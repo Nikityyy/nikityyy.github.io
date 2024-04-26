@@ -1,0 +1,333 @@
+      body {
+        font-family: roboto, sans-serif;
+      }
+	  
+	  html {
+		scrollbar-width: none;
+	  }
+
+      html::-webkit-scrollbar {
+        width: 0;
+      }
+
+      .dark-mode {
+        background-color: #202124;
+        color: #fff;
+      }
+
+      .switch {
+        position: absolute;
+        display: flex;
+        top: 19px;
+        left: 10px;
+        display: inline-block;
+        width: 50px;
+        height: 22px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #333;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 14px;
+        width: 14px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      input:checked+.slider {
+        background-color: #565656;
+      }
+
+      input:focus+.slider {
+        box-shadow: 0 0 1px #2196F3;
+      }
+
+      input:checked+.slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
+
+      .slider.round {
+        border-radius: 34px;
+      }
+
+      .slider.round:before {
+        border-radius: 50%;
+      }
+
+      #googleLogo {
+        display: block;
+        margin: 0 auto;
+        bottom: 10%;
+        padding-top: 25vh;
+        width: 100%;
+        min-width: 100px;
+        max-width: 285px;
+        margin-bottom: 20px;
+      }
+
+      #down {
+        position: absolute;
+        bottom: 10%;
+        left: 50%;
+        transform: translateX(-50%) translateY(50%);
+        display: block;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid #a6a6a6;
+        box-sizing: border-box;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
+        cursor: pointer;
+      }
+
+      #down:hover {
+        width: 50px;
+        height: 50px;
+      }
+
+      #below-down {
+        position: flex;
+        top: 100%;
+        left: 0%;
+        margin-left: auto;
+        margin-right: auto;
+        display: inline-block;
+        text-align: center;
+        color: #333;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      #below-down-1 {
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      #below-down-2 {
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      #below-down-3 {
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      #below-down-4 {
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      #below-down-5 {
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      #below-down-6 {
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      #navigation {
+        margin-bottom: 0;
+        padding-top: 5px;
+        padding-bottom: 0;
+      }
+
+      a {
+        padding-right: 10px;
+        color: #000;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .search-bar {
+        width: 100%;
+        min-width: 100px;
+        max-width: 450px;
+        min-height: 40px;
+        height: 100vh;
+        max-height: 40px;
+        margin-bottom: 75vh;
+        display: flex;
+        align-items: center;
+        background-color: #fff;
+        overflow: hidden;
+        border-radius: 25px;
+        border: 1px solid #a6a6a6;
+        transition: box-shadow 0.3s ease-in-out;
+      }
+
+      .search-bar:hover {
+        box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, .8);
+      }
+
+      input {
+        flex: 1;
+        height: 100%;
+        border: none;
+        outline: none;
+        padding: 10px;
+        font-size: 16px;
+        background-color: #fff;
+        color: #000;
+        transition: background-color 0.3s ease-in-out;
+      }
+
+      input:hover {
+        background-color: #f5f5f5;
+      }
+
+      #searchButton {
+        width: 50px;
+        height: 100%;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s ease-in-out;
+        background-color: transparent;
+      }
+
+      #searchButton:hover {
+        background-color: #CECECE;
+      }
+
+      #search {
+        width: 25px;
+        height: 25px;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        height: 63vh;
+      }
+
+      iframe {
+        width: 50%;
+        aspect-ratio: 16 / 9;
+      }
+
+      video {
+        width: 60%;
+        aspect-ratio: 16 / 9;
+      }
+
+      #comment {
+        width: 35%;
+      }
+
+      #yt {
+        width: 35%;
+      }
+
+      table {
+        margin-left: auto;
+        margin-right: auto;
+        border-collapse: collapse;
+        width: 50%;
+        margin-bottom: 20px;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+
+      #flag {
+        width: 30px;
+        height: 18px;
+        vertical-align: middle;
+        cursor: pointer;
+      }
+
+      #germany {
+        width: 30px;
+        height: 18px;
+        vertical-align: middle;
+        cursor: pointer;
+        display: none;
+      }
+
+      #england {
+        width: 30px;
+        height: 18px;
+        vertical-align: middle;
+        cursor: pointer;
+        display: none;
+      }
+
+      #spain {
+        width: 30px;
+        height: 18px;
+        vertical-align: middle;
+        cursor: pointer;
+        display: none;
+      }
+
+      displayTooSmall {
+        display: none;
+      }
+
+      @media screen and (max-width: 800px) {
+        video {
+          width: 90%;
+          aspect-ratio: 16 / 9;
+        }
+
+        #comment {
+          width: 70%;
+        }
+		
+		#yt {
+          width: 70%;
+        }
+      }
+
+      @media screen and (max-width: 279px) {
+        main {
+          display: none;
+        }
+
+        displayTooSmall {
+          display: block;
+        }
+      }

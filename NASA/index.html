@@ -55,7 +55,6 @@
       }
 
       img {
-        user-drag: none;
         -webkit-user-drag: none;
         user-select: none;
         -moz-user-select: none;
@@ -78,14 +77,14 @@
 	  
 	  #moon {
         display: block;
-		position: absolute;
+		    position: absolute;
         width: 50%;
-		margin: auto;
+		    margin: auto;
         height: auto;
         border-radius: 40px;
-		z-index: 2;
-		left: 50%;
-		transform: translateX(-50%);
+		    z-index: 2;
+        left: 50%;
+        transform: translateX(-50%);
       }
 
       #start {
@@ -133,6 +132,22 @@
       table {
         height: 100dvh;
       }
+
+      @media (max-width: 800px) {
+        #logo {
+          width: 70vw;
+        }
+        td {
+          display: inline-block;
+          width: 90%;
+          margin: 30px;
+          padding: 0;
+          vertical-align: middle;
+        }
+        td h2 {
+          font-size: 30px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -151,7 +166,7 @@
             <td>
               <h2>This is the magnificent Apollo 11 rocket, a symbol of humanity's boundless ambition and the pinnacle of scientific achievement. Its journey to the moon marked a historic leap for mankind, inspiring generations to reach for the stars.</h2>
             </td>
-          <tr>
+          </table>tr>
         </table>
         <table>
           <tr>
@@ -161,7 +176,7 @@
             <td>
               <img id="image" src="images/Neil-Armstrong.webp">
             </td>
-          <tr>
+          </table>tr>
         </table>
         <table>
           <tr>
@@ -171,7 +186,7 @@
             <td>
               <h2>This is the breathtaking Hubble Space Telescope, an eye to the universe that has revolutionized our understanding of the cosmos. Its stunning images have revealed the beauty and mysteries of distant galaxies, igniting wonder and fascination in all who gaze upon them.</h2>
             </td>
-          <tr>
+          </table>tr>
         </table>
         <table>
           <tr>
@@ -181,7 +196,7 @@
             <td>
               <img id="image" src="images/Mars.webp">
             </td>
-          <tr>
+          </table>tr>
         </table>
       </div>
     </main>

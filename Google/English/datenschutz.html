@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy</title>
+    <link rel="icon" href="../Bilder/google-icon-w-background.webp">
+    <link rel="stylesheet" href="../CSS/datenschutz.css">
+  </head>
+  <body>
+    <nav>
+      <div class="switch-container">
+        <label class="switch">
+          <input onclick="toggleDarkMode()" type="checkbox">
+          <span class="slider round"></span>
+        </label>
+      </div>
+      <p id="navigation" style="text-align: right">
+        <a class="darkMode" href="index.html">Google</a>
+        <a class="darkMode" href="career.html">Career</a>
+        <a class="darkMode" href="schule.html">School</a>
+        <a class="darkMode" href="datenschutz.html">Privacy Policy</a>
+        <a class="darkMode" id="marginYea" href="impressum.html">Legal Notice</a>
+        <img id="flag" onmouseover="allFlags()" onclick="allFlags()" src="../Bilder/England.webp">
+        <img id="germany" onclick="german()" src="../Bilder/Germany.webp">
+        <img id="england" onclick="english()" src="../Bilder/England.webp">
+        <img id="spain" onclick="spanish()" src="../Bilder/Spain.webp">
+      </p>
+    </nav>
+    <img id="googleLogo" src="../Bilder/google-logo-transparent.webp">
+    <main>
+      <form id="form">
+        <h3 class="darkMode" style="text-align: center">Declaration of Information Obligation</h3>
+        <p class="darkMode">
+          <b>Privacy Policy</b>
+        </p>
+        <p class="darkMode">In the following privacy policy, we inform you about the most important aspects of data processing within the scope of our website. We only collect and process personal data based on legal regulations (General Data Protection Regulation, Telecommunications Act 2003).</p>
+        <p class="darkMode">As soon as you, as a user, access or visit our website, your IP address, as well as the start and end of the session, are recorded. This is technically necessary and thus constitutes a legitimate interest within the meaning of Art. 6 para. 1 lit. f GDPR.</p>
+        <h4 class="darkMode">Contacting Us</h4>
+        <p class="darkMode">If you contact us, either through our contact form on our website or by email, the data you transmit to us will be stored by us for the purpose of processing your request or for the case of follow-up questions for six months. Your transmitted data will not be disclosed without your consent.</p>
+        <h4 class="darkMode">Your Rights as a Data Subject</h4>
+        <p class="darkMode">As a data subject, you have the right regarding your data stored with us:</p>
+        <ul>
+          <li class="darkMode">Information</li>
+          <li class="darkMode">Deletion of data</li>
+          <li class="darkMode">Correction of data</li>
+          <li class="darkMode">Data portability</li>
+          <li class="darkMode">Revocation and objection to data processing</li>
+          <li class="darkMode">Restriction</li>
+        </ul>
+        <p class="darkMode">If you suspect that violations of data protection laws have occurred in the processing of your data, you have the option to complain to us (nikita.berger@hak-steyr.at) or the data protection authority.</p>
+        <h4 class="darkMode">You can reach us at the following contact details:</h4>
+        <p class="darkMode" style="padding-bottom: 20px;">
+          <b>Website Operator:</b> Google LLC <br>
+          <b>Email:</b> nikita.berger@hak-steyr.at
+		  <br>
+		  <b>Email:</b> sandro-samuel.bramberger@hak-steyr.at
+        </p>
+      </form>
+    </main>
+    <script src="english.js"></script>
+    <script>
+      let darkMode = localStorage.getItem('darkMode') === '1' ? 1 : 0;
+
+      function toggleDarkMode() {
+        darkMode = darkMode === 0 ? 1 : 0;
+        localStorage.setItem('darkMode', darkMode);
+        var body = document.body;
+        body.classList.toggle("dark-mode");
+        var logo = document.getElementById('googleLogo');
+        var nav = document.querySelectorAll('.darkMode');
+        var form = document.getElementById('form');
+        if (darkMode === 1) {
+          logo.src = "../Bilder/google-logo-transparent-dark.webp";
+          nav.forEach(function(element) {
+            element.style.color = "#fff";
+          });
+          form.style.backgroundColor = "#333";
+        } else {
+          logo.src = "../Bilder/google-logo-transparent.webp";
+          nav.forEach(function(element) {
+            element.style.color = "#000";
+          });
+          form.style.backgroundColor = "#f4f4f4";
+        }
+      }
+
+      function darkModeToggled() {
+        var body = document.body;
+        body.classList.toggle("dark-mode");
+        var logo = document.getElementById('googleLogo');
+        var nav = document.querySelectorAll('.darkMode');
+        var form = document.getElementById('form');
+        if (darkMode === 1) {
+          body.classList.add("dark-mode");
+          logo.src = "../Bilder/google-logo-transparent-dark.webp";
+          nav.forEach(function(element) {
+            element.style.color = "#fff";
+          });
+          form.style.backgroundColor = "#333";
+        } else {
+          body.classList.remove("dark-mode");
+          logo.src = "../Bilder/google-logo-transparent.webp";
+          nav.forEach(function(element) {
+            element.style.color = "#000";
+          });
+          form.style.backgroundColor = "#f4f4f4";
+        }
+      }
+      document.getElementById('googleLogo').ondragstart = function() {
+        return false;
+      };
+
+      function german() {
+        window.location.href = "../Deutsch/datenschutz.html";
+      }
+
+      function english() {
+        window.location.href = "datenschutz.html";
+      }
+
+      function spanish() {
+        window.location.href = "../Spanish/datenschutz.html";
+      }
+      document.addEventListener("DOMContentLoaded", function() {
+        darkModeToggled();
+        localStorage.setItem('googleLanguage', 'Deutsch');
+      });
+    </script>
+  </body>
+</html>
+<!--
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡟⠋⠈⠙⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠤⢤⡀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠈⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠞⠀⠀⢠⡜⣦⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡃⠀⠀⠀⠀⠈⢷⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠊⣠⠀⠀⠀⠀⢻⡘⡇
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠃⠀⠀⠀⠀⠀⠀⠙⢶⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠚⢀⡼⠃⠀⠀⠀⠀⠸⣇⢳
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⠀⣀⠖⠀⠀⠀⠀⠉⠀⠀⠈⠉⠛⠛⡛⢛⠛⢳⡶⠖⠋⠀⢠⡞⠀⠀⠀⠐⠆⠀⠀⣿⢸
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣦⣀⣴⡟⠀⠀⢶⣶⣾⡿⠀⠀⣿⢸
+⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⡠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣏⠀⠀⠀⣶⣿⣿⡇⠀⠀⢏⡞
+⠀⠀⠀⠀⠀⠀⢀⡴⠛⠀⠀⠀⠀⠀⠀⠀⠀⢀⢀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢦⣤⣾⣿⣿⠋⠀⠀⡀⣾⠁
+⠀⠀⠀⠀⠀⣠⠟⠁⠀⠀⠀⣀⠀⠀⠀⠀⢀⡟⠈⢀⣤⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠙⣏⡁⠀⠐⠚⠃⣿⠀
+⠀⠀⠀⠀⣴⠋⠀⠀⠀⡴⣿⣿⡟⣷⠀⠀⠊⠀⠴⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠀⠀⠀⠀⢹⡆
+⠀⠀⠀⣴⠃⠀⠀⠀⠀⣇⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⡶⢶⣶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇
+⠀⠀⣸⠃⠀⠀⠀⢠⠀⠊⠛⠉⠁⠀⠀⠀⠀⠀⠀⠀⢲⣾⣿⡏⣾⣿⣿⣿⣿⠖⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢧
+⠀⢠⡇⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠈⠛⠿⣽⣿⡿⠏⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡜
+⢀⡿⠀⠀⠀⠀⢀⣤⣶⣟⣶⣦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇
+⢸⠇⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇
+⣼⠀⢀⡀⠀⠀⢷⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡇
+⡇⠀⠈⠀⠀⠀⣬⠻⣿⣿⣿⡿⠙⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠁
+⢹⡀⠀⠀⠀⠈⣿⣶⣿⣿⣝⡛⢳⠭⠍⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⠃⠀
+⠸⡇⠀⠀⠀⠀⠙⣿⣿⣿⣿⣿⣿⣷⣦⣀⣀⣀⣤⣤⣴⡶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠇⠀⠀
+⠀⢿⡄⠀⠀⠀⠀⠀⠙⣇⠉⠉⠙⠛⠻⠟⠛⠛⠉⠙⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⠋⠀⠀⠀
+⠀⠈⢧⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠀
+⠀⠀⠘⢷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠱⢆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡴⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠛⢦⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⠴⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠲⠤⣤⣤⣤⣄⠀⠀⠀⠀⠀⠀⠀⢠⣤⣤⠤⠴⠒⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+
+-->

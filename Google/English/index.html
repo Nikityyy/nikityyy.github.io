@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google</title>
+    <link rel="icon" href="../Bilder/google-icon-w-background.webp">
+    <link rel="stylesheet" href="../CSS/index.css">
+  </head>
+  <body>
+    <displayTooSmall>
+      <h1 style="text-shadow: 10px 10px 20px black; margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center">DISPLAY TOO SMALL! 🙁</h1>
+    </displayTooSmall>
+    <main>
+      <nav>
+        <div class="switch-container">
+          <label class="switch">
+            <input onclick="toggleDarkMode()" type="checkbox">
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <p id="navigation" style="text-align: right">
+          <a class="darkMode" href="index.html">Google</a>
+          <a class="darkMode" href="career.html">Career</a>
+          <a class="darkMode" href="schule.html">School</a>
+          <a class="darkMode" href="datenschutz.html">Privacy Policy</a>
+          <a class="darkMode" id="marginYea" href="impressum.html">Legal Notice</a>
+          <img id="flag" onmouseover="allFlags()" onclick="allFlags()" src="../Bilder/England.webp">
+          <img id="germany" onclick="german()" src="../Bilder/Germany.webp">
+          <img id="england" onclick="english()" src="../Bilder/England.webp">
+          <img id="spain" onclick="spanish()" src="../Bilder/Spain.webp">
+        </p>
+      </nav>
+      <div>
+        <img id="googleLogo" src="../Bilder/google-logo-transparent.webp">
+      </div>
+      <div class="container">
+        <form method="get" class="search-bar" autocomplete="off" title="">
+          <input type="text" name="q" id="searchInput" autocomplete="off">
+          <button type="submit" id="searchButton">
+            <img id="search" src="../Bilder/search-loop.webp" alt="Search">
+          </button>
+        </form>
+      </div>
+      <div onclick="scrollSmoothly(window.innerHeight, 1000);">
+        <img id="down" src="../Bilder/arrow-down.webp">
+      </div>
+      <div id="below-down">
+        <div id="below-down-1">
+          <h3 class="darkMode" style="font-size: 36px; margin-top: 15px; margin-bottom: 15px;">What is "Google"?</h3>
+          <p class="darkMode" style="font-size: 18px; margin-left: 30px; margin-right: 30px">Google is an Internet search engine developed by our US company Google LLC. The search engine enables users to search the World Wide Web for information of all kinds. Founded in 1998, Google has developed into one of the world's leading search engines and technology companies. <br>
+            <br>Our main goal is to help users find relevant and high quality information on the Internet. In addition to traditional web search, Google offers a variety of services and products, including Maps, Gmail, YouTube and many more. These services help to simplify users' daily lives and make information easily accessible.
+          </p>
+          <div id="video-container">
+            <video id="autoplay-video">
+              <source src="../Videos/The-Google-Story.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <div id="below-down-2">
+          <h3 class="darkMode" style="font-size: 36px; margin-top: 85px; margin-bottom: 15px;">Where did it all begin?</h3>
+          <p class="darkMode" style="font-size: 18px; margin-left: 30px; margin-right: 30px">The origins of Google date back to 1995 at Stanford University. Larry Page was considering studying at the prestigious university and during his deliberations, Sergey Brin, who was already enrolled there as a student, was asked to show him around the campus. It was in the midst of this student encounter that the fascinating story began that would make the two of them pioneers of the Internet world. <br>
+            <br>Larry Page and Sergey Brin had a shared vision that went beyond the campus tour. Their pursuit of knowledge and innovation led to the development of a search engine that had the potential to revolutionise the internet. In 1996, they began collaborating on a project called "Backrub", which focused on analysing backlinks to evaluate the relevance of websites. <br>
+            <br>The first steps had been taken and the two founders began to refine their ideas. The company Google Inc. was finally founded in 1998. The name "Google" is an allusion to the mathematical concept "googol", which stands for the almost infinite amount of information that they wanted to make accessible through their search engine.
+          </p>
+          <div>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3168.3997619172346!2d-122.17263492413275!3d37.427659972074906!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fbb2a678bea9d%3A0x29cdf01a44fc687f!2sStanford%20University!5e0!3m2!1sen!2sat!4v1705071190527!5m2!1sen!2sat" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+        <div id="below-down-3">
+          <h3 class="darkMode" style="font-size: 36px; margin-top: 85px; margin-bottom: 15px;">The most important products from Google</h3>
+          <div>
+            <table class="darkMode">
+              <thead class="tableDark">
+                <th>Service</th>
+                <th>Description</th>
+              </thead>
+              <tr>
+                <td>
+                  <a class="darkMode" href="https://mail.google.com/" target="_blank">Gmail</a>
+                </td>
+                <td>The e-mail service from Google.</td>
+              </tr>
+              <tr>
+                <td>
+                  <a class="darkMode" href="https://www.google.com/chrome/" target="_blank">Google Chrome</a>
+                </td>
+                <td>The web browser from Google.</td>
+              </tr>
+              <tr>
+                <td>
+                  <a class="darkMode" href="https://docs.google.com/" target="_blank">Google Docs</a>
+                </td>
+                <td>Online word processing.</td>
+              </tr>
+              <tr>
+                <td>
+                  <a class="darkMode" href="https://drive.google.com/" target="_blank">Google Drive</a>
+                </td>
+                <td>Cloud storage for files.</td>
+              </tr>
+              <tr>
+                <td>
+                  <a class="darkMode" href="https://photos.google.com/" target="_blank">Google Photos</a>
+                </td>
+                <td>Storage space for photos and videos.</td>
+              </tr>
+              <tr>
+                <td>
+                  <a class="darkMode" href="https://www.google.com/maps/" target="_blank">Google Maps</a>
+                </td>
+                <td>Maps and navigation.</td>
+              </tr>
+              <tr>
+                <td>
+                  <a class="darkMode" href="https://pay.google.com/" target="_blank">Google Pay</a>
+                </td>
+                <td>Mobile payment solution from Google.</td>
+              </tr>
+              <tr>
+                <td>
+                  <a class="darkMode" href="https://play.google.com/" target="_blank">Google Play</a>
+                </td>
+                <td>App Store for Android.</td>
+              </tr>
+              <tr>
+                <td>
+                  <a class="darkMode" href="https://www.google.com/index.html" target="_blank">Google Search</a>
+                </td>
+                <td>The most popular search engine in the world.</td>
+              </tr>
+              <tr>
+                <td>
+                  <a class="darkMode" href="https://sheets.google.com/" target="_blank">Google Sheets</a>
+                </td>
+                <td>Online spreadsheet.</td>
+              </tr>
+              <tr>
+                <td>
+                  <a class="darkMode" href="https://translate.google.com/" target="_blank">Google Translate</a>
+                </td>
+                <td>The translator from Google.</td>
+              </tr>
+              <tr>
+                <td>
+                  <a class="darkMode" href="https://wallet.google.com/" target="_blank">Google Wallet</a>
+                </td>
+                <td>Electronic wallet from Google.</td>
+              </tr>
+              <tr>
+                <td>
+                  <a class="darkMode" href="https://www.youtube.com/" target="_blank">YouTube</a>
+                </td>
+                <td>The largest video platform.</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div id="below-down-4">
+          <h3 class="darkMode" style="font-size: 36px; margin-top: 100px; margin-bottom: 15px;">Where is Google's headquarters located?</h3>
+          <p class="darkMode" style="font-size: 18px; margin-left: 30px; margin-right: 30px">The Googleplex, located at 1600 Amphitheatre Parkway in Mountain View, California, serves as the central headquarters for Google and its parent company, Alphabet Inc. This imposing campus spans an expansive area and represents the centrepiece of the technological innovations that drive the companies forward. <br>
+            <br>With its architectural diversity, modern working environments and innovative design concepts, the Googleplex creates an inspiring atmosphere for the creative minds who work there. In addition to office buildings, the campus also includes numerous amenities, including cafeterias, recreational areas, gyms and green open spaces that promote the work-life balance of employees. <br>
+            <br>The Googleplex is not only a physical location, but also a symbol of Google and Alphabet's mission to improve the world through technology. This is where ideas are born, innovations are fostered and projects are driven forward that have the potential to revolutionise the way we live, work and communicate.
+          </p>
+          <div>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3168.6367308208687!2d-122.08780922413287!3d37.422060372076345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fba02425dad8f%3A0x6c296c66619367e0!2sGoogleplex!5e0!3m2!1sen!2sat!4v1705072571905!5m2!1sen!2sat" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="english.js"></script>
+    <script>
+      let darkMode = localStorage.getItem('darkMode') === '1' ? 1 : 0;
+
+      function toggleDarkMode() {
+        darkMode = darkMode === 0 ? 1 : 0;
+        localStorage.setItem('darkMode', darkMode);
+        const body = document.body;
+        const logo = document.getElementById('googleLogo');
+        const searchForm = document.querySelector(".search-bar");
+        const search = document.getElementById('searchInput');
+        const searchIcon = document.getElementById('search');
+        const down = document.getElementById('down');
+        const nav = document.querySelectorAll('.darkMode');
+        const dM = document.querySelectorAll('.darkMode');
+        const tD = document.querySelectorAll('.tableDark');
+        const searchBut = document.getElementById('searchButton');
+        if (darkMode === 1) {
+          body.classList.add("dark-mode");
+          logo.src = "../Bilder/google-logo-transparent-dark.webp";
+          searchForm.style.backgroundColor = "#202124";
+          searchForm.style.border = "1px solid #d3d3d3";
+          search.style.transition = "none";
+          search.style.backgroundColor = "#202124";
+          search.style.color = "#fff";
+          searchIcon.src = "../Bilder/search-loop-dark.webp";
+          down.src = "../Bilder/arrow-down-dark.webp";
+          nav.forEach(function(element) {
+            element.style.color = "#fff";
+          });
+          dM.forEach(function(element) {
+            element.style.color = "#f5f5f5";
+          });
+          tD.forEach(function(element) {
+            element.style.color = "#111";
+          });
+          searchBut.addEventListener("mouseenter", function() {
+            searchBut.style.backgroundColor = "transparent";
+          });
+          searchBut.addEventListener("mouseleave", function() {
+            searchBut.style.backgroundColor = "transparent";
+          });
+        } else {
+          body.classList.remove("dark-mode");
+          logo.src = "../Bilder/google-logo-transparent.webp";
+          searchForm.style.backgroundColor = "#fff";
+          searchForm.style.border = "1px solid #a6a6a6";
+          search.style.backgroundColor = "#fff";
+          search.style.color = "#000";
+          searchIcon.src = "../Bilder/search-loop.webp";
+          down.src = "../Bilder/arrow-down.webp";
+          nav.forEach(function(element) {
+            element.style.color = "#000";
+          });
+          dM.forEach(function(element) {
+            element.style.color = "#333";
+          });
+          tD.forEach(function(element) {
+            element.style.color = "#f2f2f2";
+          });
+          searchBut.addEventListener("mouseenter", function() {
+            searchBut.style.backgroundColor = "#CECECE";
+          });
+          searchBut.addEventListener("mouseleave", function() {
+            searchBut.style.backgroundColor = "transparent";
+          });
+        }
+      }
+
+      function darkModeToggled() {
+        const body = document.body;
+        const logo = document.getElementById('googleLogo');
+        const searchForm = document.querySelector(".search-bar");
+        const search = document.getElementById('searchInput');
+        const searchIcon = document.getElementById('search');
+        const down = document.getElementById('down');
+        const nav = document.querySelectorAll('.darkMode');
+        const dM = document.querySelectorAll('.darkMode');
+        const tD = document.querySelectorAll('.tableDark');
+        const searchBut = document.getElementById('searchButton');
+        if (darkMode === 1) {
+          body.classList.add("dark-mode");
+          logo.src = "../Bilder/google-logo-transparent-dark.webp";
+          searchForm.style.backgroundColor = "#202124";
+          searchForm.style.border = "1px solid #d3d3d3";
+          search.style.transition = "none";
+          search.style.backgroundColor = "#202124";
+          search.style.color = "#fff";
+          searchIcon.src = "../Bilder/search-loop-dark.webp";
+          down.src = "../Bilder/arrow-down-dark.webp";
+          nav.forEach(function(element) {
+            element.style.color = "#fff";
+          });
+          dM.forEach(function(element) {
+            element.style.color = "#f5f5f5";
+          });
+          tD.forEach(function(element) {
+            element.style.color = "#111";
+          });
+          searchBut.addEventListener("mouseenter", function() {
+            searchBut.style.backgroundColor = "transparent";
+          });
+          searchBut.addEventListener("mouseleave", function() {
+            searchBut.style.backgroundColor = "transparent";
+          });
+        } else {
+          body.classList.remove("dark-mode");
+          logo.src = "../Bilder/google-logo-transparent.webp";
+          searchForm.style.backgroundColor = "#fff";
+          searchForm.style.border = "1px solid #a6a6a6";
+          search.style.backgroundColor = "#fff";
+          search.style.color = "#000";
+          searchIcon.src = "../Bilder/search-loop.webp";
+          down.src = "../Bilder/arrow-down.webp";
+          nav.forEach(function(element) {
+            element.style.color = "#000";
+          });
+          dM.forEach(function(element) {
+            element.style.color = "#333";
+          });
+          tD.forEach(function(element) {
+            element.style.color = "#f2f2f2";
+          });
+          searchBut.addEventListener("mouseenter", function() {
+            searchBut.style.backgroundColor = "#CECECE";
+          });
+          searchBut.addEventListener("mouseleave", function() {
+            searchBut.style.backgroundColor = "transparent";
+          });
+        }
+      }
+      document.getElementById('googleLogo').ondragstart = function() {
+        return false;
+      };
+      document.getElementById('down').ondragstart = function() {
+        return false;
+      };
+
+      function german() {
+        window.location.href = "../Deutsch/index.html";
+      }
+
+      function english() {
+        window.location.href = "index.html";
+      }
+
+      function spanish() {
+        window.location.href = "../Spanish/index.html";
+      }
+
+      function preloadVideo() {
+        var video = document.getElementById('autoplay-video');
+        if (video && video.getAttribute('data-src')) {
+          video.src = video.getAttribute('data-src');
+          video.load();
+        }
+      }
+
+      function preloadImages() {
+        var images = ['../Bilder/google-logo-transparent.webp', ];
+        images.forEach(function(imageSrc) {
+          var img = new Image();
+          img.src = imageSrc;
+        });
+      }
+      window.addEventListener('popstate', function(event) {
+        document.documentElement.scrollTop = 0;
+      });
+      document.addEventListener("DOMContentLoaded", function() {
+        darkModeToggled();
+        localStorage.setItem('googleLanguage', 'English');
+        preloadVideo();
+        preloadImages();
+        const searchForm = document.querySelector(".search-bar");
+        searchForm.addEventListener("submit", function(event) {
+          event.preventDefault();
+          const queryParam = document.getElementById("searchInput").value.trim();
+          if (queryParam) {
+            const googleSearchUrl = "https://www.google.com/search?q=" + encodeURIComponent(queryParam);
+            window.location.assign(googleSearchUrl);
+          }
+        });
+        const urlParams = new URLSearchParams(window.location.search);
+        const initialQueryParam = urlParams.get("q");
+        if (initialQueryParam) {
+          document.getElementById("searchInput").value = initialQueryParam;
+        }
+        window.onbeforeunload = function() {
+          document.documentElement.scrollTop = 0;
+        }
+        var videoContainer = document.getElementById('video-container');
+        var video = document.getElementById('autoplay-video');
+        let isPlaying = false;
+        let interacted = 0;
+        var videoObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              if (document.visibilityState === 'visible' && document.hasFocus()) {
+                if (!isPlaying) {
+                  if (interacted === 0) {
+                    try {
+                      video.muted = true;
+                      video.play();
+                      isPlaying = true;
+                    } catch (e) {
+                      console.warn(e.message);
+                    }
+                  } else if (interacted > 0) {
+                    video.muted = false;
+                    video.play();
+                  }
+                }
+              }
+            } else {
+              video.pause();
+              isPlaying = false;
+            }
+          });
+        }, {
+          threshold: [0.1]
+        });
+        ["click", "focus"].forEach((eventName) => {
+          window.addEventListener(eventName, () => {
+            video.muted = false;
+            interacted++;
+            isPlaying = false;
+          });
+        });
+        videoObserver.observe(video);
+        document.getElementById('video-container').addEventListener('click', function() {
+          //if (video.paused) {
+          video.play();
+          //} else {
+          //  video.pause();
+          //}
+        });
+        var belowDown = document.getElementById('below-down');
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              belowDown.style.opacity = 1;
+            } else {}
+          });
+        }, {
+          threshold: [0.1]
+        });
+        observer.observe(belowDown);
+        var belowDown1 = document.getElementById('below-down-1');
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              belowDown1.style.opacity = 1;
+            } else {}
+          });
+        }, {
+          threshold: [0.1]
+        });
+        observer.observe(belowDown1);
+        var belowDown2 = document.getElementById('below-down-2');
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              belowDown2.style.opacity = 1;
+            } else {}
+          });
+        }, {
+          threshold: [0.1]
+        });
+        observer.observe(belowDown2);
+        var belowDown3 = document.getElementById('below-down-3');
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              belowDown3.style.opacity = 1;
+            } else {}
+          });
+        }, {
+          threshold: [0.1]
+        });
+        observer.observe(belowDown3);
+        var belowDown4 = document.getElementById('below-down-4');
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              belowDown4.style.opacity = 1;
+            } else {}
+          });
+        }, {
+          threshold: [0.1]
+        });
+        observer.observe(belowDown4);
+      });
+
+      function scrollSmoothly(targetPosition, duration) {
+        const startPosition = window.scrollY;
+        const startTime = performance.now();
+
+        function ease(t) {
+          return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+        }
+
+        function scrollStep(timestamp) {
+          const currentTime = timestamp - startTime;
+          const progress = currentTime / duration;
+          window.scrollTo(0, startPosition + (targetPosition - startPosition) * ease(progress));
+          if (currentTime < duration) {
+            requestAnimationFrame(scrollStep);
+          }
+        }
+        requestAnimationFrame(scrollStep);
+      }
+    </script>
+  </body>
+</html>
+<!--
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡟⠋⠈⠙⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠤⢤⡀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠈⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠞⠀⠀⢠⡜⣦⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡃⠀⠀⠀⠀⠈⢷⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠊⣠⠀⠀⠀⠀⢻⡘⡇
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠃⠀⠀⠀⠀⠀⠀⠙⢶⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠚⢀⡼⠃⠀⠀⠀⠀⠸⣇⢳
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⠀⣀⠖⠀⠀⠀⠀⠉⠀⠀⠈⠉⠛⠛⡛⢛⠛⢳⡶⠖⠋⠀⢠⡞⠀⠀⠀⠐⠆⠀⠀⣿⢸
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣦⣀⣴⡟⠀⠀⢶⣶⣾⡿⠀⠀⣿⢸
+⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⡠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣏⠀⠀⠀⣶⣿⣿⡇⠀⠀⢏⡞
+⠀⠀⠀⠀⠀⠀⢀⡴⠛⠀⠀⠀⠀⠀⠀⠀⠀⢀⢀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢦⣤⣾⣿⣿⠋⠀⠀⡀⣾⠁
+⠀⠀⠀⠀⠀⣠⠟⠁⠀⠀⠀⣀⠀⠀⠀⠀⢀⡟⠈⢀⣤⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠙⣏⡁⠀⠐⠚⠃⣿⠀
+⠀⠀⠀⠀⣴⠋⠀⠀⠀⡴⣿⣿⡟⣷⠀⠀⠊⠀⠴⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠀⠀⠀⠀⢹⡆
+⠀⠀⠀⣴⠃⠀⠀⠀⠀⣇⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⡶⢶⣶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇
+⠀⠀⣸⠃⠀⠀⠀⢠⠀⠊⠛⠉⠁⠀⠀⠀⠀⠀⠀⠀⢲⣾⣿⡏⣾⣿⣿⣿⣿⠖⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢧
+⠀⢠⡇⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠈⠛⠿⣽⣿⡿⠏⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡜
+⢀⡿⠀⠀⠀⠀⢀⣤⣶⣟⣶⣦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇
+⢸⠇⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇
+⣼⠀⢀⡀⠀⠀⢷⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡇
+⡇⠀⠈⠀⠀⠀⣬⠻⣿⣿⣿⡿⠙⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠁
+⢹⡀⠀⠀⠀⠈⣿⣶⣿⣿⣝⡛⢳⠭⠍⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⠃⠀
+⠸⡇⠀⠀⠀⠀⠙⣿⣿⣿⣿⣿⣿⣷⣦⣀⣀⣀⣤⣤⣴⡶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠇⠀⠀
+⠀⢿⡄⠀⠀⠀⠀⠀⠙⣇⠉⠉⠙⠛⠻⠟⠛⠛⠉⠙⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⠋⠀⠀⠀
+⠀⠈⢧⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠀
+⠀⠀⠘⢷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠱⢆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡴⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠛⢦⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⠴⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠲⠤⣤⣤⣤⣄⠀⠀⠀⠀⠀⠀⠀⢠⣤⣤⠤⠴⠒⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+
+-->

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School</title>
+    <link rel="icon" href="../Bilder/google-icon-w-background.webp">
+    <link rel="stylesheet" href="../CSS/schule.css">
+  </head>
+  <body>
+    <displayTooSmall>
+      <h1 style="text-shadow: 10px 10px 20px black; margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center">DISPLAY TOO SMALL! 🙁</h1>
+    </displayTooSmall>
+    <main>
+      <nav>
+        <div class="switch-container">
+          <label class="switch">
+            <input onclick="toggleDarkMode()" type="checkbox">
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <p id="navigation" style="text-align: right">
+          <a class="darkMode" href="index.html">Google</a>
+          <a class="darkMode" href="career.html">Career</a>
+          <a class="darkMode" href="schule.html">School</a>
+          <a class="darkMode" href="datenschutz.html">Privacy Policy</a>
+          <a class="darkMode" id="marginYea" href="impressum.html">Legal Notice</a>
+          <img id="flag" onmouseover="allFlags()" onclick="allFlags()" src="../Bilder/England.webp">
+          <img id="germany" onclick="german()" src="../Bilder/Germany.webp">
+          <img id="england" onclick="english()" src="../Bilder/England.webp">
+          <img id="spain" onclick="spanish()" src="../Bilder/Spain.webp">
+        </p>
+      </nav>
+      <div>
+        <img id="googleLogo" src="../Bilder/Google-Bard.webp">
+      </div>
+      <div class="container">
+        <!-- Für platz :) -->
+      </div>
+      <div onclick="scrollSmoothly(window.innerHeight, 1000);">
+        <img id="down" src="../Bilder/arrow-down.webp">
+      </div>
+      <div id="below-down">
+        <div id="below-down-1">
+          <div id="video-container">
+            <video id="autoplay-video">
+              <source src="../Videos/Bard-Video.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <div id="below-down-2">
+          <h3 class="darkModer" style="font-size: 36px; margin-top: 85px; margin-bottom: 15px;">How to make school easy</h3>
+          <p class="darkModer" style="font-size: 18px; margin-left: 30px; margin-right: 30px">
+            <b>Bard AI</b> is a large language model developed by Google AI. It can generate texts, translate languages, write different types of creative content and answer questions in an informative way. Bard AI can be used in schools to help students with the following tasks: <br>
+            <br>
+          <ul align="left">
+            <li class="darkMode">
+              <b>Research</b>: Bard AI can help students research a topic by finding and summarising relevant information from the Internet.
+            </li>
+            <br>
+            <li class="darkMode">
+              <b>Understanding</b>: Bard AI can help students understand complex concepts by explaining them in simple language.
+            </li>
+            <br>
+            <li class="darkMode">
+              <b>Creativity</b>: Bard AI can help students develop creative ideas by making suggestions and giving feedback.
+            </li>
+          </ul>
+          </p>
+        </div>
+        <div id="below-down-3">
+          <div id="below-down-4">
+            <img id="yt" style="margin-top: 85px; margin-bottom: 20px" src="../Bilder/YT-Logo-Name.webp">
+          </div>
+          <h3 class="darkModer" style="font-size: 36px; margin-top: 25px; margin-bottom: 15px;">The use of YouTube</h3>
+          <p class="darkModer" style="font-size: 18px; margin-left: 30px; margin-right: 30px">
+            <b>YouTube</b> is a video portal where users can upload and watch videos on a variety of topics. YouTube can be used in school to help students with the following tasks: <br>
+            <br>
+          <ul align="left">
+            <li class="darkMode">
+              <b>Learning</b>: YouTube offers a wide range of educational videos on various subjects and topics. These videos can help students to learn new content and prepare for exams.
+            </li>
+            <br>
+            <li class="darkMode">
+              <b>Communication</b>: YouTube can be used to communicate and collaborate with other students and teachers.
+            </li>
+            <br>
+            <li class="darkMode">
+              <b>Self-presentation</b>: YouTube can be used to present your own projects and work.
+            </li>
+          </ul>
+          </p>
+        </div>
+        <div id="below-down-5">
+          <h3 class="darkModer" style="font-size: 20px; margin-top: 85px; margin-bottom: 45px;">Bard AI and YouTube are two powerful tools that can facilitate and enhance learning in school. They can be used by students and teachers to conduct research, understand complex concepts, be creative and connect with others.</h3>
+          <div id="video-container2">
+            <video id="autoplay-video2">
+              <source src="../Videos/Google-Bard-And-YT.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <div id="below-down-6">
+          <img id="comment" style="margin-top: 50px; margin-bottom: 20px" src="../Bilder/Google-Comment.webp">
+        </div>
+      </div>
+    </main>
+  </body>
+  <script src="english.js"></script>
+  <script>
+    let darkMode = localStorage.getItem('darkMode') === '1' ? 1 : 0;
+
+    function toggleDarkMode() {
+      darkMode = darkMode === 0 ? 1 : 0;
+      localStorage.setItem('darkMode', darkMode);
+      var body = document.body;
+      body.classList.toggle("dark-mode");
+      var down = document.getElementById('down');
+      var comment = document.getElementById('comment');
+      var yt = document.getElementById('yt');
+      var nav = document.querySelectorAll('.darkMode');
+      var dM = document.querySelectorAll('.darkModer');
+      if (body.classList.contains("dark-mode")) {
+        comment.src = "../Bilder/Google-Comment-Dark.webp";
+        yt.src = "../Bilder/YT-Logo-Name-Dark.webp";
+        down.src = "../Bilder/arrow-down-dark.webp";
+        nav.forEach(function(element) {
+          element.style.color = "#fff";
+        });
+        dM.forEach(function(element) {
+          element.style.color = "#f5f5f5";
+        });
+      } else {
+        comment.src = "../Bilder/Google-Comment.webp";
+        yt.src = "../Bilder/YT-Logo-Name.webp";
+        down.src = "../Bilder/arrow-down.webp";
+        nav.forEach(function(element) {
+          element.style.color = "#000";
+        });
+        dM.forEach(function(element) {
+          element.style.color = "#333";
+        });
+      }
+    }
+
+    function darkModeToggled() {
+      var body = document.body;
+      body.classList.toggle("dark-mode");
+      var down = document.getElementById('down');
+      var comment = document.getElementById('comment');
+      var yt = document.getElementById('yt');
+      var nav = document.querySelectorAll('.darkMode');
+      var dM = document.querySelectorAll('.darkModer');
+      if (darkMode === 1) {
+        body.classList.add("dark-mode");
+        comment.src = "../Bilder/Google-Comment-Dark.webp";
+        yt.src = "../Bilder/YT-Logo-Name-Dark.webp";
+        down.src = "../Bilder/arrow-down-dark.webp";
+        nav.forEach(function(element) {
+          element.style.color = "#fff";
+        });
+        dM.forEach(function(element) {
+          element.style.color = "#f5f5f5";
+        });
+      } else {
+        body.classList.remove("dark-mode");
+        comment.src = "../Bilder/Google-Comment.webp";
+        yt.src = "../Bilder/YT-Logo-Name.webp";
+        down.src = "../Bilder/arrow-down.webp";
+        nav.forEach(function(element) {
+          element.style.color = "#000";
+        });
+        dM.forEach(function(element) {
+          element.style.color = "#333";
+        });
+      }
+    }
+    document.getElementById('googleLogo').ondragstart = function() {
+      return false;
+    };
+    document.getElementById('down').ondragstart = function() {
+      return false;
+    };
+    document.getElementById('yt').ondragstart = function() {
+      return false;
+    };
+    document.getElementById('comment').ondragstart = function() {
+      return false;
+    };
+
+    function german() {
+      window.location.href = "../Deutsch/schule.html";
+    }
+
+    function english() {
+      window.location.href = "schule.html";
+    }
+
+    function spanish() {
+      window.location.href = "../Spanish/schule.html";
+    }
+    window.addEventListener('popstate', function(event) {
+      document.documentElement.scrollTop = 0;
+    });
+    document.addEventListener("DOMContentLoaded", function() {
+      darkModeToggled();
+      localStorage.setItem('googleLanguage', 'Deutsch');
+      window.onbeforeunload = function() {
+        document.documentElement.scrollTop = 0;
+      }
+
+      function setupVideo(videoId, containerId) {
+        const video = document.getElementById(videoId);
+        const videoContainer = document.getElementById(containerId);
+        let isPlaying = false;
+        let interacted = 0;
+        const videoObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              if (document.visibilityState === 'visible' && document.hasFocus()) {
+                if (!isPlaying) {
+                  if (interacted === 0) {
+                    try {
+                      video.muted = true;
+                      video.play();
+                      isPlaying = true;
+                    } catch (e) {
+                      console.warn(e.message);
+                    }
+                  } else if (interacted > 0) {
+                    video.muted = false;
+                    video.play();
+                  }
+                }
+              }
+            } else {
+              video.pause();
+              isPlaying = false;
+            }
+          });
+        }, {
+          threshold: [0.1],
+        });
+        ["click", "focus"].forEach((eventName) => {
+          window.addEventListener(eventName, () => {
+            video.muted = false;
+            interacted++;
+            isPlaying = false;
+          });
+        });
+        videoObserver.observe(video);
+        videoContainer.addEventListener('click', function() {
+          video.play();
+        });
+      }
+      setupVideo('autoplay-video', 'video-container');
+      setupVideo('autoplay-video2', 'video-container2');
+      var belowDown = document.getElementById('below-down');
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            belowDown.style.opacity = 1;
+          } else {}
+        });
+      }, {
+        threshold: [0.1]
+      });
+      observer.observe(belowDown);
+      var belowDown1 = document.getElementById('below-down-1');
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            belowDown1.style.opacity = 1;
+          } else {}
+        });
+      }, {
+        threshold: [0.1]
+      });
+      observer.observe(belowDown1);
+      var belowDown2 = document.getElementById('below-down-2');
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            belowDown2.style.opacity = 1;
+          } else {}
+        });
+      }, {
+        threshold: [0.1]
+      });
+      observer.observe(belowDown2);
+      var belowDown3 = document.getElementById('below-down-3');
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            belowDown3.style.opacity = 1;
+          } else {}
+        });
+      }, {
+        threshold: [0.1]
+      });
+      observer.observe(belowDown3);
+      var belowDown4 = document.getElementById('below-down-4');
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            belowDown4.style.opacity = 1;
+          } else {}
+        });
+      }, {
+        threshold: [0.1]
+      });
+      observer.observe(belowDown4);
+      var belowDown5 = document.getElementById('below-down-5');
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            belowDown5.style.opacity = 1;
+          } else {}
+        });
+      }, {
+        threshold: [0.1]
+      });
+      observer.observe(belowDown5);
+      var belowDown6 = document.getElementById('below-down-6');
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            belowDown6.style.opacity = 1;
+          } else {}
+        });
+      }, {
+        threshold: [0.1]
+      });
+      observer.observe(belowDown6);
+    });
+
+    function scrollSmoothly(targetPosition, duration) {
+      const startPosition = window.scrollY;
+      const startTime = performance.now();
+
+      function ease(t) {
+        return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+      }
+
+      function scrollStep(timestamp) {
+        const currentTime = timestamp - startTime;
+        const progress = currentTime / duration;
+        window.scrollTo(0, startPosition + (targetPosition - startPosition) * ease(progress));
+        if (currentTime < duration) {
+          requestAnimationFrame(scrollStep);
+        }
+      }
+      requestAnimationFrame(scrollStep);
+    }
+  </script>
+  </body>
+</html>
+<!--
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡟⠋⠈⠙⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠤⢤⡀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠈⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠞⠀⠀⢠⡜⣦⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡃⠀⠀⠀⠀⠈⢷⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠊⣠⠀⠀⠀⠀⢻⡘⡇
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠃⠀⠀⠀⠀⠀⠀⠙⢶⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠚⢀⡼⠃⠀⠀⠀⠀⠸⣇⢳
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⠀⣀⠖⠀⠀⠀⠀⠉⠀⠀⠈⠉⠛⠛⡛⢛⠛⢳⡶⠖⠋⠀⢠⡞⠀⠀⠀⠐⠆⠀⠀⣿⢸
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣦⣀⣴⡟⠀⠀⢶⣶⣾⡿⠀⠀⣿⢸
+⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⡠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣏⠀⠀⠀⣶⣿⣿⡇⠀⠀⢏⡞
+⠀⠀⠀⠀⠀⠀⢀⡴⠛⠀⠀⠀⠀⠀⠀⠀⠀⢀⢀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢦⣤⣾⣿⣿⠋⠀⠀⡀⣾⠁
+⠀⠀⠀⠀⠀⣠⠟⠁⠀⠀⠀⣀⠀⠀⠀⠀⢀⡟⠈⢀⣤⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠙⣏⡁⠀⠐⠚⠃⣿⠀
+⠀⠀⠀⠀⣴⠋⠀⠀⠀⡴⣿⣿⡟⣷⠀⠀⠊⠀⠴⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠀⠀⠀⠀⢹⡆
+⠀⠀⠀⣴⠃⠀⠀⠀⠀⣇⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⡶⢶⣶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇
+⠀⠀⣸⠃⠀⠀⠀⢠⠀⠊⠛⠉⠁⠀⠀⠀⠀⠀⠀⠀⢲⣾⣿⡏⣾⣿⣿⣿⣿⠖⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢧
+⠀⢠⡇⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠈⠛⠿⣽⣿⡿⠏⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡜
+⢀⡿⠀⠀⠀⠀⢀⣤⣶⣟⣶⣦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇
+⢸⠇⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇
+⣼⠀⢀⡀⠀⠀⢷⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡇
+⡇⠀⠈⠀⠀⠀⣬⠻⣿⣿⣿⡿⠙⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠁
+⢹⡀⠀⠀⠀⠈⣿⣶⣿⣿⣝⡛⢳⠭⠍⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⠃⠀
+⠸⡇⠀⠀⠀⠀⠙⣿⣿⣿⣿⣿⣿⣷⣦⣀⣀⣀⣤⣤⣴⡶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠇⠀⠀
+⠀⢿⡄⠀⠀⠀⠀⠀⠙⣇⠉⠉⠙⠛⠻⠟⠛⠛⠉⠙⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⠋⠀⠀⠀
+⠀⠈⢧⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠀
+⠀⠀⠘⢷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠱⢆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡴⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠛⢦⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⠴⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠲⠤⣤⣤⣤⣄⠀⠀⠀⠀⠀⠀⠀⢠⣤⣤⠤⠴⠒⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+
+-->

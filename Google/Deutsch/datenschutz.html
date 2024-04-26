@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datenschutzerklärung</title>
+    <link rel="icon" href="../Bilder/google-icon-w-background.webp">
+    <link rel="stylesheet" href="../CSS/datenschutz.css">
+  </head>
+  <body>
+    <nav>
+      <div class="switch-container">
+        <label class="switch">
+          <input onclick="toggleDarkMode()" type="checkbox">
+          <span class="slider round"></span>
+        </label>
+      </div>
+      <p id="navigation" style="text-align: right">
+        <a class="darkMode" href="index.html">Google</a>
+        <a class="darkMode" href="career.html">Karriere</a>
+        <a class="darkMode" href="schule.html">Schule</a>
+        <a class="darkMode" href="datenschutz.html">Datenschutz</a>
+        <a class="darkMode" id="marginYea" href="impressum.html">Impressum</a>
+        <img id="flag" onmouseover="allFlags()" onclick="allFlags()" src="../Bilder/Germany.webp">
+        <img id="germany" onclick="german()" src="../Bilder/Germany.webp">
+        <img id="england" onclick="english()" src="../Bilder/England.webp">
+        <img id="spain" onclick="spanish()" src="../Bilder/Spain.webp">
+      </p>
+    </nav>
+    <img id="googleLogo" src="../Bilder/google-logo-transparent.webp">
+    <main>
+      <form id="form">
+        <h3 class="darkMode" style="text-align: center">Erklärung zur Informationspflicht</h3>
+        <p class="darkMode">
+          <b>Datenschutzerklärung</b>
+        </p>
+        <p class="darkMode">In folgender Datenschutzerklärung informieren wir Sie über die wichtigsten Aspekte der Datenverarbeitung im Rahmen unserer Webseite. Wir erheben und verarbeiten personenbezogene Daten nur auf Grundlage der gesetzlichen Bestimmungen (Datenschutzgrundverordnung, Telekommunikationsgesetz 2003).</p>
+        <p class="darkMode">Sobald Sie als Benutzer auf unsere Webseite zugreifen oder diese besuchen wird Ihre IP-Adresse, Beginn sowie Beginn und Ende der Sitzung erfasst. Dies ist technisch bedingt und stellt somit ein berechtigtes Interesse iSv Art 6 Abs 1 lit f DSGVO.</p>
+        <h4 class="darkMode">Kontakt mit uns</h4>
+        <p class="darkMode">Wenn Sie uns, entweder über unser Kontaktformular auf unserer Webseite, oder per Email kontaktieren, dann werden die von Ihnen an uns übermittelten Daten zwecks Bearbeitung Ihrer Anfrage oder für den Fall von weiteren Anschlussfragen für sechs Monate bei uns gespeichert. Es erfolgt, ohne Ihre Einwilligung, keine Weitergabe Ihrer übermittelten Daten.</p>
+        <h4 class="darkMode">Ihre Rechte als Betroffener</h4>
+        <p class="darkMode">Sie als Betroffener haben bezüglich Ihrer Daten, welche bei uns gespeichert sind grundsätzlich ein Recht auf:</p>
+        <ul>
+          <li class="darkMode">Auskunft</li>
+          <li class="darkMode">Löschung der Daten</li>
+          <li class="darkMode">Berichtigung der Daten</li>
+          <li class="darkMode">Übertragbarkeit der Daten</li>
+          <li class="darkMode">Widerruf und Widerspruch zur Datenverarbeitung</li>
+          <li class="darkMode">Einschränkung</li>
+        </ul>
+        <p class="darkMode">Wenn sie vermuten, dass im Zuge der Verarbeitung Ihrer Daten Verstöße gegen das Datenschutzrecht passiert sind, so haben Sie die Möglichkeit sich bei uns (nikita.berger@hak-steyr.at) oder der Datenschutzbehörde zu beschweren.</p>
+        <h4 class="darkMode">Sie erreichen uns unter folgenden Kontaktdaten:</h4>
+        <p class="darkMode" style="padding-bottom: 20px;">
+          <b>Webseitenbetreiber:</b> Google LLC <br>
+          <b>Email:</b> nikita.berger@hak-steyr.at
+		  <br>
+		  <b>Email:</b> sandro-samuel.bramberger@hak-steyr.at
+        </p>
+      </form>
+    </main>
+    <script src="deutsch.js"></script>
+    <script>
+      let darkMode = localStorage.getItem('darkMode') === '1' ? 1 : 0;
+
+      function toggleDarkMode() {
+        darkMode = darkMode === 0 ? 1 : 0;
+        localStorage.setItem('darkMode', darkMode);
+        var body = document.body;
+        body.classList.toggle("dark-mode");
+        var logo = document.getElementById('googleLogo');
+        var nav = document.querySelectorAll('.darkMode');
+        var form = document.getElementById('form');
+        if (darkMode === 1) {
+          logo.src = "../Bilder/google-logo-transparent-dark.webp";
+          nav.forEach(function(element) {
+            element.style.color = "#fff";
+          });
+          form.style.backgroundColor = "#333";
+        } else {
+          logo.src = "../Bilder/google-logo-transparent.webp";
+          nav.forEach(function(element) {
+            element.style.color = "#000";
+          });
+          form.style.backgroundColor = "#f4f4f4";
+        }
+      }
+
+      function darkModeToggled() {
+        var body = document.body;
+        body.classList.toggle("dark-mode");
+        var logo = document.getElementById('googleLogo');
+        var nav = document.querySelectorAll('.darkMode');
+        var form = document.getElementById('form');
+        if (darkMode === 1) {
+          body.classList.add("dark-mode");
+          logo.src = "../Bilder/google-logo-transparent-dark.webp";
+          nav.forEach(function(element) {
+            element.style.color = "#fff";
+          });
+          form.style.backgroundColor = "#333";
+        } else {
+          body.classList.remove("dark-mode");
+          logo.src = "../Bilder/google-logo-transparent.webp";
+          nav.forEach(function(element) {
+            element.style.color = "#000";
+          });
+          form.style.backgroundColor = "#f4f4f4";
+        }
+      }
+      document.getElementById('googleLogo').ondragstart = function() {
+        return false;
+      };
+
+      function german() {
+        window.location.href = "datenschutz.html";
+      }
+
+      function english() {
+        window.location.href = "../English/datenschutz.html";
+      }
+
+      function spanish() {
+        window.location.href = "../Spanish/datenschutz.html";
+      }
+      document.addEventListener("DOMContentLoaded", function() {
+        darkModeToggled();
+        localStorage.setItem('googleLanguage', 'Deutsch');
+      });
+    </script>
+  </body>
+</html>
+<!--
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡟⠋⠈⠙⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠤⢤⡀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠈⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠞⠀⠀⢠⡜⣦⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡃⠀⠀⠀⠀⠈⢷⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠊⣠⠀⠀⠀⠀⢻⡘⡇
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠃⠀⠀⠀⠀⠀⠀⠙⢶⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠚⢀⡼⠃⠀⠀⠀⠀⠸⣇⢳
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⠀⣀⠖⠀⠀⠀⠀⠉⠀⠀⠈⠉⠛⠛⡛⢛⠛⢳⡶⠖⠋⠀⢠⡞⠀⠀⠀⠐⠆⠀⠀⣿⢸
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣦⣀⣴⡟⠀⠀⢶⣶⣾⡿⠀⠀⣿⢸
+⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⡠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣏⠀⠀⠀⣶⣿⣿⡇⠀⠀⢏⡞
+⠀⠀⠀⠀⠀⠀⢀⡴⠛⠀⠀⠀⠀⠀⠀⠀⠀⢀⢀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢦⣤⣾⣿⣿⠋⠀⠀⡀⣾⠁
+⠀⠀⠀⠀⠀⣠⠟⠁⠀⠀⠀⣀⠀⠀⠀⠀⢀⡟⠈⢀⣤⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠙⣏⡁⠀⠐⠚⠃⣿⠀
+⠀⠀⠀⠀⣴⠋⠀⠀⠀⡴⣿⣿⡟⣷⠀⠀⠊⠀⠴⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠀⠀⠀⠀⢹⡆
+⠀⠀⠀⣴⠃⠀⠀⠀⠀⣇⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⡶⢶⣶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇
+⠀⠀⣸⠃⠀⠀⠀⢠⠀⠊⠛⠉⠁⠀⠀⠀⠀⠀⠀⠀⢲⣾⣿⡏⣾⣿⣿⣿⣿⠖⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢧
+⠀⢠⡇⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠈⠛⠿⣽⣿⡿⠏⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡜
+⢀⡿⠀⠀⠀⠀⢀⣤⣶⣟⣶⣦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇
+⢸⠇⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇
+⣼⠀⢀⡀⠀⠀⢷⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡇
+⡇⠀⠈⠀⠀⠀⣬⠻⣿⣿⣿⡿⠙⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠁
+⢹⡀⠀⠀⠀⠈⣿⣶⣿⣿⣝⡛⢳⠭⠍⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⠃⠀
+⠸⡇⠀⠀⠀⠀⠙⣿⣿⣿⣿⣿⣿⣷⣦⣀⣀⣀⣤⣤⣴⡶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠇⠀⠀
+⠀⢿⡄⠀⠀⠀⠀⠀⠙⣇⠉⠉⠙⠛⠻⠟⠛⠛⠉⠙⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⠋⠀⠀⠀
+⠀⠈⢧⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠀
+⠀⠀⠘⢷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠱⢆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡴⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠛⢦⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⠴⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠲⠤⣤⣤⣤⣄⠀⠀⠀⠀⠀⠀⠀⢠⣤⣤⠤⠴⠒⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+
+-->

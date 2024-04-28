@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musify</title>
+    <link rel="icon" href="images/Musify.webp">
+    <meta name="description" content="Music For Free">
+  </head>
+  <style>
+
+    @font-face {
+      font-family: "LEMONMILK-Regular";
+      src: url("fonts/LEMONMILK-Regular.otf");
+    }
+
+    body {
+      margin: 0;
+      font-family: "LEMONMILK-Regular", arial, sans-serif;
+      background-color: #000000;
+      opacity: 0;
+      animation: opac 2s forwards;
+    }
+
+    @keyframes opac {
+      0% {
+        opacity: 0.01;
+        }
+
+        100% {
+        opacity: 1;
+      }
+    }
+
+    h1 {
+      margin-top: 40px;
+      font-size: 9dvw;
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      font-size: 5dvw;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    #songs {
+      display: none;
+      border-radius:12px;
+      width: 90dvw;
+      margin: auto;
+      display: block;
+      color: #fff;
+    }
+
+    #start {
+      color: #fff;
+      margin: auto;
+      display: block;
+      width: 90%;
+      text-align: center;
+    }
+
+    #myForm {
+      margin: auto;
+      width: 80%;
+      text-align: center;
+    }
+
+    #inputText {
+      outline: none;
+      border: 1px solid #fff;
+      border-radius: 35px;
+      width: 50dvw;
+      max-width: 300px;
+      height: 22px;
+      padding: 20px;
+      font-size: 16px;
+      background-color: #fff;
+      transition: all 0.3s;
+      margin-bottom: 40px;
+    }
+
+    #inputText:hover {
+      box-shadow: rgba(30, 215, 96, 0.10) 0px 1px 4px, rgb(30, 215, 96) 0px 0px 0px 2px;
+    }
+
+    #error {
+      color: #ff0000;
+      text-align: center;
+      letter-spacing: 3px;
+      display: none;
+      font-size: 5dvw;
+    }
+  </style>
+  <body>
+    <div id="start">
+      <h1>SONGS FOR FREE</h1>
+      <h2>This can't be true...</h2>
+    </div>
+    <form id="myForm">
+      <input type="text" placeholder="Spotify URL" autocomplete="off" id="inputText" name="inputText">
+    </form>
+    <h3 id="error">WRONG URL</h3>
+    <iframe id="songs" title="Spotify" src="" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+    <script>
+      window.addEventListener('load', function() {
+        var latestSpotifyLink = localStorage.getItem('latestSpotifyLink');
+        if (latestSpotifyLink) {
+          document.getElementById('songs').src = latestSpotifyLink;
+        }
+      });
+    
+      document.getElementById('myForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var inputValue = document.getElementById('inputText').value;
+        processInput(inputValue);
+        document.getElementById('inputText').value = '';
+      });
+    
+      function processInput(value) {
+        let songFrame = document.getElementById("songs");
+        let error = document.getElementById("error");
+        error.style.display = "none";
+        var embedUrl = null;
+        if (value && typeof value === "string" && value.startsWith("https://open.spotify.com/") && value.includes("/track/")) {
+          var trackId = extractTrackId(value);
+          embedUrl = 'https://open.spotify.com/embed/track/' + trackId;
+        } else if (value && typeof value === "string" && value.startsWith("https://open.spotify.com/") && value.includes("/album/")) {
+          var albumId = extractAlbumId(value);
+          embedUrl = 'https://open.spotify.com/embed/album/' + albumId;
+        } else if (value && typeof value === "string" && value.startsWith("https://open.spotify.com/") && value.includes("/artist/")) {
+          var artistId = extractArtistId(value);
+          embedUrl = 'https://open.spotify.com/embed/artist/' + artistId;
+        } else if (value && typeof value === "string" && value.startsWith("https://open.spotify.com/show/")) {
+          var podcastId = extractPodcastId(value);
+          embedUrl = 'https://open.spotify.com/embed/show/' + podcastId;
+        } else if (value && typeof value === "string" && value.startsWith("https://open.spotify.com/playlist/")) {
+          var playlistId = extractPlaylistId(value);
+          embedUrl = 'https://open.spotify.com/embed/playlist/' + playlistId;
+        } else {
+          error.style.display = "block";
+          songFrame.style.display = "none";
+        }
+    
+        if (embedUrl) {
+          songFrame.src = embedUrl;
+          songFrame.style.display = "block";
+          localStorage.setItem('latestSpotifyLink', embedUrl);
+        }
+      }
+    
+      function extractPlaylistId(url) {
+        var regex = /playlist\/([a-zA-Z0-9]{22})/;
+        var match = url.match(regex);
+        if (match && match.length > 1) {
+          return match[1];
+        } else {
+          return null;
+        }
+      }
+    
+      function extractPodcastId(url) {
+        var regex = /show\/([a-zA-Z0-9]{22})/;
+        var match = url.match(regex);
+        if (match && match.length > 1) {
+          return match[1];
+        } else {
+          return null;
+        }
+      }
+    
+      function extractTrackId(url) {
+        var regex = /track\/([a-zA-Z0-9]{22})/;
+        var match = url.match(regex);
+        if (match && match.length > 1) {
+          return match[1];
+        } else {
+          return null;
+        }
+      }
+    
+      function extractAlbumId(url) {
+        var regex = /album\/([a-zA-Z0-9]{22})/;
+        var match = url.match(regex);
+        if (match && match.length > 1) {
+          return match[1];
+        } else {
+          return null;
+        }
+      }
+
+      function extractArtistId(url) {
+        var regex = /artist\/([a-zA-Z0-9]{22})/;
+        var match = url.match(regex);
+        if (match && match.length > 1) {
+          return match[1];
+        } else {
+          return null;
+        }
+      }
+    </script>    
+  </body>
+</html>

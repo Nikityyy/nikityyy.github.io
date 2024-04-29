@@ -69,6 +69,10 @@
       padding: calc(30px / 2);
     }
 
+    a {
+      font-style: italic;
+    }
+
     header p, a {
       color: #fff;
       text-decoration: none;    
@@ -77,7 +81,7 @@
       background-size: var(--underline-width, 0%) 0.1em;
       background-repeat: no-repeat;
       display: inline-block;
-      padding: 0.2em 0.2em;
+      padding: 0.2em 0px;
       margin: 0;
     }
 
@@ -103,6 +107,16 @@
     #logoImg:hover {
       transform: scale(1.15);
     }
+
+    @media (max-width: 1000px) {
+        h1 {
+          margin-top: 55px;
+          font-size: 5dvw;
+        }
+        h2 {
+          font-size: 4dvw;
+        }
+      }
   </style>
   <body>
     <div id="logo">
@@ -113,7 +127,7 @@
     </header>
     <div id="start">
       <h1>What devices can use Musify?</h1>
-      <h2>It only works on Desktop. You have to log in at <b><a href="https://spotify.com" target="_blank">Spotify</a></b> for it to work.</h2>
+      <h2>It only works on Desktop.</h2>
       
       <h1>Why is it only showing a 30-second preview?</h1>
       <h2>You have to log in at <b><a href="https://spotify.com" target="_blank">Spotify</a></b> to play the full songs for free with no ads.</h2>

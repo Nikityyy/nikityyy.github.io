@@ -7,6 +7,14 @@
   <title>Anger - Control your Anger by protecting your data.</title>
   <link rel="stylesheet" href="style.css">
   <meta name="description" content="Anger">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline';">
+  <meta http-equiv="Expect-CT" content="enforce, max-age=30">
+  <meta http-equiv="Feature-Policy" content="geolocation 'self'; microphone 'none'">
+  <meta http-equiv="Referrer-Policy" content="no-referrer">
+  <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains; preload">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer" content="no-referrer" />
+  <meta name="robots" content="noindex, nofollow">
 </head>
 <body>
   <div id="particles-js"></div>
@@ -23,12 +31,58 @@
     </form>
   </div>
   <script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+        document.referrerPolicy = "no-referrer";
+
+        document.cacheControl = "no-store, no-cache, must-revalidate, max-age=0";
+        document.cacheControl += "post-check=0, pre-check=0";
+        document.pragma = "no-cache";
+
+        function generateRandomUserAgent() {
+          var platforms = [
+          'Windows NT 10.0; Win64; x64',
+          'Windows NT 6.1; Win64; x64',
+          'Macintosh; Intel Mac OS X 10_15_7',
+          'Linux x86_64'
+          ];
+
+          var browsers = [
+          'Chrome',
+          'Firefox',
+          'Safari',
+          'Edge',
+          'Opera'
+          ];
+
+          var randomPlatform = platforms[Math.floor(Math.random() * platforms.length)];
+          var randomBrowser = browsers[Math.floor(Math.random() * browsers.length)];
+          var version = Math.floor(Math.random() * 100) + 1;
+
+          var userAgent = `Anger is a gift.`;
+          Object.defineProperty(navigator, 'userAgent', {
+            get: function () { return `${userAgent}`; }
+          });
+
+          // Object.defineProperty(navigator, 'userAgent', {
+          //   get: function () { return `Mozilla/5.0 (${randomPlatform}) AppleWebKit/537.37 (KHTML, like Gecko) ${randomBrowser}/${version}.0`; }
+          // });
+
+          return userAgent;
+        }
+
+        var randomUserAgent = generateRandomUserAgent();
+
+        document.setUserData = randomUserAgent;
+        navigator.userAgent = randomUserAgent;;
+      });
+
         const searchForm = document.querySelector(".search-bar");
         searchForm.addEventListener("submit", function(event) {
+          console.log("hi");
           event.preventDefault();
           const queryParam = document.getElementById("searchInput").value.trim();
           if (queryParam) {
-            const googleSearchUrl = "https://www.google.com/search?q=" + encodeURIComponent(queryParam);
+            const googleSearchUrl = "https://google.com/search?q=" + encodeURIComponent(queryParam);
             window.location.assign(googleSearchUrl);
           }
         });

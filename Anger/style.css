@@ -3,17 +3,10 @@
   src: url("fonts/Vertically.otf");
 }
 
-@font-face {
-  font-family: "Muli";
-  src: url("fonts/Muli-Regular.ttf");
-}
-
 body {
   margin: 0;
   font-family: "Vertically", Arial, sans-serif;
   background-color: #000000;
-  opacity: 0.1;
-  animation: opac 1.5s forwards;
 }
 
 .container {
@@ -37,24 +30,24 @@ body {
   z-index: -1;
 }
 
-@keyframes opac {
-  0% {
-    opacity: 0.1;
-    }
-
-    100% {
-    opacity: 1;
-  }
-}
-
 .logo {
   width: 90%;
 }
 
 .logo img {
-  width: 200px;
+  width: 90%;
+  max-width: 200px;
   height: auto;
   z-index: -1;
+}
+
+img, h1 {
+  user-select: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 .search-bar {
@@ -76,17 +69,19 @@ input {
   border: #000 1px solid;
   outline: none;
   padding: 10px;
+  padding-left: 20px;
   font-size: 17px;
   background-color: #000;
   color: #f5f5f5;
-  font-family: "Muli", arial, sans-serif;
+  font-family: arial, sans-serif;
 }
 
 #search {
-  width: 20px;
-  filter: invert(1);
-  padding-right: 5px;
-  padding-top: 4px;
+  width: 50px;
+  background-image: url("images/search.webp");
+  background-size: 24px 24px;
+  background-position: 7px center;
+  background-repeat: no-repeat;
 }
 
 h1 {

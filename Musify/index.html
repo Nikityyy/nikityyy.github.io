@@ -85,8 +85,8 @@
       font-family: arial, sans-serif;
     }
 
-    #inputText:hover {
-      box-shadow: rgb(30, 215, 96) 0px 1px 4px, rgb(30, 215, 96) 0px 0px 0px 2px;
+    #inputText:hover, #inputText:focus {
+      box-shadow: rgb(30, 215, 96) 0px 1px 4px, rgb(30, 215, 96) 0px 0px 0px 5px;
     }
 
     #error {
@@ -95,6 +95,8 @@
       letter-spacing: 3px;
       display: none;
       font-size: 5dvw;
+      opacity: 0;
+      transition: opacity 0.5s;
     }
 
     ::-webkit-scrollbar {
@@ -162,7 +164,7 @@
       <p onclick="hide()">FAQ</p>
     </header>
     <div id="start">
-      <h1>SONGS FOR FREE</h1>
+      <h1>SONGS FOR FREE?</h1>
       <h2>This can't be true...</h2>
     </div>
     <form id="myForm">
@@ -205,7 +207,10 @@
       function processInput(value) {
         let songFrame = document.getElementById("songs");
         let error = document.getElementById("error");
-        error.style.display = "none";
+        error.style.opacity = 0;
+        setTimeout(() => {
+            error.style.display = "none";
+        }, 500);
         songFrame.style.opacity = 0;
         var embedUrl = null;
         if (value && typeof value === "string" && value.startsWith("https://open.spotify.com/") && value.includes("/track/")) {
@@ -224,8 +229,17 @@
           var playlistId = extractPlaylistId(value);
           embedUrl = 'https://open.spotify.com/embed/playlist/' + playlistId;
         } else {
-          error.style.display = "block";
-          songFrame.style.display = "none";
+          songFrame.style.opacity = 0;
+          setTimeout(() => {
+            songFrame.style.display = "none";
+          }, 500);
+
+          setTimeout(() => {
+            error.style.display = "block";
+          }, 500);
+          setTimeout(() => {
+            error.style.opacity = 1;
+          }, 600);
         }
     
         if (embedUrl) {

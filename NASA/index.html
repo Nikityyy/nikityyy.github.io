@@ -54,8 +54,7 @@
 
       #logo {
         display: block;
-        max-width: 500px;
-        height: auto;
+        height: 55vh;
       }
 
       #image {
@@ -161,10 +160,6 @@
 		}
 
       @media (max-width: 800px) {
-        #logo {
-          width: 70vw;
-        }
-
         td {
           display: inline-block;
           width: 90%;
@@ -187,8 +182,8 @@
 
       #logo, #mainText {
         position: absolute;
-        top: -100vh;
-        transition: all 1.5s;
+        top: -100dvh;
+        transition: top 1.5s;
       }
     </style>
   </head>
@@ -252,10 +247,10 @@
     let rest = document.getElementById("rest");
     let background = document.getElementById("background");
 
-    logo.style.top = '25%';
+    logo.style.top = '15%';
     logo.style.transform = "translate(-50%, -50%);"
       
-    main.style.top = '65%';
+    main.style.top = '70%';
     main.style.transform = "translate(-50%, -50%);"
 
 

@@ -86,6 +86,7 @@ input {
   width: 20px;
   filter: invert(1);
   padding-right: 5px;
+  padding-top: 4px;
 }
 
 h1 {

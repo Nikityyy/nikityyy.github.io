@@ -19,29 +19,25 @@
       font-family: "LEMONMILK-Regular", arial, sans-serif;
       background-color: #000000;
       opacity: 0;
-      animation: opac 2s forwards;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      transition: opacity 0.5s;
     }
 
-    @keyframes opac {
-      0% {
-        opacity: 0.01;
-        }
-
-        100% {
-        opacity: 1;
-      }
+    ::-webkit-scrollbar { 
+        display: none;
     }
 
     h1 {
-      margin-top: 40px;
-      font-size: 9dvw;
-      margin-bottom: 40px;
+      margin-top: calc(30px + (30px / 2));
+      font-size: 7.25dvw;
+      margin-bottom: 30px;
     }
 
     h2 {
-      font-size: 5dvw;
-      margin-top: 40px;
-      margin-bottom: 40px;
+      font-size: 4.5dvw;
+      margin-top: 30px;
+      margin-bottom: 30px;
     }
 
     #songs {
@@ -51,6 +47,11 @@
       margin: auto;
       display: block;
       color: #fff;
+      height: 30dvh;
+      margin-bottom: 30px;
+      margin-top: 30px;
+      opacity: 0;
+      transition: opacity 0.5s;
     }
 
     #start {
@@ -78,11 +79,14 @@
       font-size: 16px;
       background-color: #fff;
       transition: all 0.3s;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
+      margin-top: calc(30px / 2);
+      font-weight: bold;
+      font-family: arial, sans-serif;
     }
 
     #inputText:hover {
-      box-shadow: rgba(30, 215, 96, 0.10) 0px 1px 4px, rgb(30, 215, 96) 0px 0px 0px 2px;
+      box-shadow: rgb(30, 215, 96) 0px 1px 4px, rgb(30, 215, 96) 0px 0px 0px 2px;
     }
 
     #error {
@@ -92,8 +96,71 @@
       display: none;
       font-size: 5dvw;
     }
+
+    ::-webkit-scrollbar {
+        width: 11px;
+      }
+
+    ::-webkit-scrollbar-track {
+      border: solid 3px transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      box-shadow: inset 0 0 10px 10px white;
+      border: solid 3px transparent;
+      border-radius: 25px;
+    }
+
+    header {
+      position: absolute;
+      text-align: right;
+      top: 0;
+      right: 0;
+      padding: calc(30px / 2);
+    }
+
+    header p {
+      color: #fff;
+      text-decoration: none;    
+      transition: all 0.4s ease-in-out;
+      background: linear-gradient(currentColor 0 0) bottom left 50%, linear-gradient(currentColor 0 0) bottom right 50%;
+      background-size: var(--underline-width, 0%) 0.1em;
+      background-repeat: no-repeat;
+      display: inline-block;
+      padding: 0.2em 0.2em;
+      margin: 0;
+    }
+
+    header p:hover {
+      cursor: pointer;
+      text-shadow: 0 0 3px white;
+      --underline-width: 100%;
+    }
+
+    #logo {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    
+    #logoImg {
+      margin: calc(30px / 2);
+      width: 34px;
+      cursor: pointer;
+      transition: all 0.5s;
+    }
+
+    #logoImg:hover {
+      transform: scale(1.15);
+    }
   </style>
   <body>
+    <div id="logo">
+      <img draggable="false" alt="icon" id="logoImg" src="images/Musify.webp" onclick="window.location.href = './'"></img>
+    </div>
+    <header>
+      <p onclick="hide()">FAQ</p>
+    </header>
     <div id="start">
       <h1>SONGS FOR FREE</h1>
       <h2>This can't be true...</h2>
@@ -102,15 +169,31 @@
       <input type="text" placeholder="Spotify URL" autocomplete="off" id="inputText" name="inputText">
     </form>
     <h3 id="error">WRONG URL</h3>
-    <iframe id="songs" title="Spotify" src="" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-    </div>
+    <iframe id="songs" title="Spotify" src="" width="100%" height="auto" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     <script>
-      window.addEventListener('load', function() {
+
+      function hide() {
+        let body = document.querySelector("body");
+        body.style.opacity = 0;
+        setTimeout(() => {
+          window.location.href = "faq.html"
+        }, 500);
+      }
+
+      window.onload = function() {
+        let body = document.querySelector("body");
+        body.style.opacity = 1;
         var latestSpotifyLink = localStorage.getItem('latestSpotifyLink');
-        if (latestSpotifyLink) {
-          document.getElementById('songs').src = latestSpotifyLink;
+        var songFrame = document.getElementById('songs');
+        if (!latestSpotifyLink) {
+          songFrame.style.display = "none";
+        } else {
+          songFrame.src = latestSpotifyLink;
+          songFrame.addEventListener('load', function() {
+              songFrame.style.opacity = 1;
+          });
         }
-      });
+      };
     
       document.getElementById('myForm').addEventListener('submit', function(event) {
         event.preventDefault();
@@ -123,6 +206,7 @@
         let songFrame = document.getElementById("songs");
         let error = document.getElementById("error");
         error.style.display = "none";
+        songFrame.style.opacity = 0;
         var embedUrl = null;
         if (value && typeof value === "string" && value.startsWith("https://open.spotify.com/") && value.includes("/track/")) {
           var trackId = extractTrackId(value);
@@ -147,6 +231,9 @@
         if (embedUrl) {
           songFrame.src = embedUrl;
           songFrame.style.display = "block";
+          songFrame.addEventListener('load', function() {
+              songFrame.style.opacity = 1;
+          });
           localStorage.setItem('latestSpotifyLink', embedUrl);
         }
       }

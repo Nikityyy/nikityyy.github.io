@@ -32,8 +32,8 @@
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function(event) {
+        let dtf = new Intl.DateTimeFormat(undefined, {timeZone: "Africa/Tripoli"});
         document.referrerPolicy = "no-referrer";
-
         document.cacheControl = "no-store, no-cache, must-revalidate, max-age=0";
         document.cacheControl += "post-check=0, pre-check=0";
         document.pragma = "no-cache";
@@ -78,7 +78,6 @@
 
         const searchForm = document.querySelector(".search-bar");
         searchForm.addEventListener("submit", function(event) {
-          console.log("hi");
           event.preventDefault();
           const queryParam = document.getElementById("searchInput").value.trim();
           if (queryParam) {

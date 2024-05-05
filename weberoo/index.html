@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weberoo</title>
+<link rel="icon" href="">
+<meta name="description" content="Web">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<section id="start">
+<h1>WEBEROO</h1>
+<div class="g-container">
+  <ul>
+    <li><h2 class="auto-width-h2">PDF</h2></li>
+    <li><h2 class="auto-width-h2">PNG</h2></li>
+    <li><h2 class="auto-width-h2">JPG</h2></li>
+    <li><h2 class="auto-width-h2">WEBP</h2></li>
+	<li><h2 class="auto-width-h2">PDF</h2></li>
+  </ul>
+</div>
+    <form rel="noreferrer" action="submit" class="search-bar" autocomplete="off" title="site">
+		<input type="text" id="site" aria-label="site" autocomplete="off">
+		<!-- <button type="button" onclick="captureScreenshot()">Capture Screenshot</button> -->
+	</form>
+	<div class="tilt-container">
+  <div class="tilt-image"></div>
+</div>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+<script src="https://github.com/niklasvh/html2canvas/releases/download/0.4.1/html2canvas.js"></script>
+<script>
+const tiltContainer = document.querySelector('.tilt-container');
+
+tiltContainer.addEventListener('mousemove', (e) => {
+  const tiltImage = tiltContainer.querySelector('.tilt-image');
+  const boundingRect = tiltContainer.getBoundingClientRect();
+  
+  const mouseX = e.clientX - boundingRect.left;
+  const mouseY = e.clientY - boundingRect.top;
+  
+  const tiltX = (mouseX / boundingRect.width - 0.5) * -30;
+  const tiltY = (mouseY / boundingRect.height - 0.5) * -30;
+  
+  tiltImage.style.transform = `rotateX(${tiltY}deg) rotateY(${-tiltX}deg)`;
+});
+
+tiltContainer.addEventListener('mouseleave', () => {
+  const tiltImage = tiltContainer.querySelector('.tilt-image');
+  tiltImage.style.transform = 'rotateX(0deg) rotateY(0deg)';
+});
+
+const searchForm = document.querySelector(".search-bar");
+searchForm.addEventListener("submit", function(event) {
+          event.preventDefault();
+		  captureScreenshot();
+		  });
+
+async function captureScreenshot() {
+  let url = document.getElementById('site').value.trim();
+  if (!url) {
+    console.error('Please enter a valid URL');
+    return;
+  }
+
+  try {
+    const proxyUrl = 'https://cors.nikity.workers.dev/proxy?modify&proxyUrl=';
+	
+	if(!url.startsWith("http://") || !url.startsWith("https://")) {
+      url = `https://${url}`;
+    }
+	
+    const response = await fetch(proxyUrl + url);
+    const html = await response.text();
+    
+    const iframe = document.createElement('iframe');
+    document.body.appendChild(iframe);
+    const iframeDocument = iframe.contentWindow.document;
+    iframeDocument.open();
+    iframeDocument.write(html);
+    iframeDocument.close();
+
+iframe.onload = () => {
+    html2canvas(iframeDocument.body, {
+        onrendered: function(canvas) {
+            document.body.appendChild(canvas);
+            leCanvas = document.getElementsByTagName("canvas")[0];
+			
+            var imgWEBP  = leCanvas.toDataURL("image/webp");
+			
+			var tiltImage = document.querySelector('.tilt-image');
+			var imageUrl = "url('" + imgWEBP + "')";
+			tiltImage.style.backgroundImage = imageUrl;
+			
+            var imgPNG  = leCanvas.toDataURL("image/png");
+            var imgJPG  = leCanvas.toDataURL("image/jpeg");
+			
+			const docPDF = new jsPDF();
+			docPDF.addImage(imgPNG, 'PNG', 0, 0);
+			
+            var PNG = document.createElement('a');
+			var JPG = document.createElement('a');
+			var PDF = document.createElement('a');
+			var WEBP = document.createElement('a');
+			
+            PNG.href = imgPNG;
+            JPG.href = imgJPG;
+            PDF.href = docPDF.output('bloburl');
+            WEBP.href = imgWEBP;
+			
+			PNG.innerHTML = "PNG";
+			JPG.innerHTML = "JPG";
+			PDF.innerHTML = "PDF";
+			WEBP.innerHTML = "WEBP";
+			
+            PNG.download = `${url}.png`;
+            JPG.download = `${url}.jpg`;
+            PDF.download = `${url}.pdf`;
+            WEBP.download = `${url}.webp`;
+
+            var downloadsDiv = document.createElement('div');
+            downloadsDiv.id = "downloads";
+            downloadsDiv.appendChild(PDF);
+            downloadsDiv.appendChild(PNG);
+            downloadsDiv.appendChild(JPG);
+            downloadsDiv.appendChild(WEBP);
+			
+            document.body.appendChild(downloadsDiv);
+
+            document.body.removeChild(leCanvas);
+            document.querySelectorAll('iframe').forEach(iframe => iframe.remove());
+        }
+    });
+};
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+</script>
+</body>
+</html>

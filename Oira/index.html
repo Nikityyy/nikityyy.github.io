@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oira.AI</title>
+    <link rel="icon" href="images/logo.webp">
+    <meta name="description" content="Oira, AI, Oira.AI">
+    <style>
+      @font-face {
+        font-family: "Fragmentcore";
+        src: url("fonts/Fragmentcore.otf");
+      }
+
+      @font-face {
+        font-family: "Roboto";
+        src: url("fonts/Roboto-Regular.ttf");
+      }
+
+      body {
+        margin: 0;
+        background-color: #000;
+      }
+
+      .blink {
+        animation: blink 0.5s infinite;
+      }
+
+      @keyframes blink {
+        to {
+          opacity: .0;
+        }
+      }
+
+      .flex {
+        display: flex;
+      }
+
+      .header-sub-title {
+        color: #fff;
+        font-family: "Fragmentcore", arial, sans-serif;
+        font-size: 12dvw;
+      }
+
+      .first {
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 30px;
+        height: 100dvh;
+        align-items: center;
+        color: #fff;
+      }
+
+      .grid-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .grid-item img {
+        width: 35dvw;
+        height: auto;
+        margin: 60px;
+        margin-right: 0px;
+        border-radius: 15px;
+      }
+
+      img {
+        filter: grayscale(1);
+        transition: filter 0.3s;
+      }
+
+      img:hover {
+        filter: grayscale(0);
+      }
+
+      h1 {
+        color: #fff;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
+
+      th,
+      td {
+        border: 0px;
+        text-align: center;
+        color: #fff;
+        font-family: "Roboto", arial, sans-serif;
+        padding: 0;
+      }
+
+      .second,
+      .third {
+        height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .fourth,
+      .fifth {
+        height: 100dvh;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-family: "Roboto", arial, sans-serif;
+        color: #fff;
+      }
+
+      main {
+        width: 100%;
+        height: 100vh;
+        overflow-y: scroll;
+        scroll-snap-type: y mandatory;
+        scroll-behavior: smooth;
+      }
+
+      .slides {
+        width: 100%;
+        height: 100vh;
+        scroll-snap-align: start;
+      }
+
+      td img {
+        width: 35dvw;
+        border-radius: 15px;
+      }
+
+      a {
+        color: #fff;
+        text-decoration: none;
+        transition: background 0.4s ease-in-out;
+        background: linear-gradient(currentColor 0 0) bottom left 50%, linear-gradient(currentColor 0 0) bottom right 50%;
+        background-size: var(--underline-width, 0%) 0.1em;
+        background-repeat: no-repeat;
+        display: inline-block;
+        padding-bottom: 0.1em;
+        margin: 0;
+        font-weight: bold;
+        text-shadow: 0 0 1px white;
+      }
+
+      a:hover {
+        cursor: pointer;
+        --underline-width: 100%;
+      }
+
+      .fourth h1 {
+        font-family: "Fragmentcore", arial, sans-serif;
+        font-size: 13dvw;
+        margin: 0;
+      }
+
+      .fourth h2 {
+        font-family: "Fragmentcore", arial, sans-serif;
+        font-size: 5dvw;
+        margin: 0;
+      }
+
+      #box {
+        width: 50%;
+        height: 30%;
+        border: 1px solid #fff;
+        display: block;
+        margin: auto;
+      }
+
+      .fifth h1 {
+        font-size: 7dvw;
+      }
+
+      .link {
+        font-size: 3.5dvw;
+        margin-right: 10px;
+        margin-left: 10px;
+      }
+
+      @media (max-width: 650px) {
+        .first {
+          grid-template-columns: none;
+        }
+
+        td {
+            display: block;
+            padding: 10px !important;
+        }
+
+        td img {
+            width: 85dvw;
+        }
+
+        .flex {
+          align-items: center;
+          justify-content: center;
+        }
+
+        .grid-item img {
+          margin: auto;
+          margin-top: 20px;
+          width: 85dvw;
+        }
+
+        img {
+          filter: grayscale(0);
+        }
+
+        .header-sub-title {
+          font-size: 20dvw;
+          margin-top: 0;
+        }
+
+        .fourth h1 {
+            font-size: 30dvw;
+        }
+
+        .fourth h2 {
+            font-size: 10dvw;
+        }
+
+        .fifth h1 {
+            font-size: 17dvw;
+        }
+
+        .fifth a {
+            font-size: 8dvw;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="slides">
+        <div class="first">
+          <div class="grid-item">
+            <img src="images/oira-image.webp" draggable="false" alt="oira">
+          </div>
+          <div class="grid-item">
+            <div class="flex">
+              <p class="header-sub-title" id="word"></p>
+              <p class="header-sub-title blink">|</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slides">
+        <div class="second">
+          <table>
+            <tr>
+              <td style="padding: 24px; padding-right: 0px;">
+                <h1>Text-To-Speech</h1>
+                <p>Our TTS solutions include <a target="_blank" href="https://keithito.com/LJ-Speech-Dataset/">LJSpeech</a> for English and <a target="_blank" href="https://github.com/thorstenMueller/Thorsten-Voice">Thorsten Voice</a> for German. Experience seamless communication and accessibility across languages with Oira's advanced technology. </p>
+              </td>
+              <td>
+                <img src="images/tts.webp" alt="oira">
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="slides">
+        <div class="third">
+          <table>
+            <tr>
+              <td>
+                <img src="images/ld.webp" alt="oira">
+              </td>
+              <td style="padding: 24px; padding-left: 0px;">
+                <h1>Language Detection</h1>
+                <p>Leveraging our expertise, we offer precise language detection capabilities, ensuring accurate communication across diverse linguistic landscapes. Trust Oira for advanced language detection solutions that power seamless interactions and accessibility.</p>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="slides">
+        <div class="fourth">
+          <h1>LLM</h1>
+          <h2>You enter a sentence. <br>We make it a story. <br>Oira. </h2>
+        </div>
+      </div>
+      <div class="slides">
+        <div class="fifth">
+          <h1>Support us!</h1>
+          <div style="display: flex;">
+            <a class="link" target="_blank" href="https://github.com/Nikityyy">GitHub</a>
+            <a class="link" target="_blank" href="https://huggingface.co/OiraAI">Huggingface</a>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script>
+      const words = ["Oira.AI", "Oira.TTS", "Oira.LD", "Oira.LLM"];
+      let i = 0;
+      let timer;
+
+      function typingEffect() {
+        let word = words[i].split("");
+        var loopTyping = function() {
+          if (word.length > 0) {
+            document.getElementById('word').innerHTML += word.shift();
+          } else {
+            deletingEffect();
+            return false;
+          };
+          timer = setTimeout(loopTyping, 500);
+        };
+        loopTyping();
+      };
+
+      function deletingEffect() {
+        let word = words[i].split("");
+        var loopDeleting = function() {
+          if (word.length > 0) {
+            word.pop();
+            document.getElementById('word').innerHTML = word.join("");
+          } else {
+            if (words.length > (i + 1)) {
+              i++;
+            } else {
+              i = 0;
+            };
+            typingEffect();
+            return false;
+          };
+          timer = setTimeout(loopDeleting, 200);
+        };
+        loopDeleting();
+      };
+      typingEffect();
+    </script>
+  </body>
+</html>

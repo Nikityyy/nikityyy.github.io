@@ -78,12 +78,12 @@
         border-radius: 15px;
       }
 
-      img, video {
+      img {
         filter: grayscale(1);
         transition: filter 0.3s;
       }
 
-      img:hover, video:hover {
+      img:hover {
         filter: grayscale(0);
       }
 
@@ -194,6 +194,24 @@
         margin-left: 10px;
       }
 
+      .arrow {
+        font-size: 28px;
+        padding: 6px 0;
+      }
+
+      .tech {
+        margin-top: auto;
+        margin-bottom: 50px;
+        display: block;
+      }
+
+      .support {
+        display: block;
+        width: 90%;
+        margin: auto;
+        text-align: center;
+      }
+
       @media (max-width: 650px) {
         .first {
           grid-template-columns: none;
@@ -219,7 +237,7 @@
           width: 85dvw;
         }
 
-        img, video {
+        img {
           filter: grayscale(0);
         }
 
@@ -251,7 +269,7 @@
       <div class="slides">
         <div class="first">
           <div class="grid-item">
-            <video src="media/Oira.mp4" autoplay muted loop draggable="false" alt="oira">
+            <video src="media/Oira.mp4" playsinline autoplay muted loop draggable="false" alt="oira">
           </div>
           <div class="grid-item">
             <div class="flex">
@@ -270,7 +288,7 @@
                 <p>Our TTS solutions include <a target="_blank" href="https://keithito.com/LJ-Speech-Dataset/">LJSpeech</a> for English and <a target="_blank" href="https://github.com/thorstenMueller/Thorsten-Voice">Thorsten Voice</a> for German. Experience seamless communication and accessibility across languages with Oira's advanced technology. </p>
               </td>
               <td>
-                <img src="media/tts.webp" alt="oira">
+                <img draggable="false" loading="lazy" src="media/tts.webp" alt="oira">
               </td>
             </tr>
           </table>
@@ -281,10 +299,10 @@
           <table>
             <tr>
               <td>
-                <img src="media/ld.webp" alt="oira">
+                <img draggable="false" loading="lazy" src="media/ld.webp" alt="oira">
               </td>
               <td style="padding: 24px; padding-left: 0px;">
-                <h1>Language Detection</h1>
+                <h1>Natural Language Processing</h1>
                 <p>Leveraging our expertise, we offer precise language detection capabilities, ensuring accurate communication across diverse linguistic landscapes. Trust Oira for advanced language detection solutions that power seamless interactions and accessibility.</p>
               </td>
             </tr>
@@ -299,17 +317,31 @@
       </div>
       <div class="slides">
         <div class="fifth">
+          <div class="support">
           <h1>Support us!</h1>
-          <div style="display: flex;">
+          <div>
             <a class="link" target="_blank" href="https://github.com/Nikityyy">GitHub</a>
             <a class="link" target="_blank" href="https://huggingface.co/OiraAI">Huggingface</a>
           </div>
         </div>
+          <div class="tech">
+            <a class="link" style="font-size: 24px" target="_blank" href="./tech.html">Technical Stuff 😨</a>
+          </div>
+        </div>
       </div>
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/three-js@79.0.0/three.min.js"></script>
     <script>
-      const words = ["Oira.AI", "Oira.TTS", "Oira.LD", "Oira.LLM"];
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', function (e) {
+              e.preventDefault();
+
+              document.querySelector(this.getAttribute('href')).scrollIntoView({
+                  behavior: 'smooth'
+              });
+          });
+      });
+
+      const words = ["Oira.AI", "Oira.TTS", "Oira.NLP", "Oira.LLM"];
       let i = 0;
       let timer;
 

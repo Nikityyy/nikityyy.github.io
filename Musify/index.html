@@ -162,6 +162,20 @@
       transform: scale(1.15);
     }
 
+    #icon {
+      filter: contrast(0) brightness(2);
+      cursor: pointer;
+      transition: all 0.3s;
+      width: 2.5dvw;
+      padding-left: 10px;
+      vertical-align: sub;
+    }
+
+    #icon:hover {
+      transform: scale(1.2);
+      filter: none;
+    }
+
     @media (max-width: 1000px) {
         h1 {
           margin-top: 55px;
@@ -172,6 +186,10 @@
         }
         h3 {
           font-size: 5.5dvw;
+        }
+        #icon {
+          width: 5dvw;
+          vertical-align: baseline;
         }
       }
   </style>
@@ -185,7 +203,7 @@
     <div id="start">
       <h1>SONGS WITHOUT ADS?</h1>
       <h2>This can't be true...</h2>
-      <h3>Desktop Application: Soon</h3>
+      <h3>Desktop Application:<img onclick="window.open('https://github.com/Nikityyy/nikityyy.github.io/releases/download/MusifyWin/Musify.msi')" src="images/windows.webp" id="icon" alt=""></h3>
     </div>
     <form id="myForm">
       <input type="text" placeholder="Spotify URL" autocomplete="off" id="inputText" name="inputText">
@@ -198,7 +216,7 @@
         let body = document.querySelector("body");
         body.style.opacity = 0;
         setTimeout(() => {
-          window.location.href = "faq.html"
+          window.location.href = "faq"
         }, 500);
       }
 

@@ -10,8 +10,9 @@
     <meta name="twitter:title" content="GCT Gruber Consulting & Technology">
     <meta name="keywords" content="Kugellager, Wälzlager, Gruber, Steyr">
     <style>
-        body {
-            margin: 0;
+        @font-face {
+            font-family: "Roboto";
+            src: url("fonts/Roboto-Regular.ttf");
         }
 
         @font-face {
@@ -19,18 +20,21 @@
             src: url("fonts/THE\ BOLD\ FONT\ -\ FREE\ VERSION\ -\ 2023.otf");
         }
 
-        @font-face {
-            font-family: "Roboto";
-            src: url("fonts/Roboto-Regular.ttf");
+        ::-webkit-scrollbar {
+            display: none;
         }
 
-::-webkit-scrollbar {
-    display: none;
-}
+        * {
+            scrollbar-width: none;
+        }
 
-* {
-    scrollbar-width: none;
-}
+        body {
+            margin: 0;
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #e8eef7;
+            color: #333;
+            overflow-x: hidden;
+        }
 
         header {
             font-family: Verdana, sans-serif;
@@ -135,93 +139,57 @@
             transform: scale(1.05);
         }
 
-        .container {
-            margin-top: 60px;
-            height: calc(100dvh - 60px);
-            width: 100dvw;
-            background: rgb(12, 28, 71);
-	        background-image: linear-gradient(
-			35deg,
-			rgba(12, 28, 71, 0.5),
-			80%,
-			hsla(0, 0%, 7%, 0.5)
-		    ),
-		    linear-gradient(transparent calc(50% - 1px), rgb(161, 173, 199) 1px, transparent calc(50% + 1px) 100%),
-		    linear-gradient(to right, transparent calc(50% - 1px), rgb(161, 173, 199) 1px, transparent calc(50% + 1px) 100%);
-	        background-size: 100% 100%, 40px 40px, 40px 40px;
+        main {
+            margin-top: 80px;
+            padding: 20px;
+        }
+
+        footer {
+			position: absolute;
+			width: 100%;
+			bottom: 0;
+			left: 0;
+            text-align: center;
+            padding-bottom: 20px;
+            padding-top: 20px;
+            background-color: rgb(12, 28, 71);
             color: #fff;
-            font-family: monospace;
+            margin-top: 40px;
+            border-top: 5px solid #333;
         }
 
-        table { 
-            table-layout: fixed;
-            width: 100%;
-            height: 100%;
-            word-wrap: break-word;
-            vertical-align: middle;
-            border-collapse: collapse;
+        .footer p {
+            margin: 10px 0;
         }
 
-        td { 
-            width: 50%;
+        .footer button {
+            padding: 10px;
+            border: none;
+            outline: none;
+            border-radius: 10px;
+            background-color: rgb(161, 173, 199);
+            color: rgb(12, 28, 71);
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        td h1 {
-            font-size: 5dvw;
+        .footer button:hover {
+            background-color: rgb(139, 149, 171);
         }
+		
+		h1 {
+			text-align: center;
+			color: rgb(12, 28, 71);
+		}
 
-        li {
-            font-size: 2.5dvh;
-            margin: 10px;
-        }
-
-        .slide-in-fwd-right {
-            animation: slide-in-fwd-right 1.2s cubic-bezier(0.230, 1.000, 0.320, 1.000);
-        }
-
-        @keyframes slide-in-fwd-right {
-        0% {
-            transform: translateZ(-1400px) translateX(1000px);
-            opacity: 0;
-        }
-        100% {
-            transform: translateZ(0) translateX(0);
-            opacity: 1;
-        }
-        }
-        
-        .slide-in-fwd-left {
-            animation: slide-in-fwd-left 1.2s cubic-bezier(0.230, 1.000, 0.320, 1.000);
-        }
-
-        @keyframes slide-in-fwd-left {
-        0% {
-            transform: translateZ(-1400px) translateX(-1000px);
-            opacity: 0;
-        }
-        100% {
-            transform: translateZ(0) translateX(0);
-            opacity: 1;
-        }
-        }
-
-        @media (max-width: 500px) {
-            li {
-                font-size: 16px;
+        @media (min-width: 768px) {
+            .content {
+                flex-direction: row;
+                gap: 20px;
             }
 
-            td {
-                margin: auto;
-                margin-top: 20px;
-                width: 80%;
-            }
-
-            td img {
-                width: 50% !important;
-            }
-
-            tr td {
-                display: block;
+            .card {
+                flex: 1;
             }
         }
 
@@ -260,29 +228,12 @@
         </div>
     </header>
     <main>
-        <div class="container">
-            <table>
-                <tr>
-                    <td class="slide-in-fwd-left" style="text-align: center; "><img style="width: 80%;" src="images/blaupause-skizze.webp" alt=""></td>
-                    <td class="slide-in-fwd-right"><h1>Kugel-/Wälzlager</h1>
-                        <ul>
-                        <li><b>Beschreibung:</b> Mechanisches Bauteil zur Reduzierung von Reibung.</li>
-                        <li><b>Aufbau:</b> Äußerer Ring, innerer Ring, Kugeln/Wälzkörper.</li>
-                        <li><b>Funktion:</b> Erleichtert Rotationsbewegung, minimiert Reibung.</li>
-                        <li><b>Anwendungen:</b> Motoren, Getriebe, Pumpen, Fahrzeuge.</li>
-                        <li><b>Wartung:</b> Regelmäßiges Schmieren, Überprüfung auf Verschleiß.</li>
-                        <li><b>Hinweis:</b> Beachten Sie spezifische Anweisungen für Installation und Nutzung.</li>
-                    </ul>
-                </td>
-                </tr>
-            </table>
-        </div>
+        <h1>Seite nicht gefunden!</h1>
     </main>
+    <footer class="footer">
+        <p>GCT Gruber Consulting & Technology</p>
+    </footer>
     <script>
-        window.onload = function() {
-            
-        }
-
         function redirect(url) {
             window.location.href = url;
         }

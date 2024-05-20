@@ -137,7 +137,8 @@
 
         .container {
             margin-top: 60px;
-            height: calc(100dvh - 60px);
+            height: 100%;
+			min-height: calc(100dvh - 60px);
             width: 100dvw;
             background: rgb(12, 28, 71);
 	        background-image: linear-gradient(
@@ -225,7 +226,7 @@
             }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 896px) {
             .nav-links {
                 display: none;
             }
@@ -243,6 +244,7 @@
             <button onclick="redirect('./')">Startseite</button>
             <button onclick="redirect('kugellager.html')">Kugellager</button>
             <button onclick="redirect('about-us.html')">Über uns</button>
+            <button onclick="redirect('geschichte.html')">Geschichte</button>
             <button onclick="redirect('impressum.html')">Impressum</button>
             <button onclick="redirect('captcha.html')">Kontakt</button>
         </nav>
@@ -255,6 +257,7 @@
             <button onclick="redirect('./')">Startseite</button>
             <button onclick="redirect('kugellager.html')">Kugellager</button>
             <button onclick="redirect('about-us.html')">Über uns</button>
+            <button onclick="redirect('geschichte.html')">Geschichte</button>
             <button onclick="redirect('impressum.html')">Impressum</button>
             <button onclick="redirect('captcha.html')">Kontakt</button>
         </div>
@@ -312,7 +315,7 @@
         window.onresize = function() {
             var w = window.innerWidth;
 
-            if(w > 768) {
+            if(w > 896) {
                 const mobileMenu = document.querySelector('.mobile-menu');
                 mobileMenu.style.right = "-200px";
 

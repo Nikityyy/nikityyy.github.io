@@ -11,23 +11,17 @@
   <meta name="keywords" content="Kugellager, Wälzlager, Gruber, Steyr">
   <style>
     @font-face {
-            font-family: "Roboto";
-            src: url("fonts/Roboto-Regular.ttf");
+      font-family: 'Roboto';
+      src: url('fonts/Roboto-Regular.ttf') format('truetype');
     }
-
-::-webkit-scrollbar {
-    display: none;
-}
-
-* {
-    scrollbar-width: none;
-}
 
     body {
       font-family: 'Roboto', Arial, sans-serif;
-      background-color: #f4f4f9;
-      margin: 0;
+      background-color: #F4F4F9;
       color: #333;
+      margin: 0;
+      padding-top: 60px; /* For fixed header spacing */
+      padding-bottom: 60px; /* For fixed footer spacing */
     }
 
     header {
@@ -133,120 +127,119 @@
             transform: scale(1.05);
         }
 
-        main {
-            padding: 60px 2.5%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .content-section {
-            margin-top: 20px;
-        }
-
-        .content-section h2 {
-            color: #0C1C47;
-            font-size: 1.8em;
-            margin: 0;
-        }
-
-        .content-section ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .content-section ul li {
-            font-size: 1.1em;
-            margin-bottom: 8px;
-        }
-
-        footer {
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-            left: 0;
-            text-align: center;
-            padding: 20px 0;
-            background-color: #0c1c47;
-            color: white;
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-        }
-  </style>
-  <script>
-    window.onload = function () {
-      generate();
+    main {
+      padding: 20px;
+      max-width: 1200px;
+      margin: 5px auto;
+      background-color: #FFFFFF;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
+    .content-section {
+      margin-top: 20px;
+    }
+
+    .content-section h2 {
+      color: #0C1C47;
+      font-size: 1.8em;
+      margin-bottom: 20px;
+    }
+
+    .content-section p {
+      font-size: 1.1em;
+      margin-bottom: 8px;
+    }
+
+    footer {
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      left: 0;
+      text-align: center;
+      padding: 20px 0;
+      background-color: #0C1C47;
+      color: white;
+    }
+
+    @media (max-width: 896px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .mobile-menu {
+        display: flex;
+      }
+    }
+  </style>
+  <script>
     function redirect(url) {
-        window.location.href = url;
+      window.location.href = url;
     }
 
     function toggleMobileMenu() {
-            const hamburger = document.querySelector('.hamburger');
-            const mobileMenu = document.querySelector('.mobile-menu');
-            hamburger.classList.toggle('open');
-            mobileMenu.style.right = mobileMenu.style.right === '60px' ? '-200px' : '60px';
-        }
+      const hamburger = document.querySelector('.hamburger');
+      const mobileMenu = document.querySelector('.mobile-menu');
+      hamburger.classList.toggle('open');
+      mobileMenu.style.right = mobileMenu.style.right === '60px' ? '-200px' : '60px';
+    }
 
-        document.addEventListener('click', (event) => {
-            const mobileMenu = document.querySelector('.mobile-menu');
-            const isClickInsideMobileMenu = mobileMenu.contains(event.target);
-            const isMobileMenuAtRightPosition = getComputedStyle(mobileMenu).right === '60px';
-            const hamburger = document.querySelector('.hamburger').contains(event.target);
+    window.addEventListener('click', (event) => {
+      const mobileMenu = document.querySelector('.mobile-menu');
+      const isClickInsideMobileMenu = mobileMenu.contains(event.target);
+      const isMobileMenuAtRightPosition = getComputedStyle(mobileMenu).right === '60px';
+      const hamburger = document.querySelector('.hamburger').contains(event.target);
 
-            if (hamburger) {
-                hamburger.classList.toggle('open');
-            }
+      if (hamburger) {
+        hamburger.classList.toggle('open');
+      }
 
-            if (!isClickInsideMobileMenu && isMobileMenuAtRightPosition) {
-                toggleMobileMenu();
-            }
-        });
+      if (!isClickInsideMobileMenu && isMobileMenuAtRightPosition) {
+        toggleMobileMenu();
+      }
+    });
 
-        window.onresize = function() {
-            var w = window.innerWidth;
+    window.onresize = function() {
+      const w = window.innerWidth;
+      if(w > 896) {
+        const mobileMenu = document.querySelector('.mobile-menu');
+        mobileMenu.style.right = "-200px";
 
-            if(w > 768) {
-                const mobileMenu = document.querySelector('.mobile-menu');
-                mobileMenu.style.right = "-200px";
-
-                const ham = document.querySelector('.hamburger');
-                ham.classList.remove('open');
-            }
-        }
+        const hamburger = document.querySelector('.hamburger');
+        hamburger.classList.remove('open');
+      }
+    }
   </script>
 </head>
 <body>
-    <header>
-        <h1 style="cursor: pointer;" onclick="redirect('./')">GCT</h1>
-        <nav class="nav-links">
-            <button onclick="redirect('./')">Startseite</button>
-            <button onclick="redirect('kugellager.html')">Kugellager</button>
-            <button onclick="redirect('about-us.html')">Über uns</button>
-            <button onclick="redirect('impressum.html')">Impressum</button>
-            <button onclick="redirect('captcha.html')">Kontakt</button>
-        </nav>
-        <div class="hamburger" onclick="toggleMobileMenu()">
-            <div class="line1"></div>
-            <div class="line2"></div>
-            <div class="line3"></div>
-        </div>
-        <div class="mobile-menu">
-            <button onclick="redirect('./')">Startseite</button>
-            <button onclick="redirect('kugellager.html')">Kugellager</button>
-            <button onclick="redirect('about-us.html')">Über uns</button>
-            <button onclick="redirect('impressum.html')">Impressum</button>
-            <button onclick="redirect('captcha.html')">Kontakt</button>
-        </div>
-    </header>
+  <header>
+    <h1 style="cursor: pointer;" onclick="redirect('./')">GCT</h1>
+    <nav class="nav-links">
+      <button onclick="redirect('./')">Startseite</button>
+      <button onclick="redirect('kugellager.html')">Kugellager</button>
+      <button onclick="redirect('about-us.html')">Über uns</button>
+            <button onclick="redirect('geschichte.html')">Geschichte</button>
+      <button onclick="redirect('impressum.html')">Impressum</button>
+      <button onclick="redirect('captcha.html')">Kontakt</button>
+    </nav>
+    <div class="hamburger" onclick="toggleMobileMenu()">
+      <div class="line1"></div>
+      <div class="line2"></div>
+      <div class="line3"></div>
+    </div>
+    <div class="mobile-menu">
+      <button onclick="redirect('./')">Startseite</button>
+      <button onclick="redirect('kugellager.html')">Kugellager</button>
+      <button onclick="redirect('about-us.html')">Über uns</button>
+            <button onclick="redirect('geschichte.html')">Geschichte</button>
+      <button onclick="redirect('impressum.html')">Impressum</button>
+      <button onclick="redirect('captcha.html')">Kontakt</button>
+    </div>
+  </header>
 <main>
     <section class="content-section">
         <h2>Kontaktinformationen</h2>
@@ -267,8 +260,8 @@
           </div>          
       </section>
 </main>
-<footer class="footer">
+  <footer>
     <p>GCT Gruber Consulting & Technology</p>
-</footer>
+  </footer>
 </body>
 </html>

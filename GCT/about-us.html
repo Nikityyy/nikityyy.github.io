@@ -144,7 +144,7 @@
             color: white;
         }
 
-    @media (max-width: 768px) {
+    @media (max-width: 896px) {
             .nav-links {
                 display: none;
             }
@@ -207,6 +207,7 @@ main {
         <button onclick="redirect('./')">Startseite</button>
         <button onclick="redirect('kugellager.html')">Kugellager</button>
         <button onclick="redirect('about-us.html')">Über uns</button>
+           <button onclick="redirect('geschichte.html')">Geschichte</button>
         <button onclick="redirect('impressum.html')">Impressum</button>
         <button onclick="redirect('captcha.html')">Kontakt</button>
     </nav>
@@ -219,6 +220,7 @@ main {
         <button onclick="redirect('./')">Startseite</button>
         <button onclick="redirect('kugellager.html')">Kugellager</button>
         <button onclick="redirect('about-us.html')">Über uns</button>
+            <button onclick="redirect('geschichte.html')">Geschichte</button>
         <button onclick="redirect('impressum.html')">Impressum</button>
         <button onclick="redirect('captcha.html')">Kontakt</button>
     </div>
@@ -279,7 +281,7 @@ main {
     window.onresize = function() {
       var w = window.innerWidth;
 
-      if(w > 768) {
+      if(w > 896) {
         const mobileMenu = document.querySelector('.mobile-menu');
         mobileMenu.style.right = "-200px";
 

@@ -246,7 +246,7 @@
             }
         }
 
-        @media (min-width: 768px) {
+        @media (min-width: 896px) {
             .content {
                 flex-direction: row;
                 gap: 20px;
@@ -257,7 +257,7 @@
             }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 896px) {
             .nav-links {
                 display: none;
             }
@@ -275,6 +275,7 @@
             <button onclick="redirect('./')">Startseite</button>
             <button onclick="redirect('kugellager.html')">Kugellager</button>
             <button onclick="redirect('about-us.html')">Über uns</button>
+            <button onclick="redirect('geschichte.html')">Geschichte</button>
             <button onclick="redirect('impressum.html')">Impressum</button>
             <button onclick="redirect('captcha.html')">Kontakt</button>
         </nav>
@@ -287,6 +288,7 @@
             <button onclick="redirect('./')">Startseite</button>
             <button onclick="redirect('kugellager.html')">Kugellager</button>
             <button onclick="redirect('about-us.html')">Über uns</button>
+            <button onclick="redirect('geschichte.html')">Geschichte</button>
             <button onclick="redirect('impressum.html')">Impressum</button>
             <button onclick="redirect('captcha.html')">Kontakt</button>
         </div>
@@ -307,7 +309,7 @@
                 <h2>Wälzlager</h2>
                 <p>Wälz- und Kugellager von höchster Qualität.</p>
             </div>
-            <div class="card card3">
+            <div class="card card3" onclick="redirect('geschichte.html')">
                 <img src="images/Logo.webp" alt="Logo">
                 <h2>Unsere Geschichte</h2>
                 <p>Unsere Unternehmensgeschichte als Familienunternehmen.</p>
@@ -349,7 +351,7 @@
         window.onresize = function() {
             var w = window.innerWidth;
 
-            if(w > 768) {
+            if(w > 896) {
                 const mobileMenu = document.querySelector('.mobile-menu');
                 mobileMenu.style.right = "-200px";
 

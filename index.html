@@ -167,8 +167,8 @@
       }
 
       .icon {
-        width: 32px;
-        height: 32px;
+        width: 40px;
+        height: 40px;
       }
 
       #about,
@@ -195,6 +195,7 @@
       #projects {
         width: 100% !important;
         padding: 0;
+        flex-wrap: wrap;
       }
 
       main {
@@ -205,6 +206,7 @@
 
       .name {
         text-align: left;
+        padding: 10px;
       }
 
       @media (max-width: 1000px) {
@@ -222,22 +224,34 @@
         #contact h2 {
           font-size: 5dvh !important;
         }
+
+        .project {
+          width: 40%;
+        }
+
+        .project h3 {
+          font-size: 1.3dvh;
+        }
+
+        .project p, .project a {
+          font-size: 1.2dvh;
+        }
       }
     </style>
   </head>
   <body>
     <header>
       <nav>
-        <a href="#home" class="button">
+        <a href="#home" class="button" aria-label="Home">
           <img style="filter: invert(1);" src="images/icons8-home-24.png" alt="">
         </a>
-        <a href="#about" class="button">
+        <a href="#about" class="button" aria-label="About">
           <img style="filter: invert(1);" src="images/icons8-about-24.png" alt="">
         </a>
-        <a href="#projects" class="button">
+        <a href="#projects" class="button" aria-label="Projects">
           <img style="filter: invert(1);" src="images/icons8-project-24.png" alt="">
         </a>
-        <a href="#contact" class="button">
+        <a href="#contact" class="button" aria-label="Contact">
           <img style="filter: invert(1);" src="images/icons8-contact-24.png" alt="">
         </a>
       </nav>
@@ -285,13 +299,13 @@
           <h2 style="margin-bottom: 30px;">Contact</h2>
           <div class="contact">
             <a href="https://github.com/Nikityyy" target="_blank">
-              <img style="filter: invert(1);" src="images/icons8-github-24.png" alt="GitHub" class="icon">
+              <img style="filter: invert(1);" src="images/icons8-github-240.png" alt="GitHub" class="icon">
             </a>
             <a href="https://huggingface.co/Nikity" target="_blank">
-              <img src="images/icons8-hugging-face-48.png" alt="Email" class="icon">
+              <img src="images/icons8-hugging-face-240.png" alt="Email" class="icon">
             </a>
             <a href="mailto:bergernikita1807@gmail.com">
-              <img style="filter: invert(1);" src="images/icons8-email-24.png" alt="Email" class="icon">
+              <img style="filter: invert(1);" src="images/icons8-email-96.png" alt="Email" class="icon">
             </a>
           </div>
         </section>

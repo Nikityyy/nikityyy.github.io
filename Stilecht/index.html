@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stilecht - Ihr Haar in den besten Händen in Kronstorf</title>
+    <link rel="icon" href="images/gütesiegel.png">
+    <meta name="keywords" content="Friseur, Frisieren, Frisörsalons, Friseurgeschäfte, Frisör, Friseus, Haarsalons, Coiffeusen, Friseure, Friseurunternehmen, Kronstorf, Claudia Köstenberger, Stilecht, Friseurstilecht, Friseur Stilecht, Steyr, Österreich">
+    <meta name="description" content="Ihr Mobiler Friseur in Kronstorf und Umgebung">
+    <meta name="robots" content="index,follow">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            color: #333;
+            background-color: #fafafa;
+        }
+        header {
+            background-color: #fff;
+            padding: 1em 0;
+            border-bottom: 1px solid #ddd;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #007BFF;
+            cursor: pointer;
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        nav ul li {
+            margin-left: 1.5em;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            padding: 0.5em;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #007BFF;
+        }
+        #hero {
+            background: linear-gradient(to bottom right, #007BFF, #00d4ff);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 135px);
+            text-align: left;
+            padding-top: 80px;
+        }
+        .hero-content {
+            max-width: 1200px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
+            padding: 0 20px;
+        }
+        .hero-text {
+            max-width: 50%;
+        }
+        .hero-text h1 {
+            font-size: 3.5em;
+            margin: 0;
+        }
+        .hero-text p {
+            font-size: 1.2em;
+            margin: 1em 0;
+            padding-bottom: 10px;
+        }
+        .hero-text button {
+            background-color: #fff;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            color: #007BFF;
+            padding: 0.8em 1.5em;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .hero-text button:hover {
+            transform: scale(1.1);
+        }
+        .hero-image {
+            max-width: 50%;
+        }
+        .hero-image img {
+            width: 100%;
+            height: auto;
+        }
+        #services {
+            text-align: center;
+            background-color: #f9f9f9;
+            padding: 100px 20px;
+        }
+        #services h2 {
+            font-size: 2.5em;
+            margin-bottom: 1em;
+            color: #007BFF;
+        }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            justify-content: center;
+        }
+        .service-item {
+            background-color: #fff;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .service-item:hover {
+            transform: translateY(-10px);
+        }
+        .service-item h3 {
+            margin-top: 0;
+            font-size: 1.5em;
+            color: #007BFF;
+        }
+        #about {
+            padding: 100px 20px;
+            background-color: #fff;
+            text-align: center;
+        }
+        #about h2 {
+            font-size: 2.5em;
+            color: #007BFF;
+        }
+        #about p {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.2em;
+            line-height: 1.6em;
+            color: #666;
+        }
+        #contact {
+            padding: 100px 20px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        #contact h2 {
+            font-size: 2.5em;
+            color: #007BFF;
+        }
+        #contact p {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            font-size: 1.2em;
+            line-height: 1.6em;
+            color: #666;
+        }
+        footer {
+            background-color: #fff;
+            padding: 1em 0;
+            text-align: center;
+            color: #333;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        footer p {
+            margin: 0;
+        }
+
+        ::-webkit-scrollbar {
+        width: 11px;
+      }
+
+    ::-webkit-scrollbar-track {
+      border: solid 3px transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      box-shadow: inset 0 0 10px 10px #007BFF;
+      border: solid 3px transparent;
+      border-radius: 25px;
+    }
+
+        #contact a {
+            color: #007BFF;
+            text-decoration: none;
+            transition: all 0.4s ease-in-out;
+            background: linear-gradient(currentColor 0 0) bottom left 0%;
+            background-size: var(--underline-width, 0%) 0.1em;
+            background-repeat: no-repeat;
+            display: inline-block;
+            padding: 0em 0.2em;
+            margin: 3px;
+            cursor: pointer;
+        }
+        #contact a:hover {
+            text-shadow: 0 0 3px white;
+            --underline-width: 100%;
+        }
+
+        #times-table {
+            max-width: 500px;
+            width: 80%;
+            border-collapse: collapse;
+            margin: auto;
+            margin-bottom: 40px;
+            color: #666;
+            background-color: #f9f9f9;
+        }
+
+        #times-table th, #times-table td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        #times-table th {
+            background-color: #007BFF;
+            color: #fff;
+        }
+
+        #times-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #times-table tr {
+            transition: all 0.2s;
+        }
+
+        #times-table tr:hover {
+            background-color: #ddd;
+        }
+
+        .menu-icon {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        .menu-icon div {
+            width: 25px;
+            height: 3px;
+            background-color: #333;
+            margin: 4px 0;
+            transition: all 0.3s;
+        }
+
+        .menu-icon:hover div {
+            background-color: #007BFF;
+        }
+
+        @media (max-width: 600px) {
+            nav ul {
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: -100%;
+                width: 100%;
+                background-color: #fff;
+                transition: left 0.3s ease;
+                z-index: 1000;
+            }
+
+            .hero-text h1 {
+                font-size: 2em;
+            }
+
+            nav ul li {
+                margin: 1.5em 0;
+                text-align: center;
+            }
+
+            nav ul.show {
+                left: 0;
+            }
+
+            .menu-icon {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div onclick="window.location.href = './'" class="logo">Stilecht</div>
+            <div class="menu-icon" onclick="toggleMenu()">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#about">Über uns</a></li>
+                    <li><a href="#contact">Kontakt</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Stilecht</h1>
+                <p>Ihr Friseur für Haare, Styling, Haarverlängerung und Co. in Kronstorf.</p>
+                <button onclick="window.location.href = '#services'">Erkunde unseren Service</button>
+            </div>
+            <div class="hero-image">
+                <img src="images/3.png" draggable="false" alt="Schere">
+            </div>
+        </div>
+    </section>
+
+    <section id="services">
+        <h2>Unsere Dienst&shy;leistungen</h2>
+        <div class="services-grid">
+            <div onclick="window.location.href='404.html'" class="service-item">
+                <h3>Besondere Anlässe</h3>
+                <p>Elegantes Styling für besondere Anlässe.</p>
+            </div>
+            <div onclick="window.location.href='404.html'" class="service-item">
+                <h3>Make up</h3>
+                <p>Professionelle Haarschnitte für alle Stile.</p>
+            </div>
+            <div onclick="window.location.href='404.html'" class="service-item">
+                <h3>Haarverlängerung</h3>
+                <p>Luxuriöse Haarverlängerungen für mehr Volumen und Länge.</p>
+            </div>
+            <div onclick="window.location.href='404.html'" class="service-item">
+                <h3>Haarverdichtung</h3>
+                <p>Verleihen Sie Ihrem Haar mehr Fülle mit unseren Behandlungen.</p>
+            </div>            
+        </div>
+    </section>
+
+    <section id="about">
+        <h2>Über uns</h2>
+        <p><b>Bei uns ist Ihr Haar in guten Händen.</b><br>Denn Haare sind für uns mehr als nur ein Beruf. Sie sind Berufung, Motivation und Lifestyle zugleich. In vielen Fällen genügt ein frischer Schnitt – ganz gleich ob klassisch oder topmodisch – um der Person im Spiegel ganz neuen Glanz zu verleihen und Sie richtig aufleben zu lassen.</p>
+    </section>
+
+    <section id="contact">
+        <h2>Kontak&shy;tieren Sie uns</h2>
+        <p>Kontaktieren Sie uns, um einen Termin zu vereinbaren oder mehr über unsere Dienstleistungen zu erfahren.</p>
+        <div>
+            <h3>Unsere Öffnungszeiten:</h3>
+            <p>Gerne nehmen wir uns zu besonderen Anlässen auch zu ungewöhnlichen Zeiten für Sie Zeit.</p>
+            <div style="overflow-x: auto;">
+            <table id="times-table">
+                <thead>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Öffnungszeiten</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Montag</td>
+                        <td>geschlossen</td>
+                    </tr>
+                    <tr>
+                        <td>Dienstag</td>
+                        <td>nach Terminvereinbarung</td>
+                    </tr>
+                    <tr>
+                        <td>Mittwoch</td>
+                        <td>08:00 - 17:30 Uhr</td>
+                    </tr>
+                    <tr>
+                        <td>Donnerstag</td>
+                        <td>08:00 - 17:30 Uhr</td>
+                    </tr>
+                    <tr>
+                        <td>Freitag</td>
+                        <td>08:00 - 17:30 Uhr</td>
+                    </tr>
+                    <tr>
+                        <td>Samstag</td>
+                        <td>nach Terminvereinbarung</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>         
+            <p>Für Fragen und Terminvereinbarungen erreichen Sie uns unter:</p>
+            <p>
+                Telefon: <a href="tel:+436507513060">+43 650 7513060</a><br>
+                E-Mail: <a href="mailto:office@friseurstilecht.at">office@friseurstilecht.at</a>
+                    <p>oder direkt im Studio:</p>
+                    <address style="color:#007BFF;">
+                        Hauptstraße 33<br>
+                        4484 Kronstorf
+                    </address>
+                </div>
+            </section>    
+    
+            <footer>
+                <p>&copy; 2024 Stilecht. Alle Rechte vorbehalten.</p>
+            </footer>
+    
+            <script>
+                function toggleMenu() {
+                    const nav = document.querySelector('nav ul');
+                    nav.classList.toggle('show');
+                }
+            
+                function hideMenu() {
+                    const nav = document.querySelector('nav ul');
+                    nav.classList.remove('show');
+                }
+            
+                function checkWidth() {
+                    if (window.innerWidth >= 600) {
+                        hideMenu();
+                    }
+                }
+            
+                window.addEventListener('load', checkWidth);
+                window.addEventListener('resize', checkWidth);
+            
+                document.body.addEventListener('click', function(event) {
+                    let target = event.target;
+                    while (target !== document.body) {
+                        const zIndex = getComputedStyle(target).getPropertyValue('z-index');
+                        if (zIndex === '1000') {
+                            return;
+                        }
+                        target = target.parentNode;
+                    }
+                    hideMenu();
+                });
+            </script>
+        </body>
+    </html>
+    

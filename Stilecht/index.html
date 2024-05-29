@@ -67,7 +67,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: calc(100vh - 135px);
+            height: calc(100vh - 130px);
             text-align: left;
             padding-top: 80px;
         }
@@ -206,7 +206,7 @@
       border-radius: 25px;
     }
 
-        #contact a {
+        #contact a, address {
             color: #007BFF;
             text-decoration: none;
             transition: all 0.4s ease-in-out;
@@ -218,7 +218,7 @@
             margin: 3px;
             cursor: pointer;
         }
-        #contact a:hover {
+        #contact a:hover, address:hover {
             text-shadow: 0 0 3px white;
             --underline-width: 100%;
         }
@@ -288,7 +288,7 @@
             }
 
             .hero-text h1 {
-                font-size: 2em;
+                font-size: 3em;
             }
 
             nav ul li {
@@ -302,6 +302,15 @@
 
             .menu-icon {
                 display: flex;
+            }
+
+            .hero-image {
+                display: none;
+            }
+
+            .hero-text {
+                max-width: 100%;
+                text-align: center;
             }
         }
     </style>
@@ -334,7 +343,7 @@
                 <button onclick="window.location.href = '#services'">Erkunde unseren Service</button>
             </div>
             <div class="hero-image">
-                <img src="images/3.png" draggable="false" alt="Schere">
+                <img src="images/scissors.png" draggable="false" alt="Schere">
             </div>
         </div>
     </section>
@@ -387,7 +396,7 @@
                     </tr>
                     <tr>
                         <td>Dienstag</td>
-                        <td>nach Terminvereinbarung</td>
+                        <td>nach Termin&shy;vereinbarung</td>
                     </tr>
                     <tr>
                         <td>Mittwoch</td>
@@ -403,7 +412,7 @@
                     </tr>
                     <tr>
                         <td>Samstag</td>
-                        <td>nach Terminvereinbarung</td>
+                        <td>nach Termin&shy;vereinbarung</td>
                     </tr>
                 </tbody>
             </table>
@@ -413,7 +422,7 @@
                 Telefon: <a href="tel:+436507513060">+43 650 7513060</a><br>
                 E-Mail: <a href="mailto:office@friseurstilecht.at">office@friseurstilecht.at</a>
                     <p>oder direkt im Studio:</p>
-                    <address style="color:#007BFF;">
+                    <address onclick="window.open('https://maps.app.goo.gl/BK9GiuwPKxGBtTts5')" style="color:#007BFF; cursor: pointer;">
                         Hauptstraße 33<br>
                         4484 Kronstorf
                     </address>

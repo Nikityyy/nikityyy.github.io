@@ -98,7 +98,8 @@
 	}
 	
 	body.dark-mode .main p,
-	body.dark-mode #result p {
+	body.dark-mode #result p,
+    body.dark-mode #result h3 {
 		color: #A0A0A0;
 	}
 	
@@ -175,7 +176,15 @@
 	}
 	
 	body.dark-mode button.analyze-button:hover {
-		background-color: #4c61ff;
+		background-color: #2D3CAD;
+	}
+
+    body.dark-mode #remove-file {
+		background-color: #ff0000;
+	}
+	
+	body.dark-mode #remove-file:hover {
+		background-color: #a30000;
 	}
 	
 	#attachment {
@@ -210,14 +219,6 @@
 		background-color: #d65742;
 	}
 	
-	body.dark-mode #remove-file {
-		background-color: #FF6F61;
-	}
-	
-	body.dark-mode #remove-file:hover {
-		background-color: #E05B51;
-	}
-	
 	#result {
 		height: auto;
 		width: 80%;
@@ -228,7 +229,16 @@
 		background-color: white;
 		margin: 20px 0;
 		display: none;
+		transition: all 0.3s;
 	}
+
+    #result h1 {
+        color: #2A9D8F;
+    }
+
+    #result h3, #result p {
+        color: #264653;
+    }
 	
 	@keyframes spin {
 		0% {

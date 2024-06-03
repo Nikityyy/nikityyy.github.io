@@ -61,6 +61,9 @@
 	header .dark-mode-toggle {
 		margin-right: 20px;
 		cursor: pointer;
+		font-size: 27px;
+		position: absolute;
+    	right: 0;
 	}
 	
 	.main {
@@ -87,7 +90,7 @@
 	}
 	
 	body.dark-mode .main h1,
-	body.dark-mode #result h1 {
+	body.dark-mode #result h2 {
 		color: #344afb;
 	}
 	
@@ -99,7 +102,7 @@
 	
 	body.dark-mode .main p,
 	body.dark-mode #result p,
-    	body.dark-mode #result h3 {
+    body.dark-mode #result h3 {
 		color: #A0A0A0;
 	}
 	
@@ -179,7 +182,7 @@
 		background-color: #2D3CAD;
 	}
 
-    	body.dark-mode #remove-file {
+    body.dark-mode #remove-file {
 		background-color: #ff0000;
 	}
 	
@@ -223,16 +226,17 @@
 		height: auto;
 		width: 80%;
 		max-width: 600px;
-		padding: 20px;
 		border-radius: 10px;
 		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 		background-color: white;
 		margin: 20px 0;
-		display: none;
-		transition: all 0.3s;
+		display: block;
+		transition: all 0.3s, max-height 10s, padding 0s;
+		max-height: 0;
+		overflow: hidden;
 	}
 
-    #result h1 {
+    #result h2 {
         color: #2A9D8F;
     }
 
@@ -262,6 +266,28 @@
 	body.dark-mode .loading-circle {
 		border-top: 4px solid transparent;
 	}
+
+	#result a {
+		font-size: 30px;
+		color: #344afb;
+		text-decoration: none;    
+		transition: all 0.3s ease-in-out;
+		background: linear-gradient(currentColor 0 0) bottom left 50%, linear-gradient(currentColor 0 0) bottom right 50%;
+		background-size: var(--underline-width, 0%) 0.1em;
+		background-repeat: no-repeat;
+		display: inline-block;
+		padding: 0.1em 0px;
+		margin: 0;
+      	cursor: pointer;
+	}
+
+	body.dark-mode #result a {
+		color: #2A9D8F;
+	}
+
+    #result a:hover {
+      	--underline-width: 100%;
+    }
 	
 	@media (max-width: 600px) {
 		.main h1 {
@@ -280,7 +306,7 @@
 		<p>Experience professional website analytics for free with BWconomy's marketing platform!
 			<br>Improve Your website to the needs of a BW-certificated website.</p>
 		<div class="input-area">
-			<input type="url" placeholder="Enter a website URL" aria-label="Enter a website URL">
+			<input type="url" placeholder="Enter your website URL" aria-label="Enter your website URL">
 			<div class="file-upload">
 				<input type="file" id="file-upload" accept=".html">
 				<label for="file-upload"><img draggable="false" id="attachment" src="images/icons8-attach-96.png" alt="Upload file"></label>
@@ -290,11 +316,11 @@
 		<button id="remove-file" onclick="removeFile()">Remove File</button>
 	</div>
 	<div id="result">
-		<h1>The four Ps of marketing</h1>
+		<h2>The four Ps of marketing</h2>
 		<p id="fourPs">Lorem ipsum dolor sit amet</p>
-		<h1>The four Cs of marketing</h1>
+		<h2>The four Cs of marketing</h2>
 		<p id="fourCs">Lorem ipsum dolor sit amet</p>
-		<h1>Search Engine Optimization</h1>
+		<h2>Search Engine Optimization</h2>
 		<p id="seo">Lorem ipsum dolor sit amet</p>
 	</div>
 	<script>
@@ -328,7 +354,7 @@
 			reader.onload = function(event) {
 				var fileContent = event.target.result;
 				// console.log(fileContent);
-				analyzation(fileContent);
+				analyzation(fileContent, "!^FILE^!");
 				analyzeButton.disabled = false;
 				analyzeButton.innerHTML = "Analyze";
 				analyzeButton.style.cursor = "pointer";
@@ -347,7 +373,7 @@
 				return response.text();
 			}).then(function(html) {
 				// console.log(html);
-				analyzation(html);
+				analyzation(html, url);
 				analyzeButton.disabled = false;
 				analyzeButton.innerHTML = "Analyze";
 				analyzeButton.style.cursor = "pointer";
@@ -364,6 +390,7 @@
 			analyzeButton.style.cursor = "pointer";
 		}
 	}
+	
 	document.getElementById('file-upload').addEventListener('change', function() {
 		var inputElement = document.querySelector('.input-area input[type="url"]');
 		var removeFileButton = document.getElementById('remove-file');
@@ -400,12 +427,11 @@
 		}
 	}
 
-	function analyzation(content) {
+	function analyzation(content, url) {
 		var result = document.getElementById("result");
 		var ps = document.getElementById("fourPs");
 		var cs = document.getElementById("fourCs");
 		var seo = document.getElementById("seo");
-		result.style.display = "block"
 		const marketingWords4Ps = ["Product", "Price", "Place", "Promotion", "Brand", "Features", "Benefits", "Quality", "Design", "Packaging", "Services", "Variety", "Functionality", "Durability", "Warranty", "Customer", "Value", "Cost", "Discount", "Offer", "Deal", "Pricing", "Strategy", "List", "Retail", "Wholesale", "Skimming", "Penetration", "Competitive", "Bundle", "Location", "Distribution", "Channel", "Supply", "Logistics", "Inventory", "Market", "Coverage", "Placement", "Retailer", "Ecommerce", "Online", "Offline", "Store", "Shipping", "Delivery", "Convenience", "Accessibility", "Advertising", "Publicity", "Sales", "Promotion", "Campaign", "Media", "Social", "SEO", "SEM", "Content", "Strategy", "Communication", "Engagement", "Influencer", "Email", "Marketing", "Digital", "Traditional", "Billboard", "Print", "Radio", "Television", "Direct", "Personal", "Selling", "Public", "Relations", "Event", "Sponsorship", "Contest", "Loyalty", "Program", "Referral", "Word", "Mouth", "Campaign", "Testimonial", "Branding", "Awareness", "Target", "Audience", "Segmentation", "Demographics", "Psychographics", "Geographics", "Behaviour", "Customer", "Acquisition", "Retention", "Experience", "Feedback", "Satisfaction"];
 		const marketingWords4Cs = ["Customer", "Cost", "Convenience", "Communication", "Value", "Needs", "Wants", "Desires", "Satisfaction", "Experience", "Feedback", "Loyalty", "Service", "Support", "Relationship", "Engagement", "Personalization", "Trust", "Retention", "Acquisition", "Price", "Affordability", "Perception", "Total", "Ownership", "Investment", "Benefit", "Savings", "Budget", "Expense", "Discount", "Offer", "Deal", "Economy", "Worth", "Advantage", "Profit", "Loss", "Convenience", "Ease", "Access", "Availability", "Delivery", "Shipping", "Location", "Proximity", "Channel", "Platform", "Online", "Offline", "Store", "Retail", "Ecommerce", "Mobile", "Support", "Help", "Assistance", "Time", "Effort", "Comfort", "Flexibility", "Usability", "Navigation", "Simplicity", "Communication", "Interaction", "Engagement", "Message", "Media", "Social", "SEO", "SEM", "Content", "Email", "Marketing", "Campaign", "Strategy", "Conversation", "Feedback", "Response", "Survey", "Testimonial", "Review", "Publicity", "Promotion", "Advertising", "Relations", "Influence", "Brand", "Awareness", "Reach", "Target", "Audience", "Connection", "Touchpoint", "Channel"];
 		const seoWords = ["SEO", "Search", "Engine", "Optimization", "Keywords", "Content", "Backlinks", "Rankings", "Traffic", "Organic", "Paid", "Results", "SERP", "Meta", "Title", "Description", "Tags", "Headings", "URL", "Structure", "Sitemap", "Robots.txt", "Indexing", "Crawling", "Google", "Bing", "Yahoo", "Algorithm", "Analytics", "PageSpeed", "Mobile", "Responsive", "Design", "User", "Experience", "UX", "Interface", "UI", "Bounce", "Rate", "Click", "Through", "Rate", "CTR", "Conversion", "Optimization", "CRO", "Alt", "Text", "Images", "Videos", "Schema", "Markup", "Structured", "Data", "Local", "SEO", "NAP", "Name", "Address", "Phone", "Google", "My", "Business", "Reviews", "Citations", "Map", "Pack", "Voice", "Search", "Long-tail", "Keywords", "Short-tail", "Content", "Marketing", "Blog", "Article", "Link", "Building", "Inbound", "Outbound", "Anchor", "Text", "Domain", "Authority", "Page", "Trust", "Spam", "Score", "Social", "Signals", "Engagement", "Analytics", "Tracking", "Performance", "Metrics", "KPI", "Heatmap", "A/B", "Testing"];
@@ -460,6 +486,30 @@
 				return "<h3>Search Engine Optimization (SEO) is crucial for any website. Improve it!</h3><p>Efficient SEO practices enhance your site's visibility, relevance, authority, and conversion rates. Neglecting SEO risks reduced visibility on SERPs, decreased relevance to potential customers, missed opportunities for building authority and trust, and lower conversion rates. Prioritize SEO to maximize your online presence and achieve business success.</p>";
 			}
 		}
+
+
+		if (url !== "!^FILE^!") {
+			var linkElement = document.createElement("a");
+
+			linkElement.href = url;
+			linkElement.target = "_blank";
+
+			url = url.replace(/(^\w+:|^)\/\//, '');
+			url = url.split('/')[0];
+
+			linkElement.innerText = url;
+			
+			var existingElement = document.getElementById("url");
+			
+			if(existingElement) {
+				existingElement.parentNode.replaceChild(linkElement, existingElement);
+			} else {
+				linkElement.id = "url";
+				result.insertBefore(linkElement, result.firstChild);
+			}
+		}
+
+
 		ps.innerHTML = analyzeWordsPs(content, marketingWords4Ps);
 		cs.innerHTML = analyzeWordsCs(content, marketingWords4Cs);
 		seo.innerHTML = analyzeWordsSEO(content, seoWords);
@@ -467,6 +517,8 @@
 		if(remove.style.display !== "none") {
 			remove.click();
 		}
+		result.style.padding = "20px"
+		result.style.maxHeight = "10000px"
 	}
 	</script>
 </body>

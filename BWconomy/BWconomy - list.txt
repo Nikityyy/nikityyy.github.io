@@ -1,0 +1,4 @@
+SWOT-Analysis - Strengths, Weaknesses, Opportunities and Threats
+Site speed - fetch time
+Privacy Compliance - GDRP, CCPA
+Security - mailto, https, CSP

@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>BWconomy</title>
-	<meta name="description" content="Improve your business.">
+	<link rel="icon" href="images/favicon.webp">
+	<link rel="stylesheet" href="planets/style.css">
+	<meta name="description" content="Discover the power of BWconomy, your premier partner in navigating the digital economy landscape. With BWconomy, gain access to cutting-edge tools that allow you to seamlessly add websites and conduct comprehensive scans, empowering you to make informed decisions and stay ahead of the competition. Maximize your efficiency and profitability with our innovative solutions, designed to optimize your online presence and drive growth in today's dynamic economic environment. Trust BWconomy to be your guiding light in the complex world of digital business, providing unparalleled insights and support every step of the way.">
 	<style>
 	@font-face {
 		font-family: 'Poppins';
@@ -34,12 +37,13 @@
 	}
 	
 	header {
-		position: absolute;
+		position: fixed;
 		top: 0;
 		left: 0;
 		width: 100%;
-		background-color: #264653;
-		color: #fff;
+		background-color: #F0F8FF;
+		border-bottom: 3px solid #264653;
+		color: #000;
 		padding: 20px 0;
 		text-align: center;
 		display: flex;
@@ -49,7 +53,9 @@
 	}
 	
 	body.dark-mode header {
-		background-color: #0d1763;
+		background-color: #121212;
+		border-bottom: 3px solid #0d1763;
+		color: #fff;
 	}
 	
 	header .logo {
@@ -57,13 +63,10 @@
 		font-weight: 600;
 		flex: 1;
 	}
-	
-	header .dark-mode-toggle {
-		margin-right: 20px;
+
+	header .logo span {
+		user-select: none;
 		cursor: pointer;
-		font-size: 27px;
-		position: absolute;
-    	right: 0;
 	}
 	
 	.main {
@@ -87,6 +90,7 @@
 	.main h1 {
 		font-size: 2.5em;
 		color: #2A9D8F;
+		margin: 20px;
 	}
 	
 	body.dark-mode .main h1,
@@ -102,7 +106,7 @@
 	
 	body.dark-mode .main p,
 	body.dark-mode #result p,
-    body.dark-mode #result h3 {
+	body.dark-mode #result h3 {
 		color: #A0A0A0;
 	}
 	
@@ -164,7 +168,6 @@
 		cursor: pointer;
 		border-radius: 15px;
 		transition: background-color 0.3s ease;
-		margin-top: 20px;
 		font-size: 16px;
 		height: 58px;
 		width: 120px;
@@ -182,7 +185,15 @@
 		background-color: #2D3CAD;
 	}
 
-    body.dark-mode #remove-file {
+	button.analyze-button:disabled {
+		background-color: #919191;
+	}
+
+	body.dark-mode button.analyze-button:disabled {
+		background-color: #333;
+	}
+	
+	body.dark-mode #remove-file {
 		background-color: #ff0000;
 	}
 	
@@ -191,12 +202,13 @@
 	}
 	
 	#attachment {
-		width: 27px;
+		width: 30px;
 		transition: all 0.3s;
+		transform: scale(0.8)
 	}
 	
 	#attachment:hover {
-		transform: scale(1.125)
+		transform: scale(1)
 	}
 	
 	body.dark-mode #attachment {
@@ -212,7 +224,6 @@
 		cursor: pointer;
 		border-radius: 15px;
 		transition: all 0.3s;
-		margin-top: 20px;
 		font-size: 16px;
 		height: 58px;
 		width: 120px;
@@ -235,14 +246,15 @@
 		max-height: 0;
 		overflow: hidden;
 	}
-
-    #result h2 {
-        color: #2A9D8F;
-    }
-
-    #result h3, #result p {
-        color: #264653;
-    }
+	
+	#result h2 {
+		color: #2A9D8F;
+	}
+	
+	#result h3,
+	#result p {
+		color: #264653;
+	}
 	
 	@keyframes spin {
 		0% {
@@ -266,11 +278,11 @@
 	body.dark-mode .loading-circle {
 		border-top: 4px solid transparent;
 	}
-
-	#result a {
-		font-size: 30px;
-		color: #344afb;
-		text-decoration: none;    
+	
+	#websiteUrl {
+		font-size: 14px;
+		color: #2A9D8F;
+		text-decoration: none;
 		transition: all 0.3s ease-in-out;
 		background: linear-gradient(currentColor 0 0) bottom left 50%, linear-gradient(currentColor 0 0) bottom right 50%;
 		background-size: var(--underline-width, 0%) 0.1em;
@@ -278,17 +290,39 @@
 		display: inline-block;
 		padding: 0.1em 0px;
 		margin: 0;
-      	cursor: pointer;
+		cursor: pointer;
 	}
-
-	body.dark-mode #result a {
-		color: #2A9D8F;
-	}
-
-    #result a:hover {
-      	--underline-width: 100%;
-    }
 	
+	body.dark-mode #websiteUrl {
+		color: #344afb;
+	}
+	
+	#websiteUrl:hover {
+		--underline-width: 100%;
+	}
+
+	#urlContainer {
+		text-align: right;
+	}
+	
+		::-webkit-scrollbar {
+        width: 11px;
+      }
+
+      ::-webkit-scrollbar-track {
+        border: solid 3px transparent;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        box-shadow: inset 0 0 10px 10px #264653;
+        border: solid 3px transparent;
+        border-radius: 25px;
+      }
+
+	  body.dark-mode::-webkit-scrollbar-thumb {
+		box-shadow: inset 0 0 10px 10px #0d1763;
+	  }
+
 	@media (max-width: 600px) {
 		.main h1 {
 			font-size: 2em;
@@ -298,13 +332,26 @@
 </head>
 <body>
 	<header>
-		<div class="logo">BW<sup>conomy</sup></div>
-		<div class="dark-mode-toggle" onclick="toggleDarkMode()" id="emoji">🌙</div>
+		<div class="logo"><span onclick="window.location.reload()">BW<sup>conomy</sup></span></div>
+		<div id="container">
+			<span id="darkmode" role="button" tabIndex="0" onClick="toggleDarkMode()" onKeyDown="toggleDarkMode()">
+			  <div class="darkmode_icon">
+				<span class="ray"></span>
+				<span class="ray"></span>
+				<span class="ray"></span>
+				<span class="ray"></span>
+				<span class="ray"></span>
+				<span class="ray"></span>
+				<span class="ray"></span>
+				<span class="ray"></span>
+			  </div>
+			</span>
+			</div>
 	</header>
 	<div class="main">
 		<h1>WELCOME TO BW<sup>conomy</sup></h1>
 		<p>Experience professional website analytics for free with BWconomy's marketing platform!
-			<br>Improve Your website to the needs of a BW-certificated website.</p>
+			<br>Improve Your website to the needs of a HAK-Steyr certified website.</p>
 		<div class="input-area">
 			<input type="url" placeholder="Enter your website URL" aria-label="Enter your website URL">
 			<div class="file-upload">
@@ -317,19 +364,19 @@
 	</div>
 	<div id="result">
 		<h2>The four Ps of marketing</h2>
-		<p id="fourPs">Lorem ipsum dolor sit amet</p>
+		<p id="fourPs"></p>
 		<h2>The four Cs of marketing</h2>
-		<p id="fourCs">Lorem ipsum dolor sit amet</p>
+		<p id="fourCs"></p>
 		<h2>Search Engine Optimization</h2>
-		<p id="seo">Lorem ipsum dolor sit amet</p>
+		<p id="seo"></p>
+		<div id="urlContainer"></div>
 	</div>
 	<script>
 	document.addEventListener("DOMContentLoaded", function() {
 		var inputElement = document.querySelector('.input-area input[type="url"]');
-		var analyzeButton = document.getElementById('analyze');
-		if(localStorage.getItem('dark-mode') === 'enabled') {
+		if(localStorage.getItem('dark-mode') === 'dark') {
 			document.body.classList.add('dark-mode');
-			document.getElementById("emoji").innerHTML = "☀️";
+			document.body.dataset.theme = localStorage.getItem('dark-mode')
 		}
 		inputElement.addEventListener("keypress", function(event) {
 			if(event.key === "Enter") {
@@ -353,7 +400,6 @@
 			var reader = new FileReader();
 			reader.onload = function(event) {
 				var fileContent = event.target.result;
-				// console.log(fileContent);
 				analyzation(fileContent, "!^FILE^!");
 				analyzeButton.disabled = false;
 				analyzeButton.innerHTML = "Analyze";
@@ -363,22 +409,27 @@
 		} else if(url && url.includes(".")) {
 			if(!url.startsWith('http://') && !url.startsWith('https://')) {
 				url = 'https://' + url;
-				// console.log(url);
 			}
-			var proxyUrl = 'https://corsmirror.onrender.com/v1/cors?url=';
+			var proxyUrl = 'https://cors.nikity.workers.dev/proxy?proxyUrl=';
+			var startTime = Date.now();
 			fetch(proxyUrl + url).then(function(response) {
 				if(!response.ok) {
 					throw new Error('Network response was not ok');
 				}
 				return response.text();
 			}).then(function(html) {
-				// console.log(html);
+				var endTime = Date.now();
+				var timeTaken = endTime - startTime;
+				console.log('Fetch took ' + timeTaken + ' milliseconds');
 				analyzation(html, url);
 				analyzeButton.disabled = false;
 				analyzeButton.innerHTML = "Analyze";
 				analyzeButton.style.cursor = "pointer";
 			}).catch(function(err) {
+				var endTime = Date.now();
+				var timeTaken = endTime - startTime;
 				console.error('Fetch error:', err);
+				console.log('Fetch took ' + timeTaken + ' milliseconds');
 				analyzeButton.disabled = false;
 				analyzeButton.innerHTML = "Analyze";
 				analyzeButton.style.cursor = "pointer";
@@ -390,7 +441,6 @@
 			analyzeButton.style.cursor = "pointer";
 		}
 	}
-	
 	document.getElementById('file-upload').addEventListener('change', function() {
 		var inputElement = document.querySelector('.input-area input[type="url"]');
 		var removeFileButton = document.getElementById('remove-file');
@@ -417,24 +467,23 @@
 
 	function toggleDarkMode() {
 		document.body.classList.toggle('dark-mode');
-		var emoji = document.getElementById("emoji");
 		if(document.body.classList.contains('dark-mode')) {
-			emoji.innerHTML = "☀️";
-			localStorage.setItem('dark-mode', 'enabled');
+			localStorage.setItem('dark-mode', 'dark');
 		} else {
-			emoji.innerHTML = "🌙";
-			localStorage.setItem('dark-mode', 'disabled');
+			localStorage.setItem('dark-mode', 'light');
 		}
+		document.body.dataset.theme = localStorage.getItem('dark-mode')
 	}
 
 	function analyzation(content, url) {
 		var result = document.getElementById("result");
+		var urlContainer = document.getElementById("urlContainer");
 		var ps = document.getElementById("fourPs");
 		var cs = document.getElementById("fourCs");
 		var seo = document.getElementById("seo");
-		const marketingWords4Ps = ["Product", "Price", "Place", "Promotion", "Brand", "Features", "Benefits", "Quality", "Design", "Packaging", "Services", "Variety", "Functionality", "Durability", "Warranty", "Customer", "Value", "Cost", "Discount", "Offer", "Deal", "Pricing", "Strategy", "List", "Retail", "Wholesale", "Skimming", "Penetration", "Competitive", "Bundle", "Location", "Distribution", "Channel", "Supply", "Logistics", "Inventory", "Market", "Coverage", "Placement", "Retailer", "Ecommerce", "Online", "Offline", "Store", "Shipping", "Delivery", "Convenience", "Accessibility", "Advertising", "Publicity", "Sales", "Promotion", "Campaign", "Media", "Social", "SEO", "SEM", "Content", "Strategy", "Communication", "Engagement", "Influencer", "Email", "Marketing", "Digital", "Traditional", "Billboard", "Print", "Radio", "Television", "Direct", "Personal", "Selling", "Public", "Relations", "Event", "Sponsorship", "Contest", "Loyalty", "Program", "Referral", "Word", "Mouth", "Campaign", "Testimonial", "Branding", "Awareness", "Target", "Audience", "Segmentation", "Demographics", "Psychographics", "Geographics", "Behaviour", "Customer", "Acquisition", "Retention", "Experience", "Feedback", "Satisfaction"];
-		const marketingWords4Cs = ["Customer", "Cost", "Convenience", "Communication", "Value", "Needs", "Wants", "Desires", "Satisfaction", "Experience", "Feedback", "Loyalty", "Service", "Support", "Relationship", "Engagement", "Personalization", "Trust", "Retention", "Acquisition", "Price", "Affordability", "Perception", "Total", "Ownership", "Investment", "Benefit", "Savings", "Budget", "Expense", "Discount", "Offer", "Deal", "Economy", "Worth", "Advantage", "Profit", "Loss", "Convenience", "Ease", "Access", "Availability", "Delivery", "Shipping", "Location", "Proximity", "Channel", "Platform", "Online", "Offline", "Store", "Retail", "Ecommerce", "Mobile", "Support", "Help", "Assistance", "Time", "Effort", "Comfort", "Flexibility", "Usability", "Navigation", "Simplicity", "Communication", "Interaction", "Engagement", "Message", "Media", "Social", "SEO", "SEM", "Content", "Email", "Marketing", "Campaign", "Strategy", "Conversation", "Feedback", "Response", "Survey", "Testimonial", "Review", "Publicity", "Promotion", "Advertising", "Relations", "Influence", "Brand", "Awareness", "Reach", "Target", "Audience", "Connection", "Touchpoint", "Channel"];
-		const seoWords = ["SEO", "Search", "Engine", "Optimization", "Keywords", "Content", "Backlinks", "Rankings", "Traffic", "Organic", "Paid", "Results", "SERP", "Meta", "Title", "Description", "Tags", "Headings", "URL", "Structure", "Sitemap", "Robots.txt", "Indexing", "Crawling", "Google", "Bing", "Yahoo", "Algorithm", "Analytics", "PageSpeed", "Mobile", "Responsive", "Design", "User", "Experience", "UX", "Interface", "UI", "Bounce", "Rate", "Click", "Through", "Rate", "CTR", "Conversion", "Optimization", "CRO", "Alt", "Text", "Images", "Videos", "Schema", "Markup", "Structured", "Data", "Local", "SEO", "NAP", "Name", "Address", "Phone", "Google", "My", "Business", "Reviews", "Citations", "Map", "Pack", "Voice", "Search", "Long-tail", "Keywords", "Short-tail", "Content", "Marketing", "Blog", "Article", "Link", "Building", "Inbound", "Outbound", "Anchor", "Text", "Domain", "Authority", "Page", "Trust", "Spam", "Score", "Social", "Signals", "Engagement", "Analytics", "Tracking", "Performance", "Metrics", "KPI", "Heatmap", "A/B", "Testing"];
+		const marketingWords4Ps = ["Product", "Service", "Brand", "Quality", "Price", "Value", "Packaging", "Design", "Features", "Benefits", "Variety", "Functionality", "Durability", "Warranty", "Customer", "Demand", "Offering", "Promotion", "Advertisement", "Campaign", "Discount", "Sales", "Retail", "Wholesale", "Distribution", "Channel", "Supply", "Logistics", "Inventory", "Market", "Coverage", "Placement", "Retailer", "Ecommerce", "Online", "Offline", "Store", "Outlet", "Shipping", "Delivery", "Convenience", "Accessibility", "Availability", "Location", "Reach", "Customer Journey", "Purchase", "Payment", "Feedback", "Satisfaction", "Engagement", "Interaction", "Influencer", "Testimonial", "Loyalty Program", "Referral Program", "Word of Mouth", "Branding", "Awareness", "Target", "Audience", "Segmentation", "Demographics", "Psychographics", "Geographics", "Behaviour", "Customer Acquisition", "Retention", "Experience", "Satisfaction", "Comparison", "Research", "User", "Review", "Ratings", "Options", "Comparison", "Comparison Shopping", "Perception", "Reputation", "Assessment", "Trend", "Market Trend", "Consumer Trend", "Demand Trend", "Supply Chain", "Value Chain", "Lifecycle", "Customer Lifecycle", "Lifecycle Stage", "Lifecycle Marketing", "Lifecycle Management", "Lifecycle Cost", "Lifecycle Analysis", "Lifecycle Assessment", "Lifecycle Strategies", "Lifecycle Approach", "Lifecycle Model", "Lifecycle Planning", "Lifecycle Optimization", "Lifecycle Enhancement", "Lifecycle Monitoring", "Lifecycle Measurement", "Lifecycle Performance", "Lifecycle Improvement", "Lifecycle Evaluation", "Lifecycle Metrics", "Lifecycle KPIs"];
+		const marketingWords4Cs = ["Customer", "Consumer", "Client", "Clientele", "Cost", "Convenience", "Communication", "Value", "Needs", "Wants", "Desires", "Satisfaction", "Experience", "Feedback", "Loyalty", "Service", "Support", "Relationship", "Engagement", "Personalization", "Trust", "Retention", "Acquisition", "Price", "Affordability", "Perception", "Total Cost of Ownership", "Investment", "Benefit", "Savings", "Budget", "Expense", "Discount", "Deal", "Economy", "Worth", "Advantage", "Profit", "Loss", "Convenience", "Ease", "Access", "Availability", "Delivery", "Shipping", "Location", "Proximity", "Channel", "Platform", "Online", "Offline", "Store", "Retail", "Ecommerce", "Mobile", "Support", "Help", "Assistance", "Time", "Effort", "Comfort", "Flexibility", "Usability", "Navigation", "Simplicity", "Interaction", "Message", "Media", "Social Media", "SEO", "SEM", "Content", "Email", "Marketing", "Campaign", "Strategy", "Conversation", "Feedback", "Response", "Survey", "Testimonial", "Review", "Publicity", "Promotion", "Advertising", "Relations", "Influence", "Brand", "Awareness", "Reach", "Target", "Audience", "Connection", "Touchpoint", "Channel", "Service Level", "Service Quality", "Service Standards", "Service Management", "Service Excellence", "Service Delivery", "Service Performance", "Service Improvement", "Service Innovation", "Service Integration", "Service Differentiation", "Service Personalization", "Service Optimization", "Service Evaluation", "Service Enhancement", "Service Monitoring", "Service Metrics", "Service KPIs"];
+		const seoWords = ["SEO", "Search", "Engine", "Optimization", "Keywords", "Content", "Backlinks", "Rankings", "Traffic", "Organic", "Paid", "Results", "SERP", "Meta", "Title", "Description", "Tags", "Headings", "URL", "Structure", "Sitemap", "Robots.txt", "Indexing", "Crawling", "Google", "Bing", "Yahoo", "Algorithm", "Analytics", "PageSpeed", "Mobile", "Responsive", "Design", "User", "Experience", "UX", "Interface", "UI", "Bounce Rate", "Click-Through Rate", "CTR", "Conversion", "Optimization", "CRO", "Alt Text", "Images", "Videos", "Schema", "Markup", "Structured Data", "Local SEO", "NAP", "Name", "Address", "Phone", "Google My Business", "Reviews", "Citations", "Map", "Pack", "Voice Search", "Long-tail Keywords", "Short-tail Keywords", "Blog", "Article", "Link Building", "Inbound", "Outbound", "Anchor Text", "Domain", "Authority", "Page", "Trust", "Spam", "Score", "Social Signals", "Engagement", "Analytics", "Tracking", "Performance", "Metrics", "KPI", "Heatmap", "A/B Testing", "Competitor Analysis", "Keyword Research", "On-page Optimization", "Off-page Optimization", "Technical SEO", "Link Profile", "Ranking Factors", "Mobile Optimization", "Local Search", "International SEO", "Multilingual SEO", "Voice Search Optimization", "Site Architecture", "Site Navigation", "Site Speed", "Site Security", "User Engagement", "User Experience", "User Intent", "User Signals", "Site Audit", "Keyword Density", "Keyword Stuffing", "Keyword Cannibalization", "Duplicate Content", "Canonicalization", "Page Authority", "Domain Age", "Domain Trust", "Link Quality", "Link Diversity", "Anchor Text Diversity", "Link Relevance", "Link Velocity", "Link Building Tactics", "Link Outreach", "Guest Posting", "Content Marketing", "Content Strategy", "Content Optimization", "Content Distribution", "Content Syndication", "Content Curation", "Content Calendar", "Content Audit", "Content Gap Analysis", "Content Performance", "Content Metrics", "Content ROI", "Content Promotion", "Content Outreach", "Social Media Marketing", "Social Signals", "Social Engagement", "Social Sharing", "Social Proof", "Social Listening", "Social Monitoring", "Social Analytics", "Social ROI", "Social Campaigns", "Social Advertising", "Social Influencers", "Social Outreach", "Local SEO Strategies", "Local Citations", "Local Directories", "Google My Business Optimization", "Local Reviews", "Local Backlinks", "Localized Content", "Local Link Building", "Local Schema Markup", "Local SEO Audits", "Local Landing Pages", "Local Link Building", "Niche Directories", "Industry Forums", "Local Networking", "Local Sponsorships", "Local Events", "Local Partnerships", "Local Content Marketing", "Local Press Releases", "Local Blogging", "Local Social Media Engagement", "Local Reviews Management", "Local Reputation Management", "Voice Search Optimization Strategies", "Voice Search Keywords", "Voice Search Content", "Voice Search Schema Markup", "Voice Search FAQs", "Voice Search User Intent", "Voice Search Analytics", "Voice Search Performance", "Voice Search Metrics", "Voice Search Conversion Optimization", "Long-tail Keywords Research", "Long-tail Keywords Optimization", "Long-tail Keywords Targeting", "Long-tail Keywords Content", "Long-tail Keywords Usage", "Long-tail Keywords Effectiveness", "Short-tail Keywords Analysis", "Short-tail Keywords Selection", "Short-tail Keywords Optimization", "Short-tail Keywords Targeting", "Short-tail Keywords Ranking", "Short-tail Keywords Traffic", "Short-tail Keywords Competition", "Short-tail Keywords Performance", "Short-tail Keywords Conversion", "Short-tail Keywords Usage", "Short-tail Keywords Effectiveness", "Blog Content Strategy", "Blog Topic Ideas", "Blog Writing", "Blog Optimization", "Blog Promotion", "Blog Engagement", "Blog Analytics", "Blog Conversion Optimization", "Blog Performance", "Blog Metrics", "Article Marketing", "Article Writing", "Article Optimization", "Article Distribution", "Article Promotion", "Article Engagement", "Article Analytics", "Article Conversion Optimization", "Article Performance", "Article Metrics", "Link Building Strategies", "Link Building Tactics", "Link Building Outreach", "Link Building Engagement", "Link Building Analytics", "Link Building Conversion Optimization", "Link Building Performance", "Link Building Metrics", "Inbound Marketing", "Inbound Strategy", "Inbound Campaigns", "Inbound Content", "Inbound Engagement", "Inbound Analytics", "Inbound Conversion Optimization", "Inbound Performance", "Inbound Metrics", "Outbound Marketing", "Outbound Strategy", "Outbound Campaigns", "Outbound Tactics", "Outbound Engagement", "Outbound Analytics", "Outbound Conversion Optimization", "Outbound Performance", "Outbound Metrics", "Anchor Text Optimization", "Anchor Text Diversity", "Anchor Text Relevance", "Anchor Text Analysis", "Anchor Text Usage", "Anchor Text Effectiveness", "Domain Authority Building", "Domain Authority Optimization", "Domain Authority Analysis", "Domain Authority Metrics", "Domain Authority Impact", "Page Authority Building", "Page Authority Optimization", "Page Authority Analysis", "Page Authority Metrics", "Page Authority Impact", "Trust Flow Building", "Trust Flow Optimization", "Trust Flow Analysis", "Trust Flow Metrics", "Trust Flow Impact", "Citation Building", "Citation Cleanup", "Citation Audits", "Citation Management", "Citation Optimization", "Citation Impact", "Schema Markup Implementation", "Schema Markup Optimization", "Schema Markup Analysis", "Schema Markup Testing", "Schema Markup Impact", "Structured Data Optimization", "Structured Data Analysis", "Structured Data Implementation", "Structured Data Testing", "Structured Data Impact", "Local Business Schema Markup", "Organization Schema Markup", "Product Schema Markup", "Article Schema Markup", "Event Schema Markup", "Review Schema Markup", "Video Schema Markup", "FAQ Schema Markup", "How-to Schema Markup", "Breadcrumbs Schema Markup", "Authorship Schema Markup", "Local Business NAP Consistency", "Local Business Address Consistency", "Local Business Phone Consistency", "Local Business Name Consistency", "Local Business Website Consistency", "Local Business Directory Listings", "Local Business Profile Listings", "Local Business Review Sites", "Local Business Mapping Services", "Local Business Citation Sites", "Local Business Review Management", "Local Business Reputation Management", "Local Business Map Listings", "Local Business Pack Optimization", "Local Business Reviews Generation", "Local Business Reviews Management", "Local Business Reviews Monitoring", "Local Business Reviews Analysis", "Local Business Reviews Performance", "Local Business Reviews Metrics", "Local Business Reviews Conversion", "Local Business Reviews ROI", "Local Business Citations Generation", "Local Business Citations Management", "Local Business Citations Monitoring", "Local Business Citations Analysis", "Local Business Citations Performance", "Local Business Citations Metrics", "Local Business Citations Conversion", "Local Business Citations ROI", "Local Business Map Listings Generation", "Local Business Map Listings Management", "Local Business Map Listings Monitoring", "Local Business Map Listings Analysis", "Local Business Map Listings Performance", "Local Business Map Listings Metrics", "Local Business Map Listings Conversion", "Local Business Map Listings ROI"];
 
 		function analyzeWordsPs(content, wordsArray) {
 			const words = content.split(/\s+/);
@@ -444,12 +493,19 @@
 					count++;
 				}
 			});
+			const excellentPs = ["<h3>The integration of the 4Ps framework in this business strategy is commendable!</h3><p>By focusing on Product, Price, Place, and Promotion, this business maximizes its potential for success and growth.</p>", "<h3>Impressive Application of the 4Ps Framework!</h3><p>This business strategy effectively incorporates the principles of the 4Ps framework, resulting in enhanced market presence and competitive advantage.</p>", "<h3>Excellent Utilization of the 4Ps Framework!</h3><p>Your business strategy demonstrates excellent utilization of the 4Ps framework, emphasizing Product, Price, Place, and Promotion. This strategic approach contributes to your business's success and growth.</p>", "<h3>Outstanding Integration of the 4Ps Framework!</h3><p>This business strategy excels in integrating the 4Ps framework, focusing on Product, Price, Place, and Promotion. This comprehensive approach contributes to your business's competitiveness and profitability.</p>", "<h3>Superb Implementation of the 4Ps Framework!</h3><p>Your business strategy showcases superb implementation of the 4Ps framework, emphasizing Product, Price, Place, and Promotion. This strategic alignment enhances your business's market position and revenue generation.</p>", "<h3>Exemplary Use of the 4Ps Framework!</h3><p>Your business strategy exemplifies the effective use of the 4Ps framework, emphasizing Product, Price, Place, and Promotion. This strategic integration contributes to your business's success and sustainability.</p>", "<h3>Top-notch Integration of the 4Ps Framework!</h3><p>This business strategy demonstrates top-notch integration of the 4Ps framework, emphasizing Product, Price, Place, and Promotion. This strategic alignment drives your business's growth and profitability.</p>", "<h3>Exceptional Application of the 4Ps Framework!</h3><p>Your business strategy demonstrates exceptional application of the 4Ps framework, emphasizing Product, Price, Place, and Promotion. This strategic approach positions your business for success and market leadership.</p>", "<h3>Impressive Implementation of Product, Price, Place, and Promotion!</h3><p>Your business strategy impressively implements the principles of the 4Ps framework, focusing on Product, Price, Place, and Promotion. This comprehensive approach drives your business's market performance and growth.</p>", "<h3>Excellent Execution of the 4Ps Framework!</h3><p>Your business strategy executes the principles of the 4Ps framework excellently, emphasizing Product, Price, Place, and Promotion. This strategic alignment enhances your business's competitiveness and profitability.</p>"];
+			const decentPs = ["<h3>The 4Ps framework is partially implemented in this business strategy.</h3><p>While elements of Product, Price, Place, and Promotion are present, further emphasis on these areas could enhance overall effectiveness.</p><ul><li>Strengthen product differentiation strategies.</li><li>Optimize pricing strategies for better market positioning.</li><li>Improve distribution channels for wider market reach.</li></ul>", "<h3>Good Start with the 4Ps Framework!</h3><p>Your business strategy shows promise with elements of the 4Ps framework, but there's room for improvement. Focus on enhancing product offerings, optimizing pricing strategies, and improving promotional efforts for better market performance.</p><ul><li>Conduct market research to identify customer needs.</li><li>Refine pricing strategies based on competitor analysis.</li><li>Invest in targeted promotional campaigns to increase brand visibility.</li></ul>", "<h3>Potential for Improvement in 4Ps Integration!</h3><p>While your business strategy incorporates aspects of the 4Ps framework, there's potential for further improvement. Focus on strengthening product differentiation, optimizing pricing strategies, and expanding distribution channels for better market penetration.</p><ul><li>Enhance product features based on customer feedback.</li><li>Implement dynamic pricing strategies to respond to market changes.</li><li>Explore new distribution channels to reach untapped markets.</li></ul>", "<h3>Work Needed to Fully Integrate the 4Ps Framework!</h3><p>Your business strategy shows potential, but there's work needed to fully integrate the 4Ps framework. Focus on aligning strategies with customer needs, optimizing pricing structures, and improving promotional activities for better market positioning.</p><ul><li>Enhance product quality and innovation to differentiate from competitors.</li><li>Implement pricing strategies that reflect product value and market demand.</li><li>Invest in targeted promotional campaigns to increase brand awareness.</li></ul>", "<h3>Room for Improvement in 4Ps Implementation!</h3><p>While your business strategy includes elements of the 4Ps framework, there's room for improvement in its implementation. Focus on strengthening product offerings, optimizing pricing strategies, and enhancing promotional activities for better market competitiveness.</p><ul><li>Conduct product testing to ensure market fit and demand.</li><li>Review pricing strategies to maximize profitability and customer value.</li><li>Enhance promotional efforts to increase customer engagement and brand loyalty.</li></ul>", "<h3>Promising Start, but Further 4Ps Integration Needed!</h3><p>Your business strategy shows promise, but further integration of the 4Ps framework is needed for optimal results. Focus on enhancing product differentiation, optimizing pricing strategies, and improving promotional activities for better market performance.</p><ul><li>Invest in product research and development to innovate and meet customer needs.</li><li>Implement pricing strategies that consider both cost and value perception.</li><li>Enhance promotional efforts to increase brand visibility and market share.</li></ul>", "<h3>Decent Implementation of Some 4Ps, but More Integration Needed!</h3><p>While your business strategy implements some aspects of the 4Ps framework, more integration is needed for comprehensive effectiveness. Focus on strengthening product differentiation, optimizing pricing strategies, and improving promotional activities for better market positioning.</p><ul><li>Enhance product features to address specific customer needs and preferences.</li><li>Adjust pricing strategies to reflect product value and market demand.</li><li>Invest in targeted promotional campaigns to increase brand awareness and customer engagement.</li></ul>", "<h3>Some 4Ps Elements Present, but Further Integration Required!</h3><p>Your business strategy includes some elements of the 4Ps framework, but further integration is required for optimal performance. Focus on strengthening product offerings, optimizing pricing strategies, and enhancing promotional activities for better market competitiveness.</p><ul><li>Conduct market research to identify emerging customer trends and preferences.</li><li>Refine pricing strategies based on competitor analysis and market demand.</li><li>Enhance promotional efforts to communicate product benefits and drive customer engagement.</li></ul>", "<h3>Potential for Stronger 4Ps Integration!</h3><p>Your business strategy has the potential for stronger integration of the 4Ps framework. Focus on enhancing product differentiation, optimizing pricing strategies, and improving promotional activities to achieve better market performance.</p><ul><li>Invest in product innovation to differentiate from competitors and attract customers.</li><li>Review pricing strategies to ensure competitive pricing while maximizing profitability.</li><li>Enhance promotional campaigns to increase brand visibility and market share.</li></ul>", "<h3>Good Foundation, but Further 4Ps Integration Needed!</h3><p>Your business strategy has a good foundation, but further integration of the 4Ps framework is needed for maximum impact. Focus on strengthening product offerings, optimizing pricing strategies, and improving promotional activities to enhance market competitiveness.</p><ul><li>Enhance product quality and features to meet evolving customer needs and preferences.</li><li>Adjust pricing strategies to align with market dynamics and customer perceptions.</li><li>Enhance promotional efforts to create brand differentiation and increase market visibility.</li></ul>"];
+			const poorPs = ["<h3>The 4Ps framework—Product, Price, Place, and Promotion—is indispensable for any business. Improve it!</h3><p>Neglecting it means risking:</p><ul><li>Product: Losing market relevance due to an undefined or subpar product.</li><li>Price: Underpricing, overpricing, or signaling low value, hurting profitability.</li><li>Place: Missing out on reaching customers effectively through distribution channels.</li><li>Promotion: Failing to generate awareness and interest, hampering growth.</li></ul>", "<h3>Enhance your 4Ps framework for business success!</h3><p>Improving your integration of the 4Ps framework will lead to enhanced market performance and business growth. Focus on strengthening product offerings, optimizing pricing strategies, and improving promotional activities to achieve better results.</p>", "<h3>Optimize the 4Ps framework for better business outcomes!</h3><p>Your business can benefit greatly from optimizing the 4Ps framework. Focus on aligning product strategies with customer needs, optimizing pricing structures, improving distribution channels, and enhancing promotional efforts for better business outcomes.</p>", "<h3>Maximize the potential of the 4Ps framework!</h3><p>Maximizing the potential of the 4Ps framework will lead to improved market competitiveness and profitability. Focus on integrating customer-focused product strategies, optimizing pricing structures, improving distribution channels, and enhancing promotional activities to achieve business success.</p>", "<h3>Strengthen your business with the 4Ps framework!</h3><p>Strengthening your integration of the 4Ps framework will enhance market performance and drive business growth. Focus on aligning product strategies with customer needs, optimizing pricing structures, improving distribution channels, and enhancing promotional efforts for better business outcomes.</p>", "<h3>Unlock the power of the 4Ps framework!</h3><p>Unlocking the power of the 4Ps framework will lead to improved market positioning and revenue generation for your business. Focus on integrating customer-centric product strategies, optimizing pricing structures, improving distribution channels, and enhancing promotional activities to unlock the full potential of your business.</p>", "<h3>Invest in the 4Ps framework for business growth!</h3><p>Investing in the 4Ps framework will drive business growth and market success. Focus on aligning product strategies with customer needs, optimizing pricing structures, improving distribution channels, and enhancing promotional activities to achieve long-term business growth.</p>", "<h3>Drive success with the 4Ps framework!</h3><p>Driving success with the 4Ps framework requires strategic integration of product, price, place, and promotion strategies. Focus on aligning these elements with customer needs and market dynamics to achieve your business goals.</p>", "<h3>Transform your business with the 4Ps framework!</h3><p>Transforming your business with the 4Ps framework will lead to improved market performance and business success. Focus on integrating customer-centric product strategies, optimizing pricing structures, improving distribution channels, and enhancing promotional activities for transformative results.</p>", "<h3>Evolve your business with the 4Ps framework!</h3><p>Evolving your business with the 4Ps framework will lead to increased market competitiveness and profitability. Focus on aligning product strategies with customer needs, optimizing pricing structures, improving distribution channels, and enhancing promotional activities to drive business evolution.</p>"];
+
+			function getRandomMessage(messages) {
+				return messages[Math.floor(Math.random() * messages.length)];
+			}
 			if(count >= 3) {
-				return "<h3>The integration of the 4Ps framework in this business strategy is commendable!</h3><p>By focusing on Product, Price, Place, and Promotion, this business maximizes its potential for success and growth.</p>";
+				return getRandomMessage(excellentPs);
 			} else if(count > 0) {
-				return "<h3>The 4Ps framework is partially implemented in this business strategy.</h3><p>While elements of Product, Price, Place, and Promotion are present, further emphasis on these areas could enhance overall effectiveness.</p>";
+				return getRandomMessage(decentPs);
 			} else {
-				return "<h3>The 4Ps framework—Product, Price, Place, and Promotion—is indispensable for any business. Improve it!</h3><p>Neglecting it means risking:</p><ul><li>Product: Losing market relevance due to an undefined or subpar product.</li><li>Price: Underpricing, overpricing, or signaling low value, hurting profitability.</li><li>Place: Missing out on reaching customers effectively through distribution channels.</li><li>Promotion: Failing to generate awareness and interest, hampering growth.</li></ul>";
+				return getRandomMessage(poorPs);
 			}
 		}
 
@@ -461,12 +517,19 @@
 					count++;
 				}
 			});
+			const excellentCs = ["<h3>Perfect Integration of the 4Cs Framework!</h3><p>This business model demonstrates an impressive integration of the 4Cs framework, focusing on Customer, Cost, Convenience, and Communication. This approach significantly boosts competitiveness and enhances customer satisfaction.</p>", "<h3>Excellent Implementation of the 4Cs Framework!</h3><p>Your business model excels in integrating the 4Cs framework, which is crucial for enhancing customer experience and ensuring business success. Keep up the great work!</p>", "<h3>Outstanding Application of the 4Cs Framework!</h3><p>Your business model effectively integrates the 4Cs framework, which is essential for meeting customer needs and achieving business goals. Well done!</p>", "<h3>Impressive Utilization of the 4Cs Framework!</h3><p>Your business model demonstrates an impressive understanding and application of the 4Cs framework, leading to enhanced customer satisfaction and business performance. Kudos!</p>", "<h3>Superb Integration of the 4Cs Framework!</h3><p>Your business model excels in integrating the 4Cs framework, focusing on Customer, Cost, Convenience, and Communication. This comprehensive approach contributes to your business's success and competitiveness.</p>", "<h3>Excellent Implementation of Customer, Cost, Convenience, and Communication!</h3><p>Your business model effectively incorporates the principles of the 4Cs framework, resulting in enhanced customer satisfaction and business performance. Keep up the excellent work!</p>", "<h3>Exemplary Application of the 4Cs Framework!</h3><p>Your business model exemplifies the principles of the 4Cs framework, focusing on Customer, Cost, Convenience, and Communication. This strategic integration contributes to your business's success and growth.</p>", "<h3>Exceptional Utilization of the 4Cs Framework!</h3><p>Your business model demonstrates exceptional utilization of the 4Cs framework, which is crucial for meeting customer needs and achieving competitive advantage. Well done!</p>", "<h3>Top-notch Integration of the 4Cs Framework!</h3><p>Your business model showcases top-notch integration of the 4Cs framework, emphasizing Customer, Cost, Convenience, and Communication. This strategic approach contributes to your business's success and sustainability.</p>", "<h3>Excellent Execution of the 4Cs Framework!</h3><p>Your business model executes the principles of the 4Cs framework exceptionally well, focusing on Customer, Cost, Convenience, and Communication. This comprehensive approach drives customer satisfaction and business growth.</p>"];
+			const decentCs = ["<h3>Partial Implementation of the 4Cs Framework!</h3><p>While elements of Customer, Cost, Convenience, and Communication are present in this business model, further emphasis on these areas could enhance its overall effectiveness.</p><ul><li>Enhance customer engagement strategies.</li><li>Optimize cost-saving initiatives.</li><li>Improve convenience through streamlined processes.</li></ul>", "<h3>Good Start with the 4Cs Framework!</h3><p>Your business model shows promise with elements of the 4Cs framework, but there's room for improvement. Focus on enhancing customer-centric strategies and optimizing cost-efficiency.</p><ul><li>Invest in personalized customer experiences.</li><li>Optimize pricing strategies to provide value.</li><li>Streamline communication channels for better engagement.</li></ul>", "<h3>Potential for Improvement in 4Cs Integration!</h3><p>While your business model incorporates aspects of the 4Cs framework, there's potential for further improvement. Focus on strengthening customer relationships and optimizing operational efficiency.</p><ul><li>Implement feedback mechanisms for customer insights.</li><li>Explore cost-saving opportunities without compromising quality.</li><li>Enhance convenience through user-friendly interfaces.</li></ul>", "<h3>Work Needed to Fully Integrate the 4Cs Framework!</h3><p>Your business model shows potential, but there's work needed to fully integrate the 4Cs framework. Focus on aligning strategies with customer needs and optimizing cost-effectiveness.</p><ul><li>Improve customer service and support offerings.</li><li>Implement cost-control measures for better financial management.</li><li>Enhance convenience through seamless user experiences.</li></ul>", "<h3>Room for Improvement in 4Cs Implementation!</h3><p>While your business model includes elements of the 4Cs framework, there's room for improvement in its implementation. Focus on enhancing customer-centric initiatives and optimizing cost-efficiency strategies.</p><ul><li>Personalize communication to improve customer engagement.</li><li>Optimize pricing models to maximize value for customers.</li><li>Streamline processes to enhance convenience.</li></ul>", "<h3>Promising Start, but Further 4Cs Integration Needed!</h3><p>Your business model shows promise, but further integration of the 4Cs framework is needed for optimal results. Focus on enhancing customer satisfaction and optimizing cost-effectiveness.</p><ul><li>Invest in market research to better understand customer needs.</li><li>Implement cost-saving measures without compromising quality.</li><li>Enhance convenience through improved service delivery.</li></ul>", "<h3>Decent Implementation of Some 4Cs, but More Integration Needed!</h3><p>While your business model implements some aspects of the 4Cs framework, more integration is needed for comprehensive effectiveness. Focus on strengthening customer relationships and optimizing cost-management strategies.</p><ul><li>Collect feedback to identify areas for improvement.</li><li>Implement cost-control measures to increase profitability.</li><li>Enhance convenience through streamlined processes.</li></ul>", "<h3>Some 4Cs Elements Present, but Further Integration Required!</h3><p>Your business model includes some elements of the 4Cs framework, but further integration is required for optimal performance. Focus on enhancing customer-centric strategies and optimizing cost-efficiency initiatives.</p><ul><li>Improve customer service to build loyalty.</li><li>Implement cost-saving measures to increase profitability.</li><li>Enhance convenience through improved processes.</li></ul>", "<h3>Potential for Stronger 4Cs Integration!</h3><p>Your business model has the potential for stronger integration of the 4Cs framework. Focus on enhancing customer satisfaction and optimizing cost-effectiveness to achieve better results.</p><ul><li>Implement personalized marketing strategies to target customer needs.</li><li>Optimize cost structures to improve profitability.</li><li>Enhance convenience through user-friendly solutions.</li></ul>", "<h3>Good Foundation, but Further 4Cs Integration Needed!</h3><p>Your business model has a good foundation, but further integration of the 4Cs framework is needed for maximum impact. Focus on strengthening customer relationships and optimizing cost-efficiency strategies.</p><ul><li>Enhance customer support services for better satisfaction.</li><li>Implement cost-saving measures without compromising quality.</li><li>Streamline processes to improve convenience.</li></ul>"];
+			const poorCs = ["<h3>The 4Cs framework—Customer, Cost, Convenience, and Communication—is indispensable for any business. Improve it!</h3><p>Neglecting it means risking:</p><ul><li>Customer: Losing connection with your target audience's needs and preferences, leading to decreased customer satisfaction and loyalty.</li><li>Cost: Failing to address cost concerns or provide value for money, resulting in loss of competitiveness and profitability.</li><li>Convenience: Overlooking the importance of making your products or services easily accessible and user-friendly, potentially driving customers to competitors.</li><li>Communication: Ineffective communication strategies leading to poor brand visibility, reduced engagement, and missed opportunities to connect with your audience.</li></ul>", "<h3>Enhance your 4Cs framework for business success!</h3><p>Improving your integration of the 4Cs framework will lead to enhanced customer satisfaction and business performance. Focus on strengthening customer relationships, optimizing costs, improving convenience, and enhancing communication strategies.</p>", "<h3>Optimize the 4Cs framework for better business outcomes!</h3><p>Your business can benefit greatly from optimizing the 4Cs framework. Focus on aligning strategies with customer needs, optimizing costs, enhancing convenience, and improving communication channels for better business outcomes.</p>", "<h3>Maximize the potential of the 4Cs framework!</h3><p>Maximizing the potential of the 4Cs framework will lead to improved competitiveness and profitability for your business. Focus on integrating customer-centric strategies, optimizing costs, enhancing convenience, and improving communication to achieve business success.</p>", "<h3>Strengthen your business with the 4Cs framework!</h3><p>Strengthening your integration of the 4Cs framework will enhance customer satisfaction and drive business growth. Focus on understanding customer needs, optimizing costs, improving convenience, and enhancing communication strategies for better business outcomes.</p>", "<h3>Unlock the power of the 4Cs framework!</h3><p>Unlocking the power of the 4Cs framework will lead to improved business performance and customer satisfaction. Focus on integrating customer-centric strategies, optimizing costs, enhancing convenience, and improving communication channels to unlock the full potential of your business.</p>", "<h3>Invest in the 4Cs framework for business growth!</h3><p>Investing in the 4Cs framework will drive business growth and competitiveness. Focus on integrating customer-focused strategies, optimizing costs, improving convenience, and enhancing communication to achieve long-term success.</p>", "<h3>Drive success with the 4Cs framework!</h3><p>Driving success with the 4Cs framework requires a strategic approach to integrating customer-centric strategies, optimizing costs, improving convenience, and enhancing communication channels. Focus on these areas to achieve your business goals.</p>", "<h3>Transform your business with the 4Cs framework!</h3><p>Transforming your business with the 4Cs framework will lead to improved customer satisfaction and business performance. Focus on integrating customer-centric strategies, optimizing costs, enhancing convenience, and improving communication channels for transformative results.</p>", "<h3>Evolve your business with the 4Cs framework!</h3><p>Evolving your business with the 4Cs framework will lead to increased competitiveness and profitability. Focus on aligning strategies with customer needs, optimizing costs, improving convenience, and enhancing communication channels to drive business evolution.</p>"];
+
+			function getRandomMessage(messages) {
+				return messages[Math.floor(Math.random() * messages.length)];
+			}
 			if(count >= 3) {
-				return "<h3>Perfect Integration of the 4Cs Framework!</h3><p>This business model demonstrates an impressive integration of the 4Cs framework, focusing on Customer, Cost, Convenience, and Communication. This approach significantly boosts competitiveness and enhances customer satisfaction.</p>";
+				return getRandomMessage(excellentCs);
 			} else if(count > 0) {
-				return "<h3>Partial Implementation of the 4Cs Framework!</h3><p>While elements of Customer, Cost, Convenience, and Communication are present in this business model, further emphasis on these areas could enhance its overall effectiveness.</p>";
+				return getRandomMessage(decentCs);
 			} else {
-				return "<h3>The 4Cs framework—Customer, Cost, Convenience, and Communication—is indispensable for any business. Improve it!</h3><p>Neglecting it means risking:</p><ul><li>Customer: Losing connection with your target audience's needs and preferences, leading to decreased customer satisfaction and loyalty.</li><li>Cost: Failing to address cost concerns or provide value for money, resulting in loss of competitiveness and profitability.</li><li>Convenience: Overlooking the importance of making your products or services easily accessible and user-friendly, potentially driving customers to competitors.</li><li>Communication: Ineffective communication strategies leading to poor brand visibility, reduced engagement, and missed opportunities to connect with your audience.</li></ul>";
+				return getRandomMessage(poorCs);
 			}
 		}
 
@@ -478,38 +541,40 @@
 					count++;
 				}
 			});
+			const excellentSEO = ["<h3>The SEO on this site is excellent!</h3><p>Optimizing your website for search engines is crucial for online visibility and success. With strong SEO, your site is more likely to rank higher on search engine results pages (SERPs), leading to increased organic traffic and potential conversions. Keep up the good work!</p>", "<h3>Your site's SEO is top-notch!</h3><p>Strong SEO practices are evident on your website, enhancing its visibility and ranking on search engines. This leads to more organic traffic and potential growth. Excellent job!</p>", "<h3>Fantastic SEO performance!</h3><p>Your website demonstrates excellent SEO. This strategic optimization will help your site rank higher in search results, attracting more visitors and potential customers. Well done!</p>", "<h3>Impressive SEO efforts!</h3><p>Your SEO strategy is working wonders. This will significantly improve your search engine rankings and drive more organic traffic to your site. Keep up the fantastic work!</p>", "<h3>Outstanding SEO!</h3><p>Your site's SEO is exemplary, which is crucial for maintaining a strong online presence. This will help you attract more organic traffic and achieve your business goals. Great job!</p>", "<h3>Excellent SEO results!</h3><p>Your efforts in SEO are clearly paying off. This high level of optimization will boost your search engine rankings and increase your site's visibility. Keep it up!</p>", "<h3>Superb SEO performance!</h3><p>Your website's SEO is outstanding. This strong foundation will lead to higher search engine rankings and more organic traffic. Well done!</p>", "<h3>Exceptional SEO!</h3><p>Your site is highly optimized for search engines. This will enhance your visibility and attract more visitors. Excellent work!</p>", "<h3>Top-tier SEO!</h3><p>Your SEO strategy is highly effective, resulting in improved search engine rankings and increased organic traffic. Keep up the great work!</p>", "<h3>Great SEO success!</h3><p>Your website is performing exceptionally well in terms of SEO. This will help you achieve better search engine rankings and drive more organic traffic. Fantastic job!</p>"];
+			const decentSEO = ["<h3>The SEO on this site is decent, but there's room for improvement.</h3><p>While some SEO efforts are evident, enhancing optimization strategies can further boost your site's visibility and relevance. Consider refining your keyword targeting and optimizing meta tags and content to enhance search engine rankings and attract more organic traffic.</p><ul><li>Focus on long-tail keywords.</li><li>Optimize your meta descriptions.</li><li>Improve your site's loading speed.</li></ul>", "<h3>Good SEO, but more can be done.</h3><p>There are visible SEO efforts, yet there's potential for more. Focus on improving keyword use, meta descriptions, and overall content quality to further increase your site's search engine ranking.</p><ul><li>Use more internal links.</li><li>Update and improve older content.</li><li>Ensure your site is mobile-friendly.</li></ul>", "<h3>Solid SEO work, but keep optimizing.</h3><p>Your SEO efforts are noticeable, but there's always room for growth. Enhance your keyword strategies and improve on-page optimization to achieve better search engine performance.</p><ul><li>Optimize images with alt text.</li><li>Increase social media engagement.</li><li>Regularly update your content.</li></ul>", "<h3>Decent SEO, but strive for better.</h3><p>Your website shows good SEO practices, but there's room to improve. Focus on keyword optimization and better content strategies to increase your search engine rankings.</p><ul><li>Build high-quality backlinks.</li><li>Ensure all pages have meta descriptions.</li><li>Utilize schema markup.</li></ul>", "<h3>SEO is good, but could be better.</h3><p>Your site has a decent SEO foundation. To further improve, consider optimizing for user experience and refining your keyword strategies.</p><ul><li>Conduct a site audit to find areas for improvement.</li><li>Improve page load times.</li><li>Use descriptive URLs.</li></ul>", "<h3>Not bad, but SEO can be improved.</h3><p>Your SEO efforts are evident, but there's more to be done. Enhance your site's optimization to achieve better visibility and rankings.</p><ul><li>Ensure your content is high-quality and relevant.</li><li>Optimize for local search if applicable.</li><li>Use HTTPS for your site.</li></ul>", "<h3>Room for improvement in SEO.</h3><p>Your site has some SEO strengths, but enhancing them will help you achieve better results. Focus on keyword optimization and content quality.</p><ul><li>Implement structured data.</li><li>Improve site architecture.</li><li>Increase the length of your content where appropriate.</li></ul>", "<h3>SEO is decent, but there's potential for more.</h3><p>Your SEO efforts are noticeable, but you can further improve your site's performance by refining your strategies.</p><ul><li>Use keyword-rich titles and headers.</li><li>Ensure your site is crawlable by search engines.</li><li>Optimize your site's navigation.</li></ul>", "<h3>Good start, but SEO needs more work.</h3><p>You've made a good start with your SEO, but there's more that can be done to improve your site's visibility and rankings.</p><ul><li>Focus on improving site speed.</li><li>Create and submit a sitemap.</li><li>Ensure all images are optimized.</li></ul>", "<h3>Decent SEO, but strive for excellence.</h3><p>Your SEO efforts are commendable, but there's always room for improvement. Optimize your content and website structure to boost your rankings.</p><ul><li>Use keywords effectively in your content.</li><li>Enhance user experience on your site.</li><li>Ensure your site is mobile-optimized.</li></ul>"];
+			const poorSEO = ["<h3>Search Engine Optimization (SEO) is crucial for any website. Improve it!</h3><p>Efficient SEO practices enhance your site's visibility, relevance, authority, and conversion rates. Neglecting SEO risks reduced visibility on SERPs, decreased relevance to potential customers, missed opportunities for building authority and trust, and lower conversion rates. Prioritize SEO to maximize your online presence and achieve business success.</p><ul><li>Conduct keyword research to find relevant terms.</li><li>Optimize your content with targeted keywords.</li><li>Ensure your site is mobile-friendly.</li></ul>", "<h3>Your site needs better SEO.</h3><p>SEO is essential for increasing your website's visibility and ranking. Without it, your site may struggle to attract visitors. Focus on improving your SEO to drive more organic traffic and potential leads.</p><ul><li>Use meta descriptions for all pages.</li><li>Optimize page load speed.</li><li>Create high-quality content regularly.</li></ul>", "<h3>SEO improvement needed!</h3><p>To boost your site's online presence, investing in better SEO practices is crucial. Work on optimizing your content, keywords, and meta tags to improve your search engine ranking and attract more visitors.</p><ul><li>Ensure all images have alt text.</li><li>Build backlinks from reputable sites.</li><li>Optimize your site's internal linking structure.</li></ul>", "<h3>Enhance your SEO efforts.</h3><p>Effective SEO is vital for your site's success. Improving your SEO strategies will increase your site's visibility and attract more traffic.</p><ul><li>Conduct an SEO audit to identify issues.</li><li>Use long-tail keywords in your content.</li><li>Improve site navigation for better user experience.</li></ul>", "<h3>Better SEO is essential.</h3><p>Your site needs improved SEO to compete in search engine rankings. Focus on optimizing your content and site structure.</p><ul><li>Update old content with fresh information.</li><li>Use schema markup to enhance search engine understanding.</li><li>Ensure your site is secure (HTTPS).</li></ul>", "<h3>SEO needs significant improvement.</h3><p>Improving your SEO will help your site achieve better visibility and attract more visitors. Focus on essential SEO practices.</p><ul><li>Improve site speed and performance.</li><li>Create and optimize a sitemap.</li><li>Use keyword-rich titles and headers.</li></ul>", "<h3>Focus on improving SEO.</h3><p>Your site will benefit greatly from enhanced SEO efforts. Implementing basic SEO strategies will help increase your site's visibility.</p><ul><li>Optimize for local search if applicable.</li><li>Enhance the quality and relevance of your content.</li><li>Ensure your site is mobile-friendly.</li></ul>", "<h3>SEO improvements needed.</h3><p>Investing in SEO will significantly benefit your site by increasing visibility and attracting more organic traffic. Start with the basics to see improvement.</p><ul><li>Ensure your website is responsive and mobile-friendly.</li><li>Optimize your site's meta tags, including titles and descriptions.</li><li>Regularly update and add fresh content to your site.</li></ul>", "<h3>Significant SEO enhancements required.</h3><p>Your site's SEO needs significant improvements to compete effectively in search engine rankings. Focus on optimizing your site's technical aspects and content.</p><ul><li>Improve site navigation and user experience.</li><li>Investigate and fix any crawl errors or broken links.</li><li>Implement structured data markup for rich snippets.</li></ul>", "<h3>SEO performance needs attention.</h3><p>There's room for improvement in your site's SEO performance. Prioritize optimizing your site for better search engine visibility and ranking.</p><ul><li>Focus on creating high-quality, relevant content.</li><li>Optimize your site's URL structure for better crawlability.</li><li>Implement a robust link building strategy.</li></ul>"];
+
+			function getRandomMessage(messages) {
+				return messages[Math.floor(Math.random() * messages.length)];
+			}
 			if(count >= 3) {
-				return "<h3>The SEO on this site is excellent!</h3><p>Optimizing your website for search engines is crucial for online visibility and success. With strong SEO, your site is more likely to rank higher on search engine results pages (SERPs), leading to increased organic traffic and potential conversions. Keep up the good work!</p>";
+				return getRandomMessage(excellentSEO);
 			} else if(count > 0) {
-				return "<h3>The SEO on this site is decent, but there's room for improvement.</h3><p>While some SEO efforts are evident, enhancing optimization strategies can further boost your site's visibility and relevance. Consider refining your keyword targeting and optimizing meta tags and content to enhance search engine rankings and attract more organic traffic.</p>";
+				return getRandomMessage(decentSEO);
 			} else {
-				return "<h3>Search Engine Optimization (SEO) is crucial for any website. Improve it!</h3><p>Efficient SEO practices enhance your site's visibility, relevance, authority, and conversion rates. Neglecting SEO risks reduced visibility on SERPs, decreased relevance to potential customers, missed opportunities for building authority and trust, and lower conversion rates. Prioritize SEO to maximize your online presence and achieve business success.</p>";
+				return getRandomMessage(poorSEO);
 			}
 		}
-
-
-		if (url !== "!^FILE^!") {
+		if(url !== "!^FILE^!") {
 			var linkElement = document.createElement("a");
-
 			linkElement.href = url;
 			linkElement.target = "_blank";
-
 			url = url.replace(/(^\w+:|^)\/\//, '');
 			url = url.split('/')[0];
-
 			linkElement.innerText = url;
-			
-			var existingElement = document.getElementById("url");
-			
+			var existingElement = document.getElementById("websiteUrl");
 			if(existingElement) {
-				existingElement.parentNode.replaceChild(linkElement, existingElement);
-			} else {
-				linkElement.id = "url";
-				result.insertBefore(linkElement, result.firstChild);
+				existingElement.remove();
+			}
+			linkElement.id = "websiteUrl";
+			urlContainer.appendChild(linkElement);
+		} else {
+			var existingElement = document.getElementById("websiteUrl");
+			if(existingElement) {
+				existingElement.remove();
 			}
 		}
-
-
 		ps.innerHTML = analyzeWordsPs(content, marketingWords4Ps);
 		cs.innerHTML = analyzeWordsCs(content, marketingWords4Cs);
 		seo.innerHTML = analyzeWordsSEO(content, seoWords);
@@ -522,4 +587,5 @@
 	}
 	</script>
 </body>
+
 </html>

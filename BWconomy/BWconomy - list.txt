@@ -1,3 +1,1 @@
 SWOT-Analysis - Strengths, Weaknesses, Opportunities and Threats
-Privacy Compliance - GDRP, CCPA
-Security - mailto, https, CSP

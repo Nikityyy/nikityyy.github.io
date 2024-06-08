@@ -424,6 +424,11 @@
 			<p id="security"></p>
 			<h2>Privacy Compliance</h2>
 			<p id="privacy"></p>
+
+			<!-- SWOT Analysis -->
+			<h2>SWOT Analysis</h2>
+			<canvas id="swotChart" width="400" height="400"></canvas>
+			<p id="swot"></p>
 			<!-- URL Container -->
 			<div id="urlContainer"></div>
 		</div>
@@ -435,6 +440,7 @@
 	}
 	document.getElementById("inputURL").focus();
 	</script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script>
 	var timeTaken;
 	var inputElement = document.querySelector('.input-area input[type="url"]');
@@ -584,6 +590,9 @@
 		var speed = document.getElementById("speed");
 		var security = document.getElementById("security");
 		var privacy = document.getElementById("privacy");
+		var ctx = document.getElementById('swotChart').getContext('2d');
+		var swotDiv = document.getElementById('swot');
+
 		const marketingWords4Ps = ["Product", "Service", "Brand", "Quality", "Price", "Value", "Packaging", "Design", "Features", "Benefits", "Variety", "Functionality", "Durability", "Warranty", "Customer", "Demand", "Offering", "Promotion", "Advertisement", "Campaign", "Discount", "Sales", "Retail", "Wholesale", "Distribution", "Channel", "Supply", "Logistics", "Inventory", "Market", "Coverage", "Placement", "Retailer", "Ecommerce", "Online", "Offline", "Store", "Outlet", "Shipping", "Delivery", "Convenience", "Accessibility", "Availability", "Location", "Reach", "Customer Journey", "Purchase", "Payment", "Feedback", "Satisfaction", "Engagement", "Interaction", "Influencer", "Testimonial", "Loyalty Program", "Referral Program", "Word of Mouth", "Branding", "Awareness", "Target", "Audience", "Segmentation", "Demographics", "Psychographics", "Geographics", "Behaviour", "Customer Acquisition", "Retention", "Experience", "Satisfaction", "Comparison", "Research", "User", "Review", "Ratings", "Options", "Comparison", "Comparison Shopping", "Perception", "Reputation", "Assessment", "Trend", "Market Trend", "Consumer Trend", "Demand Trend", "Supply Chain", "Value Chain", "Lifecycle", "Customer Lifecycle", "Lifecycle Stage", "Lifecycle Marketing", "Lifecycle Management", "Lifecycle Cost", "Lifecycle Analysis", "Lifecycle Assessment", "Lifecycle Strategies", "Lifecycle Approach", "Lifecycle Model", "Lifecycle Planning", "Lifecycle Optimization", "Lifecycle Enhancement", "Lifecycle Monitoring", "Lifecycle Measurement", "Lifecycle Performance", "Lifecycle Improvement", "Lifecycle Evaluation", "Lifecycle Metrics", "Lifecycle KPIs"];
 		const marketingWords4Cs = ["Customer", "Consumer", "Client", "Clientele", "Cost", "Convenience", "Communication", "Value", "Needs", "Wants", "Desires", "Satisfaction", "Experience", "Feedback", "Loyalty", "Service", "Support", "Relationship", "Engagement", "Personalization", "Trust", "Retention", "Acquisition", "Price", "Affordability", "Perception", "Total Cost of Ownership", "Investment", "Benefit", "Savings", "Budget", "Expense", "Discount", "Deal", "Economy", "Worth", "Advantage", "Profit", "Loss", "Convenience", "Ease", "Access", "Availability", "Delivery", "Shipping", "Location", "Proximity", "Channel", "Platform", "Online", "Offline", "Store", "Retail", "Ecommerce", "Mobile", "Support", "Help", "Assistance", "Time", "Effort", "Comfort", "Flexibility", "Usability", "Navigation", "Simplicity", "Interaction", "Message", "Media", "Social Media", "SEO", "SEM", "Content", "Email", "Marketing", "Campaign", "Strategy", "Conversation", "Feedback", "Response", "Survey", "Testimonial", "Review", "Publicity", "Promotion", "Advertising", "Relations", "Influence", "Brand", "Awareness", "Reach", "Target", "Audience", "Connection", "Touchpoint", "Channel", "Service Level", "Service Quality", "Service Standards", "Service Management", "Service Excellence", "Service Delivery", "Service Performance", "Service Improvement", "Service Innovation", "Service Integration", "Service Differentiation", "Service Personalization", "Service Optimization", "Service Evaluation", "Service Enhancement", "Service Monitoring", "Service Metrics", "Service KPIs"];
 		const seoWords = ["SEO", "Search", "Engine", "Optimization", "Keywords", "Content", "Backlinks", "Rankings", "Traffic", "Organic", "Paid", "Results", "SERP", "Meta", "Title", "Description", "Tags", "Headings", "URL", "Structure", "Sitemap", "Robots.txt", "Indexing", "Crawling", "Google", "Bing", "Yahoo", "Algorithm", "Analytics", "PageSpeed", "Mobile", "Responsive", "Design", "User", "Experience", "UX", "Interface", "UI", "Bounce Rate", "Click-Through Rate", "CTR", "Conversion", "Optimization", "CRO", "Alt Text", "Images", "Videos", "Schema", "Markup", "Structured Data", "Local SEO", "NAP", "Name", "Address", "Phone", "Google My Business", "Reviews", "Citations", "Map", "Pack", "Voice Search", "Long-tail Keywords", "Short-tail Keywords", "Blog", "Article", "Link Building", "Inbound", "Outbound", "Anchor Text", "Domain", "Authority", "Page", "Trust", "Spam", "Score", "Social Signals", "Engagement", "Analytics", "Tracking", "Performance", "Metrics", "KPI", "Heatmap", "A/B Testing", "Competitor Analysis", "Keyword Research", "On-page Optimization", "Off-page Optimization", "Technical SEO", "Link Profile", "Ranking Factors", "Mobile Optimization", "Local Search", "International SEO", "Multilingual SEO", "Voice Search Optimization", "Site Architecture", "Site Navigation", "Site Speed", "Site Security", "User Engagement", "User Experience", "User Intent", "User Signals", "Site Audit", "Keyword Density", "Keyword Stuffing", "Keyword Cannibalization", "Duplicate Content", "Canonicalization", "Page Authority", "Domain Age", "Domain Trust", "Link Quality", "Link Diversity", "Anchor Text Diversity", "Link Relevance", "Link Velocity", "Link Building Tactics", "Link Outreach", "Guest Posting", "Content Marketing", "Content Strategy", "Content Optimization", "Content Distribution", "Content Syndication", "Content Curation", "Content Calendar", "Content Audit", "Content Gap Analysis", "Content Performance", "Content Metrics", "Content ROI", "Content Promotion", "Content Outreach", "Social Media Marketing", "Social Signals", "Social Engagement", "Social Sharing", "Social Proof", "Social Listening", "Social Monitoring", "Social Analytics", "Social ROI", "Social Campaigns", "Social Advertising", "Social Influencers", "Social Outreach", "Local SEO Strategies", "Local Citations", "Local Directories", "Google My Business Optimization", "Local Reviews", "Local Backlinks", "Localized Content", "Local Link Building", "Local Schema Markup", "Local SEO Audits", "Local Landing Pages", "Local Link Building", "Niche Directories", "Industry Forums", "Local Networking", "Local Sponsorships", "Local Events", "Local Partnerships", "Local Content Marketing", "Local Press Releases", "Local Blogging", "Local Social Media Engagement", "Local Reviews Management", "Local Reputation Management", "Voice Search Optimization Strategies", "Voice Search Keywords", "Voice Search Content", "Voice Search Schema Markup", "Voice Search FAQs", "Voice Search User Intent", "Voice Search Analytics", "Voice Search Performance", "Voice Search Metrics", "Voice Search Conversion Optimization", "Long-tail Keywords Research", "Long-tail Keywords Optimization", "Long-tail Keywords Targeting", "Long-tail Keywords Content", "Long-tail Keywords Usage", "Long-tail Keywords Effectiveness", "Short-tail Keywords Analysis", "Short-tail Keywords Selection", "Short-tail Keywords Optimization", "Short-tail Keywords Targeting", "Short-tail Keywords Ranking", "Short-tail Keywords Traffic", "Short-tail Keywords Competition", "Short-tail Keywords Performance", "Short-tail Keywords Conversion", "Short-tail Keywords Usage", "Short-tail Keywords Effectiveness", "Blog Content Strategy", "Blog Topic Ideas", "Blog Writing", "Blog Optimization", "Blog Promotion", "Blog Engagement", "Blog Analytics", "Blog Conversion Optimization", "Blog Performance", "Blog Metrics", "Article Marketing", "Article Writing", "Article Optimization", "Article Distribution", "Article Promotion", "Article Engagement", "Article Analytics", "Article Conversion Optimization", "Article Performance", "Article Metrics", "Link Building Strategies", "Link Building Tactics", "Link Building Outreach", "Link Building Engagement", "Link Building Analytics", "Link Building Conversion Optimization", "Link Building Performance", "Link Building Metrics", "Inbound Marketing", "Inbound Strategy", "Inbound Campaigns", "Inbound Content", "Inbound Engagement", "Inbound Analytics", "Inbound Conversion Optimization", "Inbound Performance", "Inbound Metrics", "Outbound Marketing", "Outbound Strategy", "Outbound Campaigns", "Outbound Tactics", "Outbound Engagement", "Outbound Analytics", "Outbound Conversion Optimization", "Outbound Performance", "Outbound Metrics", "Anchor Text Optimization", "Anchor Text Diversity", "Anchor Text Relevance", "Anchor Text Analysis", "Anchor Text Usage", "Anchor Text Effectiveness", "Domain Authority Building", "Domain Authority Optimization", "Domain Authority Analysis", "Domain Authority Metrics", "Domain Authority Impact", "Page Authority Building", "Page Authority Optimization", "Page Authority Analysis", "Page Authority Metrics", "Page Authority Impact", "Trust Flow Building", "Trust Flow Optimization", "Trust Flow Analysis", "Trust Flow Metrics", "Trust Flow Impact", "Citation Building", "Citation Cleanup", "Citation Audits", "Citation Management", "Citation Optimization", "Citation Impact", "Schema Markup Implementation", "Schema Markup Optimization", "Schema Markup Analysis", "Schema Markup Testing", "Schema Markup Impact", "Structured Data Optimization", "Structured Data Analysis", "Structured Data Implementation", "Structured Data Testing", "Structured Data Impact", "Local Business Schema Markup", "Organization Schema Markup", "Product Schema Markup", "Article Schema Markup", "Event Schema Markup", "Review Schema Markup", "Video Schema Markup", "FAQ Schema Markup", "How-to Schema Markup", "Breadcrumbs Schema Markup", "Authorship Schema Markup", "Local Business NAP Consistency", "Local Business Address Consistency", "Local Business Phone Consistency", "Local Business Name Consistency", "Local Business Website Consistency", "Local Business Directory Listings", "Local Business Profile Listings", "Local Business Review Sites", "Local Business Mapping Services", "Local Business Citation Sites", "Local Business Review Management", "Local Business Reputation Management", "Local Business Map Listings", "Local Business Pack Optimization", "Local Business Reviews Generation", "Local Business Reviews Management", "Local Business Reviews Monitoring", "Local Business Reviews Analysis", "Local Business Reviews Performance", "Local Business Reviews Metrics", "Local Business Reviews Conversion", "Local Business Reviews ROI", "Local Business Citations Generation", "Local Business Citations Management", "Local Business Citations Monitoring", "Local Business Citations Analysis", "Local Business Citations Performance", "Local Business Citations Metrics", "Local Business Citations Conversion", "Local Business Citations ROI", "Local Business Map Listings Generation", "Local Business Map Listings Management", "Local Business Map Listings Monitoring", "Local Business Map Listings Analysis", "Local Business Map Listings Performance", "Local Business Map Listings Metrics", "Local Business Map Listings Conversion", "Local Business Map Listings ROI"];
@@ -716,6 +725,169 @@
 				return getRandomMessage(poorPrivacy);
 			}
 		}
+
+		function swotAnalysis(content) {
+			const parser = new DOMParser();
+			const doc = parser.parseFromString(content, 'text/html');
+
+			function getMetaTag(name) {
+				return doc.querySelector(`meta[name="${name}"]`) || doc.querySelector(`meta[property="${name}"]`);
+			}
+
+			function checkResponsiveDesign() {
+				return getMetaTag('viewport') !== null;
+			}
+
+			function checkMetaTags() {
+				const title = doc.querySelector('title');
+				const description = getMetaTag('description');
+				return {
+					title: title ? title.textContent : null,
+					description: description ? description.getAttribute('content') : null,
+				};
+			}
+
+			function checkHeadings() {
+				const headings = {};
+				for (let i = 1; i <= 6; i++) {
+					headings[`h${i}`] = doc.querySelectorAll(`h${i}`).length;
+				}
+				return headings;
+			}
+
+			function checkImages() {
+				const images = doc.querySelectorAll('img');
+				const withoutAlt = [...images].filter(img => !img.hasAttribute('alt'));
+				return {
+					total: images.length,
+					withoutAlt: withoutAlt.length,
+				};
+			}
+
+			function checkAccessibility() {
+				const roles = doc.querySelectorAll('[role]');
+				return {
+					roles: roles.length,
+				};
+			}
+
+			function checkLoadTimeIssues() {
+				const scripts = doc.querySelectorAll('script[src]');
+				const inlineStyles = doc.querySelectorAll('style, [style]');
+				return {
+					scripts: scripts.length,
+					inlineStyles: inlineStyles.length,
+				};
+			}
+
+			const metaTags = checkMetaTags();
+			const responsiveDesign = checkResponsiveDesign();
+			const headings = checkHeadings();
+			const images = checkImages();
+			const accessibility = checkAccessibility();
+			const loadTimeIssues = checkLoadTimeIssues();
+
+			const strengths = [];
+			const weaknesses = [];
+			const opportunities = [];
+			const threats = [];
+
+			if (metaTags.title) strengths.push('Title tag is present');
+			if (metaTags.description) strengths.push('Meta description is present');
+			if (responsiveDesign) strengths.push('Responsive design detected');
+			if (headings.h1 > 0) strengths.push('H1 tags are used');
+
+			if (!metaTags.title) weaknesses.push('Missing title tag');
+			if (!metaTags.description) weaknesses.push('Missing meta description');
+			if (!responsiveDesign) weaknesses.push('No viewport meta tag for responsive design');
+			if (images.withoutAlt > 0) weaknesses.push(`${images.withoutAlt} images without alt attributes`);
+			if (loadTimeIssues.inlineStyles > 0) weaknesses.push('Presence of inline styles can slow down load time');
+
+			if (metaTags.title && metaTags.title.length < 60) opportunities.push('Optimize title length for better SEO');
+			if (metaTags.description && metaTags.description.length < 160) opportunities.push('Optimize meta description length for better SEO');
+			if (headings.h2 === 0) opportunities.push('Add H2 tags to better structure the content');
+			if (accessibility.roles === 0) opportunities.push('Add ARIA roles for better accessibility');
+
+			const scripts = doc.querySelectorAll('script');
+			const externalScripts = [...scripts].filter(script => script.src && script.src !== '');
+			if (externalScripts.length > 0) threats.push(`${externalScripts.length} external scripts detected`);
+			const forms = doc.querySelectorAll('form');
+			if (forms.length > 0) threats.push(`${forms.length} forms detected`);
+			const iframes = doc.querySelectorAll('iframe');
+			if (iframes.length > 0) threats.push(`${iframes.length} iframes detected`);
+			const externalLinks = doc.querySelectorAll('a[href^="http"]');
+			if (externalLinks.length > 0) threats.push(`${externalLinks.length} external links detected`);
+
+			return {
+				strengths,
+				weaknesses,
+				opportunities,
+				threats,
+			};
+		}
+
+		const swot = swotAnalysis(content);
+
+		const data = {
+			labels: ['Strengths', 'Weaknesses', 'Opportunities', 'Threats'],
+			datasets: [{
+				label: 'SWOT Analysis',
+				data: [
+					swot.strengths.length,
+					swot.weaknesses.length,
+					swot.opportunities.length,
+					swot.threats.length
+				],
+				backgroundColor: [
+					'rgba(75, 192, 192, 0.2)',
+					'rgba(255, 99, 132, 0.2)',
+					'rgba(255, 206, 86, 0.2)',
+					'rgba(153, 102, 255, 0.2)'
+				],
+				borderColor: [
+					'rgba(75, 192, 192, 1)',
+					'rgba(255, 99, 132, 1)',
+					'rgba(255, 206, 86, 1)',
+					'rgba(153, 102, 255, 1)'
+				],
+				borderWidth: 1
+			}]
+		};
+
+		
+		var existingChart = Chart.getChart("swotChart");
+
+		if (existingChart) {
+			existingChart.destroy();
+		}
+
+		const swotChart = new Chart(ctx, {
+			type: 'bar',
+			data: data,
+			options: {
+				plugins: {
+					legend: {
+						display: false
+					},
+				},
+				scales: {
+					y: {
+						beginAtZero: true
+					}
+				}
+			}
+		});
+
+		swotDiv.innerHTML = `
+			<h2>Details</h2>
+			<ul>
+				${swot.strengths.length > 0 ? `<li><strong>Strengths (${swot.strengths.length}):</strong> ${swot.strengths.join(', ')}</li>` : '<li><strong>Strengths:</strong> Good job!</li>'}
+				${swot.weaknesses.length > 0 ? `<li><strong>Weaknesses (${swot.weaknesses.length}):</strong> ${swot.weaknesses.join(', ')}</li>` : '<li><strong>Weaknesses:</strong> No significant weaknesses found.</li>'}
+				${swot.opportunities.length > 0 ? `<li><strong>Opportunities (${swot.opportunities.length}):</strong> ${swot.opportunities.join(', ')}</li>` : '<li><strong>Opportunities:</strong> No opportunities identified.</li>'}
+				${swot.threats.length > 0 ? `<li><strong>Threats (${swot.threats.length}):</strong> ${swot.threats.join(', ')}</li>` : '<li><strong>Threats:</strong> No threats detected.</li>'}
+			</ul>
+		`;
+
 		var parser = new DOMParser();
 		var doc = parser.parseFromString(content, 'text/html');
 		var title = doc.querySelector('title').textContent;

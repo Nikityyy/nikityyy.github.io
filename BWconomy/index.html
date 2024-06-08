@@ -356,6 +356,49 @@
 		color: transparent !important;
 	}
 
+	.export {
+		appearance: none;
+		background-color: #fff;
+		border: 2px solid #1A1A1A;
+		border-radius: 15px;
+		box-sizing: border-box;
+		color: #3B3B3B;
+		cursor: pointer;
+		display: inline-block;
+		font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+		font-size: 16px;
+		font-weight: 600;
+		line-height: normal;
+		margin: 0;
+		margin-top: 19.92px;
+		min-width: 0;
+		outline: none;
+		padding: 10px;
+		text-align: center;
+		text-decoration: none;
+		transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+		user-select: none;
+		-webkit-user-select: none;
+		touch-action: manipulation;
+		will-change: transform;
+	}
+
+	.export:disabled {
+		pointer-events: none;
+	}
+
+	.export:hover {
+		color: #fff;
+		background-color: #1A1A1A;
+		box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+		transform: translateY(-2px);
+	}
+
+	.export:active {
+		box-shadow: none;
+		transform: translateY(0);
+	}
+
 	@keyframes skeleton-loading {
 		0% {
 			background-color: hsl(0, 0%, 78%);
@@ -429,8 +472,12 @@
 			<h2>SWOT Analysis</h2>
 			<canvas id="swotChart" width="400" height="400"></canvas>
 			<p id="swot"></p>
+
 			<!-- URL Container -->
-			<div id="urlContainer"></div>
+			<div style="display: flex; justify-content: space-between;">
+				<button class="export" onclick="exportNote('result')" style="align-self: flex-start;">Export to Word</button>
+				<div id="urlContainer" style="align-self: flex-end;"></div>
+			</div>			
 		</div>
 	</div>
 	<script>
@@ -441,7 +488,10 @@
 	document.getElementById("inputURL").focus();
 	</script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js"></script>
+	<script src="./html-docx.js"></script>
 	<script>
+	var url;
 	var timeTaken;
 	var inputElement = document.querySelector('.input-area input[type="url"]');
 	inputElement.addEventListener("keypress", function(event) {
@@ -478,7 +528,7 @@
 		var inputElement = document.querySelector('.input-area input[type="url"]');
 		var fileInput = document.getElementById('file-upload');
 		var file = fileInput.files[0];
-		var url = inputElement.value;
+		url = inputElement.value;
 		inputElement.value = '';
 		var analyzeButton = document.getElementById('analyze');
 		var loadingCircle = '<div class="loading-circle"></div>';
@@ -579,6 +629,25 @@
 
 	function getRandomMessage(messages) {
 		return messages[Math.floor(Math.random() * messages.length)];
+	}
+
+	function exportNote(contentId){
+		url = url.replace(/(^\w+:|^)\/\//, '');
+		url = url.split('/')[0];
+		url = url.split('.').slice(0, -1).join('.');
+
+		var htmlDoc = document.getElementById(contentId).innerHTML;
+
+		var tempDiv = document.createElement('div');
+		tempDiv.innerHTML = htmlDoc;
+		var buttonToRemove = tempDiv.querySelector('button');
+		if (buttonToRemove) {
+			buttonToRemove.parentNode.removeChild(buttonToRemove);
+		}
+		var modifiedHtml = tempDiv.innerHTML;
+
+		var converted = htmlDocx.asBlob(modifiedHtml);
+		saveAs(converted, `${url}.docx`);
 	}
 
 	function analyzation(content, url) {

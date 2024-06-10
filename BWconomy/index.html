@@ -33,6 +33,7 @@
 			align-items: center;
 			transition: background-color 0.3s, color 0.3s;
 			overflow-y: scroll;
+			overflow-x: hidden;
 		}
 
 		body.dark-mode {
@@ -266,21 +267,6 @@
 			border-radius: 1rem;
 		}
 
-		.loading-circle {
-			border: 4px solid #000;
-			border-top: 4px solid transparent;
-			border-radius: 50%;
-			width: 15px;
-			height: 15px;
-			animation: spin 2s linear infinite;
-			margin: auto;
-		}
-
-		body.dark-mode .loading-circle {
-			border: 4px solid #fff;
-			border-top: 4px solid transparent;
-		}
-
 		button.analyze-button:disabled {
 			animation: skeleton-loading 1s linear infinite alternate;
 		}
@@ -343,13 +329,6 @@
 			border-radius: 1rem;
 		}
 
-		body.dark-mode #remove-file {
-			background:
-				linear-gradient(var(--bg), var(--bg)) padding-box,
-				var(--glow),
-				linear-gradient(black, black) border-box;
-		}
-
 		body.dark-mode #remove-file::before {
 			background: var(--bg);
 		}
@@ -386,7 +365,7 @@
 			-webkit-backdrop-filter: blur(10px);
 			margin: 20px 0;
 			display: block;
-			transition: all 0.3s, max-height 2s ease-in, padding 0s;
+			transition: all 0.3s, max-height 2s cubic-bezier(1, 0.06, 0.51, 0.9), padding 0s;
 			max-height: 0;
 			overflow: hidden;
 		}
@@ -572,6 +551,138 @@
 			}
 		}
 
+		#buttonText {
+			transition: opacity 0.3s ease;
+		}
+
+		.seoList {
+			margin-top: 0;
+		}
+
+		.start {
+			animation: start 1.5s ease forwards;
+		}
+
+		.cookie-popup {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			width: auto;
+			color: #000;
+			border-radius: 10px;
+			background: rgba(255, 255, 255, 0.15);
+			box-shadow: 0 6px 60px 0 rgba(42, 157, 143, 0.75);
+			backdrop-filter: blur(10px);
+			-webkit-backdrop-filter: blur(10px);
+			padding: 10px 20px;
+			text-align: center;
+			z-index: 9999;
+			font-size: 18px;
+			transition: all 0.3s;
+		}
+
+		.cookie-popup button {
+			margin: 5px;
+			padding: 10px 20px;
+			font-size: 16px;
+			border: none;
+			cursor: pointer;
+			border-radius: 5px;
+			color: #fff;
+			transition: all 0.3s;
+			transform: scale(0.9);
+		}
+
+		.cookie-popup button:hover {
+			transform: scale(1.0);
+		}
+
+		.cookie-popup button.accept {
+			background-color: #2A9D8F;
+		}
+
+		.cookie-popup button.decline {
+			background-color: #ff0000;
+		}
+
+		.cookie-popup a {
+			font-size: 16px;
+			color: #344afb;
+			text-decoration: none;
+			font-weight: bold;
+			transition: all 0.3s ease-in-out;
+			background: linear-gradient(currentColor 0 0) bottom left 50%, linear-gradient(currentColor 0 0) bottom right 50%;
+			background-size: var(--underline-width, 0%) 0.1em;
+			background-repeat: no-repeat;
+			display: inline-block;
+			padding: 0.1em 0px;
+			margin: 0;
+			cursor: pointer;
+		}
+
+		.cookie-popup a:hover {
+			--underline-width: 100%;
+		}
+
+		body.dark-mode .cookie-popup {
+			background: rgba(30, 30, 30, 0.2);
+			box-shadow: 0 6px 60px 0 rgba(52, 74, 251, 0.75);
+			backdrop-filter: blur(10px);
+			-webkit-backdrop-filter: blur(10px);
+			color: #fff;
+		}
+
+		body.dark-mode .cookie-popup a {
+			color: #2A9D8F;
+		}
+
+		body.dark-mode .cookie-popup button.accept {
+			background-color: #344afb;
+		}
+
+		.privacy {
+			position: absolute;
+			top: 0;
+			right: 0;
+			cursor: pointer;
+			user-select: none;
+			margin: 10px;
+			font-size: 12px;
+		}
+
+		.privacy a {
+			text-decoration: none;
+			font-weight: bold;
+			transition: all 0.3s, background 0.3s ease-in-out;
+			background: linear-gradient(currentColor 0 0) bottom left 50%, linear-gradient(currentColor 0 0) bottom right 50%;
+			background-size: var(--underline-width, 0%) 0.15em;
+			background-repeat: no-repeat;
+			display: inline-block;
+			padding: 0.1em 0px;
+			margin: 0;
+			cursor: pointer;
+			color: #4b4b4b;
+		}
+
+		body.dark-mode .privacy a {
+			color: #A0A0A0;
+		}
+
+		.privacy a:hover {
+			--underline-width: 100%;
+		}
+
+		@keyframes start {
+			0% {
+				opacity: 0.01;
+				filter:	blur(5px)
+			}
+
+			100% {
+				opacity: 1;
+			}
+		}
+
 		@keyframes skeleton-loading {
 			0% {
 				background-color: hsl(0, 0%, 78%);
@@ -600,7 +711,10 @@
 			body {
 				min-height: 0;
 			}
-			#line-1, #line-2, #line-3 {
+
+			#line-1,
+			#line-2,
+			#line-3 {
 				visibility: hidden !important;
 			}
 		}
@@ -608,11 +722,17 @@
 </head>
 
 <body>
+	<div class="cookie-popup start" id="cookie-popup">
+		<p>We use Cookies...<br>(we have to)</p>
+		<button class="accept" onclick="acceptCookies()">Accept</button>
+		<button class="decline" onclick="declineCookies()">Decline</button>
+		<p><a onclick="window.open('/privacy-policy')">Privacy Policy</a></p>
+	</div>
 	<svg id="line-1"></svg>
 	<svg id="line-2"></svg>
 	<svg id="line-3"></svg>
 	<header>
-		<div class="logo"><span onclick="window.location.reload()">BW<sub>conomy</sub></span></div>
+		<div class="logo"><span onclick="window.location.reload()">BWconomy</span></div>
 		<div id="container"> <span id="darkmode" role="button" tabIndex="0" onClick="toggleDarkMode()"
 				aria-label="darkmode button">
 				<div class="darkmode_icon"> <span class="ray"></span> <span class="ray"></span> <span
@@ -621,8 +741,9 @@
 			</span>
 		</div>
 	</header>
-	<div class="main">
-		<h1>WELCOME TO BW<sub>conomy</sub></h1>
+	<div class="main start">
+        <div class="privacy"><a onClick="window.open('privacy-policy')">Privacy Policy</a></div>
+		<h1>WELCOME TO BWconomy</h1>
 		<p>Experience professional website analytics for free with BWconomy's marketing platform!
 			<br>Improve Your website to the needs of a HAK-Steyr certified website.
 		</p>
@@ -664,6 +785,15 @@
 			<canvas id="swotChart" width="400" height="400"></canvas>
 			<p id="swot"></p>
 
+			<!-- ABC Analysis -->
+			<h2>ABC Analysis</h2>
+			<p id="abc"></p>
+
+			<!-- Summarization -->
+			<h2>Summarization</h2>
+			<canvas id="summarizationChart" width="400" height="400"></canvas>
+			<p id="summarization"></p>
+
 			<!-- URL Container -->
 			<div style="display: flex; justify-content: space-between;">
 				<button class="export" onclick="exportNote('result')" style="align-self: flex-start;">Export to
@@ -677,6 +807,10 @@
 			document.body.classList.add('dark-mode');
 			document.body.dataset.theme = localStorage.getItem('dark-mode')
 		}
+		var consent = localStorage.getItem('cookie_consent');
+		if (consent === 'accepted' || consent === 'declined') {
+			document.getElementById('cookie-popup').style.display = 'none';
+		}
 		document.getElementById("inputURL").focus();
 	</script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -684,47 +818,57 @@
 	<script src="./html-docx.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 	<script>
-		const syncPointer = ({ x: pointerX, y: pointerY }) => {
-			const x = pointerX.toFixed(2);
-			const y = pointerY.toFixed(2);
-			const xp = (pointerX / window.innerWidth).toFixed(2);
-			const yp = (pointerY / window.innerHeight).toFixed(2);
-			document.documentElement.style.setProperty('--x', x);
-			document.documentElement.style.setProperty('--xp', xp);
-			document.documentElement.style.setProperty('--y', y);
-			document.documentElement.style.setProperty('--yp', yp);
-		};
-		document.body.addEventListener('pointermove', syncPointer);
+		var score = 0;
+		var maxScore = 9;
+
+		function acceptCookies() {
+			localStorage.setItem('cookie_consent', 'accepted');
+			document.getElementById('cookie-popup').style.display = 'none';
+		}
+
+		function declineCookies() {
+			localStorage.setItem('cookie_consent', 'declined');
+			document.getElementById('cookie-popup').style.display = 'none';
+		}
+
+			const syncPointer = ({ x: pointerX, y: pointerY }) => {
+				const x = pointerX.toFixed(2);
+				const y = pointerY.toFixed(2);
+				const xp = (pointerX / window.innerWidth).toFixed(2);
+				const yp = (pointerY / window.innerHeight).toFixed(2);
+				document.documentElement.style.setProperty('--x', x);
+				document.documentElement.style.setProperty('--xp', xp);
+				document.documentElement.style.setProperty('--y', y);
+				document.documentElement.style.setProperty('--yp', yp);
+			};
+			document.body.addEventListener('pointermove', syncPointer);
 
 		const svgns = 'http://www.w3.org/2000/svg';
-		const ease = 0.7;
-
-		const pointer = {
-			x: window.innerWidth / 2,
-			y: window.innerHeight / 2
-		};
+		const ease = 0.5;
+		const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+		const lines = ["line-1", "line-2", "line-3"];
+		const lineElements = lines.map(id => document.getElementById(id));
+		const lineVisibilityMap = {};
 
 		function updatePointer(event) {
 			pointer.x = event.clientX;
 			pointer.y = event.clientY;
-			var lines = ["line-1", "line-2", "line-3"];
 
-			lines.forEach(function (lineId) {
-				var line = document.getElementById(lineId);
-				if (line.style.visibility !== "visible") {
-					line.style.visibility = "visible";
+			for (const lineId of lines) {
+				if (!lineVisibilityMap[lineId]) {
+					lineVisibilityMap[lineId] = true;
+					document.getElementById(lineId).style.visibility = "visible";
 				}
-			});
+			}
 		}
 
 		function resizePos(event) {
-			pointer.x = window.innerWidth / 2,
-				pointer.y = window.innerHeight / 2
+			pointer.x = window.innerWidth / 2;
+			pointer.y = window.innerHeight / 2;
 		}
 
 		function createLine(leader) {
 			const line = document.createElementNS(svgns, 'line');
-
 			const get = gsap.getProperty(line);
 			const set = gsap.quickSetter(line, 'attr');
 
@@ -749,10 +893,7 @@
 				y: '+=1',
 				repeat: -1,
 				ease: 'linear',
-				modifiers: {
-					x: modifier('x'),
-					y: modifier('y')
-				}
+				modifiers: { x: modifier('x'), y: modifier('y') }
 			});
 
 			return line;
@@ -760,7 +901,6 @@
 
 		function createTrail(selector, trailLength = 10) {
 			const root = document.querySelector(selector);
-
 			let leader = (prop) => prop === 'x' ? pointer.x : pointer.y;
 
 			for (let i = 0; i < trailLength; i++) {
@@ -772,10 +912,14 @@
 
 		window.addEventListener('pointerdown', updatePointer);
 		window.addEventListener('pointermove', updatePointer, { passive: true });
-		window.addEventListener('resize', resizePos)
+		window.addEventListener('resize', resizePos);
 
-		createTrail('#line-1', 30);
-		createTrail('#line-2', 20);
+		for (const lineId of lines) {
+			lineVisibilityMap[lineId] = false;
+		}
+
+		createTrail('#line-1', 20);
+		createTrail('#line-2', 15);
 		createTrail('#line-3', 10);
 
 		var url;
@@ -811,6 +955,7 @@
 		}
 
 		function analyzeURL() {
+			score = 0;
 			addSkeleton();
 			var inputElement = document.querySelector('.input-area input[type="url"]');
 			var fileInput = document.getElementById('file-upload');
@@ -818,8 +963,11 @@
 			url = inputElement.value;
 			inputElement.value = '';
 			var analyzeButton = document.getElementById('buttonText');
-			var loadingCircle = '<div class="loading-circle"></div>';
-			analyzeButton.innerHTML = loadingCircle;
+			analyzeButton.style.opacity = '0';
+			setTimeout(function () {
+				analyzeButton.textContent = "Loading";
+				analyzeButton.style.opacity = '1';
+			}, 200);
 			analyzeButton.disabled = true;
 			analyzeButton.style.cursor = "default";
 			if (file && file.type === "text/html") {
@@ -828,7 +976,11 @@
 					var fileContent = event.target.result;
 					analyzation(fileContent, "!^FILE^!");
 					analyzeButton.disabled = false;
-					analyzeButton.innerHTML = "Analyze";
+					analyzeButton.style.opacity = '0';
+					setTimeout(function () {
+						analyzeButton.textContent = "Analyze";
+						analyzeButton.style.opacity = '1';
+					}, 200);
 					analyzeButton.style.cursor = "pointer";
 				};
 				reader.readAsText(file);
@@ -848,11 +1000,15 @@
 							timeTaken = endTime - startTime;
 							console.log('Fetching the website took ' + timeTaken + ' milliseconds');
 							analyzation(xhr.responseText, url);
-						} else if(xhr.responseText == "error code: 1003") {
+						} else if (xhr.responseText == "error code: 1003") {
 							alert('Error: This website does not work!');
 						} else {
 							analyzeButton.disabled = false;
-							analyzeButton.innerHTML = "Analyze";
+							analyzeButton.style.opacity = '0';
+							setTimeout(function () {
+								analyzeButton.textContent = "Analyze";
+								analyzeButton.style.opacity = '1';
+							}, 200);
 							analyzeButton.style.cursor = "pointer";
 							removeSkeleton();
 							setTimeout(() => {
@@ -860,7 +1016,11 @@
 							}, 10);
 						}
 						analyzeButton.disabled = false;
-						analyzeButton.innerHTML = "Analyze";
+						analyzeButton.style.opacity = '0';
+						setTimeout(function () {
+							analyzeButton.textContent = "Analyze";
+							analyzeButton.style.opacity = '1';
+						}, 200);
 						analyzeButton.style.cursor = "pointer";
 					} else {
 						console.error('XHR error: Network response was not ok');
@@ -869,14 +1029,22 @@
 				xhr.onerror = function () {
 					console.error('XHR error: Network request failed');
 					analyzeButton.disabled = false;
-					analyzeButton.innerHTML = "Analyze";
+					analyzeButton.style.opacity = '0';
+					setTimeout(function () {
+						analyzeButton.textContent = "Analyze";
+						analyzeButton.style.opacity = '1';
+					}, 200);
 					analyzeButton.style.cursor = "pointer";
 					removeSkeleton();
 				};
 				xhr.send();
 			} else {
 				analyzeButton.disabled = false;
-				analyzeButton.innerHTML = "Analyze";
+				analyzeButton.style.opacity = '0';
+				setTimeout(function () {
+					analyzeButton.textContent = "Analyze";
+					analyzeButton.style.opacity = '1';
+				}, 200);
 				analyzeButton.style.cursor = "pointer";
 				removeSkeleton();
 				alert('Please enter a valid URL / Input a valid file');
@@ -950,6 +1118,8 @@
 			var privacy = document.getElementById("privacy");
 			var ctx = document.getElementById('swotChart').getContext('2d');
 			var swotDiv = document.getElementById('swot');
+			var summarization = document.getElementById("summarization");
+			var abc = document.getElementById("abc");
 
 			const marketingWords4Ps = ["Product", "Service", "Brand", "Quality", "Price", "Value", "Packaging", "Design", "Features", "Benefits", "Variety", "Functionality", "Durability", "Warranty", "Customer", "Demand", "Offering", "Promotion", "Advertisement", "Campaign", "Discount", "Sales", "Retail", "Wholesale", "Distribution", "Channel", "Supply", "Logistics", "Inventory", "Market", "Coverage", "Placement", "Retailer", "Ecommerce", "Online", "Offline", "Store", "Outlet", "Shipping", "Delivery", "Convenience", "Accessibility", "Availability", "Location", "Reach", "Customer Journey", "Purchase", "Payment", "Feedback", "Satisfaction", "Engagement", "Interaction", "Influencer", "Testimonial", "Loyalty Program", "Referral Program", "Word of Mouth", "Branding", "Awareness", "Target", "Audience", "Segmentation", "Demographics", "Psychographics", "Geographics", "Behaviour", "Customer Acquisition", "Retention", "Experience", "Satisfaction", "Comparison", "Research", "User", "Review", "Ratings", "Options", "Comparison", "Comparison Shopping", "Perception", "Reputation", "Assessment", "Trend", "Market Trend", "Consumer Trend", "Demand Trend", "Supply Chain", "Value Chain", "Lifecycle", "Customer Lifecycle", "Lifecycle Stage", "Lifecycle Marketing", "Lifecycle Management", "Lifecycle Cost", "Lifecycle Analysis", "Lifecycle Assessment", "Lifecycle Strategies", "Lifecycle Approach", "Lifecycle Model", "Lifecycle Planning", "Lifecycle Optimization", "Lifecycle Enhancement", "Lifecycle Monitoring", "Lifecycle Measurement", "Lifecycle Performance", "Lifecycle Improvement", "Lifecycle Evaluation", "Lifecycle Metrics", "Lifecycle KPIs"];
 			const marketingWords4Cs = ["Customer", "Consumer", "Client", "Clientele", "Cost", "Convenience", "Communication", "Value", "Needs", "Wants", "Desires", "Satisfaction", "Experience", "Feedback", "Loyalty", "Service", "Support", "Relationship", "Engagement", "Personalization", "Trust", "Retention", "Acquisition", "Price", "Affordability", "Perception", "Total Cost of Ownership", "Investment", "Benefit", "Savings", "Budget", "Expense", "Discount", "Deal", "Economy", "Worth", "Advantage", "Profit", "Loss", "Convenience", "Ease", "Access", "Availability", "Delivery", "Shipping", "Location", "Proximity", "Channel", "Platform", "Online", "Offline", "Store", "Retail", "Ecommerce", "Mobile", "Support", "Help", "Assistance", "Time", "Effort", "Comfort", "Flexibility", "Usability", "Navigation", "Simplicity", "Interaction", "Message", "Media", "Social Media", "SEO", "SEM", "Content", "Email", "Marketing", "Campaign", "Strategy", "Conversation", "Feedback", "Response", "Survey", "Testimonial", "Review", "Publicity", "Promotion", "Advertising", "Relations", "Influence", "Brand", "Awareness", "Reach", "Target", "Audience", "Connection", "Touchpoint", "Channel", "Service Level", "Service Quality", "Service Standards", "Service Management", "Service Excellence", "Service Delivery", "Service Performance", "Service Improvement", "Service Innovation", "Service Integration", "Service Differentiation", "Service Personalization", "Service Optimization", "Service Evaluation", "Service Enhancement", "Service Monitoring", "Service Metrics", "Service KPIs"];
@@ -957,19 +1127,27 @@
 
 			function analyzeWordsPs(content, wordsArray) {
 				const words = content.split(/\s+/);
-				let count = 0;
+				let wordCounts = {};
 				words.forEach(word => {
 					if (wordsArray.includes(word)) {
-						count++;
+						wordCounts[word] = (wordCounts[word] || 0) + 1;
 					}
 				});
+
+				let count = Object.keys(wordCounts).length;
+
 				const excellentPs = ["<h3>The integration of the 4Ps framework in this business strategy is commendable!</h3><p>By focusing on Product, Price, Place, and Promotion, this business maximizes its potential for success and growth.</p>", "<h3>Impressive Application of the 4Ps Framework!</h3><p>This business strategy effectively incorporates the principles of the 4Ps framework, resulting in enhanced market presence and competitive advantage.</p>", "<h3>Excellent Utilization of the 4Ps Framework!</h3><p>Your business strategy demonstrates excellent utilization of the 4Ps framework, emphasizing Product, Price, Place, and Promotion. This strategic approach contributes to your business's success and growth.</p>", "<h3>Outstanding Integration of the 4Ps Framework!</h3><p>This business strategy excels in integrating the 4Ps framework, focusing on Product, Price, Place, and Promotion. This comprehensive approach contributes to your business's competitiveness and profitability.</p>", "<h3>Superb Implementation of the 4Ps Framework!</h3><p>Your business strategy showcases superb implementation of the 4Ps framework, emphasizing Product, Price, Place, and Promotion. This strategic alignment enhances your business's market position and revenue generation.</p>", "<h3>Exemplary Use of the 4Ps Framework!</h3><p>Your business strategy exemplifies the effective use of the 4Ps framework, emphasizing Product, Price, Place, and Promotion. This strategic integration contributes to your business's success and sustainability.</p>", "<h3>Top-notch Integration of the 4Ps Framework!</h3><p>This business strategy demonstrates top-notch integration of the 4Ps framework, emphasizing Product, Price, Place, and Promotion. This strategic alignment drives your business's growth and profitability.</p>", "<h3>Exceptional Application of the 4Ps Framework!</h3><p>Your business strategy demonstrates exceptional application of the 4Ps framework, emphasizing Product, Price, Place, and Promotion. This strategic approach positions your business for success and market leadership.</p>", "<h3>Impressive Implementation of Product, Price, Place, and Promotion!</h3><p>Your business strategy impressively implements the principles of the 4Ps framework, focusing on Product, Price, Place, and Promotion. This comprehensive approach drives your business's market performance and growth.</p>", "<h3>Excellent Execution of the 4Ps Framework!</h3><p>Your business strategy executes the principles of the 4Ps framework excellently, emphasizing Product, Price, Place, and Promotion. This strategic alignment enhances your business's competitiveness and profitability.</p>"];
 				const decentPs = ["<h3>The 4Ps framework is partially implemented in this business strategy.</h3><p>While elements of Product, Price, Place, and Promotion are present, further emphasis on these areas could enhance overall effectiveness.</p><ul><li>Strengthen product differentiation strategies.</li><li>Optimize pricing strategies for better market positioning.</li><li>Improve distribution channels for wider market reach.</li></ul>", "<h3>Good Start with the 4Ps Framework!</h3><p>Your business strategy shows promise with elements of the 4Ps framework, but there's room for improvement. Focus on enhancing product offerings, optimizing pricing strategies, and improving promotional efforts for better market performance.</p><ul><li>Conduct market research to identify customer needs.</li><li>Refine pricing strategies based on competitor analysis.</li><li>Invest in targeted promotional campaigns to increase brand visibility.</li></ul>", "<h3>Potential for Improvement in 4Ps Integration!</h3><p>While your business strategy incorporates aspects of the 4Ps framework, there's potential for further improvement. Focus on strengthening product differentiation, optimizing pricing strategies, and expanding distribution channels for better market penetration.</p><ul><li>Enhance product features based on customer feedback.</li><li>Implement dynamic pricing strategies to respond to market changes.</li><li>Explore new distribution channels to reach untapped markets.</li></ul>", "<h3>Work Needed to Fully Integrate the 4Ps Framework!</h3><p>Your business strategy shows potential, but there's work needed to fully integrate the 4Ps framework. Focus on aligning strategies with customer needs, optimizing pricing structures, and improving promotional activities for better market positioning.</p><ul><li>Enhance product quality and innovation to differentiate from competitors.</li><li>Implement pricing strategies that reflect product value and market demand.</li><li>Invest in targeted promotional campaigns to increase brand awareness.</li></ul>", "<h3>Room for Improvement in 4Ps Implementation!</h3><p>While your business strategy includes elements of the 4Ps framework, there's room for improvement in its implementation. Focus on strengthening product offerings, optimizing pricing strategies, and enhancing promotional activities for better market competitiveness.</p><ul><li>Conduct product testing to ensure market fit and demand.</li><li>Review pricing strategies to maximize profitability and customer value.</li><li>Enhance promotional efforts to increase customer engagement and brand loyalty.</li></ul>", "<h3>Promising Start, but Further 4Ps Integration Needed!</h3><p>Your business strategy shows promise, but further integration of the 4Ps framework is needed for optimal results. Focus on enhancing product differentiation, optimizing pricing strategies, and improving promotional activities for better market performance.</p><ul><li>Invest in product research and development to innovate and meet customer needs.</li><li>Implement pricing strategies that consider both cost and value perception.</li><li>Enhance promotional efforts to increase brand visibility and market share.</li></ul>", "<h3>Decent Implementation of Some 4Ps, but More Integration Needed!</h3><p>While your business strategy implements some aspects of the 4Ps framework, more integration is needed for comprehensive effectiveness. Focus on strengthening product differentiation, optimizing pricing strategies, and improving promotional activities for better market positioning.</p><ul><li>Enhance product features to address specific customer needs and preferences.</li><li>Adjust pricing strategies to reflect product value and market demand.</li><li>Invest in targeted promotional campaigns to increase brand awareness and customer engagement.</li></ul>", "<h3>Some 4Ps Elements Present, but Further Integration Required!</h3><p>Your business strategy includes some elements of the 4Ps framework, but further integration is required for optimal performance. Focus on strengthening product offerings, optimizing pricing strategies, and enhancing promotional activities for better market competitiveness.</p><ul><li>Conduct market research to identify emerging customer trends and preferences.</li><li>Refine pricing strategies based on competitor analysis and market demand.</li><li>Enhance promotional efforts to communicate product benefits and drive customer engagement.</li></ul>", "<h3>Potential for Stronger 4Ps Integration!</h3><p>Your business strategy has the potential for stronger integration of the 4Ps framework. Focus on enhancing product differentiation, optimizing pricing strategies, and improving promotional activities to achieve better market performance.</p><ul><li>Invest in product innovation to differentiate from competitors and attract customers.</li><li>Review pricing strategies to ensure competitive pricing while maximizing profitability.</li><li>Enhance promotional campaigns to increase brand visibility and market share.</li></ul>", "<h3>Good Foundation, but Further 4Ps Integration Needed!</h3><p>Your business strategy has a good foundation, but further integration of the 4Ps framework is needed for maximum impact. Focus on strengthening product offerings, optimizing pricing strategies, and improving promotional activities to enhance market competitiveness.</p><ul><li>Enhance product quality and features to meet evolving customer needs and preferences.</li><li>Adjust pricing strategies to align with market dynamics and customer perceptions.</li><li>Enhance promotional efforts to create brand differentiation and increase market visibility.</li></ul>"];
 				const poorPs = ["<h3>The 4Ps framework-Product, Price, Place, and Promotion-is indispensable for any business. Improve it!</h3><p>Neglecting it means risking:</p><ul><li>Product: Losing market relevance due to an undefined or subpar product.</li><li>Price: Underpricing, overpricing, or signaling low value, hurting profitability.</li><li>Place: Missing out on reaching customers effectively through distribution channels.</li><li>Promotion: Failing to generate awareness and interest, hampering growth.</li></ul>", "<h3>Enhance your 4Ps framework for business success!</h3><p>Improving your integration of the 4Ps framework will lead to enhanced market performance and business growth. Focus on strengthening product offerings, optimizing pricing strategies, and improving promotional activities to achieve better results.</p>", "<h3>Optimize the 4Ps framework for better business outcomes!</h3><p>Your business can benefit greatly from optimizing the 4Ps framework. Focus on aligning product strategies with customer needs, optimizing pricing structures, improving distribution channels, and enhancing promotional efforts for better business outcomes.</p>", "<h3>Maximize the potential of the 4Ps framework!</h3><p>Maximizing the potential of the 4Ps framework will lead to improved market competitiveness and profitability. Focus on integrating customer-focused product strategies, optimizing pricing structures, improving distribution channels, and enhancing promotional activities to achieve business success.</p>", "<h3>Strengthen your business with the 4Ps framework!</h3><p>Strengthening your integration of the 4Ps framework will enhance market performance and drive business growth. Focus on aligning product strategies with customer needs, optimizing pricing structures, improving distribution channels, and enhancing promotional efforts for better business outcomes.</p>", "<h3>Unlock the power of the 4Ps framework!</h3><p>Unlocking the power of the 4Ps framework will lead to improved market positioning and revenue generation for your business. Focus on integrating customer-centric product strategies, optimizing pricing structures, improving distribution channels, and enhancing promotional activities to unlock the full potential of your business.</p>", "<h3>Invest in the 4Ps framework for business growth!</h3><p>Investing in the 4Ps framework will drive business growth and market success. Focus on aligning product strategies with customer needs, optimizing pricing structures, improving distribution channels, and enhancing promotional activities to achieve long-term business growth.</p>", "<h3>Drive success with the 4Ps framework!</h3><p>Driving success with the 4Ps framework requires strategic integration of product, price, place, and promotion strategies. Focus on aligning these elements with customer needs and market dynamics to achieve your business goals.</p>", "<h3>Transform your business with the 4Ps framework!</h3><p>Transforming your business with the 4Ps framework will lead to improved market performance and business success. Focus on integrating customer-centric product strategies, optimizing pricing structures, improving distribution channels, and enhancing promotional activities for transformative results.</p>", "<h3>Evolve your business with the 4Ps framework!</h3><p>Evolving your business with the 4Ps framework will lead to increased market competitiveness and profitability. Focus on aligning product strategies with customer needs, optimizing pricing structures, improving distribution channels, and enhancing promotional activities to drive business evolution.</p>"];
+
+				const wordCountList = Object.entries(wordCounts).map(([word, count]) => `<li>${word}: ${count}</li>`).join('');
+
 				if (count >= 3) {
-					return getRandomMessage(excellentPs);
+					score++;
+					return `${getRandomMessage(excellentPs)}<ul>${wordCountList}</ul>`;
 				} else if (count > 0) {
-					return getRandomMessage(decentPs);
+					score += 0.5;
+					return `${getRandomMessage(decentPs)}<ul>${wordCountList}</ul>`;
 				} else {
 					return getRandomMessage(poorPs);
 				}
@@ -977,46 +1155,152 @@
 
 			function analyzeWordsCs(content, wordsArray) {
 				const words = content.split(/\s+/);
-				let count = 0;
+				let wordCounts = {};
 				words.forEach(word => {
 					if (wordsArray.includes(word)) {
-						count++;
+						wordCounts[word] = (wordCounts[word] || 0) + 1;
 					}
 				});
+
+				let count = Object.keys(wordCounts).length;
+
 				const excellentCs = ["<h3>Perfect Integration of the 4Cs Framework!</h3><p>This business model demonstrates an impressive integration of the 4Cs framework, focusing on Customer, Cost, Convenience, and Communication. This approach significantly boosts competitiveness and enhances customer satisfaction.</p>", "<h3>Excellent Implementation of the 4Cs Framework!</h3><p>Your business model excels in integrating the 4Cs framework, which is crucial for enhancing customer experience and ensuring business success. Keep up the great work!</p>", "<h3>Outstanding Application of the 4Cs Framework!</h3><p>Your business model effectively integrates the 4Cs framework, which is essential for meeting customer needs and achieving business goals. Well done!</p>", "<h3>Impressive Utilization of the 4Cs Framework!</h3><p>Your business model demonstrates an impressive understanding and application of the 4Cs framework, leading to enhanced customer satisfaction and business performance. Kudos!</p>", "<h3>Superb Integration of the 4Cs Framework!</h3><p>Your business model excels in integrating the 4Cs framework, focusing on Customer, Cost, Convenience, and Communication. This comprehensive approach contributes to your business's success and competitiveness.</p>", "<h3>Excellent Implementation of Customer, Cost, Convenience, and Communication!</h3><p>Your business model effectively incorporates the principles of the 4Cs framework, resulting in enhanced customer satisfaction and business performance. Keep up the excellent work!</p>", "<h3>Exemplary Application of the 4Cs Framework!</h3><p>Your business model exemplifies the principles of the 4Cs framework, focusing on Customer, Cost, Convenience, and Communication. This strategic integration contributes to your business's success and growth.</p>", "<h3>Exceptional Utilization of the 4Cs Framework!</h3><p>Your business model demonstrates exceptional utilization of the 4Cs framework, which is crucial for meeting customer needs and achieving competitive advantage. Well done!</p>", "<h3>Top-notch Integration of the 4Cs Framework!</h3><p>Your business model showcases top-notch integration of the 4Cs framework, emphasizing Customer, Cost, Convenience, and Communication. This strategic approach contributes to your business's success and sustainability.</p>", "<h3>Excellent Execution of the 4Cs Framework!</h3><p>Your business model executes the principles of the 4Cs framework exceptionally well, focusing on Customer, Cost, Convenience, and Communication. This comprehensive approach drives customer satisfaction and business growth.</p>"];
 				const decentCs = ["<h3>Partial Implementation of the 4Cs Framework!</h3><p>While elements of Customer, Cost, Convenience, and Communication are present in this business model, further emphasis on these areas could enhance its overall effectiveness.</p><ul><li>Enhance customer engagement strategies.</li><li>Optimize cost-saving initiatives.</li><li>Improve convenience through streamlined processes.</li></ul>", "<h3>Good Start with the 4Cs Framework!</h3><p>Your business model shows promise with elements of the 4Cs framework, but there's room for improvement. Focus on enhancing customer-centric strategies and optimizing cost-efficiency.</p><ul><li>Invest in personalized customer experiences.</li><li>Optimize pricing strategies to provide value.</li><li>Streamline communication channels for better engagement.</li></ul>", "<h3>Potential for Improvement in 4Cs Integration!</h3><p>While your business model incorporates aspects of the 4Cs framework, there's potential for further improvement. Focus on strengthening customer relationships and optimizing operational efficiency.</p><ul><li>Implement feedback mechanisms for customer insights.</li><li>Explore cost-saving opportunities without compromising quality.</li><li>Enhance convenience through user-friendly interfaces.</li></ul>", "<h3>Work Needed to Fully Integrate the 4Cs Framework!</h3><p>Your business model shows potential, but there's work needed to fully integrate the 4Cs framework. Focus on aligning strategies with customer needs and optimizing cost-effectiveness.</p><ul><li>Improve customer service and support offerings.</li><li>Implement cost-control measures for better financial management.</li><li>Enhance convenience through seamless user experiences.</li></ul>", "<h3>Room for Improvement in 4Cs Implementation!</h3><p>While your business model includes elements of the 4Cs framework, there's room for improvement in its implementation. Focus on enhancing customer-centric initiatives and optimizing cost-efficiency strategies.</p><ul><li>Personalize communication to improve customer engagement.</li><li>Optimize pricing models to maximize value for customers.</li><li>Streamline processes to enhance convenience.</li></ul>", "<h3>Promising Start, but Further 4Cs Integration Needed!</h3><p>Your business model shows promise, but further integration of the 4Cs framework is needed for optimal results. Focus on enhancing customer satisfaction and optimizing cost-effectiveness.</p><ul><li>Invest in market research to better understand customer needs.</li><li>Implement cost-saving measures without compromising quality.</li><li>Enhance convenience through improved service delivery.</li></ul>", "<h3>Decent Implementation of Some 4Cs, but More Integration Needed!</h3><p>While your business model implements some aspects of the 4Cs framework, more integration is needed for comprehensive effectiveness. Focus on strengthening customer relationships and optimizing cost-management strategies.</p><ul><li>Collect feedback to identify areas for improvement.</li><li>Implement cost-control measures to increase profitability.</li><li>Enhance convenience through streamlined processes.</li></ul>", "<h3>Some 4Cs Elements Present, but Further Integration Required!</h3><p>Your business model includes some elements of the 4Cs framework, but further integration is required for optimal performance. Focus on enhancing customer-centric strategies and optimizing cost-efficiency initiatives.</p><ul><li>Improve customer service to build loyalty.</li><li>Implement cost-saving measures to increase profitability.</li><li>Enhance convenience through improved processes.</li></ul>", "<h3>Potential for Stronger 4Cs Integration!</h3><p>Your business model has the potential for stronger integration of the 4Cs framework. Focus on enhancing customer satisfaction and optimizing cost-effectiveness to achieve better results.</p><ul><li>Implement personalized marketing strategies to target customer needs.</li><li>Optimize cost structures to improve profitability.</li><li>Enhance convenience through user-friendly solutions.</li></ul>", "<h3>Good Foundation, but Further 4Cs Integration Needed!</h3><p>Your business model has a good foundation, but further integration of the 4Cs framework is needed for maximum impact. Focus on strengthening customer relationships and optimizing cost-efficiency strategies.</p><ul><li>Enhance customer support services for better satisfaction.</li><li>Implement cost-saving measures without compromising quality.</li><li>Streamline processes to improve convenience.</li></ul>"];
 				const poorCs = ["<h3>The 4Cs framework-Customer, Cost, Convenience, and Communication-is indispensable for any business. Improve it!</h3><p>Neglecting it means risking:</p><ul><li>Customer: Losing connection with your target audience's needs and preferences, leading to decreased customer satisfaction and loyalty.</li><li>Cost: Failing to address cost concerns or provide value for money, resulting in loss of competitiveness and profitability.</li><li>Convenience: Overlooking the importance of making your products or services easily accessible and user-friendly, potentially driving customers to competitors.</li><li>Communication: Ineffective communication strategies leading to poor brand visibility, reduced engagement, and missed opportunities to connect with your audience.</li></ul>", "<h3>Enhance your 4Cs framework for business success!</h3><p>Improving your integration of the 4Cs framework will lead to enhanced customer satisfaction and business performance. Focus on strengthening customer relationships, optimizing costs, improving convenience, and enhancing communication strategies.</p>", "<h3>Optimize the 4Cs framework for better business outcomes!</h3><p>Your business can benefit greatly from optimizing the 4Cs framework. Focus on aligning strategies with customer needs, optimizing costs, enhancing convenience, and improving communication channels for better business outcomes.</p>", "<h3>Maximize the potential of the 4Cs framework!</h3><p>Maximizing the potential of the 4Cs framework will lead to improved competitiveness and profitability for your business. Focus on integrating customer-centric strategies, optimizing costs, enhancing convenience, and improving communication to achieve business success.</p>", "<h3>Strengthen your business with the 4Cs framework!</h3><p>Strengthening your integration of the 4Cs framework will enhance customer satisfaction and drive business growth. Focus on understanding customer needs, optimizing costs, improving convenience, and enhancing communication strategies for better business outcomes.</p>", "<h3>Unlock the power of the 4Cs framework!</h3><p>Unlocking the power of the 4Cs framework will lead to improved business performance and customer satisfaction. Focus on integrating customer-centric strategies, optimizing costs, enhancing convenience, and improving communication channels to unlock the full potential of your business.</p>", "<h3>Invest in the 4Cs framework for business growth!</h3><p>Investing in the 4Cs framework will drive business growth and competitiveness. Focus on integrating customer-focused strategies, optimizing costs, improving convenience, and enhancing communication to achieve long-term success.</p>", "<h3>Drive success with the 4Cs framework!</h3><p>Driving success with the 4Cs framework requires a strategic approach to integrating customer-centric strategies, optimizing costs, improving convenience, and enhancing communication channels. Focus on these areas to achieve your business goals.</p>", "<h3>Transform your business with the 4Cs framework!</h3><p>Transforming your business with the 4Cs framework will lead to improved customer satisfaction and business performance. Focus on integrating customer-centric strategies, optimizing costs, enhancing convenience, and improving communication channels for transformative results.</p>", "<h3>Evolve your business with the 4Cs framework!</h3><p>Evolving your business with the 4Cs framework will lead to increased competitiveness and profitability. Focus on aligning strategies with customer needs, optimizing costs, improving convenience, and enhancing communication channels to drive business evolution.</p>"];
+
+				const wordCountList = Object.entries(wordCounts).map(([word, count]) => `<li>${word}: ${count}</li>`).join('');
+
 				if (count >= 3) {
-					return getRandomMessage(excellentCs);
+					score++;
+					return `${getRandomMessage(excellentCs)}<ul>${wordCountList}</ul>`;
 				} else if (count > 0) {
-					return getRandomMessage(decentCs);
+					score += 0.5;
+					return `${getRandomMessage(decentCs)}<ul>${wordCountList}</ul>`;
 				} else {
 					return getRandomMessage(poorCs);
 				}
 			}
 
-			function analyzeWordsSEO(content, wordsArray) {
-				const words = content.split(/\s+/);
-				let count = 0;
-				words.forEach(word => {
-					if (wordsArray.includes(word)) {
-						count++;
+			function analyzeWordsSEO(content) {
+				const parser = new DOMParser();
+				const doc = parser.parseFromString(content, 'text/html');
+
+				const seoChecks = {
+					title: !!doc.querySelector('title'),
+					metaDescription: !!doc.querySelector('meta[name="description"]'),
+					headings: {
+						h1: !!doc.querySelector('h1'),
+						h2: !!doc.querySelector('h2'),
+						h3: !!doc.querySelector('h3')
+					},
+					imagesWithAlt: [...doc.querySelectorAll('img')].every(img => img.hasAttribute('alt')),
+					internalLinks: [...doc.querySelectorAll('a')].filter(link => link.hostname === window.location.hostname).length > 0,
+					externalLinks: [...doc.querySelectorAll('a')].filter(link => link.hostname !== window.location.hostname).length > 0,
+					mobileFriendly: !!doc.querySelector('meta[name="viewport"]'),
+					structuredData: !!doc.querySelector('script[type="application/ld+json"]'),
+					sitemap: !!doc.querySelector('link[rel="sitemap"], sitemap'),
+					socialMediaIntegration: checkSocialMediaIntegration(doc),
+					contentQuality: checkContentQuality(doc),
+					sslCertificate: checkSSLCertificate(),
+					robotsTxt: !!doc.querySelector('meta[name="robots"]'),
+					localSEO: checkLocalSEO(doc),
+					keywordDensity: checkKeywordDensity(doc),
+					urlStructure: checkUrlStructure(doc),
+					breadcrumbs: checkBreadcrumbs(doc),
+					canonicalTags: !!doc.querySelector('link[rel="canonical"]')
+				};
+
+				const usedSEO = Object.keys(seoChecks).filter(key => {
+					if (typeof seoChecks[key] === 'object') {
+						return Object.values(seoChecks[key]).some(Boolean);
 					}
+					return seoChecks[key];
 				});
+
+				const missingSEO = Object.keys(seoChecks).filter(key => {
+					if (typeof seoChecks[key] === 'object') {
+						return Object.values(seoChecks[key]).every(value => !value);
+					}
+					return !seoChecks[key];
+				});
+
+				let scoreSEO = usedSEO.length;
+
 				const excellentSEO = ["<h3>The SEO on this site is excellent!</h3><p>Optimizing your website for search engines is crucial for online visibility and success. With strong SEO, your site is more likely to rank higher on search engine results pages (SERPs), leading to increased organic traffic and potential conversions. Keep up the good work!</p>", "<h3>Your site's SEO is top-notch!</h3><p>Strong SEO practices are evident on your website, enhancing its visibility and ranking on search engines. This leads to more organic traffic and potential growth. Excellent job!</p>", "<h3>Fantastic SEO performance!</h3><p>Your website demonstrates excellent SEO. This strategic optimization will help your site rank higher in search results, attracting more visitors and potential customers. Well done!</p>", "<h3>Impressive SEO efforts!</h3><p>Your SEO strategy is working wonders. This will significantly improve your search engine rankings and drive more organic traffic to your site. Keep up the fantastic work!</p>", "<h3>Outstanding SEO!</h3><p>Your site's SEO is exemplary, which is crucial for maintaining a strong online presence. This will help you attract more organic traffic and achieve your business goals. Great job!</p>", "<h3>Excellent SEO results!</h3><p>Your efforts in SEO are clearly paying off. This high level of optimization will boost your search engine rankings and increase your site's visibility. Keep it up!</p>", "<h3>Superb SEO performance!</h3><p>Your website's SEO is outstanding. This strong foundation will lead to higher search engine rankings and more organic traffic. Well done!</p>", "<h3>Exceptional SEO!</h3><p>Your site is highly optimized for search engines. This will enhance your visibility and attract more visitors. Excellent work!</p>", "<h3>Top-tier SEO!</h3><p>Your SEO strategy is highly effective, resulting in improved search engine rankings and increased organic traffic. Keep up the great work!</p>", "<h3>Great SEO success!</h3><p>Your website is performing exceptionally well in terms of SEO. This will help you achieve better search engine rankings and drive more organic traffic. Fantastic job!</p>"];
 				const decentSEO = ["<h3>The SEO on this site is decent, but there's room for improvement.</h3><p>While some SEO efforts are evident, enhancing optimization strategies can further boost your site's visibility and relevance. Consider refining your keyword targeting and optimizing meta tags and content to enhance search engine rankings and attract more organic traffic.</p><ul><li>Focus on long-tail keywords.</li><li>Optimize your meta descriptions.</li><li>Improve your site's loading speed.</li></ul>", "<h3>Good SEO, but more can be done.</h3><p>There are visible SEO efforts, yet there's potential for more. Focus on improving keyword use, meta descriptions, and overall content quality to further increase your site's search engine ranking.</p><ul><li>Use more internal links.</li><li>Update and improve older content.</li><li>Ensure your site is mobile-friendly.</li></ul>", "<h3>Solid SEO work, but keep optimizing.</h3><p>Your SEO efforts are noticeable, but there's always room for growth. Enhance your keyword strategies and improve on-page optimization to achieve better search engine performance.</p><ul><li>Optimize images with alt text.</li><li>Increase social media engagement.</li><li>Regularly update your content.</li></ul>", "<h3>Decent SEO, but strive for better.</h3><p>Your website shows good SEO practices, but there's room to improve. Focus on keyword optimization and better content strategies to increase your search engine rankings.</p><ul><li>Build high-quality backlinks.</li><li>Ensure all pages have meta descriptions.</li><li>Utilize schema markup.</li></ul>", "<h3>SEO is good, but could be better.</h3><p>Your site has a decent SEO foundation. To further improve, consider optimizing for user experience and refining your keyword strategies.</p><ul><li>Conduct a site audit to find areas for improvement.</li><li>Improve page load times.</li><li>Use descriptive URLs.</li></ul>", "<h3>Not bad, but SEO can be improved.</h3><p>Your SEO efforts are evident, but there's more to be done. Enhance your site's optimization to achieve better visibility and rankings.</p><ul><li>Ensure your content is high-quality and relevant.</li><li>Optimize for local search if applicable.</li><li>Use HTTPS for your site.</li></ul>", "<h3>Room for improvement in SEO.</h3><p>Your site has some SEO strengths, but enhancing them will help you achieve better results. Focus on keyword optimization and content quality.</p><ul><li>Implement structured data.</li><li>Improve site architecture.</li><li>Increase the length of your content where appropriate.</li></ul>", "<h3>SEO is decent, but there's potential for more.</h3><p>Your SEO efforts are noticeable, but you can further improve your site's performance by refining your strategies.</p><ul><li>Use keyword-rich titles and headers.</li><li>Ensure your site is crawlable by search engines.</li><li>Optimize your site's navigation.</li></ul>", "<h3>Good start, but SEO needs more work.</h3><p>You've made a good start with your SEO, but there's more that can be done to improve your site's visibility and rankings.</p><ul><li>Focus on improving site speed.</li><li>Create and submit a sitemap.</li><li>Ensure all images are optimized.</li></ul>", "<h3>Decent SEO, but strive for excellence.</h3><p>Your SEO efforts are commendable, but there's always room for improvement. Optimize your content and website structure to boost your rankings.</p><ul><li>Use keywords effectively in your content.</li><li>Enhance user experience on your site.</li><li>Ensure your site is mobile-optimized.</li></ul>"];
-				const poorSEO = ["<h3>Search Engine Optimization (SEO) is crucial for any website. Improve it!</h3><p>Efficient SEO practices enhance your site's visibility, relevance, authority, and conversion rates. Neglecting SEO risks reduced visibility on SERPs, decreased relevance to potential customers, missed opportunities for building authority and trust, and lower conversion rates. Prioritize SEO to maximize your online presence and achieve business success.</p><ul><li>Conduct keyword research to find relevant terms.</li><li>Optimize your content with targeted keywords.</li><li>Ensure your site is mobile-friendly.</li></ul>", "<h3>Your site needs better SEO.</h3><p>SEO is essential for increasing your website's visibility and ranking. Without it, your site may struggle to attract visitors. Focus on improving your SEO to drive more organic traffic and potential leads.</p><ul><li>Use meta descriptions for all pages.</li><li>Optimize page load speed.</li><li>Create high-quality content regularly.</li></ul>", "<h3>SEO improvement needed!</h3><p>To boost your site's online presence, investing in better SEO practices is crucial. Work on optimizing your content, keywords, and meta tags to improve your search engine ranking and attract more visitors.</p><ul><li>Ensure all images have alt text.</li><li>Build backlinks from reputable sites.</li><li>Optimize your site's internal linking structure.</li></ul>", "<h3>Enhance your SEO efforts.</h3><p>Effective SEO is vital for your site's success. Improving your SEO strategies will increase your site's visibility and attract more traffic.</p><ul><li>Conduct an SEO audit to identify issues.</li><li>Use long-tail keywords in your content.</li><li>Improve site navigation for better user experience.</li></ul>", "<h3>Better SEO is essential.</h3><p>Your site needs improved SEO to compete in search engine rankings. Focus on optimizing your content and site structure.</p><ul><li>Update old content with fresh information.</li><li>Use schema markup to enhance search engine understanding.</li><li>Ensure your site is secure (HTTPS).</li></ul>", "<h3>SEO needs significant improvement.</h3><p>Improving your SEO will help your site achieve better visibility and attract more visitors. Focus on essential SEO practices.</p><ul><li>Improve site speed and performance.</li><li>Create and optimize a sitemap.</li><li>Use keyword-rich titles and headers.</li></ul>", "<h3>Focus on improving SEO.</h3><p>Your site will benefit greatly from enhanced SEO efforts. Implementing basic SEO strategies will help increase your site's visibility.</p><ul><li>Optimize for local search if applicable.</li><li>Enhance the quality and relevance of your content.</li><li>Ensure your site is mobile-friendly.</li></ul>", "<h3>SEO improvements needed.</h3><p>Investing in SEO will significantly benefit your site by increasing visibility and attracting more organic traffic. Start with the basics to see improvement.</p><ul><li>Ensure your website is responsive and mobile-friendly.</li><li>Optimize your site's meta tags, including titles and descriptions.</li><li>Regularly update and add fresh content to your site.</li></ul>", "<h3>Significant SEO enhancements required.</h3><p>Your site's SEO needs significant improvements to compete effectively in search engine rankings. Focus on optimizing your site's technical aspects and content.</p><ul><li>Improve site navigation and user experience.</li><li>Investigate and fix any crawl errors or broken links.</li><li>Implement structured data markup for rich snippets.</li></ul>", "<h3>SEO performance needs attention.</h3><p>There's room for improvement in your site's SEO performance. Prioritize optimizing your site for better search engine visibility and ranking.</p><ul><li>Focus on creating high-quality, relevant content.</li><li>Optimize your site's URL structure for better crawlability.</li><li>Implement a robust link building strategy.</li></ul>"];
+				const poorSEO = ["<h3>Search Engine Optimization (SEO) is crucial for any website. Improve it!</h3><p>Efficient SEO practices enhance your site's visibility, relevance, authority, and conversion rates. Neglecting SEO risks reduced visibility on SERPs, decreased relevance to potential customers, missed opportunities for building authority and trust, and lower conversion rates. Prioritize SEO to maximize your online presence and achieve business success.</p><ul><li>Conduct keyword research to find relevant terms.</li><li>Optimize your content with targeted keywords.</li><li>Ensure your site is mobile-friendly.</li></ul>", "<h3>Your site needs better SEO.</h3><p>SEO is essential for increasing your website's visibility and ranking. Focus on improving your SEO strategies to attract more organic traffic.</p><ul><li>Optimize your site's meta tags.</li><li>Use alt text for all images.</li><li>Improve your site's load time.</li></ul>", "<h3>Significant SEO improvements needed.</h3><p>Your website's SEO needs attention to perform better in search engine rankings. Focus on the basics to start improving your SEO.</p><ul><li>Use relevant keywords in your content.</li><li>Ensure your site is mobile-friendly.</li><li>Improve your site's overall user experience.</li></ul>", "<h3>Better SEO is essential.</h3><p>Your site needs improved SEO to compete in search engine rankings. Focus on optimizing your content and site structure.</p><ul><li>Update old content with fresh information.</li><li>Use schema markup to enhance search engine understanding.</li><li>Ensure your site is secure (HTTPS).</li></ul>", "<h3>SEO needs significant improvement.</h3><p>Improving your SEO will help your site achieve better visibility and attract more visitors. Focus on essential SEO practices.</p><ul><li>Improve site speed and performance.</li><li>Create and optimize a sitemap.</li><li>Use keyword-rich titles and headers.</li></ul>", "<h3>Focus on improving SEO.</h3><p>Your site will benefit greatly from enhanced SEO efforts. Implementing basic SEO strategies will help increase your site's visibility.</p><ul><li>Optimize for local search if applicable.</li><li>Enhance the quality and relevance of your content.</li><li>Ensure your site is mobile-friendly.</li></ul>", "<h3>SEO improvements needed.</h3><p>Investing in SEO will significantly benefit your site by increasing visibility and attracting more organic traffic. Start with the basics to see improvement.</p><ul><li>Ensure your website is responsive and mobile-friendly.</li><li>Optimize your site's meta tags, including titles and descriptions.</li><li>Regularly update and add fresh content to your site.</li></ul>", "<h3>Significant SEO enhancements required.</h3><p>Your site's SEO needs significant improvements to compete effectively in search engine rankings. Focus on optimizing your site's technical aspects and content.</p><ul><li>Improve site navigation and user experience.</li><li>Investigate and fix any crawl errors or broken links.</li><li>Implement structured data markup for rich snippets.</li></ul>", "<h3>SEO performance needs attention.</h3><p>There's room for improvement in your site's SEO performance. Prioritize optimizing your site for better search engine visibility and ranking.</p><ul><li>Focus on creating high-quality, relevant content.</li><li>Optimize your site's URL structure for better crawlability.</li><li>Implement a robust link building strategy.</li></ul>", "<h3>Substantial SEO enhancements needed.</h3><p>To achieve better search engine rankings and visibility, significant SEO improvements are necessary. Start with foundational practices and build from there.</p><ul><li>Use descriptive, keyword-rich titles and headers.</li><li>Ensure your site is mobile-responsive and loads quickly.</li><li>Build a strong internal linking structure.</li></ul>"];
 
-				function getRandomMessage(messages) {
-					return messages[Math.floor(Math.random() * messages.length)];
-				}
-				if (count >= 3) {
-					return getRandomMessage(excellentSEO);
-				} else if (count > 0) {
-					return getRandomMessage(decentSEO);
+				let message;
+				if (scoreSEO >= 20) {
+					score++;
+					message = getRandomMessage(excellentSEO);
+				} else if (scoreSEO >= 10) {
+					score += 0.5;
+					message = getRandomMessage(decentSEO);
 				} else {
-					return getRandomMessage(poorSEO);
+					message = getRandomMessage(poorSEO);
 				}
+
+				const seoSummary = `
+					<h3>SEO Techniques Analysis</h3>
+					<strong>SEO Techniques Used:</strong>
+						<ul class="seoList">
+						${usedSEO.map(technique => `<li>${technique}</li>`).join('')}
+					</ul>
+					<strong>SEO Techniques Missing:</strong>
+						<ul class="seoList">
+						${missingSEO.map(technique => `<li>${technique}</li>`).join('')}
+					</ul>
+				`;
+
+				message += seoSummary;
+
+				return message;
+			}
+
+			function checkDuplicateContent(doc) {
+				const bodyText = doc.body.textContent || '';
+				const sentences = bodyText.split(/[.!?]/);
+				const uniqueSentences = new Set(sentences);
+				return uniqueSentences.size / sentences.length < 0.8;
+			}
+
+			function checkSocialMediaIntegration(doc) {
+				return !!doc.querySelector('meta[property="og:url"], meta[name="twitter:card"]');
+			}
+
+			function checkContentQuality(doc) {
+				const bodyText = doc.body.textContent || '';
+				const sentences = bodyText.split(/[.!?]/);
+				return sentences.length > 50;
+			}
+
+			function checkSSLCertificate() {
+				return window.location.protocol === 'https:';
+			}
+
+			function checkLocalSEO(doc) {
+				return !!doc.querySelector('meta[name="geo.position"]');
+			}
+
+			function checkKeywordDensity(doc) {
+				const bodyText = doc.body.textContent || '';
+				const words = bodyText.split(/\s+/);
+				const keywordFrequency = words.reduce((acc, word) => {
+					acc[word] = (acc[word] || 0) + 1;
+					return acc;
+				}, {});
+				const keywordCount = Object.keys(keywordFrequency).filter(keyword => keywordFrequency[keyword] > 5).length;
+				return keywordCount > 5;
+			}
+
+			function checkUrlStructure(doc) {
+				const url = window.location.href;
+				return url.split('/').length <= 5 && !url.includes('?');
+			}
+
+			function checkBreadcrumbs(doc) {
+				return !!doc.querySelector('nav.breadcrumb');
 			}
 
 			function speedCheck() {
@@ -1026,8 +1310,10 @@
 				const decentSpeed = [`<h3>The speed the website loaded with is decent, but there's room for improvement. (${timeString})</h3><p>Your website's performance is good, but optimizing further could enhance user experience and engagement. Consider refining your performance strategies to achieve faster load times.</p>`, `<h3>Good loading speed, but more can be done. (${timeString})</h3><p>Your site loads at a reasonable speed, yet there's potential for improvement. Enhancing load times can lead to better user satisfaction and retention.</p>`, `<h3>Solid loading speed, but keep optimizing. (${timeString})</h3><p>Your website's speed is noticeable, but there's always room for growth. Focus on optimizing load times for even better performance.</p>`, `<h3>Decent loading speed, but strive for better. (${timeString})</h3><p>Your website shows good performance, but there's room to improve. Faster load times will enhance user experience and engagement.</p>`, `<h3>Loading speed is good, but could be better. (${timeString})</h3><p>Your site has a decent loading speed. To further improve, consider optimizing performance and reducing load times.</p>`, `<h3>Not bad, but loading speed can be improved. (${timeString})</h3><p>Your website's performance is evident, but there's more to be done. Enhancing load times will improve user experience and satisfaction.</p>`, `<h3>Room for improvement in loading speed. (${timeString})</h3><p>Your site has some performance strengths, but enhancing them will help you achieve better results. Focus on reducing load times for a smoother experience.</p>`, `<h3>Loading speed is decent, but there's potential for more. (${timeString})</h3><p>Your website's performance is noticeable, but you can further improve it by refining your speed optimization strategies.</p>`, `<h3>Good start, but loading speed needs more work. (${timeString})</h3><p>You've made a good start with your site's speed, but there's more that can be done to improve load times and user satisfaction.</p>`, `<h3>Decent loading speed, but strive for excellence. (${timeString})</h3><p>Your site's performance is commendable, but there's always room for improvement. Optimizing load times will boost user experience and engagement.</p>`];
 				const poorSpeed = [`<h3>The website's loading speed needs significant improvement. (${timeString})</h3><p>Efficient performance practices enhance your site's usability and retention rates. Prioritize optimizing load times to maximize your site's effectiveness.</p>`, `<h3>Your site's loading speed is poor. (${timeString})</h3><p>Performance is essential for increasing your website's usability. Focus on improving load times to drive more user satisfaction and engagement.</p>`, `<h3>Loading speed improvement needed! (${timeString})</h3><p>To boost your site's performance, investing in better speed optimization practices is crucial. Work on reducing load times to improve user experience.</p>`, `<h3>Enhance your website's loading speed. (${timeString})</h3><p>Effective performance optimization is vital for your site's success. Improving load times will increase usability and retention.</p>`, `<h3>Better loading speed is essential. (${timeString})</h3><p>Your site needs improved performance to compete effectively. Focus on optimizing load times to enhance user experience.</p>`, `<h3>Loading speed needs significant improvement. (${timeString})</h3><p>Improving your site's speed will help you achieve better usability and retention. Focus on essential performance practices.</p>`, `<h3>Focus on improving loading speed. (${timeString})</h3><p>Your site will benefit greatly from enhanced performance efforts. Implementing basic speed optimization strategies will help increase usability.</p>`, `<h3>Loading speed improvements needed. (${timeString})</h3><p>Investing in speed optimization will significantly benefit your site by increasing usability and user satisfaction. Start with the basics to see improvement.</p>`, `<h3>Significant loading speed enhancements required. (${timeString})</h3><p>Your site's performance needs significant improvements to compete effectively. Focus on optimizing load times for better usability.</p>`, `<h3>Loading speed needs attention. (${timeString})</h3><p>There's room for improvement in your site's performance. Prioritize optimizing load times for better user experience and retention.</p>`];
 				if (timeTaken <= 2000) {
+					score++;
 					return getRandomMessage(excellentSpeed);
 				} else if (timeTaken > 2000 && timeTaken <= 3000) {
+					score += 0.5;
 					return getRandomMessage(decentSpeed);
 				} else {
 					return getRandomMessage(poorSpeed);
@@ -1127,13 +1413,11 @@
 					`<h3>Security performance needs attention.</h3><p>There's room for improvement in your site's security. Prioritize implementing the following measures:<ul>${missingFeatures.map(feature => `<li>${feature}</li>`).join('')}</ul></p>`
 				];
 
-				function getRandomMessage(messages) {
-					return messages[Math.floor(Math.random() * messages.length)];
-				}
-
 				if (missingFeatures.length === 0) {
+					score++;
 					return getRandomMessage(excellentSecurity);
 				} else if (missingFeatures.length <= 3) {
+					score += 0.5;
 					return getRandomMessage(decentSecurity);
 				} else {
 					return getRandomMessage(poorSecurity);
@@ -1222,8 +1506,10 @@
 				const decentCompliance = hasPrivacyPolicy || hasConsentBanner || hasDataRequestOptions || hasContactInformation;
 
 				if (excellentCompliance) {
+					score++;
 					return excellentPrivacy[Math.floor(Math.random() * excellentPrivacy.length)];
 				} else if (decentCompliance) {
+					score += 0.5;
 					const missing = !hasPrivacyPolicy ? "Privacy Policy" : !hasConsentBanner ? "Consent Banner" : !hasDataRequestOptions ? "Data Request Options" : "Contact Information";
 					return decentPrivacy[Math.floor(Math.random() * decentPrivacy.length)].replace("Missing compliance with GDPR", `Missing compliance with ${missing}`);
 				} else {
@@ -1416,9 +1702,189 @@
 			</ul>
 		`;
 
+			function abcAnalysis(content) {
+				const parser = new DOMParser();
+				const doc = parser.parseFromString(content, 'text/html');
+
+				const aCategory = [
+					{ selector: 'meta[name="description"]', description: '&lt;meta name="description"&gt;' },
+					{ selector: 'meta[charset]', description: '&lt;meta charset="UTF-8"&gt;' },
+					{ selector: 'title', description: '&lt;title&gt;' },
+					{ selector: 'link[rel="stylesheet"]', description: '&lt;link rel="stylesheet"&gt;' },
+					{ selector: 'script[src]', description: '&lt;script src="..."&gt;' },
+					{ selector: 'header', description: '&lt;header&gt;' },
+					{ selector: 'footer', description: '&lt;footer&gt;' },
+					{ selector: 'main', description: '&lt;main&gt;' },
+					{ selector: 'nav', description: '&lt;nav&gt;' },
+					{ selector: 'h1', description: '&lt;h1&gt;' }
+				];
+
+				const bCategory = [
+					{ selector: 'section', description: '&lt;section&gt;' },
+					{ selector: 'article', description: '&lt;article&gt;' },
+					{ selector: 'aside', description: '&lt;aside&gt;' },
+					{ selector: 'button', description: '&lt;button&gt;' },
+					{ selector: 'form', description: '&lt;form&gt;' },
+					{ selector: 'input', description: '&lt;input&gt;' },
+					{ selector: 'img', description: '&lt;img&gt;' },
+					{ selector: 'video', description: '&lt;video&gt;' },
+					{ selector: 'audio', description: '&lt;audio&gt;' }
+				];
+
+				const cCategory = [
+					{ selector: 'div', description: '&lt;div&gt;' },
+					{ selector: 'span', description: '&lt;span&gt;' },
+					{ selector: '[id]', description: 'id attribute' },
+					{ selector: '[class]', description: 'class attribute' }
+				];
+
+				const missingFeaturesA = aCategory.filter(feature => !doc.querySelector(feature.selector)).map(feature => feature.description);
+				const missingFeaturesB = bCategory.filter(feature => !doc.querySelector(feature.selector)).map(feature => feature.description);
+				const missingFeaturesC = cCategory.filter(feature => !doc.querySelector(feature.selector)).map(feature => feature.description);
+
+				const excellentA = [
+					`<h3>Excellent in Category A!</h3><p>Your site excels in critical elements. Great job!</p>`
+				];
+
+				const decentA = [
+					`<h3>Good in Category A!</h3><p>Some improvements needed in these elements:</p>`
+				];
+
+				const poorA = [
+					`<h3>Poor in Category A!</h3><p>Significant improvements needed in these elements:</p>`
+				];
+
+				const excellentB = [
+					`<h3>Excellent in Category B!</h3><p>Your site excels in secondary elements. Great job!</p>`
+				];
+
+				const decentB = [
+					`<h3>Good in Category B!</h3><p>Some improvements needed in these elements:</p>`
+				];
+
+				const poorB = [
+					`<h3>Poor in Category B!</h3><p>Significant improvements needed in these elements:</p>`
+				];
+
+				const excellentC = [
+					`<h3>Excellent in Category C!</h3><p>Your site excels in supplementary elements. Great job!</p>`
+				];
+
+				const decentC = [
+					`<h3>Good in Category C!</h3><p>Some improvements needed in these elements:</p>`
+				];
+
+				const poorC = [
+					`<h3>Poor in Category C!</h3><p>Significant improvements needed in these elements:</p>`
+				];
+
+				let messageA, messageB, messageC;
+
+				if (missingFeaturesA.length === 0) {
+					score++;
+					messageA = getRandomMessage(excellentA);
+				} else if (missingFeaturesA.length <= 2) {
+					score += 0.5;
+					messageA = getRandomMessage(decentA);
+				} else {
+					messageA = getRandomMessage(poorA);
+				}
+
+				if (missingFeaturesB.length === 0) {
+					score++;
+					messageB = getRandomMessage(excellentB);
+				} else if (missingFeaturesB.length <= 2) {
+					score += 0.5;
+					messageB = getRandomMessage(decentB);
+				} else {
+					messageB = getRandomMessage(poorB);
+				}
+
+				if (missingFeaturesC.length === 0) {
+					score++;
+					messageC = getRandomMessage(excellentC);
+				} else if (missingFeaturesC.length <= 2) {
+					score += 0.5;
+					messageC = getRandomMessage(decentC);
+				} else {
+					messageC = getRandomMessage(poorC);
+				}
+
+				return `
+						<h3>Category A: Critical Elements</h3>
+						<p>Category A includes the most critical elements that significantly impact the user experience and SEO.</p>
+						<h3>Category B: Secondary Elements</h3>
+						<p>Category B includes important elements that enhance functionality and usability.</p>
+						<h3>Category C: Supplementary Elements</h3>
+						<p>Category C includes supplementary elements that add additional value and refinement to the site.</p>
+					<div>
+						${messageA}
+						${missingFeaturesA.length > 0 ? `<p>Missing elements:<ul>${missingFeaturesA.map(feature => `<li>${feature}</li>`).join('')}</ul></p>` : ''}
+					</div>
+					<div>
+						${messageB}
+						${missingFeaturesB.length > 0 ? `<p>Missing elements:<ul>${missingFeaturesB.map(feature => `<li>${feature}</li>`).join('')}</ul></p>` : ''}
+					</div>
+					<div>
+						${messageC}
+						${missingFeaturesC.length > 0 ? `<p>Missing elements:<ul>${missingFeaturesC.map(feature => `<li>${feature}</li>`).join('')}</ul></p>` : ''}
+					</div>
+				`;
+			}
+
+			function summarized() {
+				const excellentScore = [
+					"<h3>Excellent Performance Overall!</h3><p>Your website excels in every aspect, demonstrating top-notch quality across the board. Well done!</p>",
+					"<h3>Outstanding Performance in Every Area!</h3><p>Your website's performance is exceptional, showcasing excellence in all aspects. Congratulations on a job well done!</p>",
+					"<h3>Impressive Performance Across the Board!</h3><p>Your website demonstrates outstanding performance in every category, reflecting a high level of dedication and expertise. Great job!</p>",
+					"<h3>Superb Performance in All Aspects!</h3><p>Your website's performance is exemplary, showcasing excellence in every category. Keep up the fantastic work!</p>",
+					"<h3>Exceptional Performance in Every Area!</h3><p>Your website excels in all aspects, demonstrating a commitment to excellence and quality. Congratulations on a job well done!</p>",
+					"<h3>Top-Notch Performance Across the Board!</h3><p>Your website's performance is top-notch in every category, reflecting a high level of expertise and dedication. Well done!</p>",
+					"<h3>Excellent Performance in All Areas!</h3><p>Your website demonstrates excellence in every aspect, reflecting a dedication to quality and professionalism. Congratulations!</p>",
+					"<h3>Exceptional Performance Overall!</h3><p>Your website excels in all categories, demonstrating outstanding performance and dedication. Keep up the fantastic work!</p>",
+					"<h3>Outstanding Performance in Each Area!</h3><p>Your website's performance is outstanding in every category, reflecting a high level of skill and dedication. Well done!</p>",
+					"<h3>Superior Performance Across the Board!</h3><p>Your website's performance is superior in every aspect, showcasing excellence and dedication. Congratulations!</p>"
+				];
+
+				const decentScore = [
+					"<h3>Decent Performance Overall!</h3><p>Your website demonstrates decent performance overall, with room for improvement in some areas. Keep up the good work!</p>",
+					"<h3>Good Effort Overall!</h3><p>Your website shows a good effort overall, although there are areas that could be improved for better performance. Keep striving for excellence!</p>",
+					"<h3>Solid Performance Overall!</h3><p>Your website's performance is solid overall, but there are areas where enhancements could be made for better results. Keep up the good work!</p>",
+					"<h3>Respectable Performance Overall!</h3><p>Your website's performance is respectable overall, with potential for improvement in certain areas. Keep pushing for excellence!</p>",
+					"<h3>Acceptable Performance Overall!</h3><p>Your website's performance is acceptable overall, though there are areas that could be enhanced for better results. Keep working towards improvement!</p>",
+					"<h3>Decent Performance in Every Aspect!</h3><p>Your website shows decent performance in every category, though there are opportunities for improvement. Keep up the good work!</p>",
+					"<h3>Good Effort in Each Area!</h3><p>Your website demonstrates a good effort in each category, with potential for improvement in certain areas. Keep striving for excellence!</p>",
+					"<h3>Solid Performance in Every Aspect!</h3><p>Your website's performance is solid in every category, but there are areas where enhancements could be made for better results. Keep up the good work!</p>",
+					"<h3>Respectable Performance in Each Area!</h3><p>Your website's performance is respectable in every category, with potential for improvement in certain areas. Keep pushing for excellence!</p>",
+					"<h3>Acceptable Performance in All Aspects!</h3><p>Your website's performance is acceptable in all categories, though there are areas that could be enhanced for better results. Keep working towards improvement!</p>"
+				];
+
+				const poorScore = [
+					"<h3>Room for Improvement Overall!</h3><p>Your website could use some improvements overall to enhance its performance. Keep working towards better results!</p>",
+					"<h3>Below Par Overall!</h3><p>Your website's performance falls below par overall, indicating a need for improvement in various areas. Keep striving for better results!</p>",
+					"<h3>Subpar Performance Overall!</h3><p>Your website's performance is subpar overall, highlighting areas that require improvement. Keep pushing for better results!</p>",
+					"<h3>Needs Improvement Overall!</h3><p>Your website needs improvement overall to enhance its performance and achieve better results. Keep working towards excellence!</p>",
+					"<h3>Below Average Performance Overall!</h3><p>Your website's performance is below average overall, indicating a need for improvement in multiple areas. Keep striving for better results!</p>",
+					"<h3>Room for Improvement in Every Aspect!</h3><p>Your website has room for improvement in every category, indicating areas that require attention. Keep working towards better results!</p>",
+					"<h3>Below Par in Each Area!</h3><p>Your website's performance is below par in each category, highlighting areas that need improvement. Keep striving for better results!</p>",
+					"<h3>Subpar Performance in Every Aspect!</h3><p>Your website's performance is subpar in every category, indicating a need for improvement across the board. Keep pushing for better results!</p>",
+					"<h3>Needs Improvement in Every Area!</h3><p>Your website needs improvement in every category to enhance its performance and achieve better results. Keep working towards excellence!</p>",
+					"<h3>Below Average Performance in All Aspects!</h3><p>Your website's performance is below average in all categories, indicating a need for improvement across the board. Keep striving for better results!</p>"
+				];
+
+				if (score == maxScore) {
+					return getRandomMessage(excellentScore);
+				} else if (score >= (maxScore / 2)) {
+					return getRandomMessage(decentScore);
+				} else {
+					return getRandomMessage(poorScore);
+				}
+			}
+
 			var parser = new DOMParser();
 			var doc = parser.parseFromString(content, 'text/html');
-			var title = doc.querySelector('title').textContent;
+			var titleElement = doc.querySelector('title');
+			var title = titleElement ? titleElement.textContent : "Title not found";
 			if (url !== "!^FILE^!") {
 				var linkElement = document.createElement("a");
 				linkElement.href = url;
@@ -1452,10 +1918,54 @@
 			speed.innerHTML = speedCheck();
 			security.innerHTML = securityCheck(content);
 			privacy.innerHTML = privacyComplianceCheck(content);
+			summarization.innerHTML = summarized();
+			abc.innerHTML = abcAnalysis(content);
 			var remove = document.getElementById("remove-file");
 			if (remove.style.display !== "none") {
 				remove.click();
 			}
+
+			const scorePercentage = (score / maxScore) * 100;
+			const remainingPercentage = 100 - scorePercentage;
+
+			const ctx2 = document.getElementById('summarizationChart').getContext('2d');
+
+			var existingChart2 = Chart.getChart("summarizationChart");
+
+			if (existingChart2) {
+				existingChart2.destroy();
+			}
+
+			const donutChart = new Chart(ctx2, {
+				type: 'doughnut',
+				data: {
+					labels: ['Your Score', 'Remaining Score'],
+					datasets: [{
+						data: [scorePercentage, remainingPercentage],
+						backgroundColor: [
+							'rgba(255, 70, 78, 0.6)',
+							'rgba(0, 0, 0, 0)',
+						],
+						borderColor: [
+							'rgba(255, 99, 132, 1)',
+						],
+						borderWidth: 1
+					}]
+				},
+				options: {
+					responsive: true,
+					plugins: {
+						tooltip: {
+							callbacks: {
+								label: function (tooltipItem) {
+									return tooltipItem.raw.toFixed(2) + '%';
+								}
+							}
+						}
+					}
+				}
+			});
+
 			removeSkeleton();
 			var content = document.querySelector("#resultContent");
 			var contentHeight = content.clientHeight;
@@ -1463,5 +1973,4 @@
 		}
 	</script>
 </body>
-
-</html>
+</html

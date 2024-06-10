@@ -675,7 +675,7 @@
 		@keyframes start {
 			0% {
 				opacity: 0.01;
-				filter:	blur(5px)
+				filter: blur(5px)
 			}
 
 			100% {
@@ -742,13 +742,14 @@
 		</div>
 	</header>
 	<div class="main start">
-        <div class="privacy"><a onClick="window.open('privacy-policy')">Privacy Policy</a></div>
+		<div class="privacy"><a onClick="window.open('privacy-policy')">Privacy Policy</a></div>
 		<h1>WELCOME TO BWconomy</h1>
-		<p>Experience professional website analytics for free with BWconomy's marketing platform!
-			<br>Improve Your website to the needs of a HAK-Steyr certified website.
+		<p>The <b>fastest</b> website analysis <b>You</b> will ever experience!
+			<br>Enter <b>Your</b> website and receive a <b>professional</b> analysis.
 		</p>
 		<div class="input-area">
-			<input id="inputURL" type="url" placeholder="Enter a website URL" aria-label="Enter a website URL">
+			<input autocomplete="false" name="hidden" id="inputURL" type="url" placeholder="Enter a website URL"
+				aria-label="Enter a website URL">
 			<div class="file-upload">
 				<input type="file" id="file-upload" accept=".html">
 				<label for="file-upload"><img draggable="false" id="attachment" src="images/icons8-attach-96.png"
@@ -769,11 +770,14 @@
 			<p id="fourPs"></p>
 			<h2>The four Cs of marketing</h2>
 			<p id="fourCs"></p>
+
 			<!-- Website Performance -->
 			<h2>Search Engine Optimization</h2>
 			<p id="seo"></p>
 			<h2>Load time</h2>
 			<p id="speed"></p>
+			<p id="ip"></p>
+
 			<!-- Security and Privacy -->
 			<h2>Security</h2>
 			<p id="security"></p>
@@ -814,7 +818,6 @@
 		document.getElementById("inputURL").focus();
 	</script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js"></script>
 	<script src="./html-docx.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 	<script>
@@ -831,17 +834,17 @@
 			document.getElementById('cookie-popup').style.display = 'none';
 		}
 
-			const syncPointer = ({ x: pointerX, y: pointerY }) => {
-				const x = pointerX.toFixed(2);
-				const y = pointerY.toFixed(2);
-				const xp = (pointerX / window.innerWidth).toFixed(2);
-				const yp = (pointerY / window.innerHeight).toFixed(2);
-				document.documentElement.style.setProperty('--x', x);
-				document.documentElement.style.setProperty('--xp', xp);
-				document.documentElement.style.setProperty('--y', y);
-				document.documentElement.style.setProperty('--yp', yp);
-			};
-			document.body.addEventListener('pointermove', syncPointer);
+		const syncPointer = ({ x: pointerX, y: pointerY }) => {
+			const x = pointerX.toFixed(2);
+			const y = pointerY.toFixed(2);
+			const xp = (pointerX / window.innerWidth).toFixed(2);
+			const yp = (pointerY / window.innerHeight).toFixed(2);
+			document.documentElement.style.setProperty('--x', x);
+			document.documentElement.style.setProperty('--xp', xp);
+			document.documentElement.style.setProperty('--y', y);
+			document.documentElement.style.setProperty('--yp', yp);
+		};
+		document.body.addEventListener('pointermove', syncPointer);
 
 		const svgns = 'http://www.w3.org/2000/svg';
 		const ease = 0.5;
@@ -954,8 +957,9 @@
 			}
 		}
 
-		function analyzeURL() {
+		async function analyzeURL() {
 			score = 0;
+			var ip = document.getElementById('ip');
 			addSkeleton();
 			var inputElement = document.querySelector('.input-area input[type="url"]');
 			var fileInput = document.getElementById('file-upload');
@@ -992,8 +996,28 @@
 				var startTime = Date.now();
 				var xhr = new XMLHttpRequest();
 				xhr.open('GET', proxyUrl + url);
+
+				// IP
+				var urlIP = url.replace(/(^\w+:|^)\/\//, '');
+				urlIP = urlIP.split('/')[0];
+				const ipResponse = await fetch(`https://dns.google/resolve?name=${urlIP}`);
+				const ipData = await ipResponse.json();
+
+				if (ipData.Answer && ipData.Answer.length > 0) {
+					const ipAddress = ipData.Answer[0].data;
+					console.log(ipAddress);
+
+					const geoResponse = await fetch(`https://ipinfo.io/${ipAddress}/geo`);
+					const geoData = await geoResponse.json();
+
+					ip.innerHTML = `Server IP: ${ipAddress}<br>Location: ${geoData.city}, ${geoData.country}`;
+				} else {
+					ip.innerHTML = 'The IP and Location could not be resolved.';
+				}
+
 				xhr.onload = function () {
 					if (xhr.status >= 200 && xhr.status < 300) {
+
 						var contentType = xhr.getResponseHeader('Content-Type');
 						if (contentType && contentType.includes('text/html')) {
 							var endTime = Date.now();
@@ -1093,18 +1117,26 @@
 			url = url.split('/')[0];
 			url = url.split('.').slice(0, -1).join('.');
 
-			var htmlDoc = document.getElementById(contentId).innerHTML;
+			var htmlContent = document.getElementById(contentId).innerHTML;
 
 			var tempDiv = document.createElement('div');
-			tempDiv.innerHTML = htmlDoc;
+			tempDiv.innerHTML = htmlContent;
+
 			var buttonToRemove = tempDiv.querySelector('button');
 			if (buttonToRemove) {
 				buttonToRemove.parentNode.removeChild(buttonToRemove);
 			}
-			var modifiedHtml = tempDiv.innerHTML;
 
-			var converted = htmlDocx.asBlob(modifiedHtml);
-			saveAs(converted, `${url}.docx`);
+			var docx = htmlDocx.asBlob(tempDiv.innerHTML);
+
+			var link = document.createElement('a');
+			link.href = window.URL.createObjectURL(docx);
+			link.download = `${url}.docx`;
+
+			document.body.appendChild(link);
+			link.click();
+
+			document.body.removeChild(link);
 		}
 
 		function analyzation(content, url) {

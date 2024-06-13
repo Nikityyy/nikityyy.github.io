@@ -1,438 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>BWconomy</title>
-	<link rel="icon" href="images/favicon.webp">
-	<link rel="stylesheet" href="planets/style.css">
-	<link rel="preload" href="fonts/Poppins.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-	<link rel="prefetch" href="images/icons8-attach-96.png">
-	<link rel="preload" href="lang/de.json" as="fetch" crossorigin="anonymous">
-	<link rel="preload" href="lang/en.json" as="fetch" crossorigin="anonymous">
-	<meta name="description"
-		content="Discover the power of BWconomy, your premier partner in navigating the digital economy landscape. With BWconomy, gain access to cutting-edge tools that allow you to seamlessly add websites and conduct comprehensive scans, empowering you to make informed decisions and stay ahead of the competition. Maximize your efficiency and profitability with our innovative solutions, designed to optimize your online presence and drive growth in today's dynamic economic environment. Trust BWconomy to be your guiding light in the complex world of digital business, providing unparalleled insights and support every step of the way.">
-	<style>
-		@font-face {
-			font-family: 'Poppins';
-			font-style: normal;
-			font-weight: 400;
-			font-display: swap;
-			src: local("Poppins"), url("fonts/Poppins.woff2") format('woff2');
-		}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/favicon.webp">
+    <link rel="stylesheet" href="planets/style.css">
+    <link rel="preload" href="fonts/Poppins.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="prefetch" href="images/website-6898411_1920.png" crossorigin="anonymous">
+    <link rel="preload" href="lang/de.json" as="fetch" crossorigin="anonymous">
+    <link rel="preload" href="lang/en.json" as="fetch" crossorigin="anonymous">
+    <title>BWconomy</title>
+    <meta name="description"
+        content="Discover the power of BWconomy, your premier partner in navigating the digital economy landscape. With BWconomy, gain access to cutting-edge tools that allow you to seamlessly add websites and conduct comprehensive scans, empowering you to make informed decisions and stay ahead of the competition. Maximize your efficiency and profitability with our innovative solutions, designed to optimize your online presence and drive growth in today's dynamic economic environment. Trust BWconomy to be your guiding light in the complex world of digital business, providing unparalleled insights and support every step of the way.">
+    <style>
+        @font-face {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: local("Poppins"), url("fonts/Poppins.woff2") format('woff2');
+        }
 
-		body {
-			font-family: 'Poppins', arial, sans-serif;
-			background-color: #F0F8FF;
-			color: #333;
-			margin: 0;
-			padding: 0;
-			display: flex;
-			flex-direction: column;
-			min-height: 100vh;
-			justify-content: center;
-			align-items: center;
-			transition: background-color 0.3s, color 0.3s;
-			overflow-y: scroll;
-			overflow-x: hidden;
-			hyphens: auto;
-		}
+        body {
+            font-family: 'Poppins', arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            overflow-y: scroll;
+        }
 
-		body.dark-mode {
-			background-color: #121212;
-			color: #E0E0E0;
-		}
+        body.dark-mode {
+            background-color: #121212;
+            color: #E0E0E0;
+        }
 
-		header {
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			background: rgba(255, 255, 255, 0.15);
-			box-shadow: 0 6px 60px 0 rgba(42, 157, 143, 0.37);
-			backdrop-filter: blur(10px);
-			-webkit-backdrop-filter: blur(10px);
-			color: #000;
-			padding: 20px 0;
-			text-align: center;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			transition: all 0.3s;
-			z-index: 2;
-		}
-
-		body.dark-mode header {
-			box-shadow: 0 6px 60px 0 rgba(31, 38, 135, 0.37);
-			background-color: transparent;
-			color: #fff;
-		}
-
-		header .logo {
-			font-size: 1.5em;
-			font-weight: 600;
-			flex: 1;
-		}
-
-		header .logo span {
-			user-select: none;
-			cursor: pointer;
-		}
-
-		.main {
-			max-width: 600px;
-			width: 80%;
-			text-align: center;
-			padding: 20px;
-			border-radius: 10px;
-			background: rgba(255, 255, 255, 0.15);
-			box-shadow: 0 6px 60px 0 rgba(42, 157, 143, 0.75);
-			backdrop-filter: blur(10px);
-			-webkit-backdrop-filter: blur(10px);
-			transition: background-color 0.3s, box-shadow 0.3s;
-			margin-top: 100px;
-		}
-
-		body.dark-mode .main,
-		body.dark-mode #result {
-			background: rgba(30, 30, 30, 0.2);
-			box-shadow: 0 6px 60px 0 rgba(52, 74, 251, 0.75);
-			backdrop-filter: blur(10px);
-			-webkit-backdrop-filter: blur(10px);
-		}
-
-		.main h1 {
-			font-size: 2.5em;
-			color: #2A9D8F;
-			margin: 20px;
-			transition: all 0.3s;
-		}
-
-		body.dark-mode .main h1,
-		body.dark-mode #result h2 {
-			color: #344afb;
-		}
-
-		.main p {
-			font-size: 1em;
-			margin: 20px 0;
-			color: #264653;
-			transition: all 0.3s;
-		}
-
-		body.dark-mode .main p,
-		body.dark-mode #result p,
-		body.dark-mode #result h3 {
-			color: #A0A0A0;
-		}
-
-		.input-area {
-			display: flex;
-			align-items: center;
-			margin: 20px 0;
-			border: 1px solid #2A9D8F;
-			border-radius: 5px;
-			overflow: hidden;
-			background-color: rgba(250, 250, 250, 0.2);
-			transition: all 0.3s;
-		}
-
-		body.dark-mode .input-area {
-			background-color: rgba(15, 15, 15, 0.3);
-			border: 1px solid #2e2e2e;
-		}
-
-		.input-area input[type="url"] {
-			flex: 1;
-			padding: 20px 10px;
-			font-size: 1em;
-			border: none;
-			outline: none;
-			background-color: rgba(250, 250, 250, 0.2);
-			transition: all 0.3s;
-		}
-
-		body.dark-mode .input-area input[type="url"] {
-			background-color: rgba(15, 15, 15, 0.2);
-			color: #E0E0E0;
-			transition: all 0.3s;
-		}
-
-		.file-upload {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			transition: all 0.3s;
-		}
-
-		body.dark-mode .file-upload {
-			transition: all 0s;
-			background-color: transparent;
-		}
-
-		.file-upload input[type="file"] {
-			display: none;
-		}
-
-		.file-upload label {
-			display: flex;
-			margin: 15px;
-			color: #fff;
-			border-radius: 20px;
-			cursor: pointer;
-		}
-
-		*,
-		* *:after,
-		*:before {
-			box-sizing: border-box;
-		}
-
-		:root {
-			--x: 0;
-			--y: 0;
-			--xp: 0;
-			--yp: 0;
-			--hue: calc(0 + (var(--xp) * 500));
-			--bg: hsl(0 0% 10%);
-			--size: 100px;
-			--glow: radial-gradient(50% 50% at center,
-					hsl(var(--hue) 80% 85%),
-					hsl(var(--hue) 80% 70%),
-					transparent) calc((var(--x) * 1px) - (var(--size) * 0.5)) calc((var(--y) * 1px) - (var(--size) * 0.5)) / var(--size) var(--size) no-repeat fixed;
-
-			--glowRed: radial-gradient(50% 50% at center,
-					hsl(0, 100%, 50%),
-					hsl(0, 100%, 50%),
-					transparent) calc((var(--x) * 1px) - (var(--size) * 0.5)) calc((var(--y) * 1px) - (var(--size) * 0.5)) / var(--size) var(--size) no-repeat fixed;
-		}
-
-		body.dark-mode button.analyze-button::before {
-			background: var(--bg);
-		}
-
-		body.dark-mode button.analyze-button span {
-			background: var(--glow), #fff;
-			-webkit-background-clip: text;
-			background-clip: text;
-		}
-
-		button.analyze-button {
-			width: 177px;
-			border-radius: 1rem;
-			text-transform: uppercase;
-			font-weight: bold;
-			letter-spacing: 0.1ch;
-			border: 4px solid transparent;
-			box-shadow: 0 1px hsl(0 0% 100% / 0.15) inset;
-			cursor: pointer;
-			background: var(--glow), transparent;
-			transition: background-size 0.24s;
-			touch-action: none;
-			position: relative;
-			padding: 1rem 2rem;
-		}
-
-		button.analyze-button::before {
-			content: "";
-			position: absolute;
-			inset: 0;
-			box-shadow: 0 1px hsl(0 0% 100% / 0.15) inset;
-			background: hsl(0, 0%, 100%);
-			z-index: 2;
-			border-radius: 1rem;
-			transition: background 0.3s;
-		}
-
-		button.analyze-button span {
-			background: var(--glow), #000;
-			-webkit-background-clip: text;
-			background-clip: text;
-			color: transparent;
-			height: 100%;
-			width: 100%;
-			z-index: 2;
-			position: relative;
-			inset: 0;
-		}
-
-		:root:has(button.analyze-button:active) {
-			--size: 300px;
-		}
-
-		button.analyze-button::after {
-			content: "";
-			position: absolute;
-			inset: -4px;
-			filter: blur(20px);
-			border: 4px solid transparent;
-			background: var(--glow);
-			border-radius: 1rem;
-		}
-
-		button.analyze-button:disabled {
-			animation: skeleton-loading 1s linear infinite alternate;
-		}
-
-		body.dark-mode button.analyze-button:disabled {
-			animation: skeleton-loading-dark 1s linear infinite alternate;
-		}
-
-		#remove-file {
-			display: none;
-			width: 208px;
-			border-radius: 1rem;
-			text-transform: uppercase;
-			font-weight: bold;
-			letter-spacing: 0.1ch;
-			border: 4px solid transparent;
-			box-shadow: 0 1px hsl(0 0% 100% / 0.15) inset;
-			cursor: pointer;
-			background: var(--glowRed) transparent;
-			transition: background-size 0.24s;
-			touch-action: none;
-			position: relative;
-			padding: 1rem 2rem;
-		}
-
-		#remove-file::before {
-			content: "";
-			position: absolute;
-			inset: 0;
-			box-shadow: 0 1px hsl(0 0% 100% / 0.15) inset;
-			background: hsl(0, 0%, 100%);
-			z-index: 2;
-			border-radius: 1rem;
-			transition: background 0.3s;
-		}
-
-		#remove-file span {
-			background: var(--glowRed), #ff0000;
-			-webkit-background-clip: text;
-			background-clip: text;
-			color: transparent;
-			height: 100%;
-			width: 100%;
-			z-index: 2;
-			position: relative;
-			inset: 0;
-		}
-
-		:root:has(#remove-file:active) {
-			--size: 300px;
-		}
-
-		#remove-file::after {
-			content: "";
-			position: absolute;
-			inset: -4px;
-			filter: blur(20px);
-			border: 4px solid transparent;
-			background: var(--glowRed);
-			border-radius: 1rem;
-		}
-
-		body.dark-mode #remove-file::before {
-			background: var(--bg);
-		}
-
-		body.dark-mode #remove-file span {
-			background: var(--glowRed), #fff;
-			-webkit-background-clip: text;
-			background-clip: text;
-		}
-
-		#attachment {
-			width: 30px;
-			transition: all 0.3s;
-			transform: scale(0.8)
-		}
-
-		#attachment:hover {
-			transform: scale(1)
-		}
-
-		body.dark-mode #attachment {
-			filter: invert(1);
-		}
-
-		#result {
-			height: auto;
-			width: 80%;
-			max-width: 630px;
-			border-radius: 10px;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			background: rgba(255, 255, 255, 0.2);
-			box-shadow: 0 6px 60px 0 rgba(42, 157, 143, 0.75);
-			backdrop-filter: blur(10px);
-			-webkit-backdrop-filter: blur(10px);
-			margin: 20px 0;
-			display: block;
-			transition: all 0.3s, max-height 2s cubic-bezier(1, 0.06, 0.51, 0.9), padding 0s;
-			max-height: 0;
-			overflow: hidden;
-		}
-
-		#result h2 {
-			color: #2A9D8F;
-		}
-
-		#result h3,
-		#result p {
-			color: #264653;
-		}
-
-		@keyframes spin {
-			0% {
-				transform: rotate(0deg);
-			}
-
-			100% {
-				transform: rotate(360deg);
-			}
-		}
-
-		#websiteUrl {
-			font-size: 14px;
-			color: #2A9D8F;
-			text-decoration: none;
-			transition: all 0.3s ease-in-out;
-			background: linear-gradient(currentColor 0 0) bottom left 50%, linear-gradient(currentColor 0 0) bottom right 50%;
-			background-size: var(--underline-width, 0%) 0.1em;
-			background-repeat: no-repeat;
-			display: inline-block;
-			padding: 0.1em 0px;
-			margin: 0;
-			cursor: pointer;
-		}
-
-		body.dark-mode #websiteUrl {
-			color: #344afb;
-		}
-
-		#websiteUrl:hover {
-			--underline-width: 100%;
-		}
-
-		#urlContainer {
-			text-align: right;
-		}
-
-		#result h2:first-child {
-			margin-top: 0;
-		}
-
-		code {
-			font-size: 16px;
-		}
-
-		#resultContent {
-			margin-top: 0px;
-			padding: 20px;
-			transition: opacity 0.5s;
-		}
-
-		::-webkit-scrollbar {
+        ::-webkit-scrollbar {
 			width: 9px;
 		}
 
@@ -441,222 +44,177 @@
 		}
 
 		::-webkit-scrollbar-thumb {
-			box-shadow: inset 0 0 10px 10px #264653;
+			box-shadow: inset 0 0 10px 10px #000;
 			border: solid 3px transparent;
 			border-radius: 25px;
 		}
 
 		body.dark-mode::-webkit-scrollbar-thumb {
-			box-shadow: inset 0 0 10px 10px #0d1763;
+			box-shadow: inset 0 0 10px 10px #fff;
 		}
 
-		body.dark-mode .skeleton {
-			animation: skeleton-loading-dark 1s linear infinite alternate;
-		}
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 6px 60px 0 rgba(42, 157, 143, 0.37);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #000;
+            padding: 20px 0;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+            z-index: 2;
+        }
 
-		.skeleton {
-			animation: skeleton-loading 1s linear infinite alternate;
-			color: transparent !important;
-			border-radius: 30px;
-			pointer-events: none !important;
-			user-select: none !important;
-		}
+        body.dark-mode header {
+            box-shadow: 0 6px 60px 0 rgba(31, 38, 135, 0.37);
+            background-color: transparent;
+            color: #fff;
+        }
 
-		.skeleton * {
-			color: transparent !important;
-		}
+        header .logo {
+            font-size: 1.5em;
+            font-weight: 600;
+            flex: 1;
+        }
 
-		.export {
-			appearance: none;
-			background-color: #fff;
-			border: 2px solid #1A1A1A;
-			border-radius: 15px;
-			box-sizing: border-box;
-			color: #3B3B3B;
-			cursor: pointer;
-			display: inline-block;
-			font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-			font-size: 16px;
-			font-weight: 600;
-			line-height: normal;
-			margin: 0;
-			margin-top: 19.92px;
-			min-width: 0;
-			outline: none;
-			padding: 10px;
-			text-align: center;
-			text-decoration: none;
-			transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
-			user-select: none;
-			-webkit-user-select: none;
-			touch-action: manipulation;
-			will-change: transform;
-			width: 136px;
-		}
+        header .logo span {
+            user-select: none;
+            cursor: pointer;
+        }
 
-		.export:disabled {
-			pointer-events: none;
-		}
+        .language {
+            position: absolute;
+            left: 23px;
+        }
 
-		.export:hover {
-			color: #fff;
-			background-color: #1A1A1A;
-			box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
-			transform: translateY(-2px);
-		}
+        #language {
+            cursor: pointer;
+            font-size: 20px;
+        }
 
-		.export:active {
-			box-shadow: none;
-			transform: translateY(0);
-		}
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #333;
+            gap: 50px;
+        }
 
-		svg {
-			visibility: hidden;
-			position: fixed;
-			top: 0;
-			left: 0;
-			height: 100%;
-			width: 100%;
-			pointer-events: none;
-			transition: all 0.3s;
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
 
-			line {
-				stroke-width: 10;
-				stroke-linecap: round;
+        nav ul li {
+            margin: 0 10px;
+        }
 
-				#line-1 & {
-					stroke: #52ebff;
-				}
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+        }
 
-				#line-2 & {
-					stroke: #8100b4;
-				}
+        .btn-cta {
+            appearance: none;
+            background-color: #fff;
+            border: 2px solid #1A1A1A;
+            border-radius: 15px;
+            box-sizing: border-box;
+            color: #3B3B3B;
+            cursor: pointer;
+            display: inline-block;
+            font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            font-size: 16px;
+            font-weight: 600;
+            line-height: normal;
+            margin: 0;
+            min-width: 0;
+            outline: none;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            will-change: transform;
+            width: 136px;
+        }
 
-				#line-3 & {
-					stroke: #f700ff;
-				}
-			}
-		}
+        .btn-cta:disabled {
+            pointer-events: none;
+        }
 
-		body.dark-mode svg {
-			line {
-				stroke-width: 7;
-				stroke-linecap: round;
+        .btn-cta:hover {
+            color: #fff;
+            background-color: #1A1A1A;
+            box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+            transform: translateY(-2px);
+        }
 
-				#line-1 & {
-					stroke: #fff;
-				}
+        .btn-cta:active {
+            box-shadow: none;
+            transform: translateY(0);
+        }
 
-				#line-2 & {
-					stroke: #fff;
-				}
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 100dvh;
+        }
 
-				#line-3 & {
-					stroke: #fff;
-				}
-			}
-		}
+        .hero-text {
+            max-width: 50%;
+        }
 
-		#buttonText {
-			transition: opacity 0.3s ease;
-		}
+        .hero-text h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
 
-		.seoList {
-			margin-top: 0;
-		}
+        .hero-text h1, .hero-text p, .container h2, .container h3, .container p {
+            transition: color 0.3s;
+        }
 
-		.start {
-			animation: start 2s ease forwards;
-		}
+        body.dark-mode .hero-text h1, body.dark-mode .hero-text p, body.dark-mode .container h2, body.dark-mode .container h3, body.dark-mode .container p {
+            color: #E0E0E0;
+        }
 
-		.cookie-popup {
-			position: fixed;
-			bottom: 0;
-			left: 0;
-			width: auto;
-			color: #000;
-			border-radius: 10px;
-			background: rgba(255, 255, 255, 0.15);
-			box-shadow: 0 6px 60px 0 rgba(42, 157, 143, 0.75);
-			backdrop-filter: blur(10px);
-			-webkit-backdrop-filter: blur(10px);
-			padding: 10px 20px;
-			text-align: center;
-			z-index: 9999;
-			font-size: 18px;
-			transition: all 0.3s;
-		}
+        .hero img {
+            max-width: 45%;
+            height: auto;
+            border-radius: 15px;
+        }
 
-		.cookie-popup button {
-			margin: 5px;
-			padding: 10px 20px;
-			font-size: 16px;
-			border: none;
-			cursor: pointer;
-			border-radius: 5px;
-			color: #fff;
-			transition: all 0.3s;
-			transform: scale(0.9);
-		}
+        .end h1 {
+            text-align: center;
+            font-size: 40px;
+        }
 
-		.cookie-popup button:hover {
-			transform: scale(1.0);
-		}
+        .steps {
+            text-align: right;
+        }
 
-		.cookie-popup button.accept {
-			background-color: #2A9D8F;
-		}
+        #privacy {
+            text-align: right;
+            margin: 40px 0px;
+        }
 
-		.cookie-popup button.decline {
-			background-color: #ff0000;
-		}
-
-		.cookie-popup a {
-			font-size: 16px;
-			color: #344afb;
-			text-decoration: none;
-			font-weight: bold;
-			transition: all 0.3s ease-in-out;
-			background: linear-gradient(currentColor 0 0) bottom left 50%, linear-gradient(currentColor 0 0) bottom right 50%;
-			background-size: var(--underline-width, 0%) 0.1em;
-			background-repeat: no-repeat;
-			display: inline-block;
-			padding: 0.1em 0px;
-			margin: 0;
-			cursor: pointer;
-		}
-
-		.cookie-popup a:hover {
-			--underline-width: 100%;
-		}
-
-		body.dark-mode .cookie-popup {
-			background: rgba(30, 30, 30, 0.2);
-			box-shadow: 0 6px 60px 0 rgba(52, 74, 251, 0.75);
-			backdrop-filter: blur(10px);
-			-webkit-backdrop-filter: blur(10px);
-			color: #fff;
-		}
-
-		body.dark-mode .cookie-popup a {
-			color: #2A9D8F;
-		}
-
-		body.dark-mode .cookie-popup button.accept {
-			background-color: #344afb;
-		}
-
-		.privacy {
-			position: absolute;
-			top: 0;
-			right: 0;
-			cursor: pointer;
-			user-select: none;
-			margin: 10px;
-			font-size: 12px;
-		}
-
-		.privacy a {
+        #privacy a {
 			text-decoration: none;
 			font-weight: bold;
 			transition: all 0.3s, background 0.3s ease-in-out;
@@ -670,297 +228,132 @@
 			color: #4b4b4b;
 		}
 
-		body.dark-mode .privacy a {
-			color: #A0A0A0;
+		body.dark-mode #privacy a {
+			color: #E0E0E0;
 		}
 
-		.privacy a:hover {
+		#privacy a:hover {
 			--underline-width: 100%;
 		}
 
-		.language {
-			position: absolute;
-			left: 23px;
-		}
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+                gap: 0px;
+            }
 
-		#language {
-			cursor: pointer;
-			font-size: 20px;
-		}
+            .container h2 {
+                margin-bottom: 0;
+            }
 
-		#dropdown {
-			position: absolute;
-			top: 20px;
-			right: 20px;
-		}
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
 
-		#dropdown img {
-			cursor: pointer;
-			width: 38px;
-			transition: all 0.3s;
-			transform: scale(0.8);
-		}
+            .steps {
+                text-align: left;
+            }
 
-		body.dark-mode #dropdown img {
-			filter: invert(1);
-		}
+            nav ul li {
+                margin: 10px 0;
+            }
 
-		#dropdown img:hover {
-			transform: scale(1);
-		}
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                margin-top: 80px;
+            }
 
-		#dropdownMenu {
-			display: none;
-			position: absolute;
-			right: 0;
-			border-radius: 10px;
-			min-width: 160px;
-			margin-top: 10px;
-			transition: all 0.3s;
-			opacity: 0;
-			background: rgba(255, 255, 255, 0.9);
-			box-shadow: 0 6px 60px 0 rgba(42, 157, 143, 0.75);
-			backdrop-filter: blur(10px);
-			-webkit-backdrop-filter: blur(10px);
-			color: #000;
-		}
+            .hero-text,
+            .hero img {
+                max-width: 100%;
+            }
 
-		body.dark-mode #dropdownMenu {
-			background: rgba(30, 30, 30, 0.9);
-			box-shadow: 0 6px 60px 0 rgba(52, 74, 251, 0.75);
-			backdrop-filter: blur(10px);
-			-webkit-backdrop-filter: blur(10px);
-			color: #fff;
-		}
+            .hero img {
+                margin-top: 20px;
+            }
 
-		#dropdownMenu a {
-			cursor: grab;
-			color: #000;
-			padding: 12px 16px;
-			text-decoration: none;
-			display: block;
-			transition: all 0.15s;
-			border-radius: 10px;
-		}
+            .btn-cta {
+                padding: 15px 30px;
+                font-size: 1.2em;
+            }
 
-		body.dark-mode #dropdownMenu a {
-			color: #fff;
-		}
+            h1 {
+                font-size: 2em;
+            }
 
-		#dropdownMenu a:hover {
-			background-color: #d5d5d5;
-		}
-
-		body.dark-mode #dropdownMenu a:hover {
-			background-color: #323232;
-		}
-
-		#resultContent h2 {
-			display: block;
-			width: calc(100% - 40px);
-		}
-
-		.greyed-out {
-			color: #a1a1a1 !important;
-		}
-
-		.dropdownContainer {
-			transition: all 0.3s;
-		}
-
-		body.dark-mode .greyed-out {
-			filter: contrast(0.5) brightness(0.5);
-		}
-
-		@keyframes start {
-			0% {
-				opacity: 0.01;
-				filter: blur(5px)
-			}
-
-			100% {
-				opacity: 1;
-			}
-		}
-
-		@keyframes skeleton-loading {
-			0% {
-				background-color: hsl(0, 0%, 78%);
-			}
-
-			100% {
-				background-color: hsl(0, 0%, 88%);
-			}
-		}
-
-		@keyframes skeleton-loading-dark {
-			0% {
-				background-color: hsl(0, 0%, 20%);
-			}
-
-			100% {
-				background-color: hsl(0, 0%, 15%);
-			}
-		}
-
-		@media (max-width: 600px) {
-			.main h1 {
-				font-size: 2em;
-			}
-
-			body {
-				min-height: 0;
-			}
-
-			#line-1,
-			#line-2,
-			#line-3 {
-				visibility: hidden !important;
-			}
-			#inputURL::placeholder {
-				font-size: 14px;
-			}
-		}
-	</style>
+            h2 {
+                font-size: 2em;
+            }
+            #privacy {
+                margin: 0;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
 </head>
-
 <body>
-	<div class="cookie-popup start" id="cookie-popup">
-		<p id="cookies"></p>
-		<button id="accept" class="accept" onclick="acceptCookies()"></button>
-		<button id="decline" class="decline" onclick="declineCookies()"></button>
-		<p><a id="privacy-policy" onclick="window.location.href = 'privacy-policy'"></a></p>
-	</div>
-	<svg id="line-1"></svg>
-	<svg id="line-2"></svg>
-	<svg id="line-3"></svg>
-	<header>
-		<div class="language"><span onclick="changeLanguage()" id="language">EN</span></div>
-		<div class="logo"><span id="logo" onclick="window.location.reload()">BWconomy</span></div>
-		<div id="container"> <span class="mode" id="darkmode" role="button" tabIndex="0" onClick="toggleDarkMode()"
-				aria-label="darkmode button">
-				<div class="darkmode_icon"> <span class="ray"></span> <span class="ray"></span> <span
-						class="ray"></span> <span class="ray"></span> <span class="ray"></span> <span
-						class="ray"></span> <span class="ray"></span> <span class="ray"></span> </div>
-			</span>
-		</div>
-	</header>
-	<div class="main start">
-		<div class="privacy"><a id="privacy-policy2" onClick="window.location.href = 'privacy-policy'"></a></div>
-		<h1 id="greeting"></h1>
-		<p id="mainText"></p>
-		<div class="input-area">
-			<input autocomplete="off" name="hidden" id="inputURL" type="url" aria-label="Enter a website URL">
-			<div class="file-upload">
-				<input type="file" id="file-upload" accept=".html">
-				<label for="file-upload"><img draggable="false" id="attachment" src="images/icons8-attach-96.png"
-						alt="Upload file"></label>
-			</div>
-		</div>
-		<button id="analyze" class="analyze-button" onclick="analyzeURL()">
-			<span id="buttonText"></span>
-		</button>
-		<button id="remove-file" onclick="removeFile()">
-			<span id="removeButtonText"></span>
-		</button>
-	</div>
-	<div id="result">
-		<div id="resultContent">
-			<div id="dropdown">
-				<img id="dropdownImg" src="images/icons8-tune-96.png" alt="Dropdown">
-				<div id="dropdownMenu" class="dropdown-content">
-				</div>
-			</div>
+    <header>
+        <div class="language"><span onclick="changeLanguage()" id="language">EN</span></div>
+        <div class="logo"><span id="logo" onclick="window.location.reload()">BWconomy</span></div>
+        <div id="container"> <span class="mode" id="darkmode" role="button" tabIndex="0" onClick="toggleDarkMode()"
+                aria-label="darkmode button">
+                <div class="darkmode_icon"> <span class="ray"></span> <span class="ray"></span> <span
+                        class="ray"></span> <span class="ray"></span> <span class="ray"></span> <span
+                        class="ray"></span> <span class="ray"></span> <span class="ray"></span> </div>
+            </span>
+        </div>
+    </header>
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-text">
+                <h1 id="landingMain"></h1>
+                <p id="landingBelowMain"></p>
+                <a id="landingStart" href="app" class="btn-cta"></a>
+            </div>
+            <img src="images/website-6898411_1920.png" alt="Hero Image">
+        </div>
+    </section>
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <h2 id="landingHowWorks"></h2>
+            <div class="steps">
+                <div class="step">
+                    <h3 id="landingStepOne"></h3>
+                    <p id="landingStepOneBelow"></p>
+                </div>
+                <div class="step">
+                    <h3 id="landingStepTwo"></h3>
+                    <p id="landingStepTwoBelow"></p>
+                </div>
+                <div class="step">
+                    <h3 id="landingStepThree"></h3>
+                    <p id="landingStepThreeBelow"></p>
+                </div>
+                <p id="privacy"><a id="privacy-policy" onclick="window.location.href = 'privacy-policy'">Privacy Policy</a></p>
+            </div>
+        </div>
+    </section>
 
-			<div id="fourPsContainer">
-				<h2 id="fourPsTitle"></h2>
-				<p id="fourPs"></p>
-			</div>
-
-			<div id="fourCsContainer">
-				<h2 id="fourCsTitle"></h2>
-				<p id="fourCs"></p>
-			</div>
-
-			<div id="seoContainer">
-				<h2 id="seoTitle"></h2>
-				<p id="seo"></p>
-			</div>
-
-			<div id="speedContainer">
-				<h2 id="speedTitle"></h2>
-				<p id="speed"></p>
-				<p id="ip"></p>
-			</div>
-
-			<div id="securityContainer">
-				<h2 id="securityTitle"></h2>
-				<p id="security"></p>
-			</div>
-
-			<div id="privacyContainer">
-				<h2 id="privacyTitle"></h2>
-				<p id="privacy"></p>
-			</div>
-
-			<div id="swotContainer">
-				<h2 id="swotTitle"></h2>
-				<canvas id="swotChart" width="400" height="400"></canvas>
-				<p id="swot"></p>
-			</div>
-
-			<div id="abcContainer">
-				<h2 id="abcTitle"></h2>
-				<p id="abc"></p>
-			</div>
-
-			<div id="summarizationContainer">
-				<h2 id="summarizationTitle"></h2>
-				<canvas id="summarizationChart" width="400" height="400"></canvas>
-				<p id="summarization"></p>
-			</div>
-
-			<div id="urlLinkContainer">
-				<div
-					style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 20px;">
-					<button id="wordButton" class="export" onclick="exportNote('result')"></button>
-					<div id="urlContainer" style="text-align: center; flex-grow: 1;"></div>
-					<button id="shareButton" class="export" onclick="copyUrl()"></button>
-				</div>
-			</div>
-
-		</div>
-	</div>
-	<script>
-		if (localStorage.getItem('dark-mode') === 'dark') {
+    <script>
+        if (localStorage.getItem('dark-mode') === 'dark') {
 			document.body.classList.add('dark-mode');
 			document.body.dataset.theme = localStorage.getItem('dark-mode')
 		}
-		var consent = localStorage.getItem('cookie_consent');
-		if (consent === 'accepted' || consent === 'declined') {
-			document.getElementById('cookie-popup').style.display = 'none';
+
+        function toggleDarkMode() {
+			document.body.classList.toggle('dark-mode');
+			if (document.body.classList.contains('dark-mode')) {
+				localStorage.setItem('dark-mode', 'dark');
+			} else {
+				localStorage.setItem('dark-mode', 'light');
+			}
+			document.body.dataset.theme = localStorage.getItem('dark-mode')
 		}
 
-		var userLang = navigator.language || navigator.userLanguage;
-
-		let preferredLang = localStorage.getItem('preferredLang');
-
-		var langText = document.getElementById("language");
-
-		if (!preferredLang) {
-			preferredLang = userLang;
-			localStorage.setItem('preferredLang', preferredLang);
-		} else {
-			langText.innerHTML = preferredLang.startsWith('de') ? 'EN' : 'DE';
-		}
-
-		document.getElementById("inputURL").focus();
-	</script>
-	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-	<script src="./html-docx.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-	<script>
-		let languageData = {};
+        let languageData = {};
 
 		function fetchLanguageData(language) {
 			return fetch(`${language}.json`)
@@ -979,32 +372,25 @@
 
 		function updateContent(data) {
 			document.getElementById('logo').innerHTML = data.logo;
-			document.getElementById('greeting').textContent = data.greeting;
-			document.getElementById('mainText').innerHTML = data.mainText;
-			document.getElementById('cookies').innerHTML = data.cookies;
-			document.getElementById('accept').textContent = data.accept;
-			document.getElementById('decline').textContent = data.decline;
-			document.getElementById('privacy-policy').textContent = data["privacy-policy"];
-			document.getElementById('privacy-policy2').textContent = data["privacy-policy2"];
-			document.getElementById('buttonText').textContent = data.buttonText;
-			document.getElementById('removeButtonText').textContent = data["removeButtonText"];
-			document.getElementById('fourPsTitle').textContent = data["fourPsTitle"];
-			document.getElementById('fourCsTitle').textContent = data["fourCsTitle"];
-			document.getElementById('seoTitle').textContent = data["seoTitle"];
-			document.getElementById('speedTitle').textContent = data["speedTitle"];
-			document.getElementById('securityTitle').textContent = data["securityTitle"];
-			document.getElementById('privacyTitle').textContent = data["privacyTitle"];
-			document.getElementById('swotTitle').textContent = data["swotTitle"];
-			document.getElementById('abcTitle').textContent = data["abcTitle"];
-			document.getElementById('summarizationTitle').textContent = data["summarizationTitle"];
-			document.getElementById('wordButton').textContent = data["wordButton"];
-			document.getElementById('inputURL').placeholder = data["inputPlaceholder"];
-			document.getElementById('shareButton').textContent = data["share"];
+			document.getElementById('privacy-policy').innerHTML = data["privacy-policy"];
+			document.getElementById('landingMain').innerHTML = data.landingMain;
+			document.getElementById('landingBelowMain').innerHTML = data.landingBelowMain;
+			document.getElementById('landingStart').innerHTML = data.landingStart;
+			document.getElementById('landingHowWorks').innerHTML = data.landingHowWorks;
+			document.getElementById('landingStepOne').innerHTML = data.landingStepOne;
+			document.getElementById('landingStepOneBelow').innerHTML = data.landingStepOneBelow;
+			document.getElementById('landingStepTwo').innerHTML = data.landingStepTwo;
+			document.getElementById('landingStepTwoBelow').innerHTML = data.landingStepTwoBelow;
+			document.getElementById('landingStepThree').innerHTML = data.landingStepThree;
+			document.getElementById('landingStepThreeBelow').innerHTML = data.landingStepThreeBelow;
+			document.getElementById('logo').innerHTML = data.logo;
 		}
 
 		var userLang = navigator.language || navigator.userLanguage;
 
 		var lang = userLang.startsWith('de') ? 'lang/de' : 'lang/en';
+
+        let preferredLang = localStorage.getItem('preferredLang');
 
 		var langText = document.getElementById("language");
 
@@ -1013,12 +399,12 @@
 			localStorage.setItem('preferredLang', preferredLang);
 		} else {
 			lang = preferredLang.startsWith('de') ? 'lang/de' : 'lang/en';
+            langText.innerHTML = preferredLang.startsWith('de') ? 'EN' : 'DE';
 		}
 
 		fetchLanguageData(lang).then(data => {
 			if (data) {
 				updateContent(data);
-				populateDropdown();
 			}
 		});
 
@@ -1031,1254 +417,6 @@
 			}
 			window.location.reload();
 		}
-
-		document.getElementById("dropdownImg").addEventListener("click", function () {
-			var dropdownMenu = document.getElementById("dropdownMenu");
-			if (dropdownMenu.style.display === "none" || dropdownMenu.style.display === "") {
-				dropdownMenu.style.display = "block";
-				setTimeout(function () {
-					dropdownMenu.style.opacity = 1;
-				}, 1);
-			} else {
-				dropdownMenu.style.opacity = 0;
-				setTimeout(function () {
-					dropdownMenu.style.display = "none";
-				}, 350);
-			}
-		});
-
-		window.onclick = function (event) {
-			if (!event.target.matches('#dropdownImg') && !event.target.matches('.dropdownContainer')) {
-				var dropdowns = document.getElementsByClassName("dropdown-content");
-				for (var i = 0; i < dropdowns.length; i++) {
-					var openDropdown = dropdowns[i];
-					if (openDropdown.style.display === "block") {
-						openDropdown.style.opacity = 0;
-						setTimeout(function () {
-							openDropdown.style.display = "none";
-						}, 350);
-					}
-				}
-			}
-		}
-
-		function populateDropdown() {
-			const dropdownMenu = document.getElementById("dropdownMenu");
-			const resultContent = document.getElementById("resultContent");
-
-			const containers = [
-				{ id: "fourPsContainer", label: languageData["dropDown4Ps"] },
-				{ id: "fourCsContainer", label: languageData["dropDown4Cs"] },
-				{ id: "seoContainer", label: languageData["dropDownSEO"] },
-				{ id: "speedContainer", label: languageData["dropDownSpeed"] },
-				{ id: "securityContainer", label: languageData["dropDownSecurity"] },
-				{ id: "privacyContainer", label: languageData["dropDownPrivacy"] },
-				{ id: "swotContainer", label: languageData["dropDownSWOT"] },
-				{ id: "abcContainer", label: languageData["dropDownABC"] },
-				{ id: "summarizationContainer", label: languageData["dropDownSummarization"] },
-			];
-
-			containers.forEach(container => {
-				const option = document.createElement("a");
-				option.href = `#${container.id}`;
-				option.classList.add("dropdownContainer");
-				option.textContent = container.label;
-				option.draggable = true;
-				option.addEventListener("dragstart", dragStart);
-				option.addEventListener("dragover", dragOver);
-				option.addEventListener("drop", drop);
-				dropdownMenu.appendChild(option);
-				option.addEventListener("click", function (event) {
-					event.preventDefault();
-					toggleSectionVisibility(container.id);
-				});
-			});
-
-			function toggleSectionVisibility(sectionId) {
-				const section = document.getElementById(sectionId);
-				const option = document.querySelector(`a[href="#${sectionId}"]`);
-				const optionsWithoutGreyedOut = document.querySelectorAll('a:not(.greyed-out)').length;
-				var resultCont = document.getElementById('resultContent');
-
-				var dropdownMenu = document.getElementById('dropdownMenu');
-				var dropdownHeight = dropdownMenu.clientHeight * 1.2;
-				resultCont.style.minHeight = dropdownHeight + "px";
-
-				if (section.style.display === "none") {
-					section.style.display = "block";
-					option.classList.remove('greyed-out');
-				} else if (!(optionsWithoutGreyedOut < 5)) {
-					section.style.display = "none";
-					option.classList.add('greyed-out');
-				}
-			}
-
-			let dragged;
-
-			function dragStart(event) {
-				dragged = event.target;
-				event.dataTransfer.effectAllowed = "move";
-			}
-
-			function dragOver(event) {
-				event.preventDefault();
-				event.dataTransfer.dropEffect = "move";
-			}
-
-			function drop(event) {
-				event.preventDefault();
-				var resultContent = document.getElementById("resultContent");
-				if (dragged !== event.target) {
-					let allOptions = Array.from(dropdownMenu.children);
-					let draggedIndex = allOptions.indexOf(dragged);
-					let targetIndex = allOptions.indexOf(event.target);
-
-					if (draggedIndex < targetIndex) {
-						event.target.after(dragged);
-					} else {
-						event.target.before(dragged);
-					}
-
-					reorderContainers();
-				}
-			}
-
-			function reorderContainers() {
-				var resultContent = document.getElementById("resultContent");
-				let orderedContainers = Array.from(dropdownMenu.children).map(option => option.href.split("#")[1]);
-				orderedContainers.forEach(containerId => {
-					let container = document.getElementById(containerId);
-					resultContent.insertBefore(container, urlLinkContainer);
-				});
-				resultContent.appendChild(urlLinkContainer);
-			}
-
-			resultContent.appendChild(urlLinkContainer);
-		};
-
-		var score = 0;
-		var maxScore = 9;
-
-		function acceptCookies() {
-			localStorage.setItem('cookie_consent', 'accepted');
-			document.getElementById('cookie-popup').style.display = 'none';
-		}
-
-		function declineCookies() {
-			localStorage.setItem('cookie_consent', 'declined');
-			document.getElementById('cookie-popup').style.display = 'none';
-		}
-
-		const syncPointer = ({ x: pointerX, y: pointerY }) => {
-			const x = pointerX.toFixed(2);
-			const y = pointerY.toFixed(2);
-			const xp = (pointerX / window.innerWidth).toFixed(2);
-			const yp = (pointerY / window.innerHeight).toFixed(2);
-			document.documentElement.style.setProperty('--x', x);
-			document.documentElement.style.setProperty('--xp', xp);
-			document.documentElement.style.setProperty('--y', y);
-			document.documentElement.style.setProperty('--yp', yp);
-		};
-		document.body.addEventListener('pointermove', syncPointer);
-
-		const svgns = 'http://www.w3.org/2000/svg';
-		const ease = 0.5;
-		const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-		const lines = ["line-1", "line-2", "line-3"];
-		const lineElements = lines.map(id => document.getElementById(id));
-		const lineVisibilityMap = {};
-
-		function updatePointer(event) {
-			pointer.x = event.clientX;
-			pointer.y = event.clientY;
-
-			for (const lineId of lines) {
-				if (!lineVisibilityMap[lineId]) {
-					lineVisibilityMap[lineId] = true;
-					document.getElementById(lineId).style.visibility = "visible";
-				}
-			}
-		}
-
-		function resizePos(event) {
-			pointer.x = window.innerWidth / 2;
-			pointer.y = window.innerHeight / 2;
-		}
-
-		function createLine(leader) {
-			const line = document.createElementNS(svgns, 'line');
-			const get = gsap.getProperty(line);
-			const set = gsap.quickSetter(line, 'attr');
-
-			const modifier = (prop) => {
-				const n2 = `${prop}2`;
-
-				return () => {
-					const posN = get(prop);
-					const leaderN = leader(prop);
-					const n = posN + (leaderN - posN) * ease;
-
-					set({ [n2]: leaderN - n });
-
-					return n;
-				}
-			};
-
-			gsap.set(line, pointer);
-
-			gsap.to(line, {
-				x: '+=1',
-				y: '+=1',
-				repeat: -1,
-				ease: 'linear',
-				modifiers: { x: modifier('x'), y: modifier('y') }
-			});
-
-			return line;
-		}
-
-		function createTrail(selector, trailLength = 10) {
-			const root = document.querySelector(selector);
-			let leader = (prop) => prop === 'x' ? pointer.x : pointer.y;
-
-			for (let i = 0; i < trailLength; i++) {
-				const line = createLine(leader);
-				root.appendChild(line);
-				leader = gsap.getProperty(line);
-			}
-		}
-
-		window.addEventListener('pointerdown', updatePointer);
-		window.addEventListener('pointermove', updatePointer, { passive: true });
-		window.addEventListener('resize', resizePos);
-
-		for (const lineId of lines) {
-			lineVisibilityMap[lineId] = false;
-		}
-
-		createTrail('#line-1', 20);
-		createTrail('#line-2', 15);
-		createTrail('#line-3', 10);
-
-		var url;
-		var timeTaken;
-		var inputElement = document.querySelector('.input-area input[type="url"]');
-		inputElement.addEventListener("keypress", function (event) {
-			if (event.key === "Enter") {
-				event.preventDefault();
-				analyzeURL();
-			}
-		});
-
-		function addSkeleton() {
-			var div = document.getElementById("resultContent");
-			var nodes = div.childNodes;
-			var dropdownImg = document.getElementById("dropdownImg");
-			dropdownImg.style.display = "none";
-
-			for (var i = 0; i < nodes.length; i++) {
-				if (nodes[i].nodeType === Node.ELEMENT_NODE) {
-					nodes[i].classList.add("skeleton");
-				}
-			}
-		}
-
-		function removeSkeleton() {
-			var div = document.getElementById("resultContent");
-			var nodes = div.childNodes;
-			var dropdownImg = document.getElementById("dropdownImg");
-			dropdownImg.style.display = "block";
-
-			for (var i = 0; i < nodes.length; i++) {
-				if (nodes[i].nodeType === Node.ELEMENT_NODE) {
-					nodes[i].classList.remove("skeleton");
-				}
-			}
-		}
-
-		document.addEventListener("DOMContentLoaded", function () {
-			var currentUrl = window.location.href;
-
-			var urlParams = new URLSearchParams(window.location.search);
-
-			if (urlParams.has('url')) {
-				var url = urlParams.get('url');
-				var inputElement = document.querySelector('.input-area input[type="url"]');
-				inputElement.value = url;
-				analyzeURL();
-			}
-		});
-
-		async function analyzeURL() {
-			let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-			window.history.replaceState({}, document.title, newUrl);
-			score = 0;
-			var ip = document.getElementById('ip');
-			addSkeleton();
-			var inputElement = document.querySelector('.input-area input[type="url"]');
-			var fileInput = document.getElementById('file-upload');
-			var file = fileInput.files[0];
-			url = inputElement.value;
-			inputElement.value = '';
-			var analyzeButton = document.getElementById('buttonText');
-			analyzeButton.style.opacity = '0';
-			setTimeout(function () {
-				analyzeButton.textContent = languageData["loadingText"];
-				analyzeButton.style.opacity = '1';
-			}, 200);
-			analyzeButton.disabled = true;
-			analyzeButton.style.cursor = "default";
-			if (file && file.type === "text/html") {
-				var reader = new FileReader();
-				reader.onload = function (event) {
-					var fileContent = event.target.result;
-					analyzation(fileContent, "!^FILE^!");
-					analyzeButton.disabled = false;
-					analyzeButton.style.opacity = '0';
-					setTimeout(function () {
-						analyzeButton.textContent = languageData["buttonText"];
-						analyzeButton.style.opacity = '1';
-					}, 200);
-					analyzeButton.style.cursor = "pointer";
-				};
-				reader.readAsText(file);
-			} else if (url && url.includes(".")) {
-				if (!url.startsWith('http://') && !url.startsWith('https://')) {
-					url = 'https://' + url;
-				}
-				var proxyUrl = 'https://cors.nikity.workers.dev/proxy?proxyUrl=';
-				var startTime = Date.now();
-				var xhr = new XMLHttpRequest();
-				xhr.open('GET', proxyUrl + url);
-
-				// IP
-				var urlIP = url.replace(/(^\w+:|^)\/\//, '');
-				urlIP = urlIP.split('/')[0];
-				const ipResponse = await fetch(`https://dns.google/resolve?name=${urlIP}`);
-				const ipData = await ipResponse.json();
-
-				if (ipData.Answer && ipData.Answer.length > 0) {
-					const ipAddress = ipData.Answer[0].data;
-
-					const geoResponse = await fetch(`https://ipinfo.io/${ipAddress}/geo`);
-					const geoData = await geoResponse.json();
-
-					ip.innerHTML = `Server-IP: ${ipAddress}<br>${languageData["locationText"]}: ${geoData.city}, ${geoData.country}`;
-				} else {
-					ip.innerHTML = `${geoError}`;
-				}
-
-				xhr.onload = function () {
-					if (xhr.status >= 200 && xhr.status < 300) {
-
-						var contentType = xhr.getResponseHeader('Content-Type');
-						if (contentType && contentType.includes('text/html')) {
-							var endTime = Date.now();
-							timeTaken = endTime - startTime;
-							// console.info('Fetching the website took ' + timeTaken + ' milliseconds');
-							analyzation(xhr.responseText, url);
-						} else if (xhr.responseText == "error code: 1003") {
-							alert(`${languageData["websiteError"]}`);
-						} else {
-							analyzeButton.disabled = false;
-							analyzeButton.style.opacity = '0';
-							setTimeout(function () {
-								analyzeButton.textContent = languageData["buttonText"];
-								analyzeButton.style.opacity = '1';
-							}, 200);
-							analyzeButton.style.cursor = "pointer";
-							removeSkeleton();
-							setTimeout(() => {
-								alert(`${languageData["validURL"]}`);
-							}, 10);
-						}
-						analyzeButton.disabled = false;
-						analyzeButton.style.opacity = '0';
-						setTimeout(function () {
-							analyzeButton.textContent = languageData["buttonText"];
-							analyzeButton.style.opacity = '1';
-						}, 200);
-						analyzeButton.style.cursor = "pointer";
-					} else {
-						console.error(`${XHRError}`);
-					}
-				};
-				xhr.onerror = function () {
-					console.error(`${XHRError2}`);
-					analyzeButton.disabled = false;
-					analyzeButton.style.opacity = '0';
-					setTimeout(function () {
-						analyzeButton.textContent = languageData["buttonText"];
-						analyzeButton.style.opacity = '1';
-					}, 200);
-					analyzeButton.style.cursor = "pointer";
-					removeSkeleton();
-				};
-				xhr.send();
-			} else {
-				analyzeButton.disabled = false;
-				analyzeButton.style.opacity = '0';
-				setTimeout(function () {
-					analyzeButton.textContent = languageData["buttonText"];
-					analyzeButton.style.opacity = '1';
-				}, 200);
-				analyzeButton.style.cursor = "pointer";
-				removeSkeleton();
-				alert(`${languageData["validURL"]}`);
-			}
-		}
-		document.getElementById('file-upload').addEventListener('change', function () {
-			var inputElement = document.querySelector('.input-area input[type="url"]');
-			var removeFileButton = document.getElementById('remove-file');
-			if (this.files.length > 0) {
-				inputElement.value = `${languageData["fileUploaded"]}`;
-				inputElement.disabled = true;
-				removeFileButton.style.display = 'inline-block';
-			} else {
-				inputElement.value = '';
-				inputElement.disabled = false;
-				removeFileButton.style.display = 'none';
-			}
-		});
-
-		function removeFile() {
-			var fileInput = document.getElementById('file-upload');
-			var inputElement = document.querySelector('.input-area input[type="url"]');
-			var removeFileButton = document.getElementById('remove-file');
-			fileInput.value = '';
-			inputElement.value = '';
-			inputElement.disabled = false;
-			removeFileButton.style.display = 'none';
-		}
-
-		function toggleDarkMode() {
-			document.body.classList.toggle('dark-mode');
-			if (document.body.classList.contains('dark-mode')) {
-				localStorage.setItem('dark-mode', 'dark');
-			} else {
-				localStorage.setItem('dark-mode', 'light');
-			}
-			document.body.dataset.theme = localStorage.getItem('dark-mode')
-		}
-
-		function getRandomMessage(messages) {
-			return messages[Math.floor(Math.random() * messages.length)];
-		}
-
-		function copyUrl() {
-			var share = document.getElementById("shareButton");
-			share.innerHTML = languageData["copy"];
-
-			let currentUrl = window.location.href;
-			let baseUrl = currentUrl.split('?')[0];
-			let newUrl = baseUrl + `?url=${url}`;
-			navigator.clipboard.writeText(newUrl);
-			setTimeout(() => {
-				share.innerHTML = languageData["share"];
-			}, 1500);
-		}
-
-		function exportNote(contentId) {
-			url = url.replace(/(^\w+:|^)\/\//, '');
-			url = url.split('/')[0];
-			url = url.split('.').slice(0, -1).join('.');
-
-			var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
-				"xmlns:w='urn:schemas-microsoft-com:office:word' " +
-				"xmlns='http://www.w3.org/TR/REC-html40'>" +
-				"<head><meta charset='utf-8'><title>" + url + "</title></head><body>";
-
-			var footer = "</body></html>";
-
-			var contentElement = document.getElementById(contentId);
-
-			var clonedContent = contentElement.cloneNode(true);
-
-			var hiddenElements = clonedContent.querySelectorAll('[style*="display: none;"]');
-			hiddenElements.forEach(function (element) {
-				element.parentNode.removeChild(element);
-			});
-
-			var imgElements = clonedContent.getElementsByTagName('img');
-			for (var i = imgElements.length - 1; i >= 0; i--) {
-				imgElements[i].parentNode.removeChild(imgElements[i]);
-			}
-
-			var sourceHTML = header + clonedContent.innerHTML + footer;
-
-			sourceHTML = sourceHTML.replace(/<button\b[^<]*(?:(?!<\/button>)<[^<]*)*<\/button>/gi, '');
-
-			var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
-			var fileName = `${url}.doc`;
-
-			var fileDownload = document.createElement("a");
-			document.body.appendChild(fileDownload);
-			fileDownload.href = source;
-			fileDownload.download = fileName;
-			fileDownload.click();
-
-			document.body.removeChild(fileDownload);
-		}
-
-		function analyzation(content, url) {
-			var result = document.getElementById("result");
-			var urlContainer = document.getElementById("urlContainer");
-			var ps = document.getElementById("fourPs");
-			var cs = document.getElementById("fourCs");
-			var seo = document.getElementById("seo");
-			var speed = document.getElementById("speed");
-			var security = document.getElementById("security");
-			var privacy = document.getElementById("privacy");
-			var ctx = document.getElementById('swotChart').getContext('2d');
-			var swotDiv = document.getElementById('swot');
-			var summarization = document.getElementById("summarization");
-			var abc = document.getElementById("abc");
-
-			const marketingWords4Ps = ["Product", "Service", "Brand", "Quality", "Price", "Value", "Packaging", "Design", "Features", "Benefits", "Variety", "Functionality", "Durability", "Warranty", "Customer", "Demand", "Offering", "Promotion", "Advertisement", "Campaign", "Discount", "Sales", "Retail", "Wholesale", "Distribution", "Channel", "Supply", "Logistics", "Inventory", "Market", "Coverage", "Placement", "Retailer", "Ecommerce", "Online", "Offline", "Store", "Outlet", "Shipping", "Delivery", "Convenience", "Accessibility", "Availability", "Location", "Reach", "Customer Journey", "Purchase", "Payment", "Feedback", "Satisfaction", "Engagement", "Interaction", "Influencer", "Testimonial", "Loyalty Program", "Referral Program", "Word of Mouth", "Branding", "Awareness", "Target", "Audience", "Segmentation", "Demographics", "Psychographics", "Geographics", "Behaviour", "Customer Acquisition", "Retention", "Experience", "Satisfaction", "Comparison", "Research", "User", "Review", "Ratings", "Options", "Comparison", "Comparison Shopping", "Perception", "Reputation", "Assessment", "Trend", "Market Trend", "Consumer Trend", "Demand Trend", "Supply Chain", "Value Chain", "Lifecycle", "Customer Lifecycle", "Lifecycle Stage", "Lifecycle Marketing", "Lifecycle Management", "Lifecycle Cost", "Lifecycle Analysis", "Lifecycle Assessment", "Lifecycle Strategies", "Lifecycle Approach", "Lifecycle Model", "Lifecycle Planning", "Lifecycle Optimization", "Lifecycle Enhancement", "Lifecycle Monitoring", "Lifecycle Measurement", "Lifecycle Performance", "Lifecycle Improvement", "Lifecycle Evaluation", "Lifecycle Metrics", "Lifecycle KPIs", "Produkt", "Dienstleistung", "Marke", "Qualität", "Preis", "Wert", "Verpackung", "Design", "Funktionen", "Vorteile", "Vielfalt", "Funktionalität", "Haltbarkeit", "Garantie", "Kunde", "Nachfrage", "Angebot", "Werbung", "Anzeige", "Kampagne", "Rabatt", "Verkauf", "Einzelhandel", "Großhandel", "Vertrieb", "Kanal", "Angebot", "Logistik", "Inventar", "Markt", "Abdeckung", "Platzierung", "Einzelhändler", "E-Commerce", "Online", "Offline", "Geschäft", "Outlet", "Versand", "Lieferung", "Bequemlichkeit", "Zugänglichkeit", "Verfügbarkeit", "Standort", "Reichweite", "Customer Journey", "Kauf", "Zahlung", "Feedback", "Zufriedenheit", "Engagement", "Interaktion", "Influencer", "Testimonial", "Loyalität Programm", "Empfehlungsprogramm", "Mundpropaganda", "Branding", "Bewusstsein", "Zielgruppe", "Publikum", "Segmentierung", "Demografie", "Psychografie", "Geografie", "Verhalten", "Kundengewinnung", "Bindung", "Erfahrung", "Zufriedenheit", "Vergleich", "Forschung", "Benutzer", "Rezension", "Bewertungen", "Optionen", "Vergleich", "Preisvergleich", "Wahrnehmung", "Reputation", "Beurteilung", "Trend", "Markttrend", "Verbrauchertrend", "Nachfragetrend", "Lieferkette", "Wertschöpfungskette", "Lebenszyklus", "Kundenlebenszyklus", "Lebenszyklusphase", "Lebenszyklusmarketing", "Lebenszyklusmanagement", "Lebenszykluskosten", "Lebenszyklusanalyse", "Lebenszyklusbewertung", "Lebenszyklusstrategien", "Lebenszyklusansatz", "Lebenszyklusmodell", "Lebenszyklusplanung", "Lebenszyklusoptimierung", "Lebenszyklusverbesserung", "Lebenszyklusüberwachung", "Lebenszyklusmessung", "Lebenszyklusleistung", "Lebenszyklusverbesserung", "Lebenszyklusbewertung", "Lebenszyklusmetriken", "Lebenszyklus-KPIs"];
-			const marketingWords4Cs = ["Customer", "Consumer", "Client", "Clientele", "Cost", "Convenience", "Communication", "Value", "Needs", "Wants", "Desires", "Satisfaction", "Experience", "Feedback", "Loyalty", "Service", "Support", "Relationship", "Engagement", "Personalization", "Trust", "Retention", "Acquisition", "Price", "Affordability", "Perception", "Total Cost of Ownership", "Investment", "Benefit", "Savings", "Budget", "Expense", "Discount", "Deal", "Economy", "Worth", "Advantage", "Profit", "Loss", "Convenience", "Ease", "Access", "Availability", "Delivery", "Shipping", "Location", "Proximity", "Channel", "Platform", "Online", "Offline", "Store", "Retail", "Ecommerce", "Mobile", "Support", "Help", "Assistance", "Time", "Effort", "Comfort", "Flexibility", "Usability", "Navigation", "Simplicity", "Interaction", "Message", "Media", "Social Media", "SEO", "SEM", "Content", "Email", "Marketing", "Campaign", "Strategy", "Conversation", "Feedback", "Response", "Survey", "Testimonial", "Review", "Publicity", "Promotion", "Advertising", "Relations", "Influence", "Brand", "Awareness", "Reach", "Target", "Audience", "Connection", "Touchpoint", "Channel", "Service Level", "Service Quality", "Service Standards", "Service Management", "Service Excellence", "Service Delivery", "Service Performance", "Service Improvement", "Service Innovation", "Service Integration", "Service Differentiation", "Service Personalization", "Service Optimization", "Service Evaluation", "Service Enhancement", "Service Monitoring", "Service Metrics", "Service KPIs", "Kunde", "Verbraucher", "Klient", "Klientel", "Kosten", "Bequemlichkeit", "Kommunikation", "Wert", "Bedürfnisse", "Wünsche", "Wünsche", "Zufriedenheit", "Erfahrung", "Feedback", "Loyalität", "Service", "Support", "Beziehung", "Engagement", "Personalisierung", "Vertrauen", "Bindung", "Akquise", "Preis", "Erschwinglichkeit", "Wahrnehmung", "Gesamtbetriebskosten", "Investition", "Nutzen", "Ersparnisse", "Budget", "Aufwand", "Rabatt", "Angebot", "Wirtschaftlichkeit", "Wert", "Vorteil", "Gewinn", "Verlust", "Bequemlichkeit", "Einfachheit", "Zugang", "Verfügbarkeit", "Lieferung", "Versand", "Standort", "Nähe", "Kanal", "Plattform", "Online", "Offline", "Geschäft", "Einzelhandel", "E-Commerce", "Mobil", "Support", "Hilfe", "Unterstützung", "Zeit", "Aufwand", "Komfort", "Flexibilität", "Benutzerfreundlichkeit", "Navigation", "Einfachheit", "Interaktion", "Nachricht", "Medien", "Soziale Medien", "SEO", "SEM", "Inhalt", "E-Mail", "Marketing", "Kampagne", "Strategie", "Gespräch", "Feedback", "Antwort", "Umfrage", "Testimonial", "Rezension", "Werbung", "Promotion", "Werbung", "Beziehungen", "Einfluss", "Marke", "Bewusstsein", "Reichweite", "Zielgruppe", "Publikum", "Verbindung", "Touchpoint", "Kanal", "Servicelevel", "Servicequalität", "Servicestandards", "Servicemanagement", "Serviceexzellenz", "Servicebereitstellung", "Serviceleistung", "Serviceverbesserung", "Serviceinnovation", "Serviceintegration", "Servicedifferenzierung", "Servicepersonalisierung", "Serviceoptimierung", "Servicebewertung", "Serviceverbesserung", "Serviceüberwachung", "Service Metriken", "Service-KPIs"];
-			const seoWords = ["SEO", "Search", "Engine", "Optimization", "Keywords", "Content", "Backlinks", "Rankings", "Traffic", "Organic", "Paid", "Results", "SERP", "Meta", "Title", "Description", "Tags", "Headings", "URL", "Structure", "Sitemap", "Robots.txt", "Indexing", "Crawling", "Google", "Bing", "Yahoo", "Algorithm", "Analytics", "PageSpeed", "Mobile", "Responsive", "Design", "User", "Experience", "UX", "Interface", "UI", "Bounce Rate", "Click-Through Rate", "CTR", "Conversion", "Optimization", "CRO", "Alt Text", "Images", "Videos", "Schema", "Markup", "Structured Data", "Local SEO", "NAP", "Name", "Address", "Phone", "Google My Business", "Reviews", "Citations", "Map", "Pack", "Voice Search", "Long-tail Keywords", "Short-tail Keywords", "Blog", "Article", "Link Building", "Inbound", "Outbound", "Anchor Text", "Domain", "Authority", "Page", "Trust", "Spam", "Score", "Social Signals", "Engagement", "Analytics", "Tracking", "Performance", "Metrics", "KPI", "Heatmap", "A/B Testing", "Competitor Analysis", "Keyword Research", "On-page Optimization", "Off-page Optimization", "Technical SEO", "Link Profile", "Ranking Factors", "Mobile Optimization", "Local Search", "International SEO", "Multilingual SEO", "Voice Search Optimization", "Site Architecture", "Site Navigation", "Site Speed", "Site Security", "User Engagement", "User Experience", "User Intent", "User Signals", "Site Audit", "Keyword Density", "Keyword Stuffing", "Keyword Cannibalization", "Duplicate Content", "Canonicalization", "Page Authority", "Domain Age", "Domain Trust", "Link Quality", "Link Diversity", "Anchor Text Diversity", "Link Relevance", "Link Velocity", "Link Building Tactics", "Link Outreach", "Guest Posting", "Content Marketing", "Content Strategy", "Content Optimization", "Content Distribution", "Content Syndication", "Content Curation", "Content Calendar", "Content Audit", "Content Gap Analysis", "Content Performance", "Content Metrics", "Content ROI", "Content Promotion", "Content Outreach", "Social Media Marketing", "Social Signals", "Social Engagement", "Social Sharing", "Social Proof", "Social Listening", "Social Monitoring", "Social Analytics", "Social ROI", "Social Campaigns", "Social Advertising", "Social Influencers", "Social Outreach", "Local SEO Strategies", "Local Citations", "Local Directories", "Google My Business Optimization", "Local Reviews", "Local Backlinks", "Localized Content", "Local Link Building", "Local Schema Markup", "Local SEO Audits", "Local Landing Pages", "Local Link Building", "Niche Directories", "Industry Forums", "Local Networking", "Local Sponsorships", "Local Events", "Local Partnerships", "Local Content Marketing", "Local Press Releases", "Local Blogging", "Local Social Media Engagement", "Local Reviews Management", "Local Reputation Management", "Voice Search Optimization Strategies", "Voice Search Keywords", "Voice Search Content", "Voice Search Schema Markup", "Voice Search FAQs", "Voice Search User Intent", "Voice Search Analytics", "Voice Search Performance", "Voice Search Metrics", "Voice Search Conversion Optimization", "Long-tail Keywords Research", "Long-tail Keywords Optimization", "Long-tail Keywords Targeting", "Long-tail Keywords Content", "Long-tail Keywords Usage", "Long-tail Keywords Effectiveness", "Short-tail Keywords Analysis", "Short-tail Keywords Selection", "Short-tail Keywords Optimization", "Short-tail Keywords Targeting", "Short-tail Keywords Ranking", "Short-tail Keywords Traffic", "Short-tail Keywords Competition", "Short-tail Keywords Performance", "Short-tail Keywords Conversion", "Short-tail Keywords Usage", "Short-tail Keywords Effectiveness", "Blog Content Strategy", "Blog Topic Ideas", "Blog Writing", "Blog Optimization", "Blog Promotion", "Blog Engagement", "Blog Analytics", "Blog Conversion Optimization", "Blog Performance", "Blog Metrics", "Article Marketing", "Article Writing", "Article Optimization", "Article Distribution", "Article Promotion", "Article Engagement", "Article Analytics", "Article Conversion Optimization", "Article Performance", "Article Metrics", "Link Building Strategies", "Link Building Tactics", "Link Building Outreach", "Link Building Engagement", "Link Building Analytics", "Link Building Conversion Optimization", "Link Building Performance", "Link Building Metrics", "Inbound Marketing", "Inbound Strategy", "Inbound Campaigns", "Inbound Content", "Inbound Engagement", "Inbound Analytics", "Inbound Conversion Optimization", "Inbound Performance", "Inbound Metrics", "Outbound Marketing", "Outbound Strategy", "Outbound Campaigns", "Outbound Tactics", "Outbound Engagement", "Outbound Analytics", "Outbound Conversion Optimization", "Outbound Performance", "Outbound Metrics", "Anchor Text Optimization", "Anchor Text Diversity", "Anchor Text Relevance", "Anchor Text Analysis", "Anchor Text Usage", "Anchor Text Effectiveness", "Domain Authority Building", "Domain Authority Optimization", "Domain Authority Analysis", "Domain Authority Metrics", "Domain Authority Impact", "Page Authority Building", "Page Authority Optimization", "Page Authority Analysis", "Page Authority Metrics", "Page Authority Impact", "Trust Flow Building", "Trust Flow Optimization", "Trust Flow Analysis", "Trust Flow Metrics", "Trust Flow Impact", "Citation Building", "Citation Cleanup", "Citation Audits", "Citation Management", "Citation Optimization", "Citation Impact", "Schema Markup Implementation", "Schema Markup Optimization", "Schema Markup Analysis", "Schema Markup Testing", "Schema Markup Impact", "Structured Data Optimization", "Structured Data Analysis", "Structured Data Implementation", "Structured Data Testing", "Structured Data Impact", "Local Business Schema Markup", "Organization Schema Markup", "Product Schema Markup", "Article Schema Markup", "Event Schema Markup", "Review Schema Markup", "Video Schema Markup", "FAQ Schema Markup", "How-to Schema Markup", "Breadcrumbs Schema Markup", "Authorship Schema Markup", "Local Business NAP Consistency", "Local Business Address Consistency", "Local Business Phone Consistency", "Local Business Name Consistency", "Local Business Website Consistency", "Local Business Directory Listings", "Local Business Profile Listings", "Local Business Review Sites", "Local Business Mapping Services", "Local Business Citation Sites", "Local Business Review Management", "Local Business Reputation Management", "Local Business Map Listings", "Local Business Pack Optimization", "Local Business Reviews Generation", "Local Business Reviews Management", "Local Business Reviews Monitoring", "Local Business Reviews Analysis", "Local Business Reviews Performance", "Local Business Reviews Metrics", "Local Business Reviews Conversion", "Local Business Reviews ROI", "Local Business Citations Generation", "Local Business Citations Management", "Local Business Citations Monitoring", "Local Business Citations Analysis", "Local Business Citations Performance", "Local Business Citations Metrics", "Local Business Citations Conversion", "Local Business Citations ROI", "Local Business Map Listings Generation", "Local Business Map Listings Management", "Local Business Map Listings Monitoring", "Local Business Map Listings Analysis", "Local Business Map Listings Performance", "Local Business Map Listings Metrics", "Local Business Map Listings Conversion", "Local Business Map Listings ROI", "SEO", "Suche", "Engine", "Optimierung", "Keywords", "Inhalt", "Backlinks", "Rankings", "Traffic", "Organisch", "Bezahlt", "Ergebnisse", "SERP", "Meta", "Titel", "Beschreibung", "Tags", "Überschriften", "URL", "Struktur", "Sitemap", "Robots.txt", "Indizierung", "Crawling", "Google", "Bing", "Yahoo", "Algorithmus", "Analytics", "PageSpeed", "Mobil", "Responsive", "Design", "Benutzer", "Erfahrung", "UX", "Schnittstelle", "UI", "Absprungrate", "Click-Through-Rate", "CTR", "Conversion", "Optimierung", "CRO", "Alt-Text", "Bilder", "Videos", "Schema", "Markup", "Strukturierte Daten", "Lokale SEO", "NAP", "Name", "Adresse", "Telefon", "Google My Business", "Bewertungen", "Zitate", "Karte", "Paket", "Sprachsuche", "Long-Tail-Keywords", "Short-Tail-Keywords", "Blog", "Artikel", "Linkaufbau", "Eingehend", "Ausgehend", "Ankertext", "Domain", "Autorität", "Seite", "Vertrauen", "Spam", "Score", "Soziale Signale", "Engagement", "Analyse", "Tracking", "Leistung", "Metriken", "KPI", "Heatmap", "A/B-Tests", "Konkurrentenanalyse", "Keyword-Recherche", "On-Page-Optimierung", "Off-Page-Optimierung", "Technisches SEO", "Linkprofil", "Ranking-Faktoren", "Mobile Optimierung", "Lokale Suche", "Internationales SEO", "Mehrsprachiges SEO", "Optimierung für die Sprachsuche", "Site-Architektur", "Site-Navigation", "Site-Geschwindigkeit", "Site-Sicherheit", "Benutzer-Engagement", "Benutzererfahrung", "Benutzerabsicht", "Benutzersignale", "Site-Audit", "Keyword-Dichte", "Keyword-Stuffing", "Keyword-Kannibalisierung", "Duplicate Content", "Kanonisierung", "Seitenautorität", "Domainalter", "Domainvertrauen", "Linkqualität", "Linkvielfalt", "Ankertextvielfalt", "Linkrelevanz", "Linkgeschwindigkeit", "Linkaufbautaktiken", "Link-Outreach", "Gastbeiträge", "Content-Marketing", "Content-Strategie", "Content-Optimierung", "Content-Verteilung", "Content-Syndication", "Content-Kuration", "Content-Kalender", "Content-Audit", "Content-Gap-Analyse", "Content-Performance", "Content-Metriken", "Content-ROI", "Content-Promotion", "Content-Outreach", "Social-Media-Marketing", "Social Signals", "Social Engagement", "Social Sharing", "Social Proof", "Social Listening", "Social Monitoring", "Social Analytics", "Social ROI", "Social-Kampagnen", "Social Advertising", "Social Influencer", "Social Outreach", "Lokale SEO-Strategien", "Lokale Zitate", "Lokale Verzeichnisse", "Google My Business-Optimierung", "Lokale Bewertungen", "Lokale Backlinks", "Lokalisierter Inhalt", "Lokaler Linkaufbau", "Lokales Schema-Markup", "Lokale SEO-Audits", "Lokale Zielseiten", "Lokaler Linkaufbau", "Nischenverzeichnisse", "Branchenforen", "Lokales Networking", "Lokales Sponsoring", "Lokale Veranstaltungen", "Lokale Partnerschaften", "Lokales Content-Marketing", "Lokale Pressemitteilungen", "Lokales Bloggen", "Lokales Social-Media-Engagement", "Lokales Bewertungsmanagement", "Lokales Reputationsmanagement", "Optimierungsstrategien für die Sprachsuche", "Schlüsselwörter für die Sprachsuche", "Inhalt für die Sprachsuche", "Schema-Markup für die Sprachsuche", "FAQs zur Sprachsuche", "Benutzerabsicht für die Sprachsuche", "Analysen für die Sprachsuche", "Leistung der Sprachsuche", "Kennzahlen für die Sprachsuche", "Konvertierungsoptimierung für die Sprachsuche", "Recherche nach Long-Tail-Keywords", "Optimierung nach Long-Tail-Keywords", "Zielsetzung nach Long-Tail-Keywords", "Inhalt nach Long-Tail-Keywords", "Verwendung von Long-Tail-Keywords", "Effektivität von Long-Tail-Keywords", "Short-Tail-Keywords Analyse", "Auswahl von Short-Tail-Keywords", "Optimierung von Short-Tail-Keywords", "Zielsetzung für Short-Tail-Keywords", "Ranking von Short-Tail-Keywords", "Verkehr von Short-Tail-Keywords", "Wettbewerb von Short-Tail-Keywords", "Leistung von Short-Tail-Keywords", "Konvertierung von Short-Tail-Keywords", "Verwendung von Short-Tail-Keywords", "Effektivität von Short-Tail-Keywords", "Strategie für Blog-Inhalte", "Ideen für Blog-Themen", "Schreiben von Blogs", "Optimierung von Blogs", "Werbung für Blogs", "Engagement für Blogs", "Analyse von Blogs", "Optimierung der Blog-Konvertierung", "Leistung von Blogs", "Metriken für Blog-Artikel", "Marketing für Artikel", "Schreiben von Artikeln", "Optimierung von Artikeln", "Verteilung von Artikeln", "Werbung für Artikel", "Engagement für Artikel", "Analyse von Artikeln", "Optimierung der Artikel-Konvertierung", "Leistung von Artikeln", "Metriken für Linkaufbau", "Strategien für Linkaufbau", "Taktiken für Linkaufbau", "Reichweite von Linkaufbau", "Engagement für Linkaufbau", "Analyse von Linkaufbau", "Optimierung der Linkaufbau-Konvertierung", "Leistung von Linkaufbau", "Metriken für Linkaufbau", "Inbound-Marketing", "Inbound-Strategie", "Inbound-Kampagnen", "Inbound-Inhalte", "Engagement für Blogs", "Analyse von Inbound-Konvertierung", "Inbound-Leistung", "Inbound-Metriken", "Outbound-Marketing", "Outbound-Strategie", "Outbound-Kampagnen", "Outbound-Taktiken", "Outbound-Engagement", "Outbound-Analyse", "Outbound-Conversion-Optimierung", "Outbound-Performance", "Outbound-Metriken", "Ankertext-Optimierung", "Ankertext-Vielfalt", "Ankertext-Relevanz", "Ankertext-Analyse", "Ankertext-Verwendung", "Ankertext-Effektivität", "Domain-Authority-Aufbau", "Domain-Authority-Optimierung", "Domain-Authority-Analyse", "Domain-Authority-Metriken", "Domain-Authority-Impact", "Seitenautoritätsaufbau", "Seitenautoritätsoptimierung", "Seitenautoritätsanalyse", "Seitenautoritätsmetriken", "Seitenautoritätseinfluss", "Trust Flow-Aufbau", "Trust Flow-Optimierung", "Trust Flow-Analyse", "Trust Flow-Metriken", "Trust Flow-Einfluss", "Zitationsaufbau", "Zitationsbereinigung", "Zitationsprüfungen", "Zitationsverwaltung", "Zitationsoptimierung", "Zitationseinfluss", "Schema-Markup-Implementierung", "Schema-Markup-Optimierung", "Schema-Markup-Analyse", "Schema-Markup-Test", "Schema-Markup-Einfluss", "Strukturierte Datenoptimierung", "Strukturierte Datenanalyse", "Strukturierte Datenimplementierung", "Strukturierte Datentests", "Strukturierte Dateneinfluss", "Lokales Geschäftsschema-Markup", "Organisationsschema-Markup", "Produktschema-Markup", "Artikelschema-Markup", "Eventschema-Markup", "Rezensionsschema-Markup", "Videoschema-Markup", "FAQschema-Markup", "Anleitungsschema-Markup", "Breadcrumbsschema-Markup", "Autorenschaftsschema Markup", "Konsistenz der lokalen Geschäftsadresse", "Konsistenz der lokalen Geschäftstelefonnummer", "Konsistenz der lokalen Geschäftsnamen", "Konsistenz der lokalen Geschäftswebsite", "Einträge im lokalen Geschäftsverzeichnis", "Einträge im lokalen Geschäftsprofil", "Bewertungsseiten für lokale Geschäftskunden", "Kartendienste für lokale Geschäftskunden", "Zitationsseiten für lokale Geschäftskunden", "Bewertungsverwaltung für lokale Geschäftskunden", "Reputationsverwaltung für lokale Geschäftskunden", "Karteneinträge für lokale Geschäftskunden", "Optimierung von lokalen Geschäftspaketen", "Generierung lokaler Geschäftsbewertungen", "Verwaltung lokaler Geschäftsbewertungen", "Überwachung lokaler Geschäftsbewertungen", "Analyse lokaler Geschäftsbewertungen", "Leistung lokaler Geschäftsbewertungen", "Kennzahlen lokaler Geschäftsbewertungen", "Konvertierung lokaler Geschäftsbewertungen", "ROI lokaler Geschäftsbewertungen", "Generierung lokaler Geschäftszitate", "Verwaltung lokaler Geschäftszitate", "Überwachung lokaler Geschäftszitate", "Analyse lokaler Geschäftszitate", "Leistung lokaler Geschäftszitate", "Kennzahlen lokaler Geschäftszitate", "Konvertierung lokaler Geschäftszitate", "ROI lokaler Geschäftszitate", "Karteneinträge generieren", "Verwaltung lokaler Karteneinträge", "Überwachung lokaler Karteneinträge", "Analyse lokaler Karteneinträge", "Leistung lokaler Karteneinträge", "Kennzahlen lokaler Karteneinträge", "Konvertierung lokaler Karteneinträge", "ROI lokaler Karteneinträge"];
-
-			function analyzeWordsPs(content, wordsArray) {
-				const words = content.split(/\s+/);
-				let wordCounts = {};
-				words.forEach(word => {
-					if (wordsArray.includes(word)) {
-						wordCounts[word] = (wordCounts[word] || 0) + 1;
-					}
-				});
-
-				let count = Object.keys(wordCounts).length;
-
-				const excellentPs = languageData["excellentPs"];
-				const decentPs = languageData["decentPs"];
-				const poorPs = languageData["poorPs"];
-
-				const wordCountList = Object.entries(wordCounts).map(([word, count]) => `<li>${word}: ${count}</li>`).join('');
-
-				if (count >= 3) {
-					score++;
-					return `${getRandomMessage(excellentPs)}<ul>${wordCountList}</ul>`;
-				} else if (count > 0) {
-					score += 0.5;
-					return `${getRandomMessage(decentPs)}<ul>${wordCountList}</ul>`;
-				} else {
-					return getRandomMessage(poorPs);
-				}
-			}
-
-			function analyzeWordsCs(content, wordsArray) {
-				const words = content.split(/\s+/);
-				let wordCounts = {};
-				words.forEach(word => {
-					if (wordsArray.includes(word)) {
-						wordCounts[word] = (wordCounts[word] || 0) + 1;
-					}
-				});
-
-				let count = Object.keys(wordCounts).length;
-
-				const excellentCs = languageData["excellentCs"];
-				const decentCs = languageData["decentCs"];
-				const poorCs = languageData["poorCs"];
-
-				const wordCountList = Object.entries(wordCounts).map(([word, count]) => `<li>${word}: ${count}</li>`).join('');
-
-				if (count >= 3) {
-					score++;
-					return `${getRandomMessage(excellentCs)}<ul>${wordCountList}</ul>`;
-				} else if (count > 0) {
-					score += 0.5;
-					return `${getRandomMessage(decentCs)}<ul>${wordCountList}</ul>`;
-				} else {
-					return getRandomMessage(poorCs);
-				}
-			}
-
-			function analyzeWordsSEO(content) {
-				const parser = new DOMParser();
-				const doc = parser.parseFromString(content, 'text/html');
-
-				const seoChecks = {
-					title: !!doc.querySelector('title'),
-					metaDescription: !!doc.querySelector('meta[name="description"]'),
-					headings: {
-						h1: !!doc.querySelector('h1'),
-						h2: !!doc.querySelector('h2'),
-						h3: !!doc.querySelector('h3')
-					},
-					imagesWithAlt: [...doc.querySelectorAll('img')].every(img => img.hasAttribute('alt')),
-					internalLinks: [...doc.querySelectorAll('a')].filter(link => link.hostname === window.location.hostname).length > 0,
-					externalLinks: [...doc.querySelectorAll('a')].filter(link => link.hostname !== window.location.hostname).length > 0,
-					mobileFriendly: !!doc.querySelector('meta[name="viewport"]'),
-					structuredData: !!doc.querySelector('script[type="application/ld+json"]'),
-					sitemap: !!doc.querySelector('link[rel="sitemap"], sitemap'),
-					socialMediaIntegration: checkSocialMediaIntegration(doc),
-					contentQuality: checkContentQuality(doc),
-					sslCertificate: checkSSLCertificate(),
-					robotsTxt: !!doc.querySelector('meta[name="robots"]'),
-					localSEO: checkLocalSEO(doc),
-					keywordDensity: checkKeywordDensity(doc),
-					urlStructure: checkUrlStructure(doc),
-					breadcrumbs: checkBreadcrumbs(doc),
-					canonicalTags: !!doc.querySelector('link[rel="canonical"]')
-				};
-
-				const usedSEO = Object.keys(seoChecks).filter(key => {
-					if (typeof seoChecks[key] === 'object') {
-						return Object.values(seoChecks[key]).some(Boolean);
-					}
-					return seoChecks[key];
-				});
-
-				const missingSEO = Object.keys(seoChecks).filter(key => {
-					if (typeof seoChecks[key] === 'object') {
-						return Object.values(seoChecks[key]).every(value => !value);
-					}
-					return !seoChecks[key];
-				});
-
-				let scoreSEO = usedSEO.length;
-
-				const excellentSEO = languageData["excellentSEO"];
-				const decentSEO = languageData["decentSEO"];
-				const poorSEO = languageData["poorSEO"];
-
-				let message;
-				if (scoreSEO >= 20) {
-					score++;
-					message = getRandomMessage(excellentSEO);
-				} else if (scoreSEO >= 10) {
-					score += 0.5;
-					message = getRandomMessage(decentSEO);
-				} else {
-					message = getRandomMessage(poorSEO);
-				}
-
-				const seoSummary = `
-					${languageData["seoTechnique"]}
-					${languageData["seoUsed"]}
-						<ul class="seoList">
-						${usedSEO.map(technique => `<li>${technique}</li>`).join('')}
-					</ul>
-					${languageData["seoMissing"]}
-						<ul class="seoList">
-						${missingSEO.map(technique => `<li>${technique}</li>`).join('')}
-					</ul>
-				`;
-
-				message += seoSummary;
-
-				return message;
-			}
-
-			function checkDuplicateContent(doc) {
-				const bodyText = doc.body.textContent || '';
-				const sentences = bodyText.split(/[.!?]/);
-				const uniqueSentences = new Set(sentences);
-				return uniqueSentences.size / sentences.length < 0.8;
-			}
-
-			function checkSocialMediaIntegration(doc) {
-				return !!doc.querySelector('meta[property="og:url"], meta[name="twitter:card"]');
-			}
-
-			function checkContentQuality(doc) {
-				const bodyText = doc.body.textContent || '';
-				const sentences = bodyText.split(/[.!?]/);
-				return sentences.length > 50;
-			}
-
-			function checkSSLCertificate() {
-				return window.location.protocol === 'https:';
-			}
-
-			function checkLocalSEO(doc) {
-				return !!doc.querySelector('meta[name="geo.position"]');
-			}
-
-			function checkKeywordDensity(doc) {
-				const bodyText = doc.body.textContent || '';
-				const words = bodyText.split(/\s+/);
-				const keywordFrequency = words.reduce((acc, word) => {
-					acc[word] = (acc[word] || 0) + 1;
-					return acc;
-				}, {});
-				const keywordCount = Object.keys(keywordFrequency).filter(keyword => keywordFrequency[keyword] > 5).length;
-				return keywordCount > 5;
-			}
-
-			function checkUrlStructure(doc) {
-				const url = window.location.href;
-				return url.split('/').length <= 5 && !url.includes('?');
-			}
-
-			function checkBreadcrumbs(doc) {
-				return !!doc.querySelector('nav.breadcrumb');
-			}
-
-			function speedCheck() {
-				var time = timeTaken / 1000;
-				var timeString = time + ` ${languageData["seconds"]}`;
-				var ip = document.getElementById('ip');
-
-				const excellentSpeed = languageData["excellentSpeed"];
-				const decentSpeed = languageData["decentSpeed"];
-				const poorSpeed = languageData["poorSpeed"];
-
-				if (!ip.innerHTML.includes(languageData["loadSpeed"])) {
-					ip.innerHTML += `<br>${languageData["loadSpeed"]}: ${timeString}`;
-				} else {
-					ip.innerHTML = ip.innerHTML.replace(new RegExp(`${languageData["loadSpeed"]}\\s*:\\s*\\d+`, "g"), `${languageData["loadSpeed"]}: ${timeString}`);
-				}
-
-				if (timeTaken <= 2000) {
-					score++;
-					return getRandomMessage(excellentSpeed);
-				} else if (timeTaken > 2000 && timeTaken <= 3000) {
-					score += 0.5;
-					return getRandomMessage(decentSpeed);
-				} else {
-					return getRandomMessage(poorSpeed);
-				}
-			}
-
-			function securityCheck(content) {
-				const parser = new DOMParser();
-				const doc = parser.parseFromString(content, 'text/html');
-
-				const mail = 'mailto:';
-				let missingFeatures = [];
-
-				if (!doc.querySelector('meta[http-equiv="Content-Security-Policy"]')) {
-					missingFeatures.push('&lt;meta http-equiv="Content-Security-Policy"&gt;');
-				}
-				if (!doc.querySelector('meta[http-equiv="X-Content-Type-Options"]')) {
-					missingFeatures.push('&lt;meta http-equiv="X-Content-Type-Options"&gt;');
-				}
-
-				const linkElement = doc.querySelector('link');
-				if (linkElement && linkElement.hasAttribute('crossorigin')) {
-					missingFeatures.push(languageData["crossorigin"]);
-				}
-
-				const iframeElement = doc.querySelector('iframe');
-				if (iframeElement && iframeElement.hasAttribute('sandbox')) {
-					missingFeatures.push(languageData["sandbox"]);
-				}
-
-				const inputElement = doc.querySelector('input');
-				if (inputElement && inputElement.getAttribute('autocomplete') === 'off') {
-					missingFeatures.push(languageData["autocomplete"]);
-				}
-
-				const scriptElement = doc.querySelector('script');
-				if (scriptElement && scriptElement.hasAttribute('integrity')) {
-					missingFeatures.push(languageData["integrity"]);
-				}
-
-				const anchorElements = doc.querySelectorAll('a');
-				anchorElements.forEach(anchorElement => {
-					const relAttribute = anchorElement.getAttribute('rel');
-					if (relAttribute && relAttribute.includes('noopener') && relAttribute.includes('noreferrer')) {
-						missingFeatures.push(languageData["rel"]);
-					}
-				});
-
-				if (content.includes(mail)) {
-					missingFeatures.push(languageData["mailto"]);
-				}
-
-				const excellentSecurity = languageData["excellentSecurity"];
-
-				var decentSecurity = languageData.decentSecurity.map(template => template.replace('%missingFeatures%', missingFeatures.map(feature => `<li>${feature}</li>`).join('')));
-
-				var poorSecurity = languageData.poorSecurity.map(template => template.replace('%missingFeatures%', missingFeatures.map(feature => `<li>${feature}</li>`).join('')));
-
-				if (missingFeatures.length === 0) {
-					score++;
-					return getRandomMessage(excellentSecurity);
-				} else if (missingFeatures.length <= 3) {
-					score += 0.5;
-					return getRandomMessage(decentSecurity);
-				} else {
-					return getRandomMessage(poorSecurity);
-				}
-			}
-
-			function privacyComplianceCheck(content) {
-				const parser = new DOMParser();
-				const doc = parser.parseFromString(content, 'text/html');
-
-				function checkPrivacyPolicy() {
-					const privacyTexts = ["privacy", "datenschutz"];
-					const privacyLinks = [...doc.querySelectorAll('a')].filter(link =>
-						privacyTexts.some(text => link.href.toLowerCase().includes(text) || link.textContent.toLowerCase().includes(text))
-					);
-					return privacyLinks.length > 0;
-				}
-
-				function checkConsentBanner() {
-					const consentTexts = ["consent", "cookie", "privacy", "agree", "zustimmung", "cookie", "datenschutz", "einverstanden"];
-					const banners = [...doc.querySelectorAll('div, section, aside')].filter(banner =>
-						consentTexts.some(text => banner.textContent.toLowerCase().includes(text))
-					);
-					return banners.length > 0;
-				}
-
-				function checkDataRequestOptions() {
-					const dataRequestTexts = ["data request", "access my data", "delete my data", "data deletion", "opt-out", "datenanfrage", "zugriff auf meine daten", "löschen meiner daten", "datenlöschung", "opt-out"];
-					const dataRequestLinks = [...doc.querySelectorAll('a')].filter(link =>
-						dataRequestTexts.some(text => link.textContent.toLowerCase().includes(text))
-					);
-					return dataRequestLinks.length > 0;
-				}
-
-				function checkContactInformation() {
-					const contactTexts = ["contact", "email", "phone", "address", "kontakt", "e-mail", "telefon", "adresse"];
-					const contactSections = [...doc.querySelectorAll('div, section, footer')].filter(section =>
-						contactTexts.some(text => section.textContent.toLowerCase().includes(text))
-					);
-					return contactSections.length > 0;
-				}
-
-				const hasPrivacyPolicy = checkPrivacyPolicy();
-				const hasConsentBanner = checkConsentBanner();
-				const hasDataRequestOptions = checkDataRequestOptions();
-				const hasContactInformation = checkContactInformation();
-
-				const excellentPrivacy = languageData["excellentPrivacy"];
-
-				const decentPrivacy = languageData["decentPrivacy"];
-
-				const poorPrivacy = languageData["poorPrivacy"];
-
-				const excellentCompliance = hasPrivacyPolicy && hasConsentBanner && hasDataRequestOptions && hasContactInformation;
-				const decentCompliance = hasPrivacyPolicy || hasConsentBanner || hasDataRequestOptions || hasContactInformation;
-
-				if (excellentCompliance) {
-					score++;
-					return excellentPrivacy[Math.floor(Math.random() * excellentPrivacy.length)];
-				} else if (decentCompliance) {
-					score += 0.5;
-					const missing = !hasPrivacyPolicy ? "Privacy Policy" : !hasConsentBanner ? "Consent Banner" : !hasDataRequestOptions ? "Data Request Options" : "Contact Information";
-					return decentPrivacy[Math.floor(Math.random() * decentPrivacy.length)].replace("Missing compliance with GDPR", `Missing compliance with ${missing}`);
-				} else {
-					return poorPrivacy[Math.floor(Math.random() * poorPrivacy.length)];
-				}
-			}
-
-			function swotAnalysis(content) {
-				const parser = new DOMParser();
-				const doc = parser.parseFromString(content, 'text/html');
-
-				function getMetaTag(name) {
-					return doc.querySelector(`meta[name="${name}"]`) || doc.querySelector(`meta[property="${name}"]`);
-				}
-
-				function checkResponsiveDesign() {
-					return getMetaTag('viewport') !== null;
-				}
-
-				function checkMetaTags() {
-					const title = doc.querySelector('title');
-					const description = getMetaTag('description');
-					return {
-						title: title ? title.textContent : null,
-						description: description ? description.getAttribute('content') : null,
-					};
-				}
-
-				function checkHeadings() {
-					const headings = {};
-					for (let i = 1; i <= 6; i++) {
-						headings[`h${i}`] = doc.querySelectorAll(`h${i}`).length;
-					}
-					return headings;
-				}
-
-				function checkImages() {
-					const images = doc.querySelectorAll('img');
-					const withoutAlt = [...images].filter(img => !img.hasAttribute('alt'));
-					return {
-						total: images.length,
-						withoutAlt: withoutAlt.length,
-					};
-				}
-
-				function checkAccessibility() {
-					const roles = doc.querySelectorAll('[role]');
-					const ariaLabels = doc.querySelectorAll('[aria-label]');
-					const ariaDescribedBy = doc.querySelectorAll('[aria-describedby]');
-					return {
-						roles: roles.length,
-						ariaLabels: ariaLabels.length,
-						ariaDescribedBy: ariaDescribedBy.length,
-					};
-				}
-
-				function checkLoadTimeIssues() {
-					const scripts = doc.querySelectorAll('script[src]');
-					const inlineStyles = doc.querySelectorAll('style, [style]');
-					return {
-						scripts: scripts.length,
-						inlineStyles: inlineStyles.length,
-					};
-				}
-
-				function checkContentLength() {
-					const bodyText = doc.body.textContent || '';
-					return bodyText.length;
-				}
-
-				function checkExternalResources() {
-					const scripts = doc.querySelectorAll('script[src]');
-					const links = doc.querySelectorAll('link[rel="stylesheet"]');
-					return {
-						externalScripts: scripts.length,
-						externalStylesheets: links.length,
-					};
-				}
-
-				const metaTags = checkMetaTags();
-				const responsiveDesign = checkResponsiveDesign();
-				const headings = checkHeadings();
-				const images = checkImages();
-				const accessibility = checkAccessibility();
-				const loadTimeIssues = checkLoadTimeIssues();
-				const contentLength = checkContentLength();
-				const externalResources = checkExternalResources();
-
-				const strengths = [];
-				const weaknesses = [];
-				const opportunities = [];
-				const threats = [];
-
-				if (metaTags.title) strengths.push(languageData["metaTitle"]);
-				if (metaTags.description) strengths.push(languageData["metaDesc"]);
-				if (responsiveDesign) strengths.push(languageData["metaDesign"]);
-				if (headings.h1 > 0) strengths.push(languageData["metaH1"]);
-				if (contentLength > 500) strengths.push(languageData["metaContent"]);
-
-				if (!metaTags.title) weaknesses.push(languageData["metaTitle2"]);
-				if (!metaTags.description) weaknesses.push(languageData["metaDesc2"]);
-				if (!responsiveDesign) weaknesses.push(languageData["metaDesign2"]);
-				if (images.withoutAlt > 0) weaknesses.push(`${images.withoutAlt} ${languageData["metaAlt"]}`);
-				if (loadTimeIssues.inlineStyles > 0) weaknesses.push(languageData["metaStyle"]);
-				if (contentLength < 300) weaknesses.push(languageData["metaContent2"]);
-
-				if (metaTags.title && metaTags.title.length < 60) opportunities.push(languageData["metaTitle3"]);
-				if (metaTags.description && metaTags.description.length < 160) opportunities.push(languageData["metaDesc3"]);
-				if (headings.h2 === 0) opportunities.push(languageData["metaH2"]);
-				if (accessibility.roles === 0) opportunities.push(languageData["metaRole"]);
-				if (accessibility.ariaLabels === 0) opportunities.push(languageData["metaAriaLabel"]);
-				if (accessibility.ariaDescribedBy === 0) opportunities.push(languageData["metaAriaDesc"]);
-
-				if (externalResources.externalScripts > 0) threats.push(`${externalResources.externalScripts} ${languageData["metaExtScript"]}`);
-				if (externalResources.externalStylesheets > 0) threats.push(`${externalResources.externalStylesheets} ${languageData["metaExtStyle"]}`);
-				if (loadTimeIssues.scripts.length > 0) threats.push(`${loadTimeIssues.scripts.length} ${languageData["metaLoadScripts"]}`);
-				const forms = doc.querySelectorAll('form');
-				if (forms.length > 0) threats.push(`${forms.length} ${languageData["metaForms"]}`);
-				const iframes = doc.querySelectorAll('iframe');
-				if (iframes.length > 0) threats.push(`${iframes.length} ${languageData["metaIframe"]}`);
-				const externalLinks = doc.querySelectorAll('a[href^="http"]');
-				if (externalLinks.length > 0) threats.push(`${externalLinks.length} ${languageData["metaExt"]}`);
-
-				return {
-					strengths,
-					weaknesses,
-					opportunities,
-					threats,
-				};
-			}
-
-			const swot = swotAnalysis(content);
-
-			const data = {
-				labels: [`${languageData["Strengths"]}`, `${languageData["Weaknesses"]}`, `${languageData["Opportunities"]}`, `${languageData["Threats"]}`],
-				datasets: [{
-					label: `${languageData["SWOT-Analysis"]}`,
-					data: [
-						swot.strengths.length,
-						swot.weaknesses.length,
-						swot.opportunities.length,
-						swot.threats.length
-					],
-					backgroundColor: [
-						'rgba(75, 192, 192, 0.2)',
-						'rgba(255, 99, 132, 0.2)',
-						'rgba(255, 206, 86, 0.2)',
-						'rgba(153, 102, 255, 0.2)'
-					],
-					borderColor: [
-						'rgba(75, 192, 192, 1)',
-						'rgba(255, 99, 132, 1)',
-						'rgba(255, 206, 86, 1)',
-						'rgba(153, 102, 255, 1)'
-					],
-					borderWidth: 1
-				}]
-			};
-
-
-			var existingChart = Chart.getChart("swotChart");
-
-			if (existingChart) {
-				existingChart.destroy();
-			}
-
-			const swotChart = new Chart(ctx, {
-				type: 'bar',
-				data: data,
-				options: {
-					plugins: {
-						legend: {
-							display: false
-						},
-					},
-					scales: {
-						y: {
-							beginAtZero: true
-						}
-					}
-				}
-			});
-
-			swotDiv.innerHTML = `
-			<ul>
-				${swot.strengths.length > 0 ? `<li><strong>${languageData["Strengths"]} (${swot.strengths.length}):</strong> ${swot.strengths.join(', ')}</li>` : `<li>${languageData["StrengthsGood"]}</li>`}
-				${swot.weaknesses.length > 0 ? `<li><strong>${languageData["Weaknesses"]} (${swot.weaknesses.length}):</strong> ${swot.weaknesses.join(', ')}</li>` : `<li>${languageData["WeaknessesGood"]}</li>`}
-				${swot.opportunities.length > 0 ? `<li><strong>${languageData["Opportunities"]} (${swot.opportunities.length}):</strong> ${swot.opportunities.join(', ')}</li>` : `<li>${languageData["OpportunitiesBad"]}</li>`}
-				${swot.threats.length > 0 ? `<li><strong>${languageData["Threats"]} (${swot.threats.length}):</strong> ${swot.threats.join(', ')}</li>` : `<li>${languageData["ThreatsGood"]}</li>`}
-			</ul>
-		`;
-
-			function abcAnalysis(content) {
-				const parser = new DOMParser();
-				const doc = parser.parseFromString(content, 'text/html');
-
-				const aCategory = [
-					{ selector: 'meta[name="description"]', description: '&lt;meta name="description"&gt;' },
-					{ selector: 'meta[charset]', description: '&lt;meta charset="UTF-8"&gt;' },
-					{ selector: 'title', description: '&lt;title&gt;' },
-					{ selector: 'link[rel="stylesheet"]', description: '&lt;link rel="stylesheet"&gt;' },
-					{ selector: 'script[src]', description: '&lt;script src="..."&gt;' },
-					{ selector: 'header', description: '&lt;header&gt;' },
-					{ selector: 'footer', description: '&lt;footer&gt;' },
-					{ selector: 'main', description: '&lt;main&gt;' },
-					{ selector: 'nav', description: '&lt;nav&gt;' },
-					{ selector: 'h1', description: '&lt;h1&gt;' }
-				];
-
-				const bCategory = [
-					{ selector: 'section', description: '&lt;section&gt;' },
-					{ selector: 'article', description: '&lt;article&gt;' },
-					{ selector: 'aside', description: '&lt;aside&gt;' },
-					{ selector: 'button', description: '&lt;button&gt;' },
-					{ selector: 'form', description: '&lt;form&gt;' },
-					{ selector: 'input', description: '&lt;input&gt;' },
-					{ selector: 'img', description: '&lt;img&gt;' },
-					{ selector: 'video', description: '&lt;video&gt;' },
-					{ selector: 'audio', description: '&lt;audio&gt;' }
-				];
-
-				const cCategory = [
-					{ selector: 'div', description: '&lt;div&gt;' },
-					{ selector: 'span', description: '&lt;span&gt;' },
-					{ selector: '[id]', description: 'id attribute' },
-					{ selector: '[class]', description: 'class attribute' }
-				];
-
-				const missingFeaturesA = aCategory.filter(feature => !doc.querySelector(feature.selector)).map(feature => feature.description);
-				const missingFeaturesB = bCategory.filter(feature => !doc.querySelector(feature.selector)).map(feature => feature.description);
-				const missingFeaturesC = cCategory.filter(feature => !doc.querySelector(feature.selector)).map(feature => feature.description);
-
-				const excellentA = languageData["excellentA"];
-
-				const decentA = languageData["decentA"];
-
-				const poorA = languageData["poorA"];
-
-				const excellentB = languageData["excellentB"];
-
-				const decentB = languageData["decentB"];
-
-				const poorB = languageData["poorB"];
-
-				const excellentC = languageData["excellentC"];
-
-				const decentC = languageData["decentC"];
-
-				const poorC = languageData["poorC"];
-
-				let messageA, messageB, messageC;
-
-				if (missingFeaturesA.length === 0) {
-					score++;
-					messageA = getRandomMessage(excellentA);
-				} else if (missingFeaturesA.length <= 2) {
-					score += 0.5;
-					messageA = getRandomMessage(decentA);
-				} else {
-					messageA = getRandomMessage(poorA);
-				}
-
-				if (missingFeaturesB.length === 0) {
-					score++;
-					messageB = getRandomMessage(excellentB);
-				} else if (missingFeaturesB.length <= 2) {
-					score += 0.5;
-					messageB = getRandomMessage(decentB);
-				} else {
-					messageB = getRandomMessage(poorB);
-				}
-
-				if (missingFeaturesC.length === 0) {
-					score++;
-					messageC = getRandomMessage(excellentC);
-				} else if (missingFeaturesC.length <= 2) {
-					score += 0.5;
-					messageC = getRandomMessage(decentC);
-				} else {
-					messageC = getRandomMessage(poorC);
-				}
-
-				return `
-						${languageData["categoryATitle"]}
-						${languageData["categoryADescription"]}
-						${languageData["categoryBTitle"]}
-						${languageData["categoryBDescription"]}
-						${languageData["categoryCTitle"]}
-						${languageData["categoryCDescription"]}
-					<div>
-						${messageA}
-						${missingFeaturesA.length > 0 ? `<p>${languageData["missing"]}:<ul>${missingFeaturesA.map(feature => `<li>${feature}</li>`).join('')}</ul></p>` : ''}
-					</div>
-					<div>
-						${messageB}
-						${missingFeaturesB.length > 0 ? `<p>${languageData["missing"]}:<ul>${missingFeaturesB.map(feature => `<li>${feature}</li>`).join('')}</ul></p>` : ''}
-					</div>
-					<div>
-						${messageC}
-						${missingFeaturesC.length > 0 ? `<p>${languageData["missing"]}:<ul>${missingFeaturesC.map(feature => `<li>${feature}</li>`).join('')}</ul></p>` : ''}
-					</div>
-				`;
-			}
-
-			function summarized() {
-				const excellentScore = languageData["excellentScore"];
-
-				const decentScore = languageData["decentScore"];
-
-				const poorScore = languageData["poorScore"];
-
-				if (score == maxScore) {
-					return getRandomMessage(excellentScore);
-				} else if (score >= (maxScore / 2)) {
-					return getRandomMessage(decentScore);
-				} else {
-					return getRandomMessage(poorScore);
-				}
-			}
-
-			var parser = new DOMParser();
-			var doc = parser.parseFromString(content, 'text/html');
-			var titleElement = doc.querySelector('title');
-			var title = titleElement ? titleElement.textContent : `${languageData["titleNotFound"]}`;
-			if (url !== "!^FILE^!") {
-				var linkElement = document.createElement("a");
-				linkElement.href = url;
-				linkElement.target = "_blank";
-				url = url.replace(/(^\w+:|^)\/\//, '');
-				url = url.split('/')[0];
-				linkElement.innerText = url;
-				var existingElement = document.getElementById("websiteUrl");
-				if (existingElement) {
-					existingElement.remove();
-				}
-				linkElement.id = "websiteUrl";
-				urlContainer.appendChild(linkElement);
-			} else {
-				var linkElement = document.createElement("a");
-				linkElement.href = "https://hak-steyr.at/";
-				linkElement.target = "_blank";
-				url = url.replace(/(^\w+:|^)\/\//, '');
-				url = url.split('/')[0];
-				linkElement.innerText = title;
-				var existingElement = document.getElementById("websiteUrl");
-				if (existingElement) {
-					existingElement.remove();
-				}
-				linkElement.id = "websiteUrl";
-				urlContainer.appendChild(linkElement);
-			}
-			ps.innerHTML = analyzeWordsPs(content, marketingWords4Ps);
-			cs.innerHTML = analyzeWordsCs(content, marketingWords4Cs);
-			seo.innerHTML = analyzeWordsSEO(content, seoWords);
-			speed.innerHTML = speedCheck();
-			security.innerHTML = securityCheck(content);
-			privacy.innerHTML = privacyComplianceCheck(content);
-			summarization.innerHTML = summarized();
-			abc.innerHTML = abcAnalysis(content);
-			var remove = document.getElementById("remove-file");
-			if (remove.style.display !== "none") {
-				remove.click();
-			}
-
-			const scorePercentage = (score / maxScore) * 100;
-			const remainingPercentage = 100 - scorePercentage;
-
-			const ctx2 = document.getElementById('summarizationChart').getContext('2d');
-
-			var existingChart2 = Chart.getChart("summarizationChart");
-
-			if (existingChart2) {
-				existingChart2.destroy();
-			}
-
-			const donutChart = new Chart(ctx2, {
-				type: 'doughnut',
-				data: {
-					labels: [`${languageData["yourScore"]}`, `${languageData["remainingScore"]}`],
-					datasets: [{
-						data: [scorePercentage, remainingPercentage],
-						backgroundColor: [
-							'rgba(255, 70, 78, 0.6)',
-							'rgba(0, 0, 0, 0)',
-						],
-						borderColor: [
-							'rgba(255, 99, 132, 1)',
-						],
-						borderWidth: 1
-					}]
-				},
-				options: {
-					responsive: true,
-					plugins: {
-						tooltip: {
-							callbacks: {
-								label: function (tooltipItem) {
-									return tooltipItem.raw.toFixed(2) + '%';
-								}
-							}
-						}
-					}
-				}
-			});
-
-			removeSkeleton();
-			var content = document.querySelector("#resultContent");
-			var contentHeight = content.clientHeight;
-			result.style.maxHeight = contentHeight + "px";
-		}
-
-		window.onresize = function () {
-			var content = document.querySelector("#resultContent");
-			var contentHeight = content.clientHeight;
-			var fourPs = document.getElementById("fourPs");
-			if(fourPs.innerHTML !== "") {
-				result.style.maxHeight = contentHeight + "px";
-			}
-		}
-	</script>
+    </script>
 </body>
-</html
+</html>

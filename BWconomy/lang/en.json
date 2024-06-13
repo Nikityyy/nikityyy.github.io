@@ -371,5 +371,15 @@
   "dropDownABC": "ABC",
   "dropDownSummarization": "Summarization",
   "share": "Share",
-  "copy": "Copied"
+  "copy": "Copied",
+  "landingMain": "Revolutionize Your Business with Cutting-Edge Data Analytics Technology",
+  "landingBelowMain": "Transform your operations with our advanced analysis solutions for marketing and SEO.",
+  "landingStart": "Start the app",
+  "landingHowWorks": "How Our Analyzation Platform Works",
+  "landingStepOne": "Step 1: Input Your Data",
+  "landingStepOneBelow": "Upload your data to our secure platform.",
+  "landingStepTwo": "Step 2: Data Processing",
+  "landingStepTwoBelow": "Our custom algorithms analyze the structure, techniques, texts and more used in the website.",
+  "landingStepThree": "Step 3: Get Results",
+  "landingStepThreeBelow": "Receive actionable insights from the processed data."
 }

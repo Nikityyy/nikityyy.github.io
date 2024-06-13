@@ -370,5 +370,15 @@
   "dropDownABC": "ABC",
   "dropDownSummarization": "Zusammenfassung",
   "share": "Teilen",
-  "copy": "Kopiert"
+  "copy": "Kopiert",
+"landingMain": "Revolutionieren Sie Ihr Unternehmen mit modernster Datenanalysetechnologie",
+"landingBelowMain": "Transformieren Sie Ihre Abläufe mit unseren fortschrittlichen Analyselösungen für Marketing und SEO.",
+"landingStart": "Starte die App",
+"landingHowWorks": "So funktioniert unsere Analyseplattform",
+"landingStepOne": "Schritt 1: Geben Sie Ihre Daten ein",
+"landingStepOneBelow": "Laden Sie Ihre Daten auf unsere sichere Plattform hoch.",
+"landingStepTwo": "Schritt 2: Datenverarbeitung",
+"landingStepTwoBelow": "Unsere benutzerdefinierten Algorithmen analysieren die Struktur, Techniken, Texte und mehr, die auf der Website verwendet werden.",
+"landingStepThree": "Schritt 3: Ergebnisse erzielen",
+"landingStepThreeBelow": "Erhalten Sie umsetzbare Erkenntnisse aus den verarbeiteten Daten."
 }

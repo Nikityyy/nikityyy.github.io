@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -492,6 +491,7 @@
 			-webkit-user-select: none;
 			touch-action: manipulation;
 			will-change: transform;
+			width: 136px;
 		}
 
 		.export:disabled {
@@ -755,9 +755,9 @@
 			background-color: #323232;
 		}
 
-		#fourPsTitle {
+		#resultContent h2 {
 			display: block;
-			width: calc(100% - 32px);
+			width: calc(100% - 40px);
 		}
 
 		.greyed-out {
@@ -816,6 +816,9 @@
 			#line-2,
 			#line-3 {
 				visibility: hidden !important;
+			}
+			#inputURL::placeholder {
+				font-size: 14px;
 			}
 		}
 	</style>
@@ -918,10 +921,11 @@
 			</div>
 
 			<div id="urlLinkContainer">
-				<div style="display: flex; justify-content: space-between;">
-					<button id="wordButton" class="export" onclick="exportNote('result')"
-						style="align-self: flex-start;"></button>
-					<div id="urlContainer" style="align-self: flex-end;"></div>
+				<div
+					style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 20px;">
+					<button id="wordButton" class="export" onclick="exportNote('result')"></button>
+					<div id="urlContainer" style="text-align: center; flex-grow: 1;"></div>
+					<button id="shareButton" class="export" onclick="copyUrl()"></button>
 				</div>
 			</div>
 
@@ -995,6 +999,7 @@
 			document.getElementById('summarizationTitle').textContent = data["summarizationTitle"];
 			document.getElementById('wordButton').textContent = data["wordButton"];
 			document.getElementById('inputURL').placeholder = data["inputPlaceholder"];
+			document.getElementById('shareButton').textContent = data["share"];
 		}
 
 		var userLang = navigator.language || navigator.userLanguage;
@@ -1103,7 +1108,6 @@
 					section.style.display = "block";
 					option.classList.remove('greyed-out');
 				} else if (!(optionsWithoutGreyedOut < 5)) {
-					console.log(optionsWithoutGreyedOut);
 					section.style.display = "none";
 					option.classList.add('greyed-out');
 				}
@@ -1269,6 +1273,8 @@
 		function addSkeleton() {
 			var div = document.getElementById("resultContent");
 			var nodes = div.childNodes;
+			var dropdownImg = document.getElementById("dropdownImg");
+			dropdownImg.style.display = "none";
 
 			for (var i = 0; i < nodes.length; i++) {
 				if (nodes[i].nodeType === Node.ELEMENT_NODE) {
@@ -1280,6 +1286,8 @@
 		function removeSkeleton() {
 			var div = document.getElementById("resultContent");
 			var nodes = div.childNodes;
+			var dropdownImg = document.getElementById("dropdownImg");
+			dropdownImg.style.display = "block";
 
 			for (var i = 0; i < nodes.length; i++) {
 				if (nodes[i].nodeType === Node.ELEMENT_NODE) {
@@ -1288,7 +1296,22 @@
 			}
 		}
 
+		document.addEventListener("DOMContentLoaded", function () {
+			var currentUrl = window.location.href;
+
+			var urlParams = new URLSearchParams(window.location.search);
+
+			if (urlParams.has('url')) {
+				var url = urlParams.get('url');
+				var inputElement = document.querySelector('.input-area input[type="url"]');
+				inputElement.value = url;
+				analyzeURL();
+			}
+		});
+
 		async function analyzeURL() {
+			let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+			window.history.replaceState({}, document.title, newUrl);
 			score = 0;
 			var ip = document.getElementById('ip');
 			addSkeleton();
@@ -1352,7 +1375,7 @@
 						if (contentType && contentType.includes('text/html')) {
 							var endTime = Date.now();
 							timeTaken = endTime - startTime;
-							console.log('Fetching the website took ' + timeTaken + ' milliseconds');
+							// console.info('Fetching the website took ' + timeTaken + ' milliseconds');
 							analyzation(xhr.responseText, url);
 						} else if (xhr.responseText == "error code: 1003") {
 							alert(`${languageData["websiteError"]}`);
@@ -1440,6 +1463,19 @@
 
 		function getRandomMessage(messages) {
 			return messages[Math.floor(Math.random() * messages.length)];
+		}
+
+		function copyUrl() {
+			var share = document.getElementById("shareButton");
+			share.innerHTML = languageData["copy"];
+
+			let currentUrl = window.location.href;
+			let baseUrl = currentUrl.split('?')[0];
+			let newUrl = baseUrl + `?url=${url}`;
+			navigator.clipboard.writeText(newUrl);
+			setTimeout(() => {
+				share.innerHTML = languageData["share"];
+			}, 1500);
 		}
 
 		function exportNote(contentId) {
@@ -2234,7 +2270,15 @@
 			var contentHeight = content.clientHeight;
 			result.style.maxHeight = contentHeight + "px";
 		}
+
+		window.onresize = function () {
+			var content = document.querySelector("#resultContent");
+			var contentHeight = content.clientHeight;
+			var fourPs = document.getElementById("fourPs");
+			if(fourPs.innerHTML !== "") {
+				result.style.maxHeight = contentHeight + "px";
+			}
+		}
 	</script>
 </body>
-
 </html

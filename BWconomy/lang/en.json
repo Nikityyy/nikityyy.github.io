@@ -369,5 +369,7 @@
   "dropDownPrivacy": "Privacy",
   "dropDownSWOT": "SWOT",
   "dropDownABC": "ABC",
-  "dropDownSummarization": "Summarization"
+  "dropDownSummarization": "Summarization",
+  "share": "Share",
+  "copy": "Copied"
 }

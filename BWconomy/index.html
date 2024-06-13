@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,8 @@
 	<link rel="stylesheet" href="planets/style.css">
 	<link rel="preload" href="fonts/Poppins.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 	<link rel="prefetch" href="images/icons8-attach-96.png">
+	<link rel="preload" href="lang/de.json" as="fetch" crossorigin="anonymous">
+	<link rel="preload" href="lang/en.json" as="fetch" crossorigin="anonymous">
 	<meta name="description"
 		content="Discover the power of BWconomy, your premier partner in navigating the digital economy landscape. With BWconomy, gain access to cutting-edge tools that allow you to seamlessly add websites and conduct comprehensive scans, empowering you to make informed decisions and stay ahead of the competition. Maximize your efficiency and profitability with our innovative solutions, designed to optimize your online presence and drive growth in today's dynamic economic environment. Trust BWconomy to be your guiding light in the complex world of digital business, providing unparalleled insights and support every step of the way.">
 	<style>
@@ -103,6 +106,7 @@
 			font-size: 2.5em;
 			color: #2A9D8F;
 			margin: 20px;
+			transition: all 0.3s;
 		}
 
 		body.dark-mode .main h1,
@@ -424,7 +428,9 @@
 		}
 
 		#resultContent {
+			margin-top: 0px;
 			padding: 20px;
+			transition: opacity 0.5s;
 		}
 
 		::-webkit-scrollbar {
@@ -682,6 +688,90 @@
 			font-size: 20px;
 		}
 
+		#dropdown {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+		}
+
+		#dropdown img {
+			cursor: pointer;
+			width: 38px;
+			transition: all 0.3s;
+			transform: scale(0.8);
+		}
+
+		body.dark-mode #dropdown img {
+			filter: invert(1);
+		}
+
+		#dropdown img:hover {
+			transform: scale(1);
+		}
+
+		#dropdownMenu {
+			display: none;
+			position: absolute;
+			right: 0;
+			border-radius: 10px;
+			min-width: 160px;
+			margin-top: 10px;
+			transition: all 0.3s;
+			opacity: 0;
+			background: rgba(255, 255, 255, 0.9);
+			box-shadow: 0 6px 60px 0 rgba(42, 157, 143, 0.75);
+			backdrop-filter: blur(10px);
+			-webkit-backdrop-filter: blur(10px);
+			color: #000;
+		}
+
+		body.dark-mode #dropdownMenu {
+			background: rgba(30, 30, 30, 0.9);
+			box-shadow: 0 6px 60px 0 rgba(52, 74, 251, 0.75);
+			backdrop-filter: blur(10px);
+			-webkit-backdrop-filter: blur(10px);
+			color: #fff;
+		}
+
+		#dropdownMenu a {
+			cursor: grab;
+			color: #000;
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+			transition: all 0.15s;
+			border-radius: 10px;
+		}
+
+		body.dark-mode #dropdownMenu a {
+			color: #fff;
+		}
+
+		#dropdownMenu a:hover {
+			background-color: #d5d5d5;
+		}
+
+		body.dark-mode #dropdownMenu a:hover {
+			background-color: #323232;
+		}
+
+		#fourPsTitle {
+			display: block;
+			width: calc(100% - 32px);
+		}
+
+		.greyed-out {
+			color: #a1a1a1 !important;
+		}
+
+		.dropdownContainer {
+			transition: all 0.3s;
+		}
+
+		body.dark-mode .greyed-out {
+			filter: contrast(0.5) brightness(0.5);
+		}
+
 		@keyframes start {
 			0% {
 				opacity: 0.01;
@@ -773,47 +863,68 @@
 	</div>
 	<div id="result">
 		<div id="resultContent">
-			<!-- Marketing Concepts -->
-			<h2 id="fourPsTitle"></h2>
-			<p id="fourPs"></p>
-			<h2 id="fourCsTitle"></h2>
-			<p id="fourCs"></p>
-
-			<!-- Website Performance -->
-			<h2 id="seoTitle"></h2>
-			<p id="seo"></p>
-
-			<h2 id="speedTitle"></h2>
-			<p id="speed"></p>
-			<p id="ip"></p>
-
-			<!-- Security and Privacy -->
-			<h2 id="securityTitle"></h2>
-			<p id="security"></p>
-
-			<h2 id="privacyTitle"></h2>
-			<p id="privacy"></p>
-
-			<!-- SWOT Analysis -->
-			<h2 id="swotTitle"></h2>
-			<canvas id="swotChart" width="400" height="400"></canvas>
-			<p id="swot"></p>
-
-			<!-- ABC Analysis -->
-			<h2 id="abcTitle"></h2>
-			<p id="abc"></p>
-
-			<!-- Summarization -->
-			<h2 id="summarizationTitle"></h2>
-			<canvas id="summarizationChart" width="400" height="400"></canvas>
-			<p id="summarization"></p>
-
-			<!-- URL Container -->
-			<div style="display: flex; justify-content: space-between;">
-				<button id="wordButton" class="export" onclick="exportNote('result')"
-					style="align-self: flex-start;"></button>
-				<div id="urlContainer" style="align-self: flex-end;"></div>
+			<div id="dropdown">
+				<img id="dropdownImg" src="images/icons8-tune-96.png" alt="Dropdown">
+				<div id="dropdownMenu" class="dropdown-content">
+				</div>
 			</div>
+
+			<div id="fourPsContainer">
+				<h2 id="fourPsTitle"></h2>
+				<p id="fourPs"></p>
+			</div>
+
+			<div id="fourCsContainer">
+				<h2 id="fourCsTitle"></h2>
+				<p id="fourCs"></p>
+			</div>
+
+			<div id="seoContainer">
+				<h2 id="seoTitle"></h2>
+				<p id="seo"></p>
+			</div>
+
+			<div id="speedContainer">
+				<h2 id="speedTitle"></h2>
+				<p id="speed"></p>
+				<p id="ip"></p>
+			</div>
+
+			<div id="securityContainer">
+				<h2 id="securityTitle"></h2>
+				<p id="security"></p>
+			</div>
+
+			<div id="privacyContainer">
+				<h2 id="privacyTitle"></h2>
+				<p id="privacy"></p>
+			</div>
+
+			<div id="swotContainer">
+				<h2 id="swotTitle"></h2>
+				<canvas id="swotChart" width="400" height="400"></canvas>
+				<p id="swot"></p>
+			</div>
+
+			<div id="abcContainer">
+				<h2 id="abcTitle"></h2>
+				<p id="abc"></p>
+			</div>
+
+			<div id="summarizationContainer">
+				<h2 id="summarizationTitle"></h2>
+				<canvas id="summarizationChart" width="400" height="400"></canvas>
+				<p id="summarization"></p>
+			</div>
+
+			<div id="urlLinkContainer">
+				<div style="display: flex; justify-content: space-between;">
+					<button id="wordButton" class="export" onclick="exportNote('result')"
+						style="align-self: flex-start;"></button>
+					<div id="urlContainer" style="align-self: flex-end;"></div>
+				</div>
+			</div>
+
 		</div>
 	</div>
 	<script>
@@ -825,6 +936,20 @@
 		if (consent === 'accepted' || consent === 'declined') {
 			document.getElementById('cookie-popup').style.display = 'none';
 		}
+
+		var userLang = navigator.language || navigator.userLanguage;
+
+		let preferredLang = localStorage.getItem('preferredLang');
+
+		var langText = document.getElementById("language");
+
+		if (!preferredLang) {
+			preferredLang = userLang;
+			localStorage.setItem('preferredLang', preferredLang);
+		} else {
+			langText.innerHTML = preferredLang.startsWith('de') ? 'EN' : 'DE';
+		}
+
 		document.getElementById("inputURL").focus();
 	</script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -876,8 +1001,6 @@
 
 		var lang = userLang.startsWith('de') ? 'lang/de' : 'lang/en';
 
-		let preferredLang = localStorage.getItem('preferredLang');
-
 		var langText = document.getElementById("language");
 
 		if (!preferredLang) {
@@ -885,17 +1008,14 @@
 			localStorage.setItem('preferredLang', preferredLang);
 		} else {
 			lang = preferredLang.startsWith('de') ? 'lang/de' : 'lang/en';
-			langText.innerHTML = preferredLang.startsWith('de') ? 'EN' : 'DE';
 		}
 
 		fetchLanguageData(lang).then(data => {
 			if (data) {
 				updateContent(data);
+				populateDropdown();
 			}
 		});
-
-		var score = 0;
-		var maxScore = 9;
 
 		function changeLanguage() {
 			let preferredLang = localStorage.getItem('preferredLang')
@@ -906,6 +1026,134 @@
 			}
 			window.location.reload();
 		}
+
+		document.getElementById("dropdownImg").addEventListener("click", function () {
+			var dropdownMenu = document.getElementById("dropdownMenu");
+			if (dropdownMenu.style.display === "none" || dropdownMenu.style.display === "") {
+				dropdownMenu.style.display = "block";
+				setTimeout(function () {
+					dropdownMenu.style.opacity = 1;
+				}, 1);
+			} else {
+				dropdownMenu.style.opacity = 0;
+				setTimeout(function () {
+					dropdownMenu.style.display = "none";
+				}, 350);
+			}
+		});
+
+		window.onclick = function (event) {
+			if (!event.target.matches('#dropdownImg') && !event.target.matches('.dropdownContainer')) {
+				var dropdowns = document.getElementsByClassName("dropdown-content");
+				for (var i = 0; i < dropdowns.length; i++) {
+					var openDropdown = dropdowns[i];
+					if (openDropdown.style.display === "block") {
+						openDropdown.style.opacity = 0;
+						setTimeout(function () {
+							openDropdown.style.display = "none";
+						}, 350);
+					}
+				}
+			}
+		}
+
+		function populateDropdown() {
+			const dropdownMenu = document.getElementById("dropdownMenu");
+			const resultContent = document.getElementById("resultContent");
+
+			const containers = [
+				{ id: "fourPsContainer", label: languageData["dropDown4Ps"] },
+				{ id: "fourCsContainer", label: languageData["dropDown4Cs"] },
+				{ id: "seoContainer", label: languageData["dropDownSEO"] },
+				{ id: "speedContainer", label: languageData["dropDownSpeed"] },
+				{ id: "securityContainer", label: languageData["dropDownSecurity"] },
+				{ id: "privacyContainer", label: languageData["dropDownPrivacy"] },
+				{ id: "swotContainer", label: languageData["dropDownSWOT"] },
+				{ id: "abcContainer", label: languageData["dropDownABC"] },
+				{ id: "summarizationContainer", label: languageData["dropDownSummarization"] },
+			];
+
+			containers.forEach(container => {
+				const option = document.createElement("a");
+				option.href = `#${container.id}`;
+				option.classList.add("dropdownContainer");
+				option.textContent = container.label;
+				option.draggable = true;
+				option.addEventListener("dragstart", dragStart);
+				option.addEventListener("dragover", dragOver);
+				option.addEventListener("drop", drop);
+				dropdownMenu.appendChild(option);
+				option.addEventListener("click", function (event) {
+					event.preventDefault();
+					toggleSectionVisibility(container.id);
+				});
+			});
+
+			function toggleSectionVisibility(sectionId) {
+				const section = document.getElementById(sectionId);
+				const option = document.querySelector(`a[href="#${sectionId}"]`);
+				const optionsWithoutGreyedOut = document.querySelectorAll('a:not(.greyed-out)').length;
+				var resultCont = document.getElementById('resultContent');
+
+				var dropdownMenu = document.getElementById('dropdownMenu');
+				var dropdownHeight = dropdownMenu.clientHeight * 1.2;
+				resultCont.style.minHeight = dropdownHeight + "px";
+
+				if (section.style.display === "none") {
+					section.style.display = "block";
+					option.classList.remove('greyed-out');
+				} else if (!(optionsWithoutGreyedOut < 5)) {
+					console.log(optionsWithoutGreyedOut);
+					section.style.display = "none";
+					option.classList.add('greyed-out');
+				}
+			}
+
+			let dragged;
+
+			function dragStart(event) {
+				dragged = event.target;
+				event.dataTransfer.effectAllowed = "move";
+			}
+
+			function dragOver(event) {
+				event.preventDefault();
+				event.dataTransfer.dropEffect = "move";
+			}
+
+			function drop(event) {
+				event.preventDefault();
+				var resultContent = document.getElementById("resultContent");
+				if (dragged !== event.target) {
+					let allOptions = Array.from(dropdownMenu.children);
+					let draggedIndex = allOptions.indexOf(dragged);
+					let targetIndex = allOptions.indexOf(event.target);
+
+					if (draggedIndex < targetIndex) {
+						event.target.after(dragged);
+					} else {
+						event.target.before(dragged);
+					}
+
+					reorderContainers();
+				}
+			}
+
+			function reorderContainers() {
+				var resultContent = document.getElementById("resultContent");
+				let orderedContainers = Array.from(dropdownMenu.children).map(option => option.href.split("#")[1]);
+				orderedContainers.forEach(containerId => {
+					let container = document.getElementById(containerId);
+					resultContent.insertBefore(container, urlLinkContainer);
+				});
+				resultContent.appendChild(urlLinkContainer);
+			}
+
+			resultContent.appendChild(urlLinkContainer);
+		};
+
+		var score = 0;
+		var maxScore = 9;
 
 		function acceptCookies() {
 			localStorage.setItem('cookie_consent', 'accepted');
@@ -1202,20 +1450,35 @@
 			var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
 				"xmlns:w='urn:schemas-microsoft-com:office:word' " +
 				"xmlns='http://www.w3.org/TR/REC-html40'>" +
-				`<head><meta charset='utf-8'><title>${url}</title></head><body>`;
+				"<head><meta charset='utf-8'><title>" + url + "</title></head><body>";
 
 			var footer = "</body></html>";
 
-			var sourceHTML = header + document.getElementById(contentId).innerHTML + footer;
+			var contentElement = document.getElementById(contentId);
+
+			var clonedContent = contentElement.cloneNode(true);
+
+			var hiddenElements = clonedContent.querySelectorAll('[style*="display: none;"]');
+			hiddenElements.forEach(function (element) {
+				element.parentNode.removeChild(element);
+			});
+
+			var imgElements = clonedContent.getElementsByTagName('img');
+			for (var i = imgElements.length - 1; i >= 0; i--) {
+				imgElements[i].parentNode.removeChild(imgElements[i]);
+			}
+
+			var sourceHTML = header + clonedContent.innerHTML + footer;
 
 			sourceHTML = sourceHTML.replace(/<button\b[^<]*(?:(?!<\/button>)<[^<]*)*<\/button>/gi, '');
 
 			var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+			var fileName = `${url}.doc`;
 
 			var fileDownload = document.createElement("a");
 			document.body.appendChild(fileDownload);
 			fileDownload.href = source;
-			fileDownload.download = `${url}.doc`;
+			fileDownload.download = fileName;
 			fileDownload.click();
 
 			document.body.removeChild(fileDownload);
@@ -1973,4 +2236,5 @@
 		}
 	</script>
 </body>
+
 </html

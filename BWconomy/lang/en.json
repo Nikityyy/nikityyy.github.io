@@ -381,5 +381,6 @@
   "landingStepTwo": "Step 2: Data Processing",
   "landingStepTwoBelow": "Our custom algorithms analyze the structure, techniques, texts and more used in the website.",
   "landingStepThree": "Step 3: Get Results",
-  "landingStepThreeBelow": "Receive actionable insights from the processed data."
+  "landingStepThreeBelow": "Receive actionable insights from the processed data.",
+  "siteNotFound": "Site Not Found"
 }

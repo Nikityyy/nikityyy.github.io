@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emojopy</title>
     <link rel="preload" href="all_emojis.txt" as="fetch" type="text/plain" crossorigin="anonymous">
     <link rel="preload" href="fonts/Poppins.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-    <link rel="preload" href="fonts/NotoColorEmoji-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+    <link rel="preload"
+        href="https://github.com/adobe-fonts/noto-emoji-svg/releases/download/2.100/NotoColorEmoji-SVG.otf" as="font"
+        type="font/otf" crossorigin="anonymous">
     <link rel="preload" href="images/favicon.webp" as="image" type="image/x-icon">
     <link rel="icon" href="images/favicon.webp">
     <meta name="description"
@@ -18,10 +21,10 @@
         }
 
         @font-face {
-            font-family: "Noto Color Emoji";
-            src: url(fonts/NotoColorEmoji-Regular.ttf);
+            font-family: 'Noto Color Emoji';
+            src:
+                url('https://github.com/adobe-fonts/noto-emoji-svg/releases/download/2.100/NotoColorEmoji-SVG.otf') format('opentype')
         }
-
 
         body {
             font-family: "Poppins", arial, sans-serif;
@@ -89,8 +92,24 @@
             transition: opacity 0.3s ease-in-out;
         }
 
+        .load-more-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border: none;
+            background-color: #00458F;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
 
-        @media (max-width:1000px) {
+        .load-more-button:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 1000px) {
             h1 {
                 font-size: 30px;
             }
@@ -102,17 +121,18 @@
     <div id="emojiContainer">
         <h1>Every Emoji easily copieable</h1>
         <div id="emojis"></div>
+        <button id="loadMoreButton" class="load-more-button">Load more</button>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const emojiContainer = document.getElementById('emojis');
+            const loadMoreButton = document.getElementById('loadMoreButton');
             const notificationTimeout = 1500;
-            const batchSize = 10;
-            const loadDelay = 0.1;
-            var notificationIndex = 0;
-            var emojis = [];
-            var emojiIndex = 0;
+            const batchSize = 50;
+            let notificationIndex = 0;
+            let emojis = [];
+            let emojiIndex = 0;
 
             function showNotification() {
                 const notification = document.createElement('div');
@@ -157,8 +177,8 @@
 
                 emojiIndex += batchSize;
 
-                if (emojiIndex < emojis.length) {
-                    setTimeout(loadNextBatch, loadDelay);
+                if (emojiIndex >= emojis.length) {
+                    loadMoreButton.style.display = 'none';
                 }
             }
 
@@ -183,6 +203,8 @@
                     emojiContainer.textContent = 'Failed to load emojis.';
                 });
 
+            loadMoreButton.addEventListener('click', loadNextBatch);
+
             function copyToClipboard(text) {
                 const tempInput = document.createElement('textarea');
                 tempInput.value = text;
@@ -192,7 +214,7 @@
                 document.body.removeChild(tempInput);
             }
         });
-
     </script>
 </body>
+
 </html>

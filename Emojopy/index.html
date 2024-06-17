@@ -204,6 +204,7 @@
             loadMoreButton.addEventListener('click', loadNextBatch);
 
             async function copyToClipboard(text) {
+                text = text.replace(" ", "");
                 try {
                     await navigator.clipboard.writeText(text);
                 } catch (err) {

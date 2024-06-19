@@ -301,6 +301,8 @@
                     return response.text();
                 })
                 .then(data => {
+                    emojiContainer.style.gridTemplateColumns = 'repeat(auto-fill, minmax(60px, 1fr));';
+
                     emojis = data.trim().split('\n');
 
                     emojiContainer.textContent = '';
@@ -309,6 +311,7 @@
                 })
                 .catch(error => {
                     console.error('Error fetching all_emojis.txt:', error);
+                    emojiContainer.style.gridTemplateColumns = 'auto';
                     emojiContainer.textContent = 'Failed to load emojis.';
                 });
 

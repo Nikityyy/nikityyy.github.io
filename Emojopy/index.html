@@ -113,6 +113,35 @@
             background-color: #0056b3;
         }
 
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .text {
+            flex-grow: 1;
+            text-align: center;
+
+            input {
+                appearance: none;
+                line-height: 24px;
+                background: none;
+                border: 1px solid #C9C9D9;
+                outline: none;
+                display: block;
+                border-radius: 10px;
+                width: 121px;
+                padding: 12px 16px;
+                font-family: inherit;
+                font-size: 14px;
+                color: #000;
+                margin: 0 auto 20px auto;
+
+                &::placeholder {
+                    color: #C9C9D9;
+                }
+            }
+        }
+
         @media (max-width: 1000px) {
             h1 {
                 font-size: 30px;
@@ -124,16 +153,39 @@
 <body>
     <div id="emojiContainer">
         <h1>Every Emoji easily copyable</h1>
+        <div class="input">
+            <div class="text">
+                <input type="text" id="searchInput" class="search-bar" placeholder="Search for emojis" />
+            </div>
+        </div>
         <div id="emojis"></div>
         <button id="loadMoreButton" class="load-more-button">Load more</button>
     </div>
-
     <script>
+        function debounce(func, delay) {
+            let timeoutId;
+            return function (...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
+
+        function delay(fn, ms) {
+            let timer = 0
+            return function (...args) {
+                clearTimeout(timer)
+                timer = setTimeout(fn.bind(this, ...args), ms || 0)
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             const emojiContainer = document.getElementById('emojis');
             const loadMoreButton = document.getElementById('loadMoreButton');
+            const searchInput = document.getElementById('searchInput');
             const notificationTimeout = 1500;
-            const batchSize = 500;
+            const batchSize = 250;
             let notificationIndex = 0;
             let emojis = [];
             let emojiIndex = 0;
@@ -158,12 +210,71 @@
                 notificationIndex++;
             }
 
+            function filterEmojis(searchText) {
+                if (!emojis) return;
+
+                if (searchText.trim() === '') {
+                    emojiContainer.innerHTML = '';
+
+                    const initialEmojis = emojis.slice(0, batchSize);
+                    displayEmojis(initialEmojis);
+
+                    emojiIndex = batchSize;
+                    loadMoreButton.style.display = '';
+                    return;
+                }
+
+                const filteredEmojis = emojis.filter(emojiData => {
+                    const parts = emojiData.split(',');
+                    if (parts.length < 2) return false;
+                    const altText = parts[1].trim();
+                    return altText.toLowerCase().includes(searchText.toLowerCase());
+                });
+
+                emojiContainer.innerHTML = '';
+
+                if (filteredEmojis.length === 0) {
+                    const noResultsMessage = document.createElement('div');
+                    noResultsMessage.textContent = 'No emojis found.';
+                    emojiContainer.appendChild(noResultsMessage);
+                } else {
+                    const emojisToShow = filteredEmojis.slice(0, batchSize);
+                    displayEmojis(emojisToShow);
+                }
+            }
+
+            function displayEmojis(emojisToDisplay) {
+                emojisToDisplay.forEach(emojiData => {
+                    const [emoji, altText] = emojiData.split(',');
+                    const emojiSpan = createEmojiSpan(emoji, altText);
+                    emojiContainer.appendChild(emojiSpan);
+                });
+            }
+
+            function createEmojiSpan(emoji, altText) {
+                const emojiSpan = document.createElement('span');
+                emojiSpan.classList.add('emoji');
+                emojiSpan.textContent = emoji.trim();
+                emojiSpan.setAttribute('alt', altText.trim());
+
+                emojiSpan.addEventListener('click', () => {
+                    copyToClipboard(emoji);
+                    showNotification();
+                });
+
+                return emojiSpan;
+            }
+
             function loadNextBatch() {
+                if (!emojis) return;
+
                 const emojisToLoad = emojis.slice(emojiIndex, emojiIndex + batchSize);
-                emojisToLoad.forEach(emoji => {
+                emojisToLoad.forEach(emojiData => {
+                    const [emoji, altText] = emojiData.split(',');
                     const emojiSpan = document.createElement('span');
                     emojiSpan.classList.add('emoji');
                     emojiSpan.textContent = emoji.trim();
+                    emojiSpan.setAttribute('alt', altText.trim());
 
                     emojiSpan.addEventListener('click', () => {
                         copyToClipboard(emoji);
@@ -203,8 +314,15 @@
 
             loadMoreButton.addEventListener('click', loadNextBatch);
 
+            const debounceFilterEmojis = debounce(filterEmojis, 50);
+
+            searchInput.addEventListener('input', function () {
+                const searchText = this.value.trim();
+                debounceFilterEmojis(searchText);
+            });
+
             async function copyToClipboard(text) {
-                text = text.replace(" ", "");
+                text = text.trim();
                 try {
                     await navigator.clipboard.writeText(text);
                 } catch (err) {

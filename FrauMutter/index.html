@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Für Frau Mutter</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: #141414;
+            color: #fff;
+        }
+
+        .header {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px 40px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            color: #e50914;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .content {
+            padding-top: 100px;
+        }
+
+        .category {
+            margin-bottom: 40px;
+        }
+
+        .category-title {
+            font-size: 1.5em;
+            margin-left: 40px;
+            margin-bottom: 10px;
+        }
+
+        .thumbnails {
+            display: flex;
+            overflow-x: auto;
+            padding: 20px 40px;
+            gap: 15px;
+        }
+
+        .thumbnail {
+            flex: 0 0 auto;
+            width: 300px;
+            height: 169px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 4px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .thumbnail:hover {
+            transform: scale(1.05);
+        }
+
+        #videoPlayer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 2000;
+        }
+
+        video,
+        iframe {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="logo">Für Frau Mutter</div>
+    </div>
+    <div class="content">
+        <div class="category">
+            <h2 class="category-title">Zurzeit im Trend</h2>
+            <div class="thumbnails">
+                <div class="thumbnail" style="background-image: url('media/18370817_605.jpg')"
+                    onclick="loadVideo('https://player.smotrim.ru/iframe/stream/live_id/4941?.m3u8')"></div>
+                <div class="thumbnail" style="background-image: url('media/rossija-rtr-senderlogo-276569.png')"
+                    onclick="loadVideo('https://player.smotrim.ru/iframe/stream/live_id/2961?e=.m3u8')"></div>
+                <div class="thumbnail" style="background-image: url('media/fmt_87_24_photo_2022-02-27_21-35-11.jpg')"
+                    onclick="loadVideo('https://ok.ru/videoembed/7760403373688?nochat=1&autoplay=1')"></div>
+                <div class="thumbnail" style="background-image: url('media/tht_russia.png')"
+                    onclick="loadVideo('https://ok.ru/videoembed/7889018035832?nochat=1&autoplay=1')"></div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="videoPlayer">
+        <video id="video" controls autoplay></video>
+    </div>
+    <script>
+        function loadVideo(url) {
+            const videoPlayer = document.getElementById('videoPlayer');
+            const video = document.getElementById('video');
+            videoPlayer.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+
+            if (url.includes('ok.ru')) {
+                video.style.display = 'none';
+                const iframe = document.createElement('iframe');
+                iframe.src = url;
+                iframe.frameBorder = '0';
+                iframe.allowFullscreen = true;
+                iframe.allow = 'encrypted-media';
+                videoPlayer.appendChild(iframe);
+            } else {
+                video.style.display = 'block';
+                if (Hls.isSupported()) {
+                    const hls = new Hls();
+                    hls.loadSource(url);
+                    hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                        video.play();
+                    });
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = url;
+                    video.addEventListener('loadedmetadata', function () {
+                        video.play();
+                    });
+                }
+            }
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                const videoPlayer = document.getElementById('videoPlayer');
+                videoPlayer.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                videoPlayer.innerHTML = '<video id="video" controls autoplay></video>';
+            }
+        });
+    </script>
+</body>
+
+</html>

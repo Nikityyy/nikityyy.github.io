@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nikity</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: monospace;
+            background-color: #000;
+            color: #ccc;
+            font-size: 1.8em;
+        }
+
+        * {
+            cursor: default;
+        }
+
+        ::selection {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .start {
+            padding: 8px;
+        }
+
+        .start p {
+            margin: 0;
+        }
+
+        #blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            50% {
+                display: none;
+            }
+
+            100% {
+                display: inline-block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="start" id="start">
+        <p>Microsoft Windows [Version 10.0.22631.3737]</p>
+        <p>(c) Microsoft Corporation. All rights reserved.</p>
+        <p><br>C:\Users\Admin\Desktop\Nikity>train.py<br>Press any key to continue . . . <span id="blink">|</span>
+        </p>
+        <p id="training1"></p>
+        <p id="training2"></p>
+        <p id="training3"></p>
+        <p id="training4"></p>
+        <p id="training5"></p>
+        <p id="training6"></p>
+        <p id="training7"></p>
+        <p id="training8"></p>
+        <p id="training9"></p>
+        <p id="training10"></p>
+    </div>
+    <script>
+        function getRandomNumber(min, max, decimals) {
+            let randomNumber = Math.random() * (max - min) + min;
+            return randomNumber.toFixed(decimals);
+        }
+
+        let min = 1.0;
+        let max = 10.0;
+
+        var texts = [`iter 0: loss ${getRandomNumber(9.5, 10.9, 4)}, time ${getRandomNumber(100, 130, 2)}ms, mfu ${getRandomNumber(7, 12, 2)}%`, `iter 500: loss ${getRandomNumber(2, 3, 4)}, time ${getRandomNumber(100, 130, 2)}ms, mfu ${getRandomNumber(2, 3, 2)}%`, `iter 1000: loss ${getRandomNumber(0, 1.2, 4)}, time ${getRandomNumber(100, 130, 2)}ms, mfu ${getRandomNumber(1, 2, 2)}%`, "Training done.", "Name: Nikity", "Benchmarks:", "HTML: 100%", "CSS: 100%", "JS: 100%", "Webdesign: Excellent."];
+        var currentText = 0;
+        var i = 0;
+        var speed = 25;
+
+        function removeLine() {
+            var blink = document.getElementById("blink")
+            if (blink) {
+                blink.remove();
+            }
+        }
+
+        function addLine() {
+            var text = "Loading Experience . . ."
+
+            var start = document.getElementById("start");
+
+            if (start.querySelector('pre') === null) {
+                var preElement = document.createElement('pre');
+                preElement.id = "blink";
+                preElement.textContent = text;
+                start.appendChild(preElement);
+            }
+
+            setTimeout(() => {
+                loadPage();
+            }, 3000);
+        }
+
+        function loadPage() {
+            window.location.href = "main.html"
+        }
+
+        function typeWriter() {
+            removeLine();
+            if (i < texts[currentText].length) {
+                document.getElementById("training" + (currentText + 1)).innerHTML += texts[currentText].charAt(i);
+                i++;
+                setTimeout(typeWriter, speed);
+            } else if (currentText < texts.length - 1) {
+                currentText++;
+                i = 0;
+                setTimeout(typeWriter, speed);
+            } else {
+                addLine();
+            }
+        }
+
+        document.addEventListener('click', typeWriter);
+        document.addEventListener('keydown', typeWriter);
+    </script>
+</body>
+
+</html>
+
+<script>

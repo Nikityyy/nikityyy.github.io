@@ -417,7 +417,7 @@
                 const imageUrl = product.productImage || product.modelImage;
 
                 productImg.src = imageUrl;
-                productName.innerHTML = `<a href="https://www2.hm.com/en_us/productpage.${product.id}.html" target="_blank">${product.productName}</a>`;
+                productName.innerHTML = `<a href="https://www2.hm.com/de_at/productpage.${product.id}.html" target="_blank">${product.productName}</a>`;
                 productPrice.textContent = product.prices[0].formattedPrice;
 
                 productDisplay.classList.remove('hiddenHalf');
@@ -458,7 +458,7 @@
                 if (!savedProducts.some(p => p.id === product.id)) {
                     savedProducts.push({
                         id: product.id,
-                        url: `https://www2.hm.com/en_us/productpage.${product.id}.html`,
+                        url: `https://www2.hm.com/de_at/productpage.${product.id}.html`,
                         name: product.productName,
                         price: product.prices[0].formattedPrice,
                         image: product.productImage || product.modelImage

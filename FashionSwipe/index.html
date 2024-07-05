@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Swipe: H&M Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #D3CCE3;
+            background: -webkit-linear-gradient(to right, #E9E4F0, #D3CCE3);
+            background: linear-gradient(to right, #E9E4F0, #D3CCE3);
+
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            color: #F70776;
+            margin-bottom: 2rem;
+            margin-bottom: 2rem;
+            font-family: "Ubuntu", Arial, sans-serif;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-8 {
+            margin-bottom: 2rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+
+        .button {
+            font-weight: bold;
+            font-size: 18px;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button-blue {
+            background-color: #3b82f6;
+        }
+
+        .button-blue:hover {
+            background-color: #2563eb;
+        }
+
+        .button-pink {
+            background-color: #ec4899;
+        }
+
+        .button-pink:hover {
+            background-color: #db2777;
+        }
+
+        .button-red {
+            background-color: #ef4444;
+        }
+
+        .button-red:hover {
+            background-color: #dc2626;
+        }
+
+        .button-green {
+            background-color: #10b981;
+        }
+
+        .button-green:hover {
+            background-color: #059669;
+        }
+
+        .mx-2 {
+            margin-left: 0.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .hiddenHalf {
+            opacity: 0 !important;
+        }
+
+        #product-display {
+            width: 100%;
+            max-width: 500px;
+            transition: opacity 0.3s ease;
+            margin: auto;
+        }
+
+        .swipe-card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .swipe-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-details {
+            padding: 1.5rem;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            color: white;
+        }
+
+        .card-details a {
+            color: white;
+        }
+
+        .product-name {
+            font-family: 'Ubuntu', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .product-price {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 16rem;
+            height: 100%;
+            background-color: white;
+            box-shadow: -4px 0 6px -1px rgba(0, 0, 0, 0.1);
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            overflow-y: auto;
+        }
+
+        .sidebar-content {
+            padding: 1rem;
+        }
+
+        .sidebar-content h2 {
+            font-size: 22px;
+        }
+
+        .saved-product {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: #f3f4f6;
+            border-radius: 0.5rem;
+        }
+
+        .saved-product img {
+            width: 100%;
+            height: 8rem;
+            object-fit: cover;
+            margin-bottom: 0.5rem;
+            border-radius: 0.25rem;
+        }
+
+        .saved-product a {
+            color: #4f46e5;
+            font-weight: bold;
+        }
+
+        .saved-product a:hover {
+            color: #4338ca;
+        }
+
+        #sidebar-toggle {
+            position: fixed;
+            top: 1rem;
+            background-color: #6366f1;
+            color: white;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #sidebar-toggle:hover {
+            background-color: #4f46e5;
+        }
+
+        #sidebar-toggle.move {
+            margin-right: 16.25rem;
+        }
+
+        .toggle {
+            right: 1rem;
+        }
+
+        .reset {
+            left: 1rem;
+        }
+
+        .image-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .image-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: #6b7280;
+        }
+
+        img {
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            #sidebar-toggle.move {
+                margin-right: 0px;
+            }
+
+            .sidebar-content h2 {
+                margin-top: 40px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .card-image img {
+                height: 100%;
+            }
+
+            .card-content {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>FashionSwipe</h1>
+
+        <div id="gender-selection" class="text-center mb-8">
+            <h2>Choose Your Style</h2>
+            <button id="men" class="button button-blue mx-2">Gentleman</button>
+            <button id="women" class="button button-pink mx-2">Lady</button>
+            <button id="beauty" class="button button-red mx-2">Make-Up & More</button>
+        </div>
+
+        <div id="product-display" class="hiddenHalf">
+            <div class="swipe-card" id="product-card">
+                <div class="card-content">
+                    <div class="card-image">
+                        <img id="product-img" src="" alt="Product Image">
+                    </div>
+                    <div class="card-details">
+                        <div id="product-name" class="product-name"></div>
+                        <p id="product-price" class="product-price"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="button-container">
+                <button id="dislike" class="button button-red mx-2">👎</button>
+                <button id="like" class="button button-green mx-2">👍</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-content">
+            <h2>Saved Items</h2>
+            <div id="saved-products"></div>
+        </div>
+    </div>
+
+    <button class="toggle" id="sidebar-toggle">
+        Saved Items
+    </button>
+
+    <button
+        onclick="localStorage.removeItem('dislikedProducts'); localStorage.removeItem('savedProducts'); window.location.reload(); "
+        class="reset" id="sidebar-toggle">
+        Reset Items
+    </button>
+
+    <script>
+        const genderSelection = document.getElementById('gender-selection');
+        const productDisplay = document.getElementById('product-display');
+        const productCard = document.getElementById('product-card');
+        const productImg = document.getElementById('product-img');
+        const productName = document.getElementById('product-name');
+        const productPrice = document.getElementById('product-price');
+        const dislikeBtn = document.getElementById('dislike');
+        const likeBtn = document.getElementById('like');
+        const sidebar = document.getElementById('sidebar');
+        const savedProductsContainer = document.getElementById('saved-products');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+
+        let products = [];
+        let currentProductIndex = 0;
+        let startX, moveX;
+        let savedProducts = JSON.parse(localStorage.getItem('savedProducts')) || [];
+        let currentPage = 1;
+        let totalPages = 1;
+        let currentGender = '';
+        let baseUrl = '';
+        let nextImage = new Image();
+
+        function fetchProducts(gender, page = 1) {
+            currentGender = gender;
+            if (gender === "men") {
+                baseUrl = "https://api.hm.com/search-services/v1/de_AT/listing/resultpage?pageId=/men/shop-by-product/view-all&categoryId=men_all&touchPoint=DESKTOP&page-size=72"
+            } else if (gender === "women") {
+                baseUrl = "https://api.hm.com/search-services/v1/de_AT/listing/resultpage?pageId=/ladies/shop-by-product/view-all&categoryId=ladies_all&touchPoint=DESKTOP&page-size=72";
+            } else if (gender === "beauty") {
+                baseUrl = "https://api.hm.com/search-services/v1/de_AT/listing/resultpage?pageId=/beauty/shop-by-product/view-all&categoryId=beauty_all&touchPoint=DESKTOP&page-size=72";
+            }
+
+            const url = `${baseUrl}&page=${page}`;
+
+            fetch(url, { cache: "force-cache" })
+                .then(response => response.json())
+                .then(data => {
+                    if (page === 1) {
+                        totalPages = data.pagination.totalPages;
+                        products = [];
+                    }
+                    products = products.concat(data.plpList.productList.filter(product => !isDisliked(product.id) && !isSaved(product.id)));
+                    if (products.length === 0 && currentPage < totalPages) {
+                        currentPage++;
+                        fetchProducts(gender, currentPage);
+                    } else {
+                        showProduct();
+                        updateSavedProductsSidebar();
+                    }
+                })
+                .catch(error => {
+                    console.error(`Error: ${error}`);
+                });
+        }
+
+        function showProduct() {
+            if (currentProductIndex >= products.length) {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    fetchProducts(currentGender, currentPage);
+                }
+                return;
+            }
+
+            const product = products[currentProductIndex];
+            if (product) {
+                const imageUrl = product.productImage || product.modelImage;
+
+                productImg.src = imageUrl;
+                productName.innerHTML = `<a href="https://www2.hm.com/en_us/productpage.${product.id}.html" target="_blank">${product.productName}</a>`;
+                productPrice.textContent = product.prices[0].formattedPrice;
+
+                productDisplay.classList.remove('hiddenHalf');
+
+                if (currentProductIndex + 1 < products.length) {
+                    const nextProduct = products[currentProductIndex + 1];
+                    const nextImageUrl = nextProduct.productImage || nextProduct.modelImage;
+                    nextImage.src = nextImageUrl;
+                }
+            } else {
+                console.error("No product found at index:", currentProductIndex);
+            }
+        }
+
+        function isDisliked(id) {
+            const dislikedProducts = JSON.parse(localStorage.getItem('dislikedProducts')) || [];
+            return dislikedProducts.includes(id);
+        }
+
+        function isSaved(id) {
+            const savedProducts = JSON.parse(localStorage.getItem('savedProducts')) || [];
+            return savedProducts.some(product => product.id === id);
+        }
+
+        function saveToLocalStorage(product, type) {
+            if (!product) {
+                console.error("Attempted to save undefined product");
+                return;
+            }
+
+            if (type === 'dislike') {
+                let dislikedProducts = JSON.parse(localStorage.getItem('dislikedProducts')) || [];
+                if (!dislikedProducts.includes(product.id)) {
+                    dislikedProducts.push(product.id);
+                    localStorage.setItem('dislikedProducts', JSON.stringify(dislikedProducts));
+                }
+            } else if (type === 'like') {
+                if (!savedProducts.some(p => p.id === product.id)) {
+                    savedProducts.push({
+                        id: product.id,
+                        url: `https://www2.hm.com/en_us/productpage.${product.id}.html`,
+                        name: product.productName,
+                        price: product.prices[0].formattedPrice,
+                        image: product.productImage || product.modelImage
+                    });
+                    localStorage.setItem('savedProducts', JSON.stringify(savedProducts));
+                    updateSavedProductsSidebar();
+                }
+            }
+        }
+
+        function updateSavedProductsSidebar() {
+            savedProductsContainer.innerHTML = '';
+            let totalPrice = 0;
+
+            savedProducts.forEach(product => {
+                const productElement = document.createElement('div');
+                productElement.classList.add('saved-product');
+                productElement.innerHTML = `
+                    <div class="image-container">
+                        <div class="image-placeholder">Loading...</div>
+                        <img src="${product.image}" alt="${product.name}" loading="lazy" onload="this.previousElementSibling.style.display='none';">
+                    </div>
+                    <a href="${product.url}" target="_blank">${product.name}</a>
+                    <p>${product.price}</p>
+                `;
+
+                const price = parseFloat(product.price.replace(',', '.').replace(/[^\d.-]/g, ''));
+                totalPrice += isNaN(price) ? 0 : price;
+
+                savedProductsContainer.appendChild(productElement);
+            });
+
+            const savedItemsHeader = document.querySelector('.sidebar-content h2');
+            savedItemsHeader.textContent = `Saved Items (${totalPrice.toFixed(2)} €)`;
+        }
+
+        document.getElementById('men').addEventListener('click', () => {
+            genderSelection.classList.add('hidden');
+            currentPage = 1;
+            currentProductIndex = 0;
+            fetchProducts('men');
+        });
+
+        document.getElementById('women').addEventListener('click', () => {
+            genderSelection.classList.add('hidden');
+            currentPage = 1;
+            currentProductIndex = 0;
+            fetchProducts('women');
+        });
+
+        document.getElementById('beauty').addEventListener('click', () => {
+            genderSelection.classList.add('hidden');
+            currentPage = 1;
+            currentProductIndex = 0;
+            fetchProducts('beauty');
+        });
+
+        dislikeBtn.addEventListener('click', () => {
+            if (currentProductIndex < products.length) {
+                saveToLocalStorage(products[currentProductIndex], 'dislike');
+                currentProductIndex++;
+                showProduct();
+            }
+        });
+
+        likeBtn.addEventListener('click', () => {
+            if (currentProductIndex < products.length) {
+                saveToLocalStorage(products[currentProductIndex], 'like');
+                currentProductIndex++;
+                showProduct();
+            }
+        });
+
+        sidebarToggle.addEventListener('click', () => {
+            sidebarToggle.classList.toggle('move');
+            sidebar.style.transform = sidebar.style.transform === 'translateX(0px)' ? 'translateX(100%)' : 'translateX(0px)';
+        });
+
+        productCard.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+        });
+
+        productCard.addEventListener('touchmove', (e) => {
+            moveX = e.touches[0].clientX;
+            const diff = moveX - startX;
+            productCard.style.transform = `translateX(${diff}px) rotate(${diff * 0.1}deg)`;
+        });
+
+        productCard.addEventListener('touchend', (e) => {
+            const diff = moveX - startX;
+            if (Math.abs(diff) > 100) {
+                if (diff > 0) {
+                    likeBtn.click();
+                } else {
+                    dislikeBtn.click();
+                }
+            }
+            productCard.style.transform = '';
+        });
+
+        updateSavedProductsSidebar();
+
+        showProduct();
+    </script>
+</body>
+
+</html>

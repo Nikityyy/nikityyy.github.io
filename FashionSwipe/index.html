@@ -4,208 +4,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fashion Swipe: H&M Edition</title>
+    <title>FashionSwipe: Immersive Style Discovery</title>
     <meta name="description"
         content="Discover your next favorite outfit and makeup with FashionSwipe. Swipe through the latest fashion trends, personalize your style, and shop effortlessly. FashionSwipe - your ultimate fashion companion.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
-        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
-        body {
-            font-family: sans-serif;
-            background: #D3CCE3;
-            background: -webkit-linear-gradient(to right, #E9E4F0, #D3CCE3);
-            background: linear-gradient(to right, #E9E4F0, #D3CCE3);
-
+        body,
+        html {
             margin: 0;
             padding: 0;
+            overflow: hidden;
+            font-family: 'Futura', sans-serif;
+            color: #ffffff;
+            background: #000000;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 2rem;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
         }
 
         h1 {
-            font-size: 3rem;
-            font-weight: bold;
+            font-size: 4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
             text-align: center;
-            color: #F70776;
             margin-bottom: 2rem;
-            margin-bottom: 2rem;
-            font-family: "Ubuntu", Arial, sans-serif;
-        }
-
-        h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .mb-8 {
-            margin-bottom: 2rem;
-        }
-
-        .mb-4 {
-            margin-bottom: 1rem;
-        }
-
-        .button {
-            font-weight: bold;
-            font-size: 18px;
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            border: none;
-            color: white;
+            -webkit-animation: glow 1s ease-in-out infinite alternate;
+            -moz-animation: glow 1s ease-in-out infinite alternate;
+            animation: glow 1s ease-in-out infinite alternate;
             cursor: pointer;
-            transition: background-color 0.3s;
         }
 
-        .button-blue {
-            background-color: #3b82f6;
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+            }
+
+            to {
+                text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
+            }
         }
 
-        .button-blue:hover {
-            background-color: #2563eb;
+        .category-select {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
 
-        .button-pink {
-            background-color: #ec4899;
-        }
-
-        .button-pink:hover {
-            background-color: #db2777;
-        }
-
-        .button-red {
-            background-color: #ef4444;
-        }
-
-        .button-red:hover {
-            background-color: #dc2626;
-        }
-
-        .button-green {
-            background-color: #10b981;
-        }
-
-        .button-green:hover {
-            background-color: #059669;
-        }
-
-        .mx-2 {
-            margin-left: 0.5rem;
-            margin-right: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .hiddenHalf {
-            opacity: 0 !important;
-        }
-
-        #product-display {
-            width: 100%;
-            max-width: 500px;
-            transition: opacity 0.3s ease;
-            margin: auto;
-        }
-
-        .swipe-card {
-            background-color: white;
-            border-radius: 1rem;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+        .category-btn {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            cursor: pointer;
             transition: all 0.3s ease;
-            position: relative;
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
         }
 
-        .swipe-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        .category-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
         }
 
-        .card-image {
-            width: 100%;
-            height: 500px;
+        .product-display {
+            display: flex;
+            margin-top: 30px;
+            align-items: center;
+            flex-direction: column;
+            flex-grow: 1;
+            transition: opacity 0.4s ease-in-out;
+        }
+
+        .product-card {
+            width: 300px;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
             overflow: hidden;
+            transition: all 0.5s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
         }
 
-        .card-image img {
+        .product-image {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: 80%;
+            background-size: cover;
+            background-position: center;
         }
 
-        .card-details {
-            padding: 1.5rem;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            color: white;
-        }
-
-        .card-details a {
-            color: white;
+        .product-info {
+            padding: 1rem;
         }
 
         .product-name {
-            font-family: 'Ubuntu', sans-serif;
-            font-size: 1.25rem;
-            font-weight: 600;
+            font-size: 1.2rem;
             margin-bottom: 0.5rem;
-            text-transform: uppercase;
+        }
+
+        .product-name a {
+            color: #fff;
+            text-decoration: none;
         }
 
         .product-price {
-            font-size: 1.1rem;
-            font-weight: 500;
+            font-size: 1rem;
+            color: #e60073;
+            font-weight: bold;
         }
 
-        .button-container {
+        .action-buttons {
             display: flex;
             justify-content: center;
-            margin-top: 1rem;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .action-btn {
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            backdrop-filter: blur(10px);
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
         }
 
         .sidebar {
             position: fixed;
             top: 0;
             right: 0;
-            width: 16rem;
+            width: 300px;
             height: 100%;
-            background-color: white;
+            background-color: rgba(47, 53, 66, 0.6);
             box-shadow: -4px 0 6px -1px rgba(0, 0, 0, 0.1);
             transform: translateX(100%);
             transition: transform 0.3s ease-in-out;
             overflow-y: auto;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
         }
 
         .sidebar-content {
             padding: 1rem;
-        }
-
-        .sidebar-content h2 {
-            font-size: 22px;
+            margin-top: 35px;
         }
 
         .saved-product {
             margin-bottom: 1rem;
             padding: 1rem;
-            background-color: #f3f4f6;
+            background-color: rgba(21, 25, 27, 0.8);
             border-radius: 0.5rem;
+            backdrop-filter: blur(10px);
         }
 
         .saved-product img {
@@ -217,18 +197,15 @@
         }
 
         .saved-product a {
-            color: #4f46e5;
+            color: #fff;
             font-weight: bold;
         }
 
-        .saved-product a:hover {
-            color: #4338ca;
-        }
-
-        #sidebar-toggle {
+        #sidebar-toggle,
+        #reset-button {
             position: fixed;
             top: 1rem;
-            background-color: #6366f1;
+            background-color: #e60073;
             color: white;
             font-weight: bold;
             padding: 0.5rem 1rem;
@@ -236,124 +213,147 @@
             border: none;
             cursor: pointer;
             transition: all 0.3s ease-in-out;
+            z-index: 1001;
+            backdrop-filter: blur(10px);
         }
 
-        #sidebar-toggle:hover {
-            background-color: #4f46e5;
-        }
-
-        #sidebar-toggle.move {
-            margin-right: 16.25rem;
-        }
-
-        .toggle {
+        #sidebar-toggle {
             right: 1rem;
         }
 
-        .reset {
+        #reset-button {
             left: 1rem;
         }
 
-        .image-container {
+        #sidebar-toggle:hover,
+        #reset-button:hover {
+            background-color: #b10058;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .hiddenHalf {
+            opacity: 0 !important;
+        }
+
+        a {
             position: relative;
-            width: 100%;
-            height: 100%;
+            color: #fff;
+            text-decoration: none;
         }
 
-        .image-placeholder {
+        a::after {
+            content: '';
             position: absolute;
-            top: 0;
-            left: 0;
+            width: 0;
+            height: 2px;
+            display: block;
+            background: #fff;
+            transition: width 0.3s;
+            -webkit-transition: width 0.3s;
+        }
+
+        a:hover::after {
             width: 100%;
-            height: 100%;
-            background-color: #f3f4f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            color: #6b7280;
         }
 
-        img {
-            pointer-events: none;
-        }
-
-        @media (max-width: 768px) {
-            #sidebar-toggle.move {
-                margin-right: 0px;
+        @media (max-width:768px) {
+            .category-btn {
+                padding: 1rem;
+                font-size: 1rem;
             }
 
-            .sidebar-content h2 {
-                margin-top: 40px;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .card-image img {
-                height: 100%;
+            h1 {
+                font-size: 30px;
+                margin-top: 35px;
+                margin-bottom: 0px;
             }
 
-            .card-content {
-                display: flex;
+            .category-select {
+                margin-top: 20px;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1>FashionSwipe</h1>
-
-        <div id="gender-selection" class="text-center mb-8">
-            <h2>Choose Your Style</h2>
-            <button id="men" class="button button-blue mx-2">Gentleman</button>
-            <button id="women" class="button button-pink mx-2">Lady</button>
-            <button id="beauty" class="button button-red mx-2">Make-Up & More</button>
+    <div id="canvas-container"></div>
+    <div class="content">
+        <h1 onclick="window.location.href = './'">Fashion&shy;Swipe</h1>
+        <div class="category-select">
+            <button class="category-btn" id="men">Herren</button>
+            <button class="category-btn" id="women">Damen</button>
+            <button class="category-btn" id="beauty">Make-Up & Co</button>
         </div>
-
-        <div id="product-display" class="hiddenHalf">
-            <div class="swipe-card" id="product-card">
-                <div class="card-content">
-                    <div class="card-image">
-                        <img id="product-img" src="" alt="Product Image">
-                    </div>
-                    <div class="card-details">
-                        <div id="product-name" class="product-name"></div>
-                        <p id="product-price" class="product-price"></p>
-                    </div>
+        <div class="product-display hiddenHalf">
+            <div class="product-card">
+                <div class="product-image" id="product-image"></div>
+                <div class="product-info">
+                    <div class="product-name" id="product-name"></div>
+                    <div class="product-price" id="product-price"></div>
                 </div>
             </div>
-            <div class="button-container">
-                <button id="dislike" class="button button-red mx-2">👎</button>
-                <button id="like" class="button button-green mx-2">👍</button>
+
+            <div class="action-buttons">
+                <button class="action-btn" id="dislike">👎</button>
+                <button class="action-btn" id="like">👍</button>
             </div>
         </div>
     </div>
 
     <div id="sidebar" class="sidebar">
         <div class="sidebar-content">
-            <h2>Saved Items</h2>
+            <h2>Warenkorb</h2>
             <div id="saved-products"></div>
         </div>
     </div>
 
-    <button class="toggle" id="sidebar-toggle">
-        Saved Items
-    </button>
-
-    <button
-        onclick="localStorage.removeItem('dislikedProducts'); localStorage.removeItem('savedProducts'); window.location.reload(); "
-        class="reset" id="sidebar-toggle">
-        Reset Items
-    </button>
-
+    <button id="sidebar-toggle">Warenkorb</button>
+    <button id="reset-button"
+        onclick="localStorage.removeItem('dislikedProducts'); localStorage.removeItem('savedProducts'); window.location.reload();">Produkte
+        zurücksetzen</button>
     <script>
-        const genderSelection = document.getElementById('gender-selection');
-        const productDisplay = document.getElementById('product-display');
-        const productCard = document.getElementById('product-card');
-        const productImg = document.getElementById('product-img');
-        const productName = document.getElementById('product-name');
-        const productPrice = document.getElementById('product-price');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 5000;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for (let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 5;
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.005,
+            color: 0xffffff
+        });
+
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+
+        camera.position.z = 3;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            particlesMesh.rotation.y += 0.001;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        const genderSelection = document.querySelector('.category-select');
+        const productDisplay = document.querySelector('.product-display');
+        const productCard = document.querySelector('.product-card');
+        const productImg = document.querySelector('.product-image');
+        const productName = document.querySelector('.product-name');
+        const productPrice = document.querySelector('.product-price');
         const dislikeBtn = document.getElementById('dislike');
         const likeBtn = document.getElementById('like');
         const sidebar = document.getElementById('sidebar');
@@ -362,7 +362,6 @@
 
         let products = [];
         let currentProductIndex = 0;
-        let startX, moveX;
         let savedProducts = JSON.parse(localStorage.getItem('savedProducts')) || [];
         let currentPage = 1;
         let totalPages = 1;
@@ -403,7 +402,16 @@
                 });
         }
 
-        function showProduct() {
+        function resizeImage(imageUrl) {
+            return new Promise((resolve) => {
+                const proxyUrl = 'https://images.weserv.nl/';
+                const encodedUrl = encodeURIComponent(imageUrl);
+                const resizedUrl = `${proxyUrl}?url=${encodedUrl}&w=300&h=480&fit=cover`;
+                resolve(resizedUrl);
+            });
+        }
+
+        async function showProduct() {
             if (currentProductIndex >= products.length) {
                 if (currentPage < totalPages) {
                     currentPage++;
@@ -415,20 +423,74 @@
             const product = products[currentProductIndex];
             if (product) {
                 const imageUrl = product.productImage || product.modelImage;
+                const resizedImageUrl = await resizeImage(imageUrl);
 
-                productImg.src = imageUrl;
+                productImg.style.backgroundImage = `url(${resizedImageUrl})`;
                 productName.innerHTML = `<a href="https://www2.hm.com/de_at/productpage.${product.id}.html" target="_blank">${product.productName}</a>`;
                 productPrice.textContent = product.prices[0].formattedPrice;
 
                 productDisplay.classList.remove('hiddenHalf');
 
-                if (currentProductIndex + 1 < products.length) {
-                    const nextProduct = products[currentProductIndex + 1];
-                    const nextImageUrl = nextProduct.productImage || nextProduct.modelImage;
-                    nextImage.src = nextImageUrl;
-                }
+                preloadImages();
             } else {
                 console.error("No product found at index:", currentProductIndex);
+            }
+        }
+
+        async function preloadImages() {
+            for (let i = 1; i <= 1000; i++) {
+                const index = currentProductIndex + i;
+                if (index < products.length) {
+                    const nextProduct = products[index];
+                    const nextImageUrl = nextProduct.productImage || nextProduct.modelImage;
+                    const resizedNextImageUrl = await resizeImage(nextImageUrl);
+                    const img = new Image();
+                    img.src = resizedNextImageUrl;
+                }
+            }
+        }
+
+        async function updateSavedProductsSidebar() {
+            savedProductsContainer.innerHTML = '';
+            let totalPrice = 0;
+
+            for (const product of savedProducts) {
+                const productElement = document.createElement('div');
+                productElement.classList.add('saved-product');
+                const resizedImageUrl = await resizeImage(product.image);
+                productElement.innerHTML = `
+                    <div class="image-container">
+                        <div class="image-placeholder">Loading...</div>
+                        <img src="${resizedImageUrl}" alt="${product.name}" loading="lazy" onload="this.previousElementSibling.style.display='none';">
+                    </div>
+                    <a href="${product.url}" target="_blank">${product.name}</a>
+                    <p>${product.price}</p>
+                `;
+
+                const price = parseFloat(product.price.replace(',', '.').replace(/[^\d.-]/g, ''));
+                totalPrice += isNaN(price) ? 0 : price;
+
+                savedProductsContainer.appendChild(productElement);
+            }
+
+            const savedItemsHeader = document.querySelector('.sidebar-content h2');
+            savedItemsHeader.textContent = `Saved Items (${totalPrice.toFixed(2)} €)`;
+        }
+
+        async function updateProductDisplay() {
+            if (currentProductIndex < products.length) {
+                const productCards = document.querySelectorAll('.product-card');
+
+                productCards.forEach(card => {
+                    card.style.opacity = 1;
+                    card.style.transform = "translateX(0px)";
+                });
+                const product = products[currentProductIndex];
+                const imageUrl = product.productImage || product.modelImage;
+                const resizedImageUrl = await resizeImage(imageUrl);
+                productImg.style.backgroundImage = `url(${resizedImageUrl})`;
+                productName.innerHTML = `<a href="https://www2.hm.com/de_at/productpage.${product.id}.html" target="_blank">${product.productName}</a>`;
+                productPrice.textContent = product.prices[0].formattedPrice;
             }
         }
 
@@ -438,7 +500,6 @@
         }
 
         function isSaved(id) {
-            const savedProducts = JSON.parse(localStorage.getItem('savedProducts')) || [];
             return savedProducts.some(product => product.id === id);
         }
 
@@ -469,32 +530,6 @@
             }
         }
 
-        function updateSavedProductsSidebar() {
-            savedProductsContainer.innerHTML = '';
-            let totalPrice = 0;
-
-            savedProducts.forEach(product => {
-                const productElement = document.createElement('div');
-                productElement.classList.add('saved-product');
-                productElement.innerHTML = `
-                    <div class="image-container">
-                        <div class="image-placeholder">Loading...</div>
-                        <img src="${product.image}" alt="${product.name}" loading="lazy" onload="this.previousElementSibling.style.display='none';">
-                    </div>
-                    <a href="${product.url}" target="_blank">${product.name}</a>
-                    <p>${product.price}</p>
-                `;
-
-                const price = parseFloat(product.price.replace(',', '.').replace(/[^\d.-]/g, ''));
-                totalPrice += isNaN(price) ? 0 : price;
-
-                savedProductsContainer.appendChild(productElement);
-            });
-
-            const savedItemsHeader = document.querySelector('.sidebar-content h2');
-            savedItemsHeader.textContent = `Saved Items (${totalPrice.toFixed(2)} €)`;
-        }
-
         document.getElementById('men').addEventListener('click', () => {
             genderSelection.classList.add('hidden');
             currentPage = 1;
@@ -519,8 +554,9 @@
         dislikeBtn.addEventListener('click', () => {
             if (currentProductIndex < products.length) {
                 saveToLocalStorage(products[currentProductIndex], 'dislike');
+
                 currentProductIndex++;
-                showProduct();
+                updateProductDisplay();
             }
         });
 
@@ -528,7 +564,7 @@
             if (currentProductIndex < products.length) {
                 saveToLocalStorage(products[currentProductIndex], 'like');
                 currentProductIndex++;
-                showProduct();
+                updateProductDisplay();
             }
         });
 
@@ -537,31 +573,12 @@
             sidebar.style.transform = sidebar.style.transform === 'translateX(0px)' ? 'translateX(100%)' : 'translateX(0px)';
         });
 
-        productCard.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-        });
-
-        productCard.addEventListener('touchmove', (e) => {
-            moveX = e.touches[0].clientX;
-            const diff = moveX - startX;
-            productCard.style.transform = `translateX(${diff}px) rotate(${diff * 0.1}deg)`;
-        });
-
-        productCard.addEventListener('touchend', (e) => {
-            const diff = moveX - startX;
-            if (Math.abs(diff) > 100) {
-                if (diff > 0) {
-                    likeBtn.click();
-                } else {
-                    dislikeBtn.click();
-                }
-            }
-            productCard.style.transform = '';
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
         });
 
         updateSavedProductsSidebar();
-
-        showProduct();
     </script>
 </body>
 

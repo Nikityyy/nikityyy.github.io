@@ -8,13 +8,14 @@
       name="description"
       content="WhatsBreak helps you craft the perfect breakup text with ease. Try our app for heartfelt and thoughtful breakup ideas."
     />
-    <link rel="icon" href="media/icon.webp">
+    <link rel="icon" href="media/icon.webp" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
       rel="stylesheet"
     />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
     <style>
       :root {
         --primary-color: #ffc107;
@@ -191,22 +192,35 @@
       }
 
       .text-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        justify-items: center;
-        gap: 20px;
-        margin-top: 50px;
-        text-align: center;
+        margin: 0 -10px;
+        margin-left: 20px;
       }
 
       .text-card {
+        width: calc(33.333% - 20px);
+        box-sizing: border-box;
         background-color: var(--secondary-background);
         border-radius: 10px;
         padding: 20px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         position: relative;
         break-inside: avoid;
+        opacity: 0;
+        transform: translateY(20px);
         margin-bottom: 10px;
+        animation: fadeInUp 0.4s ease forwards;
+        animation-play-state: paused;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       .text-content {
@@ -257,12 +271,6 @@
         font-weight: 500;
       }
 
-      @media (min-width: 768px) {
-        .text-grid {
-          grid-template-columns: repeat(3, 1fr);
-        }
-      }
-
       @media (max-width: 768px) {
         .hero {
           padding: 0 20px;
@@ -287,6 +295,9 @@
         .container3 {
           margin-bottom: 10px;
         }
+        .text-card {
+          width: calc(50% - 20px);
+        }
 
         .btn {
           width: 100%;
@@ -303,6 +314,11 @@
           padding: 15px 20px;
           white-space: normal;
           text-align: center;
+        }
+      }
+      @media (max-width: 480px) {
+        .text-card {
+          width: calc(100% - 20px);
         }
       }
 
@@ -322,7 +338,7 @@
             WhatsBreak
           </div>
           <div class="nav-links">
-            <a href="#" id="add-text-btn" class="cta-button"
+            <a href="" id="add-text-btn" class="cta-button"
               >Recommend WhatsBreak!</a
             >
           </div>
@@ -388,6 +404,10 @@
     </main>
 
     <script>
+      window.onbeforeunload = function () {
+        window.scrollTo(0, 0);
+      };
+
       const texts = [
         {
           content:
@@ -623,6 +643,204 @@
           language: "de",
           category: "funny",
         },
+        {
+          content:
+            "Hey there 👋! Remember those good old days? 🌞 Well, it seems like those were just a figment of our imagination 🤔🤪. Let's call it quits before things get any more awkward 😬. Peace out! ✌",
+          language: "en",
+          category: "funny",
+        },
+        {
+          content:
+            " 👋 Tchau! Es ist Zeit, Abschied zu nehmen 😔. Ich wünsche dir alles Gute für die Zukunft 🎉, aber ich bin bereit für neue Herausforderungen 💪🚀!",
+          language: "de",
+          category: "nice",
+        },
+        {
+          content:
+            "Let's be real for a sec 🤨... this relationship is like a broken record 🎶 playing the same sad song 😩 over and over again. It's time to change the tune! 🎤💃🕺",
+          language: "en",
+          category: "serious",
+        },
+        {
+          content:
+            "Ich bin wie ein Fisch auf dem Trockenen 🐠🚫🌳 - ich brauche Wasser, um zu überleben! 😅😭. Dieses Beziehungswasser ist einfach nicht mehr genug für mich 😔💦. ",
+          language: "de",
+          category: "funny",
+        },
+        {
+          content:
+            "You know what they say? 🤔 'When it's over, it's over.' 💥 This relationship is officially kaput! 💔 Time to move on and find someone who actually appreciates me ✨🤩.",
+          language: "en",
+          category: "mean",
+        },
+        {
+          content:
+            "Es tut mir leid, aber ich bin nicht mehr glücklich in dieser Beziehung 😔🥺. Es ist wie ein verlassenes Haus 🏚️ - leer und kalt 😭🥶. Ich brauche Wärme und Liebe ❤️🔥!",
+          language: "de",
+          category: "honest",
+        },
+        {
+          content:
+            "This relationship is officially on the rocks! 🪨🌋 Time to grab life jackets and swim for shore 🌊🏊‍♀️🏊‍♂️, because things are about to get rough! 😬😬",
+          language: "en",
+          category: "funny",
+        },
+        {
+          content:
+            "Ich bin bereit für ein neues Kapitel in meinem Leben 📖✨. Dieses Kapitel mit dir ist zu Ende 😔. Ich wünsche dir alles Gute 🎉 und hoffe, dass du bald jemanden findest, der dich glücklich macht 😊💖.",
+          language: "de",
+          category: "nice",
+        },
+        {
+          content:
+            "This is goodbye 👋 for now... but maybe not forever 🤷‍♀️. You'll always hold a special place in my heart... until I meet someone cooler 😎🤪!",
+          language: "en",
+          category: "funny",
+        },
+        {
+          content:
+            "Es ist wie ein Tanz auf einem Vulkan 🔥🌋 - spannend, aber gefährlich! 😅😭 Ich brauche mehr Stabilität und Sicherheit in meinem Leben 😔💪. ",
+          language: "de",
+          category: "serious",
+        },
+        {
+          content:
+            "You're like a bad pizza 🍕🤮... I tried to give you another chance, but it just wasn't good enough! 😩 Time to move on and find something tastier 😋🤤.",
+          language: "en",
+          category: "mean",
+        },
+        {
+          content:
+            "Let's be honest, this conversation is about as exciting as watching paint dry 🥱.  Maybe we should just call it a day? 👋 ",
+          language: "en",
+          category: "funny",
+        },
+        {
+          content:
+            "Ich brauche dringend einen Kaffee ☕️😩 - dieses Gespräch ist etwas langweilig! 😅😴 Lass uns lieber auf Wiedersehen sagen und unsere Energie für bessere Dinge nutzen 💪😁!",
+          language: "de",
+          category: "nice",
+        },
+        {
+          content:
+            "This isn't working. I can feel it like a lead weight dragging me down 😓. We need to break free from this unproductive cycle! 😩😤",
+          language: "en",
+          category: "serious",
+        },
+        {
+          content:
+            "Ich bin wie ein Hamster auf der Laufrad 🚀 - ich renne immer weiter, aber komme nirgendwo hin 😔. Dieses Gespräch bringt mich nicht weiter 🤨🤯. ",
+          language: "de",
+          category: "funny",
+        },
+        {
+          content:
+            "Look, I'm not saying you're a bad person... just that this relationship is like wearing shoes that are two sizes too small - painful and limiting! 😩💥 Time to find a better fit! 💖 ",
+          language: "en",
+          category: "mean",
+        },
+        {
+          content:
+            "Es tut mir leid, aber ich spüre, dass wir beide nicht mehr auf der gleichen Wellenlänge sind 😔🥺. Es ist Zeit für einen Abschied, der uns beiden dient 😊👋.",
+          language: "de",
+          category: "honest",
+        },
+        {
+          content:
+            "This conversation is like a broken record 🎶... stuck on repeat! 😩 It's time to switch gears and find something more stimulating! 🧠🎉 ",
+          language: "en",
+          category: "funny",
+        },
+        {
+          content:
+            "Ich bin wie ein Segelboot ohne Wind ⛵🚫💨 - ich brauche neuen Input und Impulse 🚀💡. Dieses Gespräch bringt mich nicht mehr voran 😔.",
+          language: "de",
+          category: "nice",
+        },
+        {
+          content:
+            "This is a goodbye for now... but don't think I'm forgetting your awkward dancing skills! 😅💃🕺 You'll always have that special place in my memory (of cringe moments) 😂!",
+          language: "en",
+          category: "funny",
+        },
+        {
+          content:
+            "Es ist wie ein Tanz ohne Musik 🎶 - wir brauchen neue Rhythmen und Melodien! 🥰🎼. Vielleicht bis bald, wenn es wieder musikalisch wird 🤩.",
+          language: "de",
+          category: "serious",
+        },
+        {
+          content:
+            "You're like a stale piece of bread 🍞... I tried to toast you up but nothing changed 😩. Time to move on and find something fresh! 😋 ",
+          language: "en",
+          category: "mean",
+        },
+        {
+          content:
+            "Well played. You managed to drag this conversation out longer than a Shakespearean tragedy 😅. I'm impressed... and slightly terrified. 😱 Let's call it quits before things get too dramatic! 👋",
+          language: "en",
+          category: "funny",
+        },
+        {
+          content:
+            "Du hast es geschafft, dieses Gespräch zu einem epischen Abenteuer zu machen! 🤩🥳 - Respekt! Aber jetzt reicht es mir.  Lass uns einen neuen Start wagen 💫.",
+          language: "de",
+          category: "nice",
+        },
+        {
+          content:
+            "This conversation has reached its natural conclusion... a slow, painful, and inevitable descent into oblivion. 😩 Let's end it gracefully before things get any worse. 🙏 ",
+          language: "en",
+          category: "serious",
+        },
+        {
+          content:
+            "Wir sind jetzt wie zwei Astronauten auf einem abgestürzten Raumschiff 🛰️💥 - wir brauchen eine neue Mission 🚀! Es war ein Vergnügen, aber nun muss Schluss sein 👋.",
+          language: "de",
+          category: "funny",
+        },
+        {
+          content:
+            "Listen, this isn't a personal attack... but you're starting to sound like that annoying friend who tells the same story over and over again. 😩 Time to find a new audience for your tales! 🚶‍♀️",
+          language: "en",
+          category: "mean",
+        },
+        {
+          content:
+            "Es ist schön, dass wir uns so gut unterhalten haben 😊 - aber es ist Zeit für uns beide, neue Horizonte zu entdecken 🚀. Auf Wiedersehen! 👋",
+          language: "de",
+          category: "honest",
+        },
+        {
+          content:
+            "This conversation is like a broken compass 🧭... spinning endlessly without ever finding its direction. 😩 Let's reset and find a new path! ✨ ",
+          language: "en",
+          category: "funny",
+        },
+        {
+          content:
+            "Wir sind wie zwei Wanderer, die sich auf einem alten Pfad begegnen 😔 - es war schön, aber nun ist es Zeit, unterschiedliche Wege zu gehen 💪. Auf Wiedersehen!",
+          language: "de",
+          category: "nice",
+        },
+        {
+          content:
+            "You've officially reached 'peak awkward'. 🤪 I applaud your commitment to the bit, but let's call it a day before things get truly unhinged! 😅 ",
+          language: "en",
+          category: "funny",
+        },
+        {
+          content:
+            "Du hast deine volle Portion Peinlichkeit erreicht 😂🤩 - ich bewundere deinen Einsatz! Aber jetzt ist es Zeit für einen neuen Act 🥳. Bis bald!",
+          language: "de",
+          category: "serious",
+        },
+        {
+          content:
+            "I'm outta here! This conversation is like a stale donut... dry, flavorless, and leaving me wanting something more 😩🍩. Time to find a fresh start! 🏃‍♀️ ",
+          language: "en",
+          category: "mean",
+        },
       ];
 
       function createTextCard(text) {
@@ -655,7 +873,15 @@
         return card;
       }
 
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      }
+
       function renderTexts(filteredTexts) {
+        shuffleArray(filteredTexts);
         const grid = document.getElementById("text-grid");
         grid.innerHTML = "";
         filteredTexts.forEach((text) => {
@@ -677,6 +903,8 @@
         });
 
         renderTexts(filteredTexts);
+        initMasonry();
+        handleScroll();
       }
 
       document.addEventListener("click", (event) => {
@@ -720,24 +948,68 @@
       const recommendButton = document.getElementById("add-text-btn");
 
       recommendButton.addEventListener("click", async function () {
+        event.preventDefault();
         try {
           if (navigator.share) {
             await navigator.share({
               title: "Check out WhatsBreak!",
-              text: "It's so great, I don't need to come up with those bad break up texts anymore!",
-              url: window.location.href.split("/").slice(0, 3).join("/"),
+              text: "It's fantastic! No more struggling to write those awkward breakup texts!",
+              url: window.location.href.split("/").slice(0, 4).join("/"),
             });
-            console.log("Link shared successfully");
           } else {
             await navigator.clipboard.writeText(
-              window.location.href.split("/").slice(0, 3).join("/")
+              window.location.href.split("/").slice(0, 4).join("/")
             );
-            alert("Link copied to clipboard!");
           }
         } catch (error) {
-          console.error("Error sharing link:", error);
-          alert("Failed to share link.");
+          // console.error("Error sharing link:", error);
         }
+      });
+
+      function initMasonry() {
+        new Masonry("#text-grid", {
+          itemSelector: ".text-card",
+          columnWidth: ".text-card",
+          percentPosition: true,
+          gutter: 10,
+          horizontalOrder: true,
+        });
+      }
+
+      window.addEventListener("load", () => {
+        initMasonry();
+      });
+
+      window.addEventListener("resize", initMasonry);
+
+      function isInViewport(element) {
+        const rect = element.getBoundingClientRect();
+        const viewportHeight =
+          window.innerHeight || document.documentElement.clientHeight;
+
+        return (
+          rect.bottom >= -rect.height &&
+          rect.top <= viewportHeight &&
+          rect.right <=
+            (window.innerWidth || document.documentElement.clientWidth) &&
+          rect.left >= 0
+        );
+      }
+
+      function handleScroll() {
+        const cards = document.querySelectorAll(".text-card");
+        cards.forEach((card) => {
+          if (isInViewport(card)) {
+            card.style.animationPlayState = "running";
+          }
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        window.addEventListener("scroll", handleScroll);
+        window.addEventListener("resize", handleScroll);
+
+        handleScroll();
       });
     </script>
   </body>

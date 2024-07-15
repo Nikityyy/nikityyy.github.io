@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WhatsBreak - Breaking up was never this easy!</title>
+    <meta
+      name="description"
+      content="WhatsBreak helps you craft the perfect breakup text with ease. Try our app for heartfelt and thoughtful breakup ideas."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #ffc107;
+        --text-color: #ffffff;
+        --background-color: #1e1e1e;
+        --secondary-background: #2a2a2a;
+      }
+
+      * {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        font-family: "Montserrat", sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      header {
+        padding: 20px 0;
+        height: 60px;
+      }
+
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--primary-color);
+        cursor: pointer;
+        transition: color 0.3s;
+      }
+
+      .nav-links a {
+        color: var(--background-color);
+        text-decoration: none;
+        margin-left: 20px;
+        font-weight: bold;
+      }
+
+      .hero {
+        padding: 0px 80px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        height: calc(100svh - 180px);
+      }
+
+      .hero-text {
+        text-align: left;
+      }
+
+      .hero h1 {
+        font-size: 64px;
+        margin-bottom: 20px;
+        line-height: 1.2;
+        font-weight: 900;
+      }
+
+      .hero p {
+        font-size: 24px;
+        margin-bottom: 40px;
+      }
+
+      .cta-button {
+        display: inline-block;
+        background-color: var(--primary-color);
+        color: var(--background-color);
+        text-decoration: none;
+        padding: 15px 30px;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 18px;
+        white-space: nowrap;
+        transition: background-color 0.3s;
+      }
+
+      .cta-button:hover {
+        background-color: #e2ad00;
+      }
+
+      .logo:hover {
+        color: #e2ad00;
+      }
+
+      .lottie {
+        width: 100%;
+        height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+      }
+
+      .filters {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+
+      .container2,
+      .container3 {
+        position: relative;
+        margin: 10px;
+      }
+
+      .btn {
+        outline: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        min-width: 260px;
+        background-color: var(--primary-color);
+        border: 0;
+        border-radius: 4px;
+        padding: 16px 20px;
+        color: var(--secondary-background);
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: var(--secondary-background);
+        width: 100%;
+        border-radius: 4px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        text-align: left;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        z-index: 1000;
+        border: 1px solid var(--primary-color);
+        margin-top: 20px;
+      }
+
+      .dropdown.open {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .dropdown li {
+        padding: 10px;
+        color: var(--text-color);
+        cursor: pointer;
+        border-radius: 4px;
+      }
+
+      .dropdown li:hover {
+        background-color: #353535;
+      }
+
+      .text-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        justify-items: center;
+        gap: 20px;
+        margin-top: 50px;
+        text-align: center;
+      }
+
+      .text-card {
+        background-color: var(--secondary-background);
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: relative;
+        break-inside: avoid;
+        margin-bottom: 10px;
+      }
+
+      .text-content {
+        margin-bottom: 80px;
+      }
+
+      .copy-button {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        background-color: var(--primary-color);
+        color: var(--background-color);
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        height: 31px;
+        width: 80px;
+        font-size: 14px;
+      }
+
+      .copy-button:hover {
+        background-color: #e2ad00;
+      }
+
+      .tags {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+
+      .tag {
+        background-color: var(--primary-color);
+        color: var(--background-color);
+        border-radius: 4px;
+        font-size: 12px;
+        margin-right: 5px;
+        height: 31px;
+        width: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      @media (min-width: 768px) {
+        .text-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .hero {
+          padding: 0 20px;
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+
+        .hero h1 {
+          font-size: 48px;
+        }
+
+        .hero p {
+          font-size: 20px;
+        }
+
+        .filters {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .container2,
+        .container3 {
+          margin-bottom: 10px;
+        }
+
+        .btn {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .dropdown {
+          width: 90%;
+          left: 5%;
+        }
+
+        .cta-button {
+          font-size: 14px;
+          padding: 15px 20px;
+          white-space: normal;
+          text-align: center;
+        }
+      }
+
+      @media (max-width: 400px) {
+        .cta-button {
+          font-size: 12px;
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <nav>
+          <div class="logo" onclick="window.location.href = './'">
+            WhatsBreak
+          </div>
+          <div class="nav-links">
+            <a href="#" id="add-text-btn" class="cta-button"
+              >Recommend WhatsBreak!</a
+            >
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="filters">
+        <div class="container2">
+          <button class="btn" id="category-btn">
+            <span>Category</span>
+            <i class="material-icons">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="30px"
+                viewBox="0 -960 960 960"
+                width="30px"
+                fill="var(--secondary-background)"
+              >
+                <path
+                  d="M440-160q-17 0-28.5-11.5T400-200v-240L168-736q-15-20-4.5-42t36.5-22h560q26 0 36.5 22t-4.5 42L560-440v240q0 17-11.5 28.5T520-160h-80Zm40-308 198-252H282l198 252Zm0 0Z"
+                />
+              </svg>
+            </i>
+            <ul class="dropdown" id="category-filter" data-value="all">
+              <li data-value="all">All Categories</li>
+              <li data-value="cool">Cool</li>
+              <li data-value="funny">Funny</li>
+              <li data-value="nice">Nice</li>
+              <li data-value="serious">Serious</li>
+              <li data-value="honest">Honest</li>
+              <li data-value="mean">Mean</li>
+            </ul>
+          </button>
+        </div>
+        <div class="container3">
+          <button class="btn" id="language-btn">
+            <span>Language</span>
+            <i class="material-icons">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="30px"
+                viewBox="0 -960 960 960"
+                width="30px"
+                fill="var(--secondary-background)"
+              >
+                <path
+                  d="M440-160q-17 0-28.5-11.5T400-200v-240L168-736q-15-20-4.5-42t36.5-22h560q26 0 36.5 22t-4.5 42L560-440v240q0 17-11.5 28.5T520-160h-80Zm40-308 198-252H282l198 252Zm0 0Z"
+                />
+              </svg>
+            </i>
+            <ul class="dropdown" id="language-filter" data-value="all">
+              <li data-value="all">All Languages</li>
+              <li data-value="en">English</li>
+              <li data-value="de">German</li>
+            </ul>
+          </button>
+        </div>
+      </div>
+
+      <div class="text-grid" id="text-grid"></div>
+    </main>
+
+    <script>
+      const texts = [
+        {
+          content:
+            "I wanted to reach out and let you know what's been on my mind lately. While our relationship has been incredibly special and meaningful, I am realizing more and more that we both want different things out of life. Despite nothing truly being wrong within our relationship, I think it would be best to part ways so we both have the opportunity to go after our individual goals.",
+          language: "en",
+          category: "serious",
+        },
+        {
+          content:
+            "Ich fühle mich schrecklich, wenn ich das per SMS mache, aber ich weiß, wenn ich das von Angesicht zu Angesicht machen würde, könnte ich einen Rückzieher machen. Und wenn ich das tun würde, wäre ich mir selbst gegenüber nicht ehrlich. Du bist so wichtig für mich, aber unsere Leben gehen im Moment getrennte Wege, also denke ich, es ist das Beste, wenn wir uns nicht mehr sehen. Du wirst mir immer sehr am Herzen liegen und ich bin so dankbar, dass wir diese Zeit miteinander verbringen durften. Ich bin für dich da, wenn du Fragen hast oder reden willst. ",
+          language: "de",
+          category: "serious",
+        },
+        {
+          content:
+            "Hey 🥺. This is really hard to say over text, but I think it's time for us to go our separate ways.  💔  I've been doing a lot of thinking lately, and I realized that we're just not on the same page anymore. 😔 It hurts to say this, but I don't think things are working out between us. 😭. I wish you all the best in the future! ✨",
+          language: "en",
+          category: "nice",
+        },
+        {
+          content:
+            "Hey 😊 👋🏼. Listen, we need to talk... It's been fun, but things aren't working out for me anymore. 🤷‍♀️  Maybe it's just timing ⏰ or maybe we're just too different 🤔.  Whatever the reason, I think it's best if we call it quits. 👋 Don't take this personally, okay? 💖",
+          language: "en",
+          category: "cool",
+        },
+        {
+          content:
+            "It's been real 😜, but I think it's time for us to move on. 🤔 Not gonna lie, things just haven't been feeling right lately 😬. Maybe we can still be friends? 🤷‍♀️",
+          language: "en",
+          category: "funny",
+        },
+        {
+          content:
+            "Hey... this is tough 😔 but I need to be honest with you. Things haven't felt the same between us for a while now, and I don't want to keep pretending they are. 🥺 It hurts saying this, but I think we should break up. ❤️",
+          language: "en",
+          category: "honest",
+        },
+        {
+          content:
+            "Look, I'm not going to sugarcoat it. 😒 This isn't working for me anymore. You're just not the person I thought you were. 😠 Don't bother trying to get back together, because it's over.  🤬.",
+          language: "en",
+          category: "mean",
+        },
+        {
+          content:
+            "Hey 👋 Ich wollte dir mal schreiben und meine Gefühle teilen. Letztendlich wollen wir beide unterschiedliche Dinge im Leben 💔 und das macht es schwer, glücklich zusammen zu sein. 😭 Es tut mir so leid, aber ich denke, es ist besser, wenn wir uns trennen 😊. ",
+          language: "de",
+          category: "nice",
+        },
+        {
+          content:
+            "Tschüss 👋🏼 . Hab dich wirklich geschätzt 💖, aber ich denke es ist Zeit, dass wir getrennte Wege gehen 😔. Vielleicht passt unsere Wellenlänge einfach nicht 🤔 oder wir sind zu verschieden 🤷‍♀️. Egal was, es war ein tolles Erlebnis mit dir! 🎉",
+          language: "de",
+          category: "cool",
+        },
+        {
+          content:
+            "Also 😅, ich muss gestehen, dass mir die letzten Wochen irgendwie nicht gut getan haben 😔 . Vielleicht sind wir einfach zu unterschiedlich 🤔 und das merkt man jetzt 😩. Na ja 🤷‍♀️, alles Gute für dich weiterhin! 😄",
+          language: "de",
+          category: "funny",
+        },
+        {
+          content:
+            "Es tut mir so leid 😭 , aber ich glaube, es ist vorbei 😔. Ich habe immer versucht ehrlich zu dir zu sein ❤️ und jetzt muss ich dir sagen, dass unsere Beziehung nicht mehr funktioniert 😢 . Es war schön mit dir zusammen gewesen 🥰, aber manchmal müssen schwierige Entscheidungen getroffen werden  💔",
+          language: "de",
+          category: "honest",
+        },
+        {
+          content:
+            "Lass uns Schluss machen! 🤬 Du hast mich immer wieder enttäuscht 😔 und ich kann es nicht mehr ertragen 😠. Ich wünsche dir alles Gute, aber wir sehen uns nie wieder 👋🏼.",
+          language: "de",
+          category: "mean",
+        },
+        {
+          content:
+            "Hey, listen... this is really hard to say, but I think we need to talk about where things are going. Lately, I've been feeling like we're growing apart and that our priorities aren't aligned anymore. It hurts me to even think about it, but I don't want us to stay in a relationship that isn't fulfilling for either of us.",
+          language: "en",
+          category: "serious",
+        },
+        {
+          content:
+            "Es tut mir so leid, dass ich das über Text schreibe, aber es ist schwer für mich, diese Worte persönlich zu sagen. Unsere Beziehung hat sich verändert und wir sind nicht mehr auf der gleichen Wellenlänge. Ich glaube, es ist an der Zeit, getrennte Wege zu gehen.",
+          language: "de",
+          category: "serious",
+        },
+        {
+          content:
+            "This isn't easy, but I think it's time for us to move on. I've realized that we have different visions for the future and I don't want to hold you back from chasing your dreams.",
+          language: "en",
+          category: "nice",
+        },
+        {
+          content:
+            "Ich weiß, dass das vielleicht nicht das Beste ist, was du hören möchtest, aber ich glaube, es ist an der Zeit für uns, Abschied zu nehmen. Wir haben viel Schönes miteinander erlebt, aber manchmal sind Wege einfach auseinanderlaufend.",
+          language: "de",
+          category: "nice",
+        },
+        {
+          content:
+            "Hey, maybe we just need a break from each other for a while. We can both figure things out and see if we want to come back together down the road.",
+          language: "en",
+          category: "cool",
+        },
+        {
+          content:
+            "Vielleicht brauchen wir einfach eine Pause? Zeit sich selbst zu finden und herauszufinden, was wirklich wichtig ist. ",
+          language: "de",
+          category: "cool",
+        },
+        {
+          content:
+            "Look, I'm not going to beat around the bush. This isn't working anymore and I think it's best if we just call it quits.",
+          language: "en",
+          category: "honest",
+        },
+        {
+          content:
+            "Ich muss dir ehrlich sagen, dass es zwischen uns nicht mehr läuft. Wir sind einfach zu unterschiedlich und das frustriert mich.",
+          language: "de",
+          category: "honest",
+        },
+        {
+          content:
+            "I'm sorry if this hurts, but I don't want to waste your time or mine anymore. We're not compatible and it's time for me to move on.",
+          language: "en",
+          category: "mean",
+        },
+        {
+          content:
+            "Es ist besser so. Wir beide wissen, dass es nicht mehr funktioniert. Lass uns einfach Schluss machen und die Vergangenheit ruhen lassen.",
+          language: "de",
+          category: "mean",
+        },
+        {
+          content:
+            "You're like a deflated balloon 🎈😩. All the air has gone out of our relationship, and I can't keep pretending it's still fun. 👋 See ya! 😎",
+          language: "en",
+          category: "funny",
+        },
+        {
+          content:
+            "Ich glaube, unser Verhältnis ist wie ein vergammeltes Brot 🥖🤢. Es riecht einfach nicht mehr nach Liebe 💖🤮 und ich bin froh, wenn wir uns trennen können.",
+          language: "de",
+          category: "mean",
+        },
+        {
+          content:
+            "Welp 👋, looks like we're going our separate ways 🚶‍♀️🚶‍♂️. It's been real, it's been weird 🤷‍♀️, but I'm outtie! 🚀 Peace!",
+          language: "en",
+          category: "funny",
+        },
+        {
+          content:
+            "Es ist vorbei 😩! Ich wünsche dir alles Gute, aber ich bin aus diesem Drama raus 🙅‍♀️💃. Tchau 👋!",
+          language: "de",
+          category: "mean",
+        },
+        {
+          content:
+            "I'm outta here!🏃💨 Like a hot potato 🥔🔥 this relationship is too much to handle. See ya later!👋😬",
+          language: "en",
+          category: "funny",
+        },
+        {
+          content:
+            "Au revoir 👋! Ich bin wie ein Vogel, der aus dem Käfig fliegt 🐦🕊️. Freiheit ruft! ",
+          language: "de",
+          category: "funny",
+        },
+        {
+          content:
+            "You're like a bad joke 😂🤣... that I can't stop telling 🤦‍♀️😭. But seriously, this isn't funny anymore. It's time to move on!",
+          language: "en",
+          category: "mean",
+        },
+        {
+          content:
+            "Du bist wie ein Kaugummi 🍬 unter dem Sofa 😔. Verdreht und alt 😩. Lass uns Schluss machen! 👋😠",
+          language: "de",
+          category: "mean",
+        },
+        {
+          content:
+            "Let's be real 😜... this relationship is more drama than a soap opera 🎭. I need a break from the over-the-top emotions 😩🤣",
+          language: "en",
+          category: "funny",
+        },
+        {
+          content:
+            "This is getting ridiculous 🙄. Our arguments are like broken records 🎶 repeating the same old tune 🥱. Time to hit the eject button! 💥",
+          language: "en",
+          category: "serious",
+        },
+        {
+          content:
+            "Du bist wie ein faulnes Haustier 🐶😴, das ständig nur schnarcht und schläft. Ich brauche etwas mehr Action in meinem Leben! 🚀😂",
+          language: "de",
+          category: "funny",
+        },
+        {
+          content:
+            "Es tut mir so leid, aber ich glaube, unsere Wege trennen sich 😔. Es war schön, dich kennengelernt zu haben, aber manchmal muss man einfach Abschied nehmen.",
+          language: "de",
+          category: "nice",
+        },
+        {
+          content:
+            "Hey 👋... remember when things were good? Yeah, me neither 🤷‍♀️🤣. Let's just call it quits before this gets any weirder.",
+          language: "en",
+          category: "funny",
+        },
+        {
+          content:
+            "Ich bin nicht mehr in der Lage, diese Beziehung zu halten. Es ist einfach zu viel Arbeit für die Liebe 😩😩. ",
+          language: "de",
+          category: "honest",
+        },
+        {
+          content:
+            "Listen, I'm not a magician ✨🪄. I can't make this relationship work if we both aren't putting in the effort 😔. It's time to be honest with ourselves.",
+          language: "en",
+          category: "serious",
+        },
+        {
+          content:
+            "This isn't working for me anymore 😩. I need someone who wants to be here just as much as I do, not someone who keeps giving half-hearted effort 🙄😤.",
+          language: "en",
+          category: "mean",
+        },
+        {
+          content:
+            "Ich bin bereit für ein neues Abenteuer 🚀! Dieses Kapitel ist zu Ende. 📖👋 ",
+          language: "de",
+          category: "funny",
+        },
+      ];
+
+      function createTextCard(text) {
+        const card = document.createElement("div");
+        card.className = "text-card";
+        card.innerHTML = `
+                    <div class="text-content">${text.content}</div>
+                    <div class="tags">
+                        <span class="tag">${text.language}</span>
+                        <span class="tag">${text.category}</span>
+                    </div>
+                    <button class="copy-button">Copy</button>
+                `;
+
+        const copyButton = card.querySelector(".copy-button");
+        copyButton.addEventListener("click", function () {
+          const textContent = card
+            .querySelector(".text-content")
+            .textContent.trim();
+          navigator.clipboard.writeText(textContent);
+
+          const originalText = "Copy";
+          this.textContent = "Copied";
+
+          setTimeout(() => {
+            this.textContent = originalText;
+          }, 600);
+        });
+
+        return card;
+      }
+
+      function renderTexts(filteredTexts) {
+        const grid = document.getElementById("text-grid");
+        grid.innerHTML = "";
+        filteredTexts.forEach((text) => {
+          grid.appendChild(createTextCard(text));
+        });
+      }
+
+      function applyFilters() {
+        const languageFilter =
+          document.getElementById("language-filter").dataset.value;
+        const categoryFilter =
+          document.getElementById("category-filter").dataset.value;
+
+        const filteredTexts = texts.filter((text) => {
+          return (
+            (languageFilter === "all" || text.language === languageFilter) &&
+            (categoryFilter === "all" || text.category === categoryFilter)
+          );
+        });
+
+        renderTexts(filteredTexts);
+      }
+
+      document.addEventListener("click", (event) => {
+        const dropdowns = document.querySelectorAll(".dropdown.open");
+
+        dropdowns.forEach((dropdown) => {
+          if (
+            !dropdown.contains(event.target) &&
+            !event.target.closest(".btn")
+          ) {
+            dropdown.classList.remove("open");
+          }
+        });
+      });
+
+      document
+        .getElementById("language-btn")
+        .addEventListener("click", (event) => {
+          event.stopPropagation();
+          document.getElementById("language-filter").classList.toggle("open");
+        });
+
+      document
+        .getElementById("category-btn")
+        .addEventListener("click", (event) => {
+          event.stopPropagation();
+          document.getElementById("category-filter").classList.toggle("open");
+        });
+
+      document.querySelectorAll(".dropdown li").forEach((item) => {
+        item.addEventListener("click", (event) => {
+          const dropdown = event.target.closest(".dropdown");
+          dropdown.dataset.value = event.target.dataset.value;
+          dropdown.classList.remove("open");
+          applyFilters();
+        });
+      });
+
+      applyFilters();
+
+      const recommendButton = document.getElementById("add-text-btn");
+
+      recommendButton.addEventListener("click", async function () {
+        try {
+          if (navigator.share) {
+            await navigator.share({
+              title: "Check out WhatsBreak!",
+              text: "It's so great, I don't need to come up with those bad break up texts anymore!",
+              url: window.location.href.split("/").slice(0, 3).join("/"),
+            });
+            console.log("Link shared successfully");
+          } else {
+            await navigator.clipboard.writeText(
+              window.location.href.split("/").slice(0, 3).join("/")
+            );
+            alert("Link copied to clipboard!");
+          }
+        } catch (error) {
+          console.error("Error sharing link:", error);
+          alert("Failed to share link.");
+        }
+      });
+    </script>
+  </body>
+</html>

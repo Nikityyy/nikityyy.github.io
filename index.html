@@ -1,381 +1,760 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nikita's Portfolio</title>
-    <link rel="icon" href="images/icon.png">
-    <meta name="description" content="Software Engineer and Webdesigner">
-    <meta name="og:title" property="og:title" content="Nikity">
-    <meta name="twitter:title" content="Nikity">
-    <meta name="keywords" content="Nikity, Webdesign, Software Engineer">
-    <style>
-      @font-face {
-        font-family: "boldy";
-        src: url("fonts/THEBOLDFONT-FREEVERSION-2023.otf");
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nikita - Data Engineer</title>
+  <link rel="icon" href="media/icon.webp">
+  <meta name="description"
+    content="Entdecken Sie mein Portfolio: eine Auswahl meiner besten Projekte, detaillierte Informationen über meine berufliche Erfahrung und alle Kontaktmöglichkeiten. Lassen Sie sich inspirieren und erfahren Sie mehr über meine Arbeit als Webdesigner und Entwickler.">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="prefetch" href="media/robot.webp" />
+  <link rel="prefetch" href="media/octicon--mark-github-16.webp" />
+  <link rel="prefetch" href="media/simple-icons--huggingface.webp" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      overflow-x: hidden;
+      color: #fff;
+      font-family: "Poppins", arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .main {
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+      align-items: center;
+      padding: 0 5%;
+      animation: opacity 3s forwards;
+    }
+
+    .start {
+      width: 50%;
+      z-index: 1;
+    }
+
+    #spline-image {
+      width: 60%;
+    }
+
+    .start h1 {
+      font-size: 5vw;
+      margin: 0;
+    }
+
+    .start p {
+      font-size: 2vw;
+      margin: 0;
+    }
+
+    .section {
+      padding: 50px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(0, 0, 0, 0.75) !important;
+      backdrop-filter: url("#svgfilter");
+      padding: 40px 0;
+      z-index: 1000;
+    }
+
+    .navbar ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .navbar li {
+      margin: 0 20px;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      transition: color 0.3s ease;
+      font-weight: 500;
+      font-size: 18px;
+      position: relative;
+    }
+
+    .navbar a::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      bottom: -5px;
+      left: 0;
+      background-color: #fff;
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .navbar a:hover::after {
+      transform: scaleX(1);
+    }
+
+    #showcase .container a {
+      color: white;
+      text-decoration: none;
+      transition: color 0.3s ease;
+      font-weight: 500;
+      font-size: 18px;
+      position: relative;
+    }
+
+    #showcase .container a::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      bottom: -5px;
+      left: 0;
+      background-color: #fff;
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    #showcase .container a:hover::after {
+      transform: scaleX(1);
+    }
+
+    h2 {
+      font-size: 3rem;
+      margin-bottom: 2rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    h2::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -10px;
+      width: 100%;
+      height: 4px;
+      background-color: #fff;
+    }
+
+    .project,
+    .thesis {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 30px;
+      margin-bottom: 30px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .project:hover,
+    .thesis:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+    }
+
+    .cta-button {
+      display: inline-block;
+      background-color: #fff;
+      color: #000;
+      padding: 15px 30px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .cta-button:hover {
+      background-color: #000;
+      color: #fff;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    }
+
+    @keyframes opacity {
+      0% {
+        opacity: 0;
       }
 
-      body {
-        margin: 0;
-        background-color: #111111;
-        background-image:
-          radial-gradient(at 47% 33%, hsl(150.00, 0%, 20%) 0, transparent 59%),
-          radial-gradient(at 82% 65%, hsl(0.00, 0%, 7.000000000000001%) 0, transparent 55%);
-        color: white;
-        font-family: Arial, sans-serif;
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .skill-bar {
+      width: 100%;
+      height: 20px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .skill-progress {
+      height: 100%;
+      background-color: #fff;
+      border-radius: 10px;
+      width: 0;
+      transition: width 1s ease;
+    }
+
+    .timeline {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 0;
+    }
+
+    .timeline::after {
+      content: "";
+      position: absolute;
+      width: 2px;
+      background-color: #fff;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      margin-left: 18.5px;
+    }
+
+    .timeline-item {
+      padding: 10px 40px;
+      position: relative;
+      background-color: inherit;
+      width: calc(50% - 40px);
+    }
+
+    .timeline-item::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      right: 5.5px;
+      background-color: #fff;
+      border: 4px solid #000;
+      top: 15px;
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    .left {
+      left: 0;
+    }
+
+    .right {
+      left: 50%;
+    }
+
+    .right::after {
+      left: 5.5px;
+    }
+
+    .timeline-content {
+      padding: 20px 30px;
+      background-color: rgba(255, 255, 255, 0.1);
+      position: relative;
+      border-radius: 6px;
+    }
+
+    .navbar-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1001;
+    }
+
+    .arrow {
+      border: solid white;
+      border-width: 0 3px 3px 0;
+      display: inline-block;
+      margin-top: 30px;
+      padding: 30px;
+      animation: moveAround 2s infinite ease-in;
+      transform: rotate(45deg);
+      cursor: pointer;
+    }
+
+    #cta .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      max-width: 729px;
+    }
+
+    #cta .container p {
+      margin-top: 0;
+      margin-bottom: 25px;
+    }
+
+    .cta-button {
+      order: 1;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 20px;
+      order: 2;
+    }
+
+    .social-icon img {
+      transition: transform 0.3s ease;
+    }
+
+    .social-icon img:hover {
+      transform: scale(1.1);
+    }
+
+    @keyframes moveAround {
+      0% {
+        transform: rotate(45deg) translateX(0) translateY(0);
       }
 
-      *::-webkit-scrollbar {
-        height: 10px;
-        width: 10px;
+      50% {
+        transform: rotate(45deg) translateX(10px) translateY(10px);
       }
 
-      *::-webkit-scrollbar-track {
-        border-radius: 20px;
-        background-color: #333;
+      100% {
+        transform: rotate(45deg) translateX(0) translateY(0);
+      }
+    }
+
+    @keyframes bounce {
+      0% {
+        transform: rotate(45deg) translate(-80%, -10%);
       }
 
-      *::-webkit-scrollbar-track:hover {
-        background-color: #333;
+      50% {
+        transform: rotate(45deg) translate(-100%, -30%);
       }
 
-      *::-webkit-scrollbar-track:active {
-        background-color: #333;
+      100% {
+        transform: rotate(45deg) translate(-80%, -10%);
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .main {
+        flex-direction: column;
+        justify-content: center;
+        padding: 0;
       }
 
-      *::-webkit-scrollbar-thumb {
-        border-radius: 20px;
-        background-color: #FFFFFF;
-      }
-
-      *::-webkit-scrollbar-thumb:hover {
-        background-color: #FFFFFF;
-      }
-
-      *::-webkit-scrollbar-thumb:active {
-        background-color: #FFFFFF;
-      }
-
-      h1,
-      h2 {
-        font-family: "boldy", arial, sans-serif;
-        letter-spacing: 2.5px;
-        margin: 0;
-      }
-
-      h1 {
-        font-size: 6dvw;
-      }
-
-      h2 {
-        font-size: 2dvw;
-      }
-
-      header {
-        position: fixed;
+      #spline {
+        position: relative;
+        top: auto;
+        right: auto;
+        transform: none;
         width: 100%;
-        padding-top: 20px;
-        padding-bottom: 20px;
+        height: 50vh;
+        margin-top: 2rem;
+        border-radius: 20%;
+      }
+
+      .start {
+        width: 100%;
         text-align: center;
       }
 
-      nav a {
-        color: azure;
-        text-decoration: none;
-        margin: 0 15px;
-        font-size: 16px;
+      .start h1 {
+        font-size: 8vw;
       }
 
-      .button {
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        width: 24px;
-        padding: 10px 20px;
-        margin: 5px;
-        font-size: 16px;
-        color: white;
-        background-color: aliceblue;
-        backdrop-filter: blur(25px) saturate(200%);
-        -webkit-backdrop-filter: blur(25px) saturate(200%);
-        background-color: rgba(17, 25, 40, 0);
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.125);
-        text-align: center;
-        text-decoration: none;
-        border-radius: 5px;
-        transition: all 0.4s;
+      .start p {
+        font-size: 4vw;
       }
+    }
 
-      .button:hover {
-        transform: scale(1.1);
-        background: rgba(255, 255, 255, 0.2);
+    @media (min-width: 850px) {
+      .arrow {
+        position: absolute;
+        bottom: 1%;
+        left: 50%;
+        transform: rotate(45deg) translate(-80%, -10%);
+        animation: bounce 2s infinite ease-out;
       }
+    }
 
-      .first {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    @media (max-width: 850px) {
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 250px;
         height: 100vh;
+        transition: left 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0;
+      }
+
+      .navbar.active {
+        left: 0;
+      }
+
+      .navbar ul {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .navbar li {
+        margin: 15px 0;
+      }
+
+      .navbar-toggle {
+        display: block;
+      }
+
+      h2 {
+        font-size: 2.5rem;
       }
 
       .section {
-        text-align: center;
-        scroll-snap-align: center;
-        display: flex;
-        flex-direction: column;
-        width: 75%;
-        margin: auto;
-        height: 100dvh;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .projects {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
-      }
-
-      .project {
-        border-radius: 10px !important;
-        border: 1px solid rgba(255, 255, 255, 0.125);
-        padding: 20px;
-        width: 250px;
-        border-radius: 8px;
-        text-align: left;
-      }
-
-      .project a {
-        color: #FFBF08;
-        text-decoration: none;
-        transition: all 0.4s ease-in-out;
-        background: linear-gradient(currentColor 0 0) bottom left 50%, linear-gradient(currentColor 0 0) bottom right 50%;
-        background-size: var(--underline-width, 0%) 0.1em;
-        background-repeat: no-repeat;
-        display: inline-block;
-        padding: 0.2em 0px;
-        margin: 0;
-      }
-
-      .project a:hover {
-        cursor: pointer;
-        text-shadow: 0 0 3px #FFBF08;
-        --underline-width: 100%;
-      }
-
-      .contact {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-      }
-
-      .contact a {
-        font-size: 2dvw;
-        transition: all 0.3s ease-in-out;
-      }
-
-      .contact a:hover {
-        transform: scale(1.2);
-      }
-
-      footer {
-        background-color: #222;
-        text-align: center;
-      }
-
-      .icon {
-        width: 40px;
-        height: 40px;
-      }
-
-      #about,
-      #projects,
-      #contact {
-        display: flex;
-        flex-direction: column;
-        width: 75%;
-        margin: auto;
-        height: 100dvh;
-        justify-content: center;
-        align-items: center;
-      }
-
-      #about h2 {
-        font-size: 6dvw;
-      }
-
-      #about p {
-        font-size: 1.75dvw;
-      }
-
-      .projects,
-      #projects {
-        width: 100% !important;
         padding: 0;
-        flex-wrap: wrap;
+        padding-bottom: 20px;
+        position: relative;
+        overflow: hidden;
       }
 
-      main {
-        overflow-y: scroll;
-        scroll-snap-type: y mandatory;
-        height: 100dvh;
+      #spline-image {
+        display: block;
+        width: 80%;
+        height: 50vh;
+        object-fit: cover;
+        border-radius: 20%;
       }
 
-      .name {
-        text-align: left;
-        padding: 10px;
+      .timeline::after {
+        left: 31px;
       }
 
-      @keyframes swing-in-left-bck {
-        0% {
-          transform: rotateY(-70deg);
-          transform-origin: left;
-          opacity: 0;
-        }
-        100% {
-          transform: rotateY(0);
-          transform-origin: left;
-          opacity: 1;
-        }
+      .timeline-item {
+        width: auto;
+        padding-left: 70px;
+        padding-right: 25px;
       }
 
-      .swing-in-left-bck {
-        animation: swing-in-left-bck 2.5s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
+      .left::after,
+      .right::after {
+        left: 37px;
       }
 
-      @media (max-width: 1000px) {
-        .name h2 {
-          font-size: 2.2dvh !important;
-        }
-
-        #about p {
-          font-size: 2dvh !important;
-        }
-
-        .name h1,
-        #about h2,
-        #projects h2,
-        #contact h2 {
-          font-size: 5.194dvh !important;
-        }
-
-        .project {
-          width: auto;
-        }
-
-        .project h3 {
-          font-size: 1.3dvh;
-          margin-top: 0;
-        }
-
-        .project p {
-          display: none;
-        }
-
-        .project p, .project a {
-          font-size: 1.2dvh;
-        }
+      .right {
+        left: 0%;
       }
-    </style>
-  </head>
-  <body>
-    <header>
-      <nav>
-        <a href="#home" class="button" aria-label="Home">
-          <img style="filter: invert(1);" src="images/icons8-home-24.png" alt="">
-        </a>
-        <a href="#about" class="button" aria-label="About">
-          <img style="filter: invert(1);" src="images/icons8-about-24.png" alt="">
-        </a>
-        <a href="#projects" class="button" aria-label="Projects">
-          <img style="filter: invert(1);" src="images/icons8-project-24.png" alt="">
-        </a>
-        <a href="#contact" class="button" aria-label="Contact">
-          <img style="filter: invert(1);" src="images/icons8-contact-24.png" alt="">
-        </a>
-      </nav>
-    </header>
-    <main>
-      <section id="home" class="first section">
-        <div class="name swing-in-left-bck">
-          <h1>Hi, I'm Nikita.</h1>
-          <h2>
-            <i>Software Engineer.</i>
-          </h2>
+    }
+
+    @media (max-width: 600px) {
+      .start h1 {
+        font-size: 12vw;
+      }
+
+      .start p {
+        font-size: 6vw;
+      }
+
+      h2 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <button class="navbar-toggle" id="navbarToggle">☰</button>
+  <nav class="navbar" id="navbar">
+    <ul>
+      <li><a href="#showcase">Projekte</a></li>
+      <li><a href="#about">Über mich</a></li>
+      <li><a href="#skills">Fähigkeiten</a></li>
+      <li><a href="#experience">Erfahrung</a></li>
+      <li><a href="#thesis">Abschlussarbeiten</a></li>
+      <li><a href="#cta">Kontakt</a></li>
+    </ul>
+  </nav>
+
+  <section class="main">
+    <div class="start">
+      <h1>Ich bin Nikita.</h1>
+      <p>Data Engineer</p>
+    </div>
+    <img id="spline-image" src="media/robot.webp" alt="Spline Image" />
+    <a href="#showcase" class="arrow" aria-label="Scroll down"></a>
+  </section>
+
+  <section id="showcase" class="section">
+    <div class="container">
+      <h2 class="fade-in">Meine Projekte</h2>
+      <div class="project fade-in">
+        <h3>Projekt 1: Conomy</h3>
+        <p>
+          Entwickeln einer Software, die es Unternehmen ermöglicht Ihre
+          Website auf viele betriebswirtschaftliche Eigenschaften zu
+          überprüfen und zu optimieren.
+        </p>
+        <a href="https://nikityyy.github.io/Conomy/">Mehr erfahren</a>
+      </div>
+      <div class="project fade-in">
+        <h3>Projekt 2: Musify</h3>
+        <p>
+          Eine werbefreie Musik-Streaming-Webanwendung, die mit Spotify funktioniert, indem es Spotify embedded.
+        </p>
+        <a href="https://nikityyy.github.io/Musify/">Mehr erfahren</a>
+      </div>
+      <div class="project fade-in">
+        <h3>Projekt 3: Pisa</h3>
+        <p>
+          Entwicklung und Training eines eigenen Large Language Models (LLM) basierend auf selbst gescrapten Daten aus
+          dem Internet. Alle Daten wurden legal durch Web-Scraping gesammelt und zu einem Datensatz zusammengestellt.
+          Anschließend wurde das LLM auf diesen Daten trainiert und im Chat-Modus weiter feinabgestimmt.
+        </p>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section id="about" class="section">
+    <div class="container">
+      <h2 class="fade-in">Über mich</h2>
+      <p class="fade-in">
+        Seitdem ich 10 Jahre alt bin, programmiere ich und habe mich kontinuierlich weiterentwickelt. Meine Reise begann
+        mit grundlegender Programmierung und führte mich über verschiedene Stationen, darunter Mathematik mit
+        Schwerpunkt auf konvexen Hüllen und Webdesign, hin zu meiner aktuellen Spezialisierung im Bereich Machine
+        Learning.
+      </p>
+      <p class="fade-in">
+        In meiner Freizeit widme ich mich weiterhin Projekten in den Bereichen Künstliche Intelligenz, Machine Learning
+        und Big Data. Dabei beschäftige ich mich intensiv mit der Entwicklung und Optimierung von Algorithmen, der
+        Analyse großer Datensätze und der Implementierung fortschrittlicher Modelle. Ich nutze verschiedene
+        Programmiersprachen und Tools, um innovative Lösungen zu entwickeln und praktische Anwendungen zu realisieren.
+        Meine Leidenschaft für diese Themen motiviert mich ständig dazu, neue Technologien zu erforschen und mein Wissen
+        kontinuierlich zu erweitern.
+      </p>
+    </div>
+  </section>
+
+  <section id="skills" class="section">
+    <div class="container">
+      <h2 class="fade-in">Meine Fähigkeiten</h2>
+      <div class="skill fade-in">
+        <h3>MS Office</h3>
+        <div class="skill-bar">
+          <div class="skill-progress" data-width="100%"></div>
         </div>
-      </section>
-      <section id="about" class="section">
-        <h2>About Me</h2>
-        <p>I'm Nikita, a passionate software engineer with extensive experience across various projects. I've explored numerous programming languages, enabling me to tackle nearly any task or challenge that comes my way.</p>
-      </section>
-      <section id="projects" class="section">
-        <h2 style="margin-bottom: 30px; font-size: 5dvw;">Projects</h2>
-        <div class="projects">
-          <div class="project">
-            <h3>Anger</h3>
-            <p>This is a search engine powered with Google but safe. It does not safe your location, the website you visited before. It makes your searching experience anonymous.</p>
-            <a href="https://nikityyy.github.io/Anger" target="_blank">View Project</a>
-          </div>
-          <div class="project">
-            <h3>Google</h3>
-            <p>This is a website I made for a school project. Very basic but still cool.</p>
-            <a href="https://nikityyy.github.io/Google" target="_blank">View Project</a>
-          </div>
-          <div class="project">
-            <h3>Musify</h3>
-            <p>My first real SaaS. Input a spotify link, experience music without ads.</p>
-            <a href="https://nikityyy.github.io/Musify" target="_blank">View Project</a>
-          </div>
-          <div class="project">
-            <h3>NASA</h3>
-            <p>A website I made for fun. The best facts about NASA visible here.</p>
-            <a href="https://nikityyy.github.io/NASA" target="_blank">View Project</a>
-          </div>
-          <div class="project">
-            <h3>BWconomy</h3>
-            <p>My current marketing and economy SaaS</p>
-            <a href="https://nikityyy.github.io/BWconomy" target="_blank">View Project</a>
+      </div>
+      <div class="skill fade-in">
+        <h3>HTML | CSS | JS</h3>
+        <div class="skill-bar">
+          <div class="skill-progress" data-width="90%"></div>
+        </div>
+      </div>
+      <div class="skill fade-in">
+        <h3>Python</h3>
+        <div class="skill-bar">
+          <div class="skill-progress" data-width="85%"></div>
+        </div>
+      </div>
+      <div class="skill fade-in">
+        <h3>Node.js | Express | Flask</h3>
+        <div class="skill-bar">
+          <div class="skill-progress" data-width="75%"></div>
+        </div>
+      </div>
+      <div class="skill fade-in">
+        <h3>PyTorch</h3>
+        <div class="skill-bar">
+          <div class="skill-progress" data-width="80%"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience" class="section">
+    <div class="container">
+      <h2 class="fade-in">Berufserfahrung</h2>
+      <div class="timeline">
+        <div class="timeline-item left fade-in">
+          <div class="timeline-content">
+            <h3>Freelancer</h3>
+            <h4>GCT Gruber Consulting & Technology</h4>
+            <p>April 2024 - Juli 2024</p>
+            <p>
+              Erstellen einer Website <br><i>(Website nicht aktiv)</i>
+            </p>
           </div>
         </div>
-      </section>
-      <footer>
-        <section id="contact" class="section">
-          <h2 style="margin-bottom: 30px;">Contact</h2>
-          <div class="contact">
-            <a href="https://github.com/Nikityyy" target="_blank">
-              <img style="filter: invert(1);" src="images/icons8-github-240.png" alt="GitHub" class="icon">
-            </a>
-            <a href="https://huggingface.co/Nikity" target="_blank">
-              <img src="images/icons8-hugging-face-240.png" alt="Email" class="icon">
-            </a>
-            <a href="mailto:bergernikita1807@gmail.com">
-              <img style="filter: invert(1);" src="images/icons8-email-96.png" alt="Email" class="icon">
-            </a>
+        <div class="timeline-item right fade-in">
+          <div class="timeline-content">
+            <h3>Praktikant</h3>
+            <h4>anqodo GmbH</h4>
+            <p>August 2024</p>
+            <p>
+              <i>Noch nicht bekannt.</i>
+            </p>
           </div>
-        </section>
-      </footer>
-    </main>
-    <script>
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section id="thesis" class="section">
+    <div class="container">
+      <h2 class="fade-in">Meine Abschlussarbeiten</h2>
+      <div class="thesis fade-in">
+        <h3>
+          Diplomarbeit: "Die Rolle der Datenanalyse im modernen Sport"
+        </h3>
+        <p>
+          In dieser Arbeit habe ich mich mit der KI-Seite der Datenanalyse im Sport befasst. Ich habe bestehende
+          Algorithmen untersucht und einen neuen Algorithmus entwickelt, der eine erhebliche Verbesserung in der
+          Zeitvorhersage ermöglicht.
+        </p>
+        <a href="" onclick="alert('Noch in Arbeit.')" class="cta-button">Mehr lesen</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="cta" class="section">
+    <div class="container">
+      <h2 class="fade-in">Lassen Sie uns zusammenarbeiten</h2>
+      <p class="fade-in">
+        Interessiert an einer Zusammenarbeit? Kontaktieren Sie mich!
+      </p>
+      <a href="mailto:bergernikita1807@gmail.com" class="cta-button fade-in">Kontaktieren Sie mich</a>
+      <div class="social-links fade-in">
+        <a href="https://github.com/Nikityyy" target="_blank" class="social-icon">
+          <img src="media/octicon--mark-github-16.webp" alt="GitHub" width="40" height="40">
+        </a>
+        <a href="https://huggingface.co/Nikity" target="_blank" class="social-icon">
+          <img src="media/simple-icons--huggingface.webp" alt="Hugging Face" width="40" height="40">
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
+    <defs>
+      <filter id="svgfilter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.3" numOctaves="1" seed="0" stitchTiles="stitch"
+          result="feTurbulence-391ac80d"></feTurbulence>
+        <feGaussianBlur in="SourceGraphic" stdDeviation="2" edgeMode="duplicate" result="feGaussianBlur-85e146a6">
+        </feGaussianBlur>
+        <feDisplacementMap in="feGaussianBlur-85e146a6" in2="feTurbulence-391ac80d" scale="37" xChannelSelector="A"
+          yChannelSelector="A"></feDisplacementMap>
+      </filter>
+    </defs>
+  </svg>
+
+  <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
           e.preventDefault();
-          document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
+          document.querySelector(this.getAttribute("href")).scrollIntoView({
+            behavior: "smooth",
           });
         });
       });
-      const container = document.querySelector('main');
-      const items = document.querySelectorAll('.section');
-      container.addEventListener('wheel', (event) => {
-        event.preventDefault();
-        const delta = event.deltaY;
-        container.scrollBy({
-          top: delta,
-          behavior: 'smooth'
+
+      const fadeElements = document.querySelectorAll(".fade-in");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      fadeElements.forEach((element) => {
+        observer.observe(element);
+      });
+
+      const skillBars = document.querySelectorAll(".skill-progress");
+
+      const skillObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const target = entry.target;
+              const finalWidth = target.getAttribute("data-width");
+
+              target.offsetHeight;
+
+              target.style.transition = "width 0.5s ease-out";
+              target.style.width = finalWidth;
+
+              skillObserver.unobserve(target);
+            }
+          });
+        },
+        { threshold: 1 }
+      );
+
+      skillBars.forEach((bar) => {
+        skillObserver.observe(bar);
+      });
+
+      const navbarToggle = document.getElementById("navbarToggle");
+      const navbar = document.getElementById("navbar");
+      const navLinks = navbar.querySelectorAll("a");
+
+      navbarToggle.addEventListener("click", function () {
+        navbar.classList.toggle("active");
+      });
+
+      navLinks.forEach(link => {
+        link.addEventListener("click", function () {
+          navbar.classList.remove("active");
         });
       });
-    </script>
-  </body>
+
+      document.addEventListener("click", function (e) {
+        if (!navbar.contains(e.target) && !navbarToggle.contains(e.target)) {
+          navbar.classList.remove("active");
+        }
+      });
+    });
+
+  </script>
+</body>
 </html>

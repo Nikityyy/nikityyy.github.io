@@ -10,7 +10,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="prefetch" href="media/octicon--mark-github-16.webp" />
     <link rel="prefetch" href="media/simple-icons--huggingface.webp" />
+    <link rel="preload" as="video" href="media/video.mp4">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gupter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
       @font-face {
         font-family: 'Antipasto Pro';
@@ -26,6 +30,124 @@
         font-family: "Poppins", arial, sans-serif;
         -webkit-tap-highlight-color: transparent;
         overflow-x: hidden;
+      }
+
+      .grain {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        pointer-events: none;
+        z-index: 300;
+        transform: translateZ(0);
+      }
+
+      .grain:before {
+        content: "";
+        top: -10rem;
+        left: -10rem;
+        width: calc(100% + 20rem);
+        height: calc(100% + 20rem);
+        z-index: 9999;
+        position: fixed;
+        background-image: url('media/noise.png');
+        opacity: 0.15;
+        pointer-events: none;
+        -webkit-animation: noise 1s steps(2) infinite;
+        animation: noise 1s steps(2) infinite;
+      }
+
+      @-webkit-keyframes noise {
+        0% {
+          transform: translate3d(0, 9rem, 0);
+        }
+
+        10% {
+          transform: translate3d(-1rem, -4rem, 0);
+        }
+
+        20% {
+          transform: translate3d(-8rem, 2rem, 0);
+        }
+
+        30% {
+          transform: translate3d(9rem, -9rem, 0);
+        }
+
+        40% {
+          transform: translate3d(-2rem, 7rem, 0);
+        }
+
+        50% {
+          transform: translate3d(-9rem, -4rem, 0);
+        }
+
+        60% {
+          transform: translate3d(2rem, 6rem, 0);
+        }
+
+        70% {
+          transform: translate3d(7rem, -8rem, 0);
+        }
+
+        80% {
+          transform: translate3d(-9rem, 1rem, 0);
+        }
+
+        90% {
+          transform: translate3d(6rem, -5rem, 0);
+        }
+
+        100% {
+          transform: translate3d(-7rem, 0, 0);
+        }
+      }
+
+      @keyframes noise {
+        0% {
+          transform: translate3d(0, 9rem, 0);
+        }
+
+        10% {
+          transform: translate3d(-1rem, -4rem, 0);
+        }
+
+        20% {
+          transform: translate3d(-8rem, 2rem, 0);
+        }
+
+        30% {
+          transform: translate3d(9rem, -9rem, 0);
+        }
+
+        40% {
+          transform: translate3d(-2rem, 7rem, 0);
+        }
+
+        50% {
+          transform: translate3d(-9rem, -4rem, 0);
+        }
+
+        60% {
+          transform: translate3d(2rem, 6rem, 0);
+        }
+
+        70% {
+          transform: translate3d(7rem, -8rem, 0);
+        }
+
+        80% {
+          transform: translate3d(-9rem, 1rem, 0);
+        }
+
+        90% {
+          transform: translate3d(6rem, -5rem, 0);
+        }
+
+        100% {
+          transform: translate3d(-7rem, 0, 0);
+        }
       }
 
       ::selection {
@@ -260,7 +382,7 @@
         bottom: 0;
         left: 50%;
         margin-left: 18.5px;
-		z-index: -1;
+        z-index: -1;
       }
 
       .timeline-item {
@@ -268,36 +390,36 @@
         position: relative;
         width: calc(50% - 40px);
       }
-	  
-	    .timeline-item::after {
-    content: "";
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    right: -32.3px;
-    background-color: #fff;
-    border: 3px solid #fff;
-    top: 15px;
-    border-radius: 50%;
-    z-index: 1;
-    transition: background-color 0.3s ease;
-  }
 
-  .timeline-item.hovered::after {
-    background-color: #000;
-  }
+      .timeline-item::after {
+        content: "";
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        right: -32.3px;
+        background-color: #fff;
+        border: 3px solid #fff;
+        top: 15px;
+        border-radius: 50%;
+        z-index: 1;
+        transition: background-color 0.3s ease;
+      }
 
-	  .timeline-content {
-		padding: 20px 30px;
-		background-color: rgba(255, 255, 255, 0.1);
-		position: relative;
-		border-radius: 6px;
-		transition: all 0.4s ease;
-	  }
+      .timeline-item.hovered::after {
+        background-color: #000;
+      }
 
-	  .timeline-content:hover {
-		transform: scale(1.01);
-	  }
+      .timeline-content {
+        padding: 20px 30px;
+        background-color: rgba(255, 255, 255, 0.1);
+        position: relative;
+        border-radius: 6px;
+        transition: all 0.4s ease;
+      }
+
+      .timeline-content:hover {
+        transform: scale(1.01);
+      }
 
       .left {
         left: 0;
@@ -310,7 +432,7 @@
       .right::after {
         left: -32.3px;
       }
-	  
+
       /* CTA Section */
       #cta .container {
         display: flex;
@@ -380,6 +502,7 @@
       }
 
       .text {
+        font-family: "Gupter", "Poppins", arial, sans-serif;
         font-size: clamp(2rem, 5vw, 4rem);
         font-weight: bold;
         color: #fff;
@@ -404,47 +527,33 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
+        filter: blur(0.05rem) saturate(0.7) contrast(1.5) brightness(1.2);
       }
-	  
-	  #loading-screen {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background-color: #000;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		z-index: 9999;
-	  }
 
-	  .loader {
-		width: 50px;
-		height: 50px;
-		border: 5px solid #fff;
-		border-bottom-color: transparent;
-		border-radius: 50%;
-		display: inline-block;
-		box-sizing: border-box;
-		animation: rotation 1s linear infinite;
-	  }
-	  
-	  .fade-in-delay {
-		opacity: 0;
-		transform: translateY(20px);
-		transition: opacity 0.5s ease, transform 0.5s ease;
-	  }
+      .fade-in-delay {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+      }
 
-	  .fade-in-delay.visible {
-		opacity: 1;
-		transform: translateY(0);
-	  }
+      .fade-in-delay.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
 
-	  #about .text.visible,
-	  #about .video-container.visible {
-		transition-delay: calc(var(--delay) * 100ms);
-	  }
+      #about .text.visible,
+      #about .video-container.visible {
+        transition-delay: calc(var(--delay) * 100ms);
+      }
+
+      .styled {
+        text-decoration: underline;
+        font-weight: bold;
+        color: #000;
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 0 10px;
+      }
 
       /* Animations */
       @keyframes opacity {
@@ -471,14 +580,15 @@
         }
       }
 
-	  @keyframes rotation {
-		0% {
-		  transform: rotate(0deg);
-		}
-		100% {
-		  transform: rotate(360deg);
-		}
-	  }
+      @keyframes rotation {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
+      }
 
       .fade-in {
         opacity: 0;
@@ -511,7 +621,6 @@
           height: 100vh;
           width: auto;
           max-width: none;
-          border-radius: 0;
           z-index: -1;
         }
 
@@ -526,6 +635,11 @@
       @media (max-width: 850px) {
         h2 {
           font-size: 2.5rem;
+        }
+
+        .styled {
+          border-radius: 5px;
+          padding: 0 5px;
         }
 
         .section {
@@ -609,9 +723,7 @@
     </style>
   </head>
   <body>
-	<div id="loading-screen">
-	  <div class="loader"></div>
-	</div>
+    <div class="grain"></div>
     <button class="navbar-toggle" id="navbarToggle">☰</button>
     <nav class="navbar" id="navbar">
       <ul>
@@ -635,67 +747,68 @@
         </li>
       </ul>
     </nav>
-<section class="main">
-  <div class="start">
-    <div class="inner-start">
-      <h1>Nikita</h1>
-    </div>
-    <video id="video1" playsinline webkit-playsinline loop muted>
-      <source src="media/video.mp4" type="video/mp4"></source>
-    </video>
-  </div>
-  <a href="#about" class="arrow" aria-label="Scroll down"></a>
-</section>
-<section id="about" class="section">
-  <div class="container">
-    <h2 class="fade-in">Über mich</h2>
-    <div class="about-container">
-      <span class="text fade-in-delay" style="--delay: 1">Seitdem</span>
-      <div class="video-container fade-in-delay" style="--delay: 2">
-        <video id="video2" class="video" playsinline webkit-playsinline loop muted>
-          <source src="media/720_video2.mp4" type="video/mp4">
+    <section class="main">
+      <div class="start">
+        <div class="inner-start">
+          <h1>Nikita</h1>
+        </div>
+        <video id="video1" playsinline webkit-playsinline loop muted>
+          <source src="media/video.mp4" type="video/mp4">
+          </source>
         </video>
       </div>
-      <span class="text fade-in-delay" style="--delay: 3">ich 10 bin,</span>
-      <div class="video-container fade-in-delay" style="--delay: 4">
-        <video id="video3" class="video" playsinline webkit-playsinline loop muted>
-          <source src="media/720_video3.mp4" type="video/mp4">
-        </video>
+      <a href="#about" class="arrow" aria-label="Scroll down"></a>
+    </section>
+    <section id="about" class="section">
+      <div class="container">
+        <h2 class="fade-in">Über mich</h2>
+        <div class="about-container">
+          <span class="text fade-in-delay" style="--delay: 1">Seitdem</span>
+          <div class="video-container fade-in-delay" style="--delay: 2">
+            <video id="video2" class="video" playsinline webkit-playsinline loop muted>
+              <source src="media/720_video2.mp4" type="video/mp4">
+            </video>
+          </div>
+          <span class="text fade-in-delay" style="--delay: 3">ich 10 bin,</span>
+          <div class="video-container fade-in-delay" style="--delay: 4">
+            <video id="video3" class="video" playsinline webkit-playsinline loop muted>
+              <source src="media/720_video3.mp4" type="video/mp4">
+            </video>
+          </div>
+          <span class="text fade-in-delay styled" style="--delay: 5">programmiere</span>
+          <div class="video-container fade-in-delay" style="--delay: 6">
+            <video id="video4" class="video" playsinline webkit-playsinline loop muted>
+              <source src="media/720_video4.mp4" type="video/mp4">
+            </video>
+          </div>
+          <span class="text fade-in-delay" style="--delay: 7">ich,</span>
+          <div class="video-container fade-in-delay" style="--delay: 8">
+            <video id="video5" class="video" playsinline webkit-playsinline loop muted>
+              <source src="media/720_video5.mp4" type="video/mp4">
+            </video>
+          </div>
+          <span class="text fade-in-delay" style="--delay: 9">erschaffe</span>
+          <div class="video-container fade-in-delay" style="--delay: 10">
+            <video id="video6" class="video" playsinline webkit-playsinline loop muted>
+              <source src="media/720_video6.mp4" type="video/mp4">
+            </video>
+          </div>
+          <span class="text fade-in-delay" style="--delay: 11">Erlebnisse</span>
+          <div class="video-container fade-in-delay" style="--delay: 12">
+            <video id="video7" class="video" playsinline webkit-playsinline loop muted>
+              <source src="media/720_video7.mp4" type="video/mp4">
+            </video>
+          </div>
+          <span class="text fade-in-delay" style="--delay: 13">durch</span>
+          <div class="video-container fade-in-delay" style="--delay: 14">
+            <video id="video8" class="video" playsinline webkit-playsinline loop muted>
+              <source src="media/720_video8.mp4" type="video/mp4">
+            </video>
+          </div>
+          <span class="text fade-in-delay styled" style="--delay: 15">Design.</span>
+        </div>
       </div>
-      <span class="text fade-in-delay" style="--delay: 5">programmiere</span>
-      <div class="video-container fade-in-delay" style="--delay: 6">
-        <video id="video4" class="video" playsinline webkit-playsinline loop muted>
-          <source src="media/720_video4.mp4" type="video/mp4">
-        </video>
-      </div>
-      <span class="text fade-in-delay" style="--delay: 7">ich,</span>
-      <div class="video-container fade-in-delay" style="--delay: 8">
-        <video id="video5" class="video" playsinline webkit-playsinline loop muted>
-          <source src="media/720_video5.mp4" type="video/mp4">
-        </video>
-      </div>
-      <span class="text fade-in-delay" style="--delay: 9">erschaffe</span>
-      <div class="video-container fade-in-delay" style="--delay: 10">
-        <video id="video6" class="video" playsinline webkit-playsinline loop muted>
-          <source src="media/720_video6.mp4" type="video/mp4">
-        </video>
-      </div>
-      <span class="text fade-in-delay" style="--delay: 11">Erlebnisse</span>
-      <div class="video-container fade-in-delay" style="--delay: 12">
-        <video id="video7" class="video" playsinline webkit-playsinline loop muted>
-          <source src="media/720_video7.mp4" type="video/mp4">
-        </video>
-      </div>
-      <span class="text fade-in-delay" style="--delay: 13">durch</span>
-      <div class="video-container fade-in-delay" style="--delay: 14">
-        <video id="video8" class="video" playsinline webkit-playsinline loop muted>
-          <source src="media/720_video8.mp4" type="video/mp4">
-        </video>
-      </div>
-      <span class="text fade-in-delay" style="--delay: 15">Design.</span>
-    </div>
-  </div>
-</section>
+    </section>
     <section id="showcase" class="section">
       <div class="container">
         <h2 class="fade-in">Meine Projekte</h2>
@@ -815,79 +928,44 @@
       </defs>
     </svg>
     <script>
-document.getElementById("video1").setAttribute("autoplay", "autoplay");
-document.getElementById("video2").setAttribute("autoplay", "autoplay");
-document.getElementById("video3").setAttribute("autoplay", "autoplay");
-document.getElementById("video4").setAttribute("autoplay", "autoplay");
-document.getElementById("video5").setAttribute("autoplay", "autoplay");
-document.getElementById("video6").setAttribute("autoplay", "autoplay");
-document.getElementById("video7").setAttribute("autoplay", "autoplay");
-document.getElementById("video8").setAttribute("autoplay", "autoplay");
+      document.getElementById("video1").setAttribute("autoplay", "autoplay");
+      document.getElementById("video2").setAttribute("autoplay", "autoplay");
+      document.getElementById("video3").setAttribute("autoplay", "autoplay");
+      document.getElementById("video4").setAttribute("autoplay", "autoplay");
+      document.getElementById("video5").setAttribute("autoplay", "autoplay");
+      document.getElementById("video6").setAttribute("autoplay", "autoplay");
+      document.getElementById("video7").setAttribute("autoplay", "autoplay");
+      document.getElementById("video8").setAttribute("autoplay", "autoplay");
 
-  window.addEventListener('load', function() {
-    const loadingScreen = document.getElementById('loading-screen');
-    const videos = document.getElementsByTagName('video');
-    const images = document.getElementsByTagName('img');
-    
-    let totalElements = videos.length + images.length;
-    let loadedElements = 0;
+      function smoothScroll(target, duration) {
+        var targetElement = document.querySelector(target);
+        var targetPosition = targetElement.getBoundingClientRect().top;
+        var startPosition = window.pageYOffset;
+        var distance = targetPosition - startPosition;
+        var startTime = null;
 
-    function hideLoadingScreen() {
-      loadedElements++;
-      if (loadedElements === totalElements) {
-        loadingScreen.style.display = 'none';
+        function animation(currentTime) {
+          if (startTime === null) startTime = currentTime;
+          var timeElapsed = currentTime - startTime;
+          var run = ease(timeElapsed, startPosition, distance, duration);
+          window.scrollTo(0, run);
+          if (timeElapsed < duration) requestAnimationFrame(animation);
+        }
+
+        function ease(t, b, c, d) {
+          t /= d / 2;
+          if (t < 1) return c / 2 * t * t + b;
+          t--;
+          return -c / 2 * (t * (t - 2) - 1) + b;
+        }
+        requestAnimationFrame(animation);
       }
-    }
-
-    for (let video of videos) {
-      if (video.readyState >= 3) {
-        hideLoadingScreen();
-      } else {
-        video.addEventListener('canplay', hideLoadingScreen);
-      }
-    }
-
-    for (let img of images) {
-      if (img.complete) {
-        hideLoadingScreen();
-      } else {
-        img.addEventListener('load', hideLoadingScreen);
-      }
-    }
-  });
-      
-function smoothScroll(target, duration) {
-  var targetElement = document.querySelector(target);
-  var targetPosition = targetElement.getBoundingClientRect().top;
-  var startPosition = window.pageYOffset;
-  var distance = targetPosition - startPosition;
-  var startTime = null;
-
-  function animation(currentTime) {
-    if (startTime === null) startTime = currentTime;
-    var timeElapsed = currentTime - startTime;
-    var run = ease(timeElapsed, startPosition, distance, duration);
-    window.scrollTo(0, run);
-    if (timeElapsed < duration) requestAnimationFrame(animation);
-  }
-
-  function ease(t, b, c, d) {
-    t /= d / 2;
-    if (t < 1) return c / 2 * t * t + b;
-    t--;
-    return -c / 2 * (t * (t - 2) - 1) + b;
-  }
-
-  requestAnimationFrame(animation);
-}
-
-document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-  anchor.addEventListener("click", function(e) {
-    e.preventDefault();
-    var target = this.getAttribute("href");
-    smoothScroll(target, 1500);
-  });
-  
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function(e) {
+          e.preventDefault();
+          var target = this.getAttribute("href");
+          smoothScroll(target, 1500);
+        });
         const fadeElements = document.querySelectorAll(".fade-in");
         const observer = new IntersectionObserver(
           (entries) => {
@@ -902,24 +980,21 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
         fadeElements.forEach((element) => {
           observer.observe(element);
         });
-		const fadeDelayElements = document.querySelectorAll(".fade-in-delay");
-		const delayObserver = new IntersectionObserver(
-		  (entries) => {
-			entries.forEach((entry) => {
-			  if (entry.isIntersecting) {
-				entry.target.classList.add("visible");
-				delayObserver.unobserve(entry.target);
-			  }
-			});
-		  },
-		  {
-			threshold: 0.1
-		  }
-		);
-
-		fadeDelayElements.forEach((element) => {
-		  delayObserver.observe(element);
-		});
+        const fadeDelayElements = document.querySelectorAll(".fade-in-delay");
+        const delayObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                delayObserver.unobserve(entry.target);
+              }
+            });
+          }, {
+            threshold: 0.1
+          });
+        fadeDelayElements.forEach((element) => {
+          delayObserver.observe(element);
+        });
         const skillBars = document.querySelectorAll(".skill-progress");
         const skillObserver = new IntersectionObserver(
           (entries) => {
@@ -956,20 +1031,17 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
           }
         });
       });
-	  
-  document.addEventListener('DOMContentLoaded', function() {
-    const timelineItems = document.querySelectorAll('.timeline-item');
-    
-    timelineItems.forEach(item => {
-      item.addEventListener('mouseenter', function() {
-        this.classList.add('hovered');
+      document.addEventListener('DOMContentLoaded', function() {
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        timelineItems.forEach(item => {
+          item.addEventListener('mouseenter', function() {
+            this.classList.add('hovered');
+          });
+          item.addEventListener('mouseleave', function() {
+            this.classList.remove('hovered');
+          });
+        });
       });
-      
-      item.addEventListener('mouseleave', function() {
-        this.classList.remove('hovered');
-      });
-    });
-  });
     </script>
   </body>
 </html>

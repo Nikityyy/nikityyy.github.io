@@ -855,44 +855,6 @@ document.getElementById("video8").setAttribute("autoplay", "autoplay");
       }
     }
   });
-  
-let lastScrollTop = 0;
-const slowScrollFactor = 0.4;
-
-window.addEventListener('wheel', function(e) {
-    e.preventDefault();
-    
-    const delta = e.deltaY * slowScrollFactor;
-    const newScrollTop = window.pageYOffset + delta;
-    
-    window.scrollTo({
-        top: newScrollTop,
-        behavior: 'auto'
-    });
-}, { passive: false });
-
-document.body.addEventListener('touchmove', function(e) {
-    e.preventDefault();
-}, { passive: false });
-
-let touchStartY = 0;
-document.body.addEventListener('touchstart', function(e) {
-    touchStartY = e.touches[0].clientY;
-});
-
-document.body.addEventListener('touchmove', function(e) {
-    const touchY = e.touches[0].clientY;
-    const touchDelta = touchStartY - touchY;
-    
-    const newScrollTop = window.pageYOffset + (touchDelta * slowScrollFactor);
-    
-    window.scrollTo({
-        top: newScrollTop,
-        behavior: 'auto'
-    });
-    
-    touchStartY = touchY;
-}, { passive: false });
       
 function smoothScroll(target, duration) {
   var targetElement = document.querySelector(target);

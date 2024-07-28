@@ -24,6 +24,20 @@
       font-family: "Poppins", arial, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
+	
+	::-webkit-scrollbar {
+      width: 11px;
+    }
+
+    ::-webkit-scrollbar-track {
+      border: solid 3px transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      box-shadow: inset 0 0 10px 10px white;
+      border: solid 3px transparent;
+      border-radius: 25px;
+    }
 
     .main {
       display: flex;
@@ -492,6 +506,13 @@
         font-size: 2rem;
       }
     }
+	
+	@media (max-width: 400px) {
+      .contact {
+		max-width: 110px;
+		text-align: center;
+	  }
+    }
   </style>
 </head>
 
@@ -656,7 +677,7 @@
       <p class="fade-in">
         Interessiert an einer Zusammenarbeit? Kontaktieren Sie mich!
       </p>
-      <a href="mailto:bergernikita1807@gmail.com" class="cta-button fade-in">Kontaktieren Sie mich</a>
+      <a href="mailto:bergernikita1807@gmail.com" class="cta-button contact fade-in">Kontaktieren Sie mich</a>
       <div class="social-links fade-in">
         <a href="https://github.com/Nikityyy" target="_blank" class="social-icon">
           <img src="media/octicon--mark-github-16.webp" alt="GitHub" width="40" height="40">

@@ -4,32 +4,43 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Nikita - Data Engineer</title>
-    <link rel="icon" href="media/icon.webp">
+    <link rel="icon" href="media/icons/icon.webp">
     <meta name="description" content="Entdecken Sie mein Portfolio: eine Auswahl meiner besten Projekte, detaillierte Informationen über meine berufliche Erfahrung und alle Kontaktmöglichkeiten. Lassen Sie sich inspirieren und erfahren Sie mehr über meine Arbeit als Webdesigner und Entwickler.">
-    <link rel="prefetch" href="media/octicon--mark-github-16.webp" />
-    <link rel="prefetch" href="media/simple-icons--huggingface.webp" />
-    <link rel="prefetch" href="media/video.webp" />
-    <link rel="prefetch" href="media/720_video2.webp" />
-    <link rel="prefetch" href="media/720_video3.webp" />
-    <link rel="prefetch" href="media/720_video4.webp" />
-    <link rel="prefetch" href="media/720_video5.webp" />
-    <link rel="prefetch" href="media/720_video6.webp" />
-    <link rel="prefetch" href="media/720_video7.webp" />
-    <link rel="prefetch" href="media/720_video8.webp" />
+    <link rel="prefetch" href="media/icons/icon.webp" />
+    <link rel="prefetch" href="media/grain/noise.png" />
+    <link rel="prefetch" href="media/icons/octicon--mark-github-16.webp" />
+    <link rel="prefetch" href="media/icons/simple-icons--huggingface.webp" />
+    <link rel="prefetch" href="media/videos/video.webp" />
+    <link rel="prefetch" href="media/videos/720_video2.webp" />
+    <link rel="prefetch" href="media/videos/720_video3.webp" />
+    <link rel="prefetch" href="media/videos/720_video4.webp" />
+    <link rel="prefetch" href="media/videos/720_video5.webp" />
+    <link rel="prefetch" href="media/videos/720_video6.webp" />
+    <link rel="prefetch" href="media/videos/720_video7.webp" />
+    <link rel="prefetch" href="media/videos/720_video8.webp" />
+    <link rel="prefetch" href="media/cursors/cursor-default.svg" />
+    <link rel="prefetch" href="media/cursors/cursor-text.svg" />
+    <link rel="prefetch" href="media/cursors/cursor-click.svg" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112.5,300;112.5,600;125,600&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script> -->
     <style>
       @font-face {
         font-family: 'Antipasto Pro';
-        src: url('media/AntipastoPro-Medium.woff2') format('woff2');
+        src: url('media/fonts/AntipastoPro-Medium.woff2') format('woff2');
         font-weight: 500;
       }
 
       /* General Styles */
+      :root {
+        --default-cursor: url("media/cursors/cursor-default.svg"), auto;
+        --text-cursor: url("media/cursors/cursor-text.svg"), auto;
+        --click-cursor: url("media/cursors/cursor-click.svg"), auto;
+      }
+
       body {
         margin: 0;
         background-color: #000;
@@ -37,6 +48,21 @@
         font-family: "Poppins", arial, sans-serif;
         -webkit-tap-highlight-color: transparent;
         overflow-x: hidden;
+        cursor: var(--default-cursor);
+      }
+
+      .cursor-follower {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 20px;
+        height: 20px;
+        border-radius: 100%;
+        mix-blend-mode: difference;
+        opacity: 0;
+        z-index: 10000;
+        user-select: none;
+        pointer-events: none;
       }
 
       canvas {
@@ -66,7 +92,7 @@
         height: calc(100% + 20rem);
         z-index: 9999;
         position: fixed;
-        background-image: url('media/noise.png');
+        background-image: url('media/grain/noise.png');
         opacity: 0.15;
         pointer-events: none;
         -webkit-animation: noise 1s steps(2) infinite;
@@ -327,6 +353,7 @@
         font-weight: 500;
         font-size: 18px;
         position: relative;
+        cursor: var(--click-cursor);
       }
 
       .navbar a::after,
@@ -342,9 +369,12 @@
         transition: transform 0.3s ease;
       }
 
-      .navbar a:hover::after,
-      #showcase .container a:hover::after {
-        transform: scaleX(1);
+      @media (hover: hover) {
+
+        .navbar a:hover::after,
+        #showcase .container a:hover::after {
+          transform: scaleX(1);
+        }
       }
 
       #showcase {
@@ -357,7 +387,7 @@
         border: none;
         color: white;
         font-size: 24px;
-        cursor: pointer;
+        cursor: var(--click-cursor);
         position: fixed;
         top: 20px;
         right: 20px;
@@ -420,8 +450,10 @@
         transition: font 0.7s ease-in;
       }
 
-      .start h1 b:hover {
-        font-variation-settings: "wght"700, "wdth"125;
+      @media (hover: hover) {
+        .start h1 b:hover {
+          font-variation-settings: "wght"700, "wdth"125;
+        }
       }
 
       .arrow {
@@ -435,15 +467,18 @@
         left: 50%;
         transform: rotate(45deg) translate(-80%, -10%);
         animation: bounce 2s infinite ease-out;
-        cursor: pointer;
+        cursor: var(--click-cursor);
       }
 
-      <!-- #about { -->
-        <!-- background-color: #000; -->
-        <!-- border-top-left-radius: 30px; -->
-        <!-- border-top-right-radius: 30px; -->
-        <!-- z-index: 2000; -->
-      <!-- } -->
+      < !-- #about {
+        -->< !-- background-color: #000;
+        -->< !-- border-top-left-radius: 30px;
+        -->< !-- border-top-right-radius: 30px;
+        -->< !-- z-index: 2000;
+        -->< !--
+      }
+
+      -->
 
       /* Projects Section */
       .project,
@@ -455,10 +490,13 @@
         transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
 
-      .project:hover,
-      .thesis:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+      @media (hover: hover) {
+
+        .project:hover,
+        .thesis:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+        }
       }
 
       /* Skills Section */
@@ -531,8 +569,10 @@
         transition: all 0.4s ease;
       }
 
-      .timeline-content:hover {
-        transform: scale(1.01);
+      @media (hover: hover) {
+        .timeline-content:hover {
+          transform: scale(1.01);
+        }
       }
 
       .left {
@@ -583,13 +623,22 @@
         font-weight: 600;
         transition: all 0.3s ease;
         order: 1;
+        cursor: var(--click-cursor);
       }
 
-      .cta-button:hover {
-        background-color: #000;
-        color: #fff;
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+      @media (hover: hover) {
+        .cta-button:hover {
+          background-color: #000;
+          color: #fff;
+          box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
       }
+	  
+	  .cta-button:active {
+          background-color: #000;
+          color: #fff;
+          box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
 
       .social-links {
         display: flex;
@@ -599,10 +648,13 @@
 
       .social-icon img {
         transition: transform 0.3s ease;
+        cursor: var(--click-cursor);
       }
 
-      .social-icon img:hover {
-        transform: scale(1.1);
+      @media (hover: hover) {
+        .social-icon img:hover {
+          transform: scale(1.1);
+        }
       }
 
       /* About section */
@@ -633,8 +685,10 @@
         transition: transform 0.3s ease;
       }
 
-      .video-container:hover {
-        transform: scale(1.05);
+      @media (hover: hover) {
+        .video-container:hover {
+          transform: scale(1.05);
+        }
       }
 
       .video {
@@ -667,7 +721,7 @@
         background-color: #fff;
         border-radius: 10px;
         padding: 0 10px;
-        cursor: pointer;
+        cursor: var(--click-cursor);
       }
 
       /* Animations */
@@ -842,6 +896,7 @@
     </style>
   </head>
   <body>
+    <span class="cursor-follower"></span>
     <div class="grain"></div>
     <button class="navbar-toggle" id="navbarToggle">☰</button>
     <nav class="navbar" id="navbar">
@@ -879,9 +934,9 @@
             <b>a</b>
           </h1>
         </div>
-        <img class="video" id="video1" src="media/video.webp"></img>
+        <img class="video" id="video1" src="media/videos/video.webp"></img>
         <!-- <video id="video1" playsinline webkit-playsinline loop muted> -->
-        <!-- <source src="media/video.mp4" type="video/mp4"> -->
+        <!-- <source src="media/videos/video.mp4" type="video/mp4"> -->
         <!-- </source> -->
         </video>
       </div>
@@ -894,53 +949,53 @@
           <div class="about-container">
             <span class="text fade-in-delay" style="--delay: 1">Seitdem</span>
             <div class="video-container fade-in-delay" style="--delay: 2">
-              <img class="video" id="video1" src="media/720_video2.webp"></img>
+              <img class="video" id="video1" src="media/videos/720_video2.webp"></img>
               <!-- <video id="video2" class="video" playsinline webkit-playsinline loop muted> -->
-              <!-- <source src="media/720_video2.mp4" type="video/mp4"> -->
+              <!-- <source src="media/videos/720_video2.mp4" type="video/mp4"> -->
               <!-- </video> -->
             </div>
             <span class="text fade-in-delay" style="--delay: 3">ich 10 bin,</span>
             <div class="video-container fade-in-delay" style="--delay: 4">
-              <img class="video" id="video1" src="media/720_video3.webp"></img>
+              <img class="video" id="video1" src="media/videos/720_video3.webp"></img>
               <!-- <video id="video3" class="video" playsinline webkit-playsinline loop muted> -->
-              <!-- <source src="media/720_video3.mp4" type="video/mp4"> -->
+              <!-- <source src="media/videos/720_video3.mp4" type="video/mp4"> -->
               <!-- </video> -->
             </div>
             <div class="emo-wrapper">
               <span class="text fade-in-delay styled emo-button" style="--delay: 5">programmiere</span>
             </div>
             <div class="video-container fade-in-delay" style="--delay: 6">
-              <img class="video" id="video1" src="media/720_video4.webp"></img>
+              <img class="video" id="video1" src="media/videos/720_video4.webp"></img>
               <!-- <video id="video4" class="video" playsinline webkit-playsinline loop muted> -->
-              <!-- <source src="media/720_video4.mp4" type="video/mp4"> -->
+              <!-- <source src="media/videos/720_video4.mp4" type="video/mp4"> -->
               <!-- </video> -->
             </div>
             <span class="text fade-in-delay" style="--delay: 7">ich,</span>
             <div class="video-container fade-in-delay" style="--delay: 8">
-              <img class="video" id="video1" src="media/720_video5.webp"></img>
+              <img class="video" id="video1" src="media/videos/720_video5.webp"></img>
               <!-- <video id="video5" class="video" playsinline webkit-playsinline loop muted> -->
-              <!-- <source src="media/720_video5.mp4" type="video/mp4"> -->
+              <!-- <source src="media/videos/720_video5.mp4" type="video/mp4"> -->
               <!-- </video> -->
             </div>
             <span class="text fade-in-delay" style="--delay: 9">erschaffe</span>
             <div class="video-container fade-in-delay" style="--delay: 10">
-              <img class="video" id="video1" src="media/720_video6.webp"></img>
+              <img class="video" id="video1" src="media/videos/720_video6.webp"></img>
               <!-- <video id="video6" class="video" playsinline webkit-playsinline loop muted> -->
-              <!-- <source src="media/720_video6.mp4" type="video/mp4"> -->
+              <!-- <source src="media/videos/720_video6.mp4" type="video/mp4"> -->
               <!-- </video> -->
             </div>
             <span class="text fade-in-delay" style="--delay: 11">Erlebnisse</span>
             <div class="video-container fade-in-delay" style="--delay: 12">
-              <img class="video" id="video1" src="media/720_video7.webp"></img>
+              <img class="video" id="video1" src="media/videos/720_video7.webp"></img>
               <!-- <video id="video7" class="video" playsinline webkit-playsinline loop muted> -->
-              <!-- <source src="media/720_video7.mp4" type="video/mp4"> -->
+              <!-- <source src="media/videos/720_video7.mp4" type="video/mp4"> -->
               <!-- </video> -->
             </div>
             <span class="text fade-in-delay" style="--delay: 13">durch</span>
             <div class="video-container fade-in-delay" style="--delay: 14">
-              <img class="video" id="video1" src="media/720_video8.webp"></img>
+              <img class="video" id="video1" src="media/videos/720_video8.webp"></img>
               <!-- <video id="video8" class="video" playsinline webkit-playsinline loop muted> -->
-              <!-- <source src="media/720_video8.mp4" type="video/mp4"> -->
+              <!-- <source src="media/videos/720_video8.mp4" type="video/mp4"> -->
               <!-- </video> -->
             </div>
             <div class="other-emo-wrapper">
@@ -1036,7 +1091,7 @@
           <div class="thesis fade-in">
             <h3> Diplomarbeit: "Die Rolle der Datenanalyse im modernen Sport" </h3>
             <p> In dieser Arbeit habe ich mich mit der KI-Seite der Datenanalyse im Sport befasst. Ich habe bestehende Algorithmen untersucht und einen neuen Algorithmus entwickelt, der eine erhebliche Verbesserung in der Zeitvorhersage ermöglicht. </p>
-            <a href="" onclick="alert('Noch in Arbeit.')" class="cta-button">Mehr lesen</a>
+            <a href="" onclick="dontExist(event)" class="cta-button">Mehr lesen</a>
           </div>
         </div>
       </section>
@@ -1048,10 +1103,10 @@
           <a href="mailto:bergernikita1807@gmail.com" class="cta-button contact fade-in">Kontaktieren Sie mich</a>
           <div class="social-links fade-in">
             <a href="https://github.com/Nikityyy" target="_blank" class="social-icon">
-              <img src="media/octicon--mark-github-16.webp" alt="GitHub" width="40" height="40">
+              <img src="media/icons/octicon--mark-github-16.webp" alt="GitHub" width="40" height="40">
             </a>
             <a href="https://huggingface.co/Nikity" target="_blank" class="social-icon">
-              <img src="media/simple-icons--huggingface.webp" alt="Hugging Face" width="40" height="40">
+              <img src="media/icons/simple-icons--huggingface.webp" alt="Hugging Face" width="40" height="40">
             </a>
           </div>
         </div>
@@ -1172,9 +1227,16 @@
           });
         });
       });
+
+      function dontExist(event) {
+        event.preventDefault();
+        alert('Noch in Arbeit.');
+        return false;
+      }
     </script>
     <!-- <script src="js/mouse.js"></script> -->
     <!-- <script src="js/scroll.js"></script> -->
     <script src="js/emojis.js"></script>
+    <script src="js/follower.js"></script>
   </body>
 </html>

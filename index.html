@@ -6,15 +6,22 @@
     <title>Nikita - Data Engineer</title>
     <link rel="icon" href="media/icon.webp">
     <meta name="description" content="Entdecken Sie mein Portfolio: eine Auswahl meiner besten Projekte, detaillierte Informationen über meine berufliche Erfahrung und alle Kontaktmöglichkeiten. Lassen Sie sich inspirieren und erfahren Sie mehr über meine Arbeit als Webdesigner und Entwickler.">
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="prefetch" href="media/octicon--mark-github-16.webp" />
     <link rel="prefetch" href="media/simple-icons--huggingface.webp" />
-    <link rel="preload" as="video" href="media/video.mp4">
+    <link rel="prefetch" href="media/video.webp" />
+    <link rel="prefetch" href="media/720_video2.webp" />
+    <link rel="prefetch" href="media/720_video3.webp" />
+    <link rel="prefetch" href="media/720_video4.webp" />
+    <link rel="prefetch" href="media/720_video5.webp" />
+    <link rel="prefetch" href="media/720_video6.webp" />
+    <link rel="prefetch" href="media/720_video7.webp" />
+    <link rel="prefetch" href="media/720_video8.webp" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112.5,300;112.5,600;125,600&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Gupter:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
     <style>
       @font-face {
         font-family: 'Antipasto Pro';
@@ -30,6 +37,14 @@
         font-family: "Poppins", arial, sans-serif;
         -webkit-tap-highlight-color: transparent;
         overflow-x: hidden;
+      }
+
+      canvas {
+        display: block;
+        width: 100vw;
+        height: 100svh;
+        position: relative;
+        animation: opacity 12s forwards;
       }
 
       .grain {
@@ -56,6 +71,70 @@
         pointer-events: none;
         -webkit-animation: noise 1s steps(2) infinite;
         animation: noise 1s steps(2) infinite;
+      }
+
+      .treat {
+        --scale-x: 0;
+        --scale-y: 0;
+        pointer-events: none;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: calc(50% - .5rem);
+        border-radius: 50%;
+        width: 1em;
+        height: 1em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 5vmin;
+        transform: translate(calc(var(--x) * 1px), calc(var(--y) * 1px)) translate(-50%, -50%);
+        pointer-events: none;
+        z-index: 10000;
+        -webkit-animation: treat-enter 0.1s ease-in backwards, treat-exit 300ms linear calc((var(--lifetime, 3000) * 1ms) - 300ms) forwards;
+        animation: treat-enter 0.1s ease-in backwards, treat-exit 300ms linear calc((var(--lifetime, 3000) * 1ms) - 300ms) forwards;
+      }
+
+      @-webkit-keyframes treat-enter {
+        from {
+          opacity: 0;
+        }
+      }
+
+      @keyframes treat-enter {
+        from {
+          opacity: 0;
+        }
+      }
+
+      @-webkit-keyframes treat-exit {
+        to {
+          opacity: 0;
+        }
+      }
+
+      @keyframes treat-exit {
+        to {
+          opacity: 0;
+        }
+      }
+
+      .treat .inner {
+        -webkit-animation: inner-rotate 0.6s linear infinite;
+        animation: inner-rotate 0.6s linear infinite;
+        transform: rotate(calc(-1turn * var(--direction)));
+      }
+
+      @-webkit-keyframes inner-rotate {
+        to {
+          transform: none;
+        }
+      }
+
+      @keyframes inner-rotate {
+        to {
+          transform: none;
+        }
       }
 
       @-webkit-keyframes noise {
@@ -192,6 +271,7 @@
       .section {
         padding: 50px 0;
         position: relative;
+        box-sizing: border-box;
         overflow: hidden;
       }
 
@@ -206,22 +286,23 @@
       /* Navigation */
       .navbar {
         position: fixed;
-        top: 0;
-        left: -100%;
-        width: 250px;
-        height: 100vh;
+        top: -100%;
+        left: 0;
+        width: 100vw;
+        height: 100svh;
         background-color: rgba(0, 0, 0, 0.75);
         backdrop-filter: url("#svgfilter");
-        transition: left 0.4s ease;
+        transition: top 0.8s;
         display: flex;
         flex-direction: column;
         justify-content: center;
         padding: 0;
         z-index: 1000;
+        pointer-events: none;
       }
 
       .navbar.active {
-        left: 0;
+        top: 0;
       }
 
       .navbar ul {
@@ -235,6 +316,7 @@
 
       .navbar li {
         margin: 15px 0;
+        pointer-events: all;
       }
 
       .navbar a,
@@ -263,6 +345,10 @@
       .navbar a:hover::after,
       #showcase .container a:hover::after {
         transform: scaleX(1);
+      }
+
+      #showcase {
+        background-color: #000;
       }
 
       .navbar-toggle {
@@ -298,9 +384,10 @@
         max-width: 1200px;
         overflow: hidden;
         -webkit-mask-image: -webkit-radial-gradient(white, black);
+        pointer-events: none;
       }
 
-      .start video {
+      .start img {
         width: 90%;
         max-width: 1200px;
         z-index: -1;
@@ -308,8 +395,12 @@
         position: relative;
       }
 
+      .inner-start {
+        pointer-events: all;
+      }
+
       .start h1 {
-        font-family: 'Antipasto Pro', "Poppins", arial, sans-serif;
+        font-family: Archivo, sans-serif;
         position: absolute;
         font-size: clamp(0px, 18vw, 260px);
         margin: 0;
@@ -317,6 +408,20 @@
         left: 10%;
         color: white;
         mix-blend-mode: difference;
+      }
+
+      .start h1,
+      .start h1 b {
+        color: rgba(255, 255, 255, 75%);
+        font-variation-settings: "wght"800, "wdth"70;
+      }
+
+      .start h1 b {
+        transition: font 0.7s ease-in;
+      }
+
+      .start h1 b:hover {
+        font-variation-settings: "wght"700, "wdth"125;
       }
 
       .arrow {
@@ -331,6 +436,13 @@
         transform: rotate(45deg) translate(-80%, -10%);
         animation: bounce 2s infinite ease-out;
         cursor: pointer;
+      }
+
+      #about {
+        background-color: #000;
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
+        z-index: 2000;
       }
 
       /* Projects Section */
@@ -528,8 +640,8 @@
       .video {
         width: 100%;
         height: 100%;
-        object-fit: cover;
-        filter: blur(0.05rem) saturate(0.7) contrast(1.5) brightness(1.2);
+        object-fit: fill;
+        filter: blur(0.05rem) saturate(0.7) contrast(1.5);
       }
 
       .fade-in-delay {
@@ -555,6 +667,7 @@
         background-color: #fff;
         border-radius: 10px;
         padding: 0 10px;
+        cursor: pointer;
       }
 
       /* Animations */
@@ -619,7 +732,7 @@
           overflow: hidden;
         }
 
-        .start video {
+        .start img {
           height: 100vh;
           width: auto;
           max-width: none;
@@ -656,6 +769,10 @@
           width: auto;
           padding-left: 70px;
           padding-right: 25px;
+        }
+
+        .timeline-content {
+          width: 100%;
         }
 
         .left::after,
@@ -695,7 +812,7 @@
         }
 
         .text {
-          font-size: clamp(1.5rem, 4vw, 3rem);
+          font-size: clamp(1.2rem, 10vw, 7rem);
         }
 
         .video-container {
@@ -714,7 +831,7 @@
         }
 
         .text {
-          font-size: clamp(1.2rem, 3vw, 2.5rem);
+          font-size: clamp(1.2rem, 10vw, 7rem);
         }
 
         .video-container {
@@ -749,177 +866,197 @@
         </li>
       </ul>
     </nav>
-    <section class="main">
+    <section class="main scroll">
+      <!-- <canvas></canvas> -->
       <div class="start">
         <div class="inner-start">
-          <h1>Nikita</h1>
+          <h1>
+            <b>N</b>
+            <b>i</b>
+            <b>k</b>
+            <b>i</b>
+            <b>t</b>
+            <b>a</b>
+          </h1>
         </div>
-        <video id="video1" playsinline webkit-playsinline loop muted>
-          <source src="media/video.mp4" type="video/mp4">
-          </source>
+        <img class="video" id="video1" src="media/video.webp"></img>
+        <!-- <video id="video1" playsinline webkit-playsinline loop muted> -->
+        <!-- <source src="media/video.mp4" type="video/mp4"> -->
+        <!-- </source> -->
         </video>
       </div>
       <a href="#about" class="arrow" aria-label="Scroll down"></a>
     </section>
-    <section id="about" class="section">
-      <div class="container">
-        <h2 class="fade-in">Über mich</h2>
-        <div class="about-container">
-          <span class="text fade-in-delay" style="--delay: 1">Seitdem</span>
-          <div class="video-container fade-in-delay" style="--delay: 2">
-            <video id="video2" class="video" playsinline webkit-playsinline loop muted>
-              <source src="media/720_video2.mp4" type="video/mp4">
-            </video>
-          </div>
-          <span class="text fade-in-delay" style="--delay: 3">ich 10 bin,</span>
-          <div class="video-container fade-in-delay" style="--delay: 4">
-            <video id="video3" class="video" playsinline webkit-playsinline loop muted>
-              <source src="media/720_video3.mp4" type="video/mp4">
-            </video>
-          </div>
-          <span class="text fade-in-delay styled" style="--delay: 5">programmiere</span>
-          <div class="video-container fade-in-delay" style="--delay: 6">
-            <video id="video4" class="video" playsinline webkit-playsinline loop muted>
-              <source src="media/720_video4.mp4" type="video/mp4">
-            </video>
-          </div>
-          <span class="text fade-in-delay" style="--delay: 7">ich,</span>
-          <div class="video-container fade-in-delay" style="--delay: 8">
-            <video id="video5" class="video" playsinline webkit-playsinline loop muted>
-              <source src="media/720_video5.mp4" type="video/mp4">
-            </video>
-          </div>
-          <span class="text fade-in-delay" style="--delay: 9">erschaffe</span>
-          <div class="video-container fade-in-delay" style="--delay: 10">
-            <video id="video6" class="video" playsinline webkit-playsinline loop muted>
-              <source src="media/720_video6.mp4" type="video/mp4">
-            </video>
-          </div>
-          <span class="text fade-in-delay" style="--delay: 11">Erlebnisse</span>
-          <div class="video-container fade-in-delay" style="--delay: 12">
-            <video id="video7" class="video" playsinline webkit-playsinline loop muted>
-              <source src="media/720_video7.mp4" type="video/mp4">
-            </video>
-          </div>
-          <span class="text fade-in-delay" style="--delay: 13">durch</span>
-          <div class="video-container fade-in-delay" style="--delay: 14">
-            <video id="video8" class="video" playsinline webkit-playsinline loop muted>
-              <source src="media/720_video8.mp4" type="video/mp4">
-            </video>
-          </div>
-          <span class="text fade-in-delay styled" style="--delay: 15">Design.</span>
-        </div>
-      </div>
-    </section>
-    <section id="showcase" class="section">
-      <div class="container">
-        <h2 class="fade-in">Meine Projekte</h2>
-        <div class="project fade-in">
-          <h3>Projekt 1: Conomy</h3>
-          <p> Entwickeln einer Software, die es Unternehmen ermöglicht Ihre Website auf viele betriebswirtschaftliche Eigenschaften zu überprüfen und zu optimieren. </p>
-          <a href="https://nikityyy.github.io/Conomy/" target="_blank">Mehr erfahren</a>
-        </div>
-        <div class="project fade-in">
-          <h3>Projekt 2: Musify</h3>
-          <p> Eine werbefreie Musik-Streaming-Webanwendung, die mit Spotify funktioniert, indem es Spotify embedded. </p>
-          <a href="https://nikityyy.github.io/Musify/" target="_blank">Mehr erfahren</a>
-        </div>
-        <div class="project fade-in">
-          <h3>Projekt 3: Pisa</h3>
-          <p> Entwicklung und Training eines eigenen Large Language Models (LLM) basierend auf selbst gescrapten Daten aus dem Internet. Alle Daten wurden legal durch Web-Scraping gesammelt und zu einem Datensatz zusammengestellt. Anschließend wurde das LLM auf diesen Daten trainiert und im Chat-Modus weiter feinabgestimmt. </p>
-        </div>
-      </div>
-      </div>
-    </section>
-    <section id="skills" class="section">
-      <div class="container">
-        <h2 class="fade-in">Meine Fähigkeiten</h2>
-        <div class="skill fade-in">
-          <h3>MS Office</h3>
-          <div class="skill-bar">
-            <div class="skill-progress" data-width="100%"></div>
-          </div>
-        </div>
-        <div class="skill fade-in">
-          <h3>HTML | CSS | JS</h3>
-          <div class="skill-bar">
-            <div class="skill-progress" data-width="90%"></div>
-          </div>
-        </div>
-        <div class="skill fade-in">
-          <h3>Python</h3>
-          <div class="skill-bar">
-            <div class="skill-progress" data-width="85%"></div>
-          </div>
-        </div>
-        <div class="skill fade-in">
-          <h3>Node.js | Express | Flask</h3>
-          <div class="skill-bar">
-            <div class="skill-progress" data-width="75%"></div>
-          </div>
-        </div>
-        <div class="skill fade-in">
-          <h3>PyTorch</h3>
-          <div class="skill-bar">
-            <div class="skill-progress" data-width="80%"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section id="experience" class="section">
-      <div class="container">
-        <h2 class="fade-in">Berufserfahrung</h2>
-        <div class="timeline">
-          <div class="timeline-item left fade-in">
-            <div class="timeline-content">
-              <h3>Freelancer</h3>
-              <h4>GCT Gruber Consulting & Technology</h4>
-              <p>April 2024 - Juli 2024</p>
-              <p> Erstellen einer Website <br>
-                <i>(Website nicht aktiv)</i>
-              </p>
+    <div class="scroll">
+      <section id="about" class="section">
+        <div class="container">
+          <h2 class="fade-in">Über mich</h2>
+          <div class="about-container">
+            <span class="text fade-in-delay" style="--delay: 1">Seitdem</span>
+            <div class="video-container fade-in-delay" style="--delay: 2">
+              <img class="video" id="video1" src="media/720_video2.webp"></img>
+              <!-- <video id="video2" class="video" playsinline webkit-playsinline loop muted> -->
+              <!-- <source src="media/720_video2.mp4" type="video/mp4"> -->
+              <!-- </video> -->
             </div>
-          </div>
-          <div class="timeline-item right fade-in">
-            <div class="timeline-content">
-              <h3>Praktikant</h3>
-              <h4>anqodo GmbH</h4>
-              <p>August 2024</p>
-              <p>
-                <i>Noch nicht bekannt.</i>
-              </p>
+            <span class="text fade-in-delay" style="--delay: 3">ich 10 bin,</span>
+            <div class="video-container fade-in-delay" style="--delay: 4">
+              <img class="video" id="video1" src="media/720_video3.webp"></img>
+              <!-- <video id="video3" class="video" playsinline webkit-playsinline loop muted> -->
+              <!-- <source src="media/720_video3.mp4" type="video/mp4"> -->
+              <!-- </video> -->
+            </div>
+            <div class="emo-wrapper">
+              <span class="text fade-in-delay styled emo-button" style="--delay: 5">programmiere</span>
+            </div>
+            <div class="video-container fade-in-delay" style="--delay: 6">
+              <img class="video" id="video1" src="media/720_video4.webp"></img>
+              <!-- <video id="video4" class="video" playsinline webkit-playsinline loop muted> -->
+              <!-- <source src="media/720_video4.mp4" type="video/mp4"> -->
+              <!-- </video> -->
+            </div>
+            <span class="text fade-in-delay" style="--delay: 7">ich,</span>
+            <div class="video-container fade-in-delay" style="--delay: 8">
+              <img class="video" id="video1" src="media/720_video5.webp"></img>
+              <!-- <video id="video5" class="video" playsinline webkit-playsinline loop muted> -->
+              <!-- <source src="media/720_video5.mp4" type="video/mp4"> -->
+              <!-- </video> -->
+            </div>
+            <span class="text fade-in-delay" style="--delay: 9">erschaffe</span>
+            <div class="video-container fade-in-delay" style="--delay: 10">
+              <img class="video" id="video1" src="media/720_video6.webp"></img>
+              <!-- <video id="video6" class="video" playsinline webkit-playsinline loop muted> -->
+              <!-- <source src="media/720_video6.mp4" type="video/mp4"> -->
+              <!-- </video> -->
+            </div>
+            <span class="text fade-in-delay" style="--delay: 11">Erlebnisse</span>
+            <div class="video-container fade-in-delay" style="--delay: 12">
+              <img class="video" id="video1" src="media/720_video7.webp"></img>
+              <!-- <video id="video7" class="video" playsinline webkit-playsinline loop muted> -->
+              <!-- <source src="media/720_video7.mp4" type="video/mp4"> -->
+              <!-- </video> -->
+            </div>
+            <span class="text fade-in-delay" style="--delay: 13">durch</span>
+            <div class="video-container fade-in-delay" style="--delay: 14">
+              <img class="video" id="video1" src="media/720_video8.webp"></img>
+              <!-- <video id="video8" class="video" playsinline webkit-playsinline loop muted> -->
+              <!-- <source src="media/720_video8.mp4" type="video/mp4"> -->
+              <!-- </video> -->
+            </div>
+            <div class="other-emo-wrapper">
+              <span class="text fade-in-delay styled other-emo-button" style="--delay: 15">Design.</span>
             </div>
           </div>
         </div>
-      </div>
-      </div>
-    </section>
-    <section id="thesis" class="section">
-      <div class="container">
-        <h2 class="fade-in">Meine Abschlussarbeiten</h2>
-        <div class="thesis fade-in">
-          <h3> Diplomarbeit: "Die Rolle der Datenanalyse im modernen Sport" </h3>
-          <p> In dieser Arbeit habe ich mich mit der KI-Seite der Datenanalyse im Sport befasst. Ich habe bestehende Algorithmen untersucht und einen neuen Algorithmus entwickelt, der eine erhebliche Verbesserung in der Zeitvorhersage ermöglicht. </p>
-          <a href="" onclick="alert('Noch in Arbeit.')" class="cta-button">Mehr lesen</a>
+      </section>
+      <section id="showcase" class="section">
+        <div class="container">
+          <h2 class="fade-in">Meine Projekte</h2>
+          <div class="project fade-in">
+            <h3>Projekt 1: Conomy</h3>
+            <p> Entwickeln einer Software, die es Unternehmen ermöglicht Ihre Website auf viele betriebswirtschaftliche Eigenschaften zu überprüfen und zu optimieren. </p>
+            <a href="https://nikityyy.github.io/Conomy/" target="_blank">Mehr erfahren</a>
+          </div>
+          <div class="project fade-in">
+            <h3>Projekt 2: Musify</h3>
+            <p> Eine werbefreie Musik-Streaming-Webanwendung, die mit Spotify funktioniert, indem es Spotify embedded. </p>
+            <a href="https://nikityyy.github.io/Musify/" target="_blank">Mehr erfahren</a>
+          </div>
+          <div class="project fade-in">
+            <h3>Projekt 3: Pisa</h3>
+            <p> Entwicklung und Training eines eigenen Large Language Models (LLM) basierend auf selbst gescrapten Daten aus dem Internet. Alle Daten wurden legal durch Web-Scraping gesammelt und zu einem Datensatz zusammengestellt. Anschließend wurde das LLM auf diesen Daten trainiert und im Chat-Modus weiter feinabgestimmt. </p>
+          </div>
         </div>
-      </div>
-    </section>
-    <section id="cta" class="section">
-      <div class="container">
-        <h2 class="fade-in">Lassen Sie uns <span>zusammenarbeiten</span>
-        </h2>
-        <p class="fade-in"> Interessiert an einer Zusammenarbeit? Kontaktieren Sie mich! </p>
-        <a href="mailto:bergernikita1807@gmail.com" class="cta-button contact fade-in">Kontaktieren Sie mich</a>
-        <div class="social-links fade-in">
-          <a href="https://github.com/Nikityyy" target="_blank" class="social-icon">
-            <img src="media/octicon--mark-github-16.webp" alt="GitHub" width="40" height="40">
-          </a>
-          <a href="https://huggingface.co/Nikity" target="_blank" class="social-icon">
-            <img src="media/simple-icons--huggingface.webp" alt="Hugging Face" width="40" height="40">
-          </a>
+      </section>
+      <section id="skills" class="section">
+        <div class="container">
+          <h2 class="fade-in">Meine Fähigkeiten</h2>
+          <div class="skill fade-in">
+            <h3>MS Office</h3>
+            <div class="skill-bar">
+              <div class="skill-progress" data-width="100%"></div>
+            </div>
+          </div>
+          <div class="skill fade-in">
+            <h3>HTML | CSS | JS</h3>
+            <div class="skill-bar">
+              <div class="skill-progress" data-width="90%"></div>
+            </div>
+          </div>
+          <div class="skill fade-in">
+            <h3>Python</h3>
+            <div class="skill-bar">
+              <div class="skill-progress" data-width="85%"></div>
+            </div>
+          </div>
+          <div class="skill fade-in">
+            <h3>Node.js | Express | Flask</h3>
+            <div class="skill-bar">
+              <div class="skill-progress" data-width="75%"></div>
+            </div>
+          </div>
+          <div class="skill fade-in">
+            <h3>PyTorch</h3>
+            <div class="skill-bar">
+              <div class="skill-progress" data-width="80%"></div>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+      <section id="experience" class="section">
+        <div class="container">
+          <h2 class="fade-in">Berufserfahrung</h2>
+          <div class="timeline">
+            <div class="timeline-item left fade-in">
+              <div class="timeline-content">
+                <h3>Freelancer</h3>
+                <h4>GCT Gruber Consulting & Technology</h4>
+                <p>April 2024 - Juli 2024</p>
+                <p> Erstellen einer Website <br>
+                  <i>(Website nicht aktiv)</i>
+                </p>
+              </div>
+            </div>
+            <div class="timeline-item right fade-in">
+              <div class="timeline-content">
+                <h3>Praktikant</h3>
+                <h4>anqodo GmbH</h4>
+                <p>August 2024</p>
+                <p>
+                  <i>Noch nicht bekannt.</i>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="thesis" class="section">
+        <div class="container">
+          <h2 class="fade-in">Meine Abschlussarbeiten</h2>
+          <div class="thesis fade-in">
+            <h3> Diplomarbeit: "Die Rolle der Datenanalyse im modernen Sport" </h3>
+            <p> In dieser Arbeit habe ich mich mit der KI-Seite der Datenanalyse im Sport befasst. Ich habe bestehende Algorithmen untersucht und einen neuen Algorithmus entwickelt, der eine erhebliche Verbesserung in der Zeitvorhersage ermöglicht. </p>
+            <a href="" onclick="alert('Noch in Arbeit.')" class="cta-button">Mehr lesen</a>
+          </div>
+        </div>
+      </section>
+      <section id="cta" class="section">
+        <div class="container">
+          <h2 class="fade-in">Lassen Sie uns <span>zusammenarbeiten</span>
+          </h2>
+          <p class="fade-in"> Interessiert an einer Zusammenarbeit? Kontaktieren Sie mich! </p>
+          <a href="mailto:bergernikita1807@gmail.com" class="cta-button contact fade-in">Kontaktieren Sie mich</a>
+          <div class="social-links fade-in">
+            <a href="https://github.com/Nikityyy" target="_blank" class="social-icon">
+              <img src="media/octicon--mark-github-16.webp" alt="GitHub" width="40" height="40">
+            </a>
+            <a href="https://huggingface.co/Nikity" target="_blank" class="social-icon">
+              <img src="media/simple-icons--huggingface.webp" alt="Hugging Face" width="40" height="40">
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
     <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
       <defs>
         <filter id="svgfilter">
@@ -930,18 +1067,9 @@
       </defs>
     </svg>
     <script>
-      document.getElementById("video1").setAttribute("autoplay", "autoplay");
-      document.getElementById("video2").setAttribute("autoplay", "autoplay");
-      document.getElementById("video3").setAttribute("autoplay", "autoplay");
-      document.getElementById("video4").setAttribute("autoplay", "autoplay");
-      document.getElementById("video5").setAttribute("autoplay", "autoplay");
-      document.getElementById("video6").setAttribute("autoplay", "autoplay");
-      document.getElementById("video7").setAttribute("autoplay", "autoplay");
-      document.getElementById("video8").setAttribute("autoplay", "autoplay");
-
       function smoothScroll(target, duration) {
         var targetElement = document.querySelector(target);
-        var targetPosition = targetElement.getBoundingClientRect().top;
+        var targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
         var startPosition = window.pageYOffset;
         var distance = targetPosition - startPosition;
         var startTime = null;
@@ -977,7 +1105,7 @@
               }
             });
           }, {
-            threshold: 0.1
+            threshold: 0.02
           });
         fadeElements.forEach((element) => {
           observer.observe(element);
@@ -992,7 +1120,7 @@
               }
             });
           }, {
-            threshold: 0.1
+            threshold: 0.02
           });
         fadeDelayElements.forEach((element) => {
           delayObserver.observe(element);
@@ -1045,5 +1173,8 @@
         });
       });
     </script>
+    <!-- <script src="js/mouse.js"></script> -->
+    <script src="js/scroll.js"></script>
+    <script src="js/emojis.js"></script>
   </body>
 </html>

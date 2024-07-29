@@ -77,7 +77,7 @@
         position: fixed;
         top: 0;
         left: 0;
-        height: 100dvh;
+        height: 100%;
         width: 100%;
         pointer-events: none;
         z-index: 300;
@@ -771,6 +771,13 @@
       }
 
       /* Responsive Design */
+	  @media only screen and (min-device-width: 320px) and (max-device-width: 812px) and (-webkit-device-pixel-ratio: 2), only screen and (min-device-width: 375px) and (max-device-width: 812px) and (-webkit-device-pixel-ratio: 3) {
+		.grain:before {
+		  -webkit-animation: none;
+		  animation: none;
+		}
+	  }
+
       @media (max-width: 1024px) {
         .main {
           flex-direction: column;

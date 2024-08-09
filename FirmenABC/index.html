@@ -39,7 +39,7 @@
       .search-container {
         display: flex;
         margin-bottom: 20px;
-		flex-direction: column;
+        flex-direction: column;
       }
 
       #urlInput {
@@ -142,9 +142,11 @@
         <input type="text" id="urlInput" placeholder="https://www.firmenabc.at/firmen/enns_PId">
         <button id="scrapeButton">Scrape</button>
         <label>
-          <input type="checkbox" id="websitesOnly"> With Websites only </label>
+          <input type="checkbox" id="websitesOnly"> With Websites only
+        </label>
         <label>
-          <input type="checkbox" id="gmbhKgOnly"> Only GmbH and KG </label>
+          <input type="checkbox" id="gmbhKgOnly"> Only GmbH and KG
+        </label>
       </div>
       <div id="loadingIndicator">
         <div class="spinner"></div>
@@ -154,135 +156,137 @@
       <div id="results"></div>
     </div>
     <script>
-      const urlInput = document.getElementById('urlInput');
-      const scrapeButton = document.getElementById('scrapeButton');
-      const resultsDiv = document.getElementById('results');
-      const exportButton = document.getElementById('exportButton');
-      const loadingIndicator = document.getElementById('loadingIndicator');
-      const websitesOnlyCheckbox = document.getElementById('websitesOnly');
-      const gmbhKgOnlyCheckbox = document.getElementById('gmbhKgOnly');
-      let companies = [];
-      let currentPageNumber = 1;
-      scrapeButton.addEventListener('click', scrapeCompanies);
-      exportButton.addEventListener('click', exportToCSV);
-      const proxyURL = "https://cors.nikity.workers.dev/proxy?proxyUrl=";
-      async function scrapeCompanies() {
-        let baseURL = urlInput.value.trim();
-        if (!baseURL.startsWith('https://www.firmenabc.at/firmen/')) {
-          alert('Please enter a valid FirmenABC URL.');
-          return;
-        }
-        currentPageNumber = 1;
-        loadingIndicator.style.display = 'block';
-        resultsDiv.innerHTML = '';
-        companies = [];
-        exportButton.style.display = 'none';
-        const seenCompanyNames = new Set();
-        try {
-          while (true) {
-            const url = `${baseURL}/${currentPageNumber}`;
-            const response = await fetch(proxyURL + encodeURIComponent(url));
-            const html = await response.text();
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const cards = doc.querySelectorAll('li.card.result');
-            let duplicateFound = false;
-            for (const card of cards) {
-              const name = card.querySelector('h2.card-heading.pull-left')?.textContent.trim();
-              const address = card.querySelector('span[itemprop="streetAddress"]')?.textContent.trim();
-              const link = card.querySelector('a[itemprop="url"]')?.getAttribute('href');
-              if (name && address && (websitesOnlyCheckbox.checked ? link : true)) {
-                if (seenCompanyNames.has(name)) {
-                  duplicateFound = true;
-                  exportButton.style.display = 'block';
-                  break;
-                }
-                seenCompanyNames.add(name);
-                const website = await scrapeCompanyDetails(link);
-                if (website) {
-                  if (gmbhKgOnlyCheckbox.checked && !/(GmbH|KG)/.test(name)) {
-                    continue;
-                  }
-                  companies.push({
-                    name,
-                    address,
-                    website
-                  });
-                  displayCompany({
-                    name,
-                    address,
-                    website
-                  });
-                }
-              }
-            }
-            if (duplicateFound) {
-              break;
-            }
-            currentPageNumber++;
-          }
-          if (companies.length === 0) {
-            resultsDiv.innerHTML = ' < p > No companies found. < /p>';
-          }
-        } catch (error) {
-          console.error('Error scraping companies:', error);
-          resultsDiv.innerHTML = ' < p > An error occurred
-          while scraping companies.Please
-          try again. < /p>';
-        } finally {
-          loadingIndicator.style.display = 'none';
-        }
-      }
-      async function scrapeCompanyDetails(url) {
-        try {
-          const response = await fetch(proxyURL + encodeURIComponent(url));
-          const html = await response.text();
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, 'text/html');
-          const webDiv = doc.querySelector('div.mobile-portrait-row.url');
-          if (webDiv) {
-            const aTag = webDiv.querySelector('a[itemprop="url"]');
-            if (aTag && aTag.hasAttribute('href')) {
-              return aTag.getAttribute('href');
-            }
-          }
-        } catch (error) {
-          console.error('Error scraping company details:', error);
-        }
-        return null;
-      }
+		const urlInput = document.getElementById('urlInput');
+		const scrapeButton = document.getElementById('scrapeButton');
+		const resultsDiv = document.getElementById('results');
+		const exportButton = document.getElementById('exportButton');
+		const loadingIndicator = document.getElementById('loadingIndicator');
+		const websitesOnlyCheckbox = document.getElementById('websitesOnly');
+		const gmbhKgOnlyCheckbox = document.getElementById('gmbhKgOnly');
+		let companies = [];
+		let currentPageNumber = 1;
+		scrapeButton.addEventListener('click', scrapeCompanies);
+		exportButton.addEventListener('click', exportToCSV);
+		const proxyURL = "https://cors.nikity.workers.dev/proxy?proxyUrl=";
 
-      function displayCompany(company) {
-        const companyCard = document.createElement('div');
-        companyCard.className = 'company-card';
-        companyCard.innerHTML = `
-        
-								<div class="company-name">${company.name}</div>
-								<div class="company-address">${company.address}</div>
-								<div class="company-website">
-									<a href="${company.website}" target="_blank">${company.website}</a>
-								</div>
-    `;
-        resultsDiv.appendChild(companyCard);
-      }
+		async function scrapeCompanies() {
+			let baseURL = urlInput.value.trim();
+			if (!baseURL.startsWith('https://www.firmenabc.at/firmen/')) {
+				alert('Please enter a valid FirmenABC URL.');
+				return;
+			}
+			currentPageNumber = 1;
+			loadingIndicator.style.display = 'block';
+			resultsDiv.innerHTML = '';
+			companies = [];
+			exportButton.style.display = 'none';
+			const seenCompanyNames = new Set();
+			try {
+				while (true) {
+					const url = `${baseURL}/${currentPageNumber}`;
+					const response = await fetch(proxyURL + encodeURIComponent(url));
+					const html = await response.text();
+					const parser = new DOMParser();
+					const doc = parser.parseFromString(html, 'text/html');
+					const cards = doc.querySelectorAll('li.card.result');
+					let duplicateFound = false;
+					for (const card of cards) {
+						const name = card.querySelector('h2.card-heading.pull-left')?.textContent.trim();
+						const address = card.querySelector('span[itemprop="streetAddress"]')?.textContent.trim();
+						const link = card.querySelector('a[itemprop="url"]')?.getAttribute('href');
+						if (name && address) {
+							if (websitesOnlyCheckbox.checked && !link) {
+								continue; // Skip companies without a website if checkbox is checked
+							}
+							if (gmbhKgOnlyCheckbox.checked && !/(GmbH|KG)/.test(name)) {
+								continue; // Skip companies not matching GmbH/KG if checkbox is checked
+							}
+							if (seenCompanyNames.has(name)) {
+								duplicateFound = true;
+								exportButton.style.display = 'block';
+								break;
+							}
+							seenCompanyNames.add(name);
+							const website = link ? await scrapeCompanyDetails(link) : null;
+							if (website || !websitesOnlyCheckbox.checked) { // Ensure only add companies with website if checkbox is checked
+								companies.push({
+									name,
+									address,
+									website
+								});
+								displayCompany({
+									name,
+									address,
+									website
+								});
+							}
+						}
+					}
+					if (duplicateFound) {
+						break;
+					}
+					currentPageNumber++;
+				}
+				if (companies.length === 0) {
+					resultsDiv.innerHTML = '<p>No companies found.</p>';
+				}
+			} catch (error) {
+				console.error('Error scraping companies:', error);
+				resultsDiv.innerHTML = '<p>An error occurred while scraping companies. Please try again.</p>';
+			} finally {
+				loadingIndicator.style.display = 'none';
+			}
+		}
 
-      function exportToCSV() {
-        let csvContent = "data:text/csv;charset=utf-8,";
-        csvContent += "Firma;Adresse;Website\n";
-        companies.forEach(company => {
-          const name = company.name.replace(/;/g, ",");
-          const address = company.address.replace(/;/g, ",");
-          const website = company.website ? company.website.replace(/;/g, ",") : '';
-          csvContent += `${name};${address};${website}\n`;
-        });
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "firmenabc_export.csv");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
+		async function scrapeCompanyDetails(url) {
+			try {
+				const response = await fetch(proxyURL + encodeURIComponent(url));
+				const html = await response.text();
+				const parser = new DOMParser();
+				const doc = parser.parseFromString(html, 'text/html');
+				const webDiv = doc.querySelector('div.mobile-portrait-row.url');
+				if (webDiv) {
+					const aTag = webDiv.querySelector('a[itemprop="url"]');
+					if (aTag && aTag.hasAttribute('href')) {
+						return aTag.getAttribute('href');
+					}
+				}
+			} catch (error) {
+				console.error('Error scraping company details:', error);
+			}
+			return null;
+		}
+
+		function displayCompany(company) {
+			const companyCard = document.createElement('div');
+			companyCard.className = 'company-card';
+			companyCard.innerHTML = `
+				<div class="company-name">${company.name}</div>
+				<div class="company-address">${company.address}</div>
+				<div class="company-website">
+					${company.website ? `<a href="${company.website}" target="_blank">${company.website}</a>` : 'No website available'}
+				</div>
+			`;
+			resultsDiv.appendChild(companyCard);
+		}
+
+		function exportToCSV() {
+			let csvContent = "data:text/csv;charset=utf-8,";
+			csvContent += "Firma;Adresse;Website\n";
+			companies.forEach(company => {
+				const name = company.name.replace(/;/g, ",");
+				const address = company.address.replace(/;/g, ",");
+				const website = company.website ? company.website.replace(/;/g, ",") : '';
+				csvContent += `${name};${address};${website}\n`;
+			});
+			const encodedUri = encodeURI(csvContent);
+			const link = document.createElement("a");
+			link.setAttribute("href", encodedUri);
+			link.setAttribute("download", "firmenabc_export.csv");
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		}
     </script>
   </body>
 </html>

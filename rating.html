@@ -12,6 +12,11 @@
         rel="stylesheet">
 
     <style>
+        :root {
+            touch-action: pan-x pan-y;
+            height: 100%
+        }
+
         * {
             font-family: 'Poppins', sans-serif;
             box-sizing: border-box;
@@ -35,10 +40,16 @@
             width: 100%;
         }
 
+        h1 {
+            font-size: 3rem;
+            margin: 0px;
+            margin-bottom: 5px;
+        }
+
         label {
             display: block;
             margin-bottom: 20px;
-            font-size: 2.5rem;
+            font-size: 2.3rem;
             font-weight: bold;
         }
 
@@ -183,6 +194,7 @@
             method="post" target="hidden_iframe" onsubmit="submitted=true">
 
             <div id="step-1" class="form-step active">
+                <h1>Bewerten Sie Nikita!</h1>
                 <label for="name">Ihr Name oder Firmenname</label>
                 <input type="text" id="name" name="entry.148008431" autocomplete="off" required>
                 <input type="button" value="Weiter" onclick="goToStep(2)">

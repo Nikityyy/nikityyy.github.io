@@ -5,12 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nikita Bewertung</title>
-    <link rel="icon" href="media/icons/icon.webp">
-    <link rel="prefetch" href="media/icons/icon.webp" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-        rel="stylesheet">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
     <style>
         :root {
             touch-action: pan-x pan-y;
@@ -23,8 +21,8 @@
         }
 
         body {
-            background-color: #000;
-            color: #fff;
+            background-color: #ffffff;
+            color: #000000;
             margin: 0;
             padding: 20px;
             height: 100svh;
@@ -32,6 +30,7 @@
             justify-content: center;
             align-items: center;
             -webkit-tap-highlight-color: transparent;
+            line-height: 1.5;
         }
 
         .container {
@@ -41,29 +40,33 @@
         }
 
         h1 {
-            font-size: 3rem;
-            margin: 0px;
-            margin-bottom: 5px;
+            font-size: 2rem;
+            margin: 0 0 1.5rem 0;
+            line-height: 1.2;
+            font-weight: 600;
+            color: #1a1a1a;
         }
 
         label {
             display: block;
-            margin-bottom: 20px;
-            font-size: 2.3rem;
-            font-weight: bold;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #333333;
         }
 
         input[type="text"],
         input[type="email"],
         textarea {
             width: 100%;
-            padding: 15px;
-            margin-bottom: 20px;
+            padding: 0.875rem;
+            margin-bottom: 1.5rem;
             border: 2px solid #444;
             border-radius: 4px;
             background: transparent;
-            color: #fff;
-            font-size: 18px;
+            color: #000;
+            font-size: 1rem;
+            line-height: 1.5;
             transition: border-color 0.3s ease, background-color 0.3s ease;
             outline: none;
         }
@@ -81,12 +84,13 @@
             background: #333;
             border: none;
             color: #fff;
-            padding: 15px 20px;
+            padding: 0.875rem 1.5rem;
             cursor: pointer;
             border-radius: 4px;
-            font-size: 1.2rem;
+            font-size: 1rem;
+            font-weight: 500;
             transition: background-color 0.3s;
-            margin-top: 0px;
+            margin-top: 0.5rem;
         }
 
         input[type="submit"]:hover,
@@ -97,20 +101,20 @@
         .star-rating {
             display: flex;
             align-items: center;
-            margin-top: 20px;
-            font-size: 1.5rem;
+            margin-top: 1.25rem;
         }
 
         .stars {
             display: flex;
-            gap: 10px;
-            margin-bottom: 40px;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
             justify-content: center;
+			width: 100%;
         }
 
         .star {
-            width: 40px;
-            height: 40px;
+            width: 2.5rem;
+            height: 2.5rem;
             cursor: pointer;
         }
 
@@ -139,46 +143,57 @@
         textarea {
             overflow: hidden;
             resize: none;
+            min-height: 120px;
         }
 
         #step-2:not(.hidden) {
             display: flex;
             flex-direction: column;
-            flex-wrap: wrap;
-            align-content: center;
         }
 
         @media (max-width: 768px) {
+            h1 {
+                font-size: 1.75rem;
+            }
+
             label {
-                font-size: 2rem;
+                font-size: 1.25rem;
             }
 
             .star {
-                width: 30px;
-                height: 30px;
+                width: 2rem;
+                height: 2rem;
             }
 
+            input[type="text"],
+            input[type="email"],
+            textarea,
             input[type="submit"],
             input[type="button"] {
                 font-size: 1rem;
+                padding: 0.75rem;
             }
         }
 
         @media (max-width: 480px) {
-            label {
+            h1 {
                 font-size: 1.5rem;
+            }
+
+            label {
+                font-size: 1.125rem;
+            }
+
+            .star {
+                width: 1.75rem;
+                height: 1.75rem;
             }
 
             input[type="text"],
             input[type="email"],
             textarea {
-                font-size: 16px;
-                padding: 10px;
-            }
-
-            .star {
-                width: 25px;
-                height: 25px;
+                font-size: 1rem;
+                padding: 0.625rem;
             }
         }
     </style>
@@ -194,14 +209,15 @@
             method="post" target="hidden_iframe" onsubmit="submitted=true">
 
             <div id="step-1" class="form-step active">
-                <h1>Bewerten Sie Nikita!</h1>
+                <h1>Bewerten Sie die Zusammenarbeit mit Nikita Berger</h1>
                 <label for="name">Ihr Name oder Firmenname</label>
                 <input type="text" id="name" name="entry.148008431" autocomplete="off" required>
                 <input type="button" value="Weiter" onclick="goToStep(2)">
             </div>
 
             <div id="step-2" class="form-step hidden">
-                <label for="rating">Ihre Bewertung</label>
+                <h1>Ihre Bewertung</h1>
+                <label for="rating">Keine Sorge, Sie können die Bewertung gleich ausführlicher beschreiben 🤗</label>
                 <div class="stars">
                     <div class="star" data-value="1">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="icon">
@@ -259,7 +275,8 @@
             </div>
 
             <div id="step-3" class="form-step hidden">
-                <label for="comments">Nachricht</label>
+                <h1>Ihre Nachricht</h1>
+                <label for="comments">Bitte seien Sie so ehrlich wie möglich 🫣</label>
                 <textarea id="comments" name="entry.230938733" rows="4" oninput="adjustTextareaHeight(this)"
                     required></textarea>
                 <input type="submit" value="Absenden">
@@ -288,7 +305,7 @@
             setTimeout(() => {
                 setTimeout(() => {
                     stepDiv.classList.add('active');
-                }, 500);
+                }, 250);
                 stepDiv.classList.remove('hidden');
             }, 500);
         }

@@ -23,8 +23,10 @@
     <link rel="dns-prefetch" href="//fonts.googleapis.com">
     <link rel="alternate" hreflang="en" href="https://nikityyy.github.io/#en">
     <link rel="alternate" hreflang="de" href="https://nikityyy.github.io/#de">
+    <link rel="prefetch" href="media/profile-picture.webp" />
+    <link rel="prefetch" href="media/anqodo-icon.webp" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
-	  <style>
+    <style>
       :root {
         --bg-color: #ffffff;
         --heading-color: #000000;
@@ -437,8 +439,48 @@
         width: 60px;
       }
 
+      .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+
+      .blog-item {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .blog-item img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .blog-item h3 {
+        margin: 10px 15px;
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      .blog-item p {
+        margin: 5px 15px 15px;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .blog-grid a {
+        text-decoration: inherit;
+      }
+
       footer {
         text-align: right;
+      }
+
+      @media (max-width: 1000px) {
+        .blog-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
       }
 
       @media (max-width: 768px) {
@@ -695,6 +737,20 @@
       <p lang="en">In this thesis, I focused on the AI aspect of data analysis in sports.</p>
       <a href="#" class="more-link" target="_blank" lang="de">Mehr erfahren →</a>
       <a href="#" class="more-link" target="_blank" lang="en">Learn more →</a>
+    </section>
+    <hr>
+    <h2 lang="de">Blog</h2>
+    <h2 lang="en">Blog</h2>
+    <section class="blog-grid">
+      <a href="blog/blog-1" target="_blank">
+        <div class="blog-item">
+          <img src="media/blog-1.webp" alt="Blog Post 1">
+          <h3 lang="de">HAK-Schüler Nikita ist Steyrs bester Nachwuchsprogrammierer</h3>
+          <h3 lang="en">HAK student Nikita is Steyr's best young programmer</h3>
+          <p lang="de">11. November 2024</p>
+          <p lang="en">November 11, 2024</p>
+        </div>
+      </a>
     </section>
     <footer>
       <p lang="de">© 2024 Nikita Berger. Alle Rechte vorbehalten.</p>

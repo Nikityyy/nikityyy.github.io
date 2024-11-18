@@ -233,10 +233,11 @@
 
         .achievement-popup {
             position: fixed;
-            top: 50%;
+            top: 10%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
-            background: rgba(255, 255, 255, 0.2);
+            background: rgb(255, 255, 255);
+			color: #000000;
             padding: 20px;
             border-radius: 10px;
             text-align: center;
@@ -250,8 +251,8 @@
 
         #daily-challenge {
             position: absolute;
-            bottom: 20px;
-            right: 20px;
+            bottom: 10px;
+            left: 10px;
             background: rgba(0, 0, 0, 0.5);
             padding: 10px;
             border-radius: 10px;
@@ -269,7 +270,7 @@
     </div>
     <div id="daily-challenge">
         Daily Challenge: <br>
-        <span id="challenge-description">Win 100x multiplier</span>
+        <span id="challenge-description">Win 1000x multiplier</span>
         <br>
         Progress: <span id="challenge-progress">0/1</span>
     </div>
@@ -279,12 +280,12 @@
     </div>
     <div class="game-container">
         <div class="controls-panel">
-            <div class="mode-switch">
-                <button class="active">Manual</button>
-            </div>
+            <!-- <div class="mode-switch"> -->
+                <!-- <button class="active">Manual</button> -->
+            <!-- </div> -->
             <div class="control-group">
                 <label>Bet Amount</label>
-                <input type="number" id="bet-amount" value="1.00" min="0.1" max="100" step="0.1">
+                <input type="number" id="bet-amount" value="1" min="1" step="1">
                 <div class="game-stats">
                     <span>Balance: <br>€<span id="balance">1000.00</span></span>
                     <span>Level XP: <br><span id="level-xp">0/100</span></span>
@@ -298,7 +299,6 @@
         </div>
     </div>
 
-    <!-- Audio Elements -->
 	<audio id="background-music" src="bg.mp3" autoplay loop></audio>
     <audio id="coin-drop-sound" src="coin-drop-1.mp3"></audio>
     <audio id="win-sound" src="cash-register-01.mp3"></audio>
@@ -330,7 +330,6 @@
         let isSpaceHeld = false;
         let spaceHoldInterval;
 
-        // Enhanced Game State
         let gameState = {
             balance: 1000,
             level: 1,
@@ -344,14 +343,44 @@
             },
             dailyChallenge: {
                 type: 'multiplier',
-                target: 100,
+                target: 1000,
                 current: 0,
                 completed: false
             },
             gameCount: 0
         };
+		
+		    // Load game state from localStorage if available
+    function loadGameState() {
+        const savedState = localStorage.getItem('hakStonksState');
+        if (savedState) {
+            gameState = JSON.parse(savedState);
+            // Ensure the balance is not less than 1000
+            if (gameState.balance < 1000) {
+                gameState.balance = 1000;
+            }
+            updateGameStateUI();
+        }
+    }
 
-        // Multipliers configuration with more dramatic variation
+    // Save game state to localStorage
+    function saveGameState() {
+        // Ensure balance is at least 1000 before saving
+        if (gameState.balance < 1000) {
+            gameState.balance = 1000;
+        }
+        localStorage.setItem('hakStonksState', JSON.stringify(gameState));
+    }
+
+    // Update the UI based on gameState
+    function updateGameStateUI() {
+        balanceEl.textContent = gameState.balance.toFixed(2);
+        levelEl.textContent = gameState.level;
+        levelXpEl.textContent = `${gameState.xp.toFixed(2)}/100`;
+        streakCountEl.textContent = gameState.streak;
+        streakBonusEl.textContent = `${gameState.streak}x`;
+    }
+
         const multipliers = [
             1000, 10, 5, 2.5, 1, 0.5, 0.5, 1, 2.5, 5, 10, 1000
         ];
@@ -494,8 +523,8 @@
                 
                 if (challenge.current >= 1) {
                     challenge.completed = true;
-                    gameState.balance += 100;  // Daily challenge reward
-                    showMessage('Daily Challenge Completed! +€100 Bonus', '#00ff4c');
+                    gameState.balance += 10000;  // Daily challenge reward
+                    showMessage('Daily Challenge Completed! +€10000 Bonus', '#00ff4c');
                     balanceEl.textContent = gameState.balance.toFixed(2);
                 }
             }
@@ -542,6 +571,10 @@
                 showMessage('Insufficient balance!', '#ff0000');
                 return;
             }
+            if (betAmount <= 0) {
+                showMessage('Not enough money bet!', '#ff0000');
+                return;
+			}
             
             gameState.balance -= betAmount;
             balanceEl.textContent = gameState.balance.toFixed(2);
@@ -610,6 +643,8 @@
                     };
                     updateAchievements(achievementData);
                     updateDailyChallenge(totalMultiplier);
+					saveGameState();
+					updateGameStateUI();
 
                     // Show win message
                     if (baseMultiplier > 1) {
@@ -677,6 +712,10 @@
             backgroundMusic.muted = isMuted;
             muteBtn.textContent = isMuted ? '🔈' : '🔊';
         });
+		
+	window.addEventListener('load', () => {
+        loadGameState();
+    });
     </script>
 </body>
 </html>

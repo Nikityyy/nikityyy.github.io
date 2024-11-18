@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HAK Stonks</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #1a1f2e;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .game-title {
+            font-size: 3rem;
+			margin: 0;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+            letter-spacing: 3px;
+        }
+
+        .game-container {
+            display: flex;
+            gap: 2rem;
+            position: relative;
+        }
+
+        .controls-panel {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            width: 300px;
+            z-index: 10;
+        }
+
+        .mode-switch {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .mode-switch button {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #fff;
+            padding: 8px;
+            border-radius: 16px;
+            cursor: pointer;
+        }
+
+        .mode-switch button.active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .control-group {
+            margin-bottom: 1rem;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #888;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .bet-button {
+            width: 100%;
+            padding: 1rem;
+            background: #00ff4c;
+            border: none;
+            border-radius: 5px;
+            color: #000;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .bet-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 255, 76, 0.3);
+        }
+
+        #plinko-board {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .peg {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .chip {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00ff4c;
+            box-shadow: 0 0 10px rgba(0, 255, 76, 0.5);
+            transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .buckets {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+        }
+
+        .bucket {
+            width: calc(100% / 16 - 4px);
+            height: 60px;
+            border-radius: 5px 5px 0 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .bucket.winning {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .multiplier {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        #message-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: #fff;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkle 0.6s ease-out;
+        }
+
+        @keyframes sparkle {
+            0% { transform: scale(0); opacity: 1; }
+            70% { opacity: 0.7; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        #streak-display {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 10px;
+            display: none;
+        }
+		
+		#mute-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: none;
+            color: #fff;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+		}
+    </style>
+</head>
+<body>
+    <h1 class="game-title">HAK Stonks</h1>
+    <div id="message-overlay"></div>
+    <div id="streak-display">
+        Streak: <span id="streak-count">0</span>
+        Bonus: <span id="streak-bonus">0x</span>
+    </div>
+    <div class="game-container">
+        <div class="controls-panel">
+            <div class="mode-switch">
+                <button class="active">Manual</button>
+            </div>
+            <div class="control-group">
+                <label>Bet Amount</label>
+                <input type="number" id="bet-amount" value="1.00" min="0.1" max="100" step="0.1">
+                <div>Balance: €<span id="balance">1000.00</span></div>
+            </div>
+            <button class="bet-button" id="drop-btn">Place Bet</button>
+        </div>
+        
+        <div id="plinko-board">
+            <div class="buckets"></div>
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+	<audio id="background-music" src="bg.mp3" autoplay loop></audio>
+    <audio id="coin-drop-sound" src="coin-drop-1.mp3"></audio>
+    <audio id="win-sound" src="cash-register-01.mp3"></audio>
+    <audio id="big-win-sound" src="applause-01.mp3"></audio>
+	
+    <button id="mute-btn">🔊</button>
+
+    <script>
+        const board = document.getElementById('plinko-board');
+        const balanceEl = document.getElementById('balance');
+        const betInput = document.getElementById('bet-amount');
+        const dropBtn = document.getElementById('drop-btn');
+        const messageOverlay = document.getElementById('message-overlay');
+        const streakDisplay = document.getElementById('streak-display');
+        const streakCountEl = document.getElementById('streak-count');
+        const streakBonusEl = document.getElementById('streak-bonus');
+
+        // Sound Elements
+        const coinDropSound = document.getElementById('coin-drop-sound');
+        const winSound = document.getElementById('win-sound');
+        const bigWinSound = document.getElementById('big-win-sound');
+
+        let balance = 1000;
+        let streak = 0;
+        let soundEnabled = true;
+        let isSpaceHeld = false;
+        let spaceHoldInterval;
+
+        // Multipliers configuration
+        const multipliers = [
+            3, 2.5, 2, 1.5, 1, 0.75, 0.5, 0.5, 0.75, 1, 1.5, 2, 2.5, 3
+        ];
+        
+        // Colors for buckets based on multiplier
+        function getMultiplierColor(multiplier) {
+            if (multiplier >= 3) return '#ff4444';
+            if (multiplier >= 2) return '#ff8c00';
+            if (multiplier >= 1.6) return '#ffd700';
+            return '#ffff44';
+        }
+
+		const pegRows = 15;
+		const boardWidth = board.offsetWidth;
+		const boardHeight = board.offsetHeight;
+
+		for (let row = 0; row < pegRows; row++) {
+			const pegsInRow = row + 14;
+			const yPos = (row + 1) * (boardHeight - 100) / (pegRows + 1);
+
+			for (let col = 0; col < pegsInRow; col++) {
+				const peg = document.createElement('div');
+				peg.className = 'peg';
+				
+				const xPos = (boardWidth / 2) + (col - (pegsInRow / 2)) * (boardWidth / (pegRows * 2));
+				peg.style.left = `${xPos}px`;
+				peg.style.top = `${yPos}px`;
+				board.appendChild(peg);
+			}
+		}
+
+        const bucketsContainer = document.querySelector('.buckets');
+        multipliers.forEach((multiplier, index) => {
+            const bucket = document.createElement('div');
+            bucket.className = 'bucket';
+            bucket.style.backgroundColor = getMultiplierColor(multiplier);
+            bucket.innerHTML = `
+                <div class="multiplier">${multiplier}x</div>
+            `;
+            bucketsContainer.appendChild(bucket);
+        });
+
+		function playSound(soundElement) {
+			const newSound = new Audio(soundElement.src);
+			newSound.play();
+		}
+		
+        function updateBalance(amount) {
+            balance += amount;
+            balanceEl.textContent = balance.toFixed(2);
+        }
+
+        function showMessage(message, color = '#fff') {
+            messageOverlay.textContent = message;
+            messageOverlay.style.color = color;
+            messageOverlay.style.opacity = 1;
+            setTimeout(() => {
+                messageOverlay.style.opacity = 0;
+            }, 2000);
+        }
+
+        function createSparkles(x, y, count = 20) {
+            for (let i = 0; i < count; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = `${x + (Math.random() * 40 - 20)}px`;
+                sparkle.style.top = `${y + (Math.random() * 40 - 20)}px`;
+                board.appendChild(sparkle);
+
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 600);
+            }
+        }
+
+        function updateStreak(multiplier) {
+            if (multiplier >= 2) {
+                streak++;
+                streakCountEl.textContent = streak;
+                const streakBonus = Math.min(streak * 0.1, 1);
+                streakBonusEl.textContent = streakBonus.toFixed(1);
+                streakDisplay.style.display = 'block';
+                return streakBonus;
+            } else {
+                streak = 0;
+                streakDisplay.style.display = 'none';
+                return 0;
+            }
+        }
+
+        function dropChip() {
+            const betAmount = parseFloat(betInput.value);
+            if (betAmount > balance) {
+                showMessage('Insufficient balance!', '#ff0000');
+                return;
+            }
+            
+            updateBalance(-betAmount);
+            playSound(coinDropSound);
+
+            const chip = document.createElement('div');
+            chip.className = 'chip';
+            chip.style.left = `${boardWidth / 2}px`;
+            chip.style.top = '0';
+            board.appendChild(chip);
+
+            let path = [];
+            for (let i = 0; i < pegRows; i++) {
+                path.push(Math.random() < 0.5 ? -1 : 1);
+            }
+
+            let currentStep = 0;
+            let currentX = boardWidth / 2;
+            let currentY = 0;
+
+            function animate() {
+                if (currentStep < path.length) {
+                    const direction = path[currentStep];
+                    currentX += direction * (boardWidth / 32);
+                    currentY += (boardHeight - 100) / (pegRows + 1);
+                    
+                    chip.style.left = `${currentX}px`;
+                    chip.style.top = `${currentY}px`;
+                    
+                    currentStep++;
+                    setTimeout(animate, 80);
+                } else {
+                    // Determine bucket and calculate winnings
+                    const bucketIndex = Math.floor((currentX / boardWidth) * multipliers.length);
+                    const actualBucketIndex = Math.max(0, Math.min(multipliers.length - 1, bucketIndex));
+                    const multiplier = multipliers[actualBucketIndex];
+                    
+                    const streakBonus = updateStreak(multiplier);
+                    const totalMultiplier = multiplier * (1 + streakBonus);
+                    const winnings = betAmount * totalMultiplier;
+                    
+                    updateBalance(winnings);
+
+                    // Highlight bucket
+                    const buckets = document.querySelectorAll('.bucket');
+                    buckets[actualBucketIndex].classList.add('winning');
+                    setTimeout(() => {
+                        buckets[actualBucketIndex].classList.remove('winning');
+                    }, 1000);
+
+                    // Create sparkles
+                    createSparkles(currentX, currentY);
+
+                    // Sound effects
+                    if (multiplier >= 3) {
+                        playSound(bigWinSound);
+                    } else if (multiplier >= 2) {
+                        playSound(winSound);
+                    }
+
+                    // Show win message
+                    if (multiplier > 1) {
+                        const messageColor = multiplier >= 3 ? '#ff4444' : '#ffd700';
+                        showMessage(`${totalMultiplier.toFixed(1)}x Win!`, messageColor);
+                    }
+
+                    setTimeout(() => {
+                        chip.remove();
+                    }, 500);
+                }
+            }
+
+            animate();
+        }
+
+        // Event Listeners
+        dropBtn.addEventListener('click', dropChip);
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (!isSpaceHeld) {
+                    isSpaceHeld = true;
+                    dropChip();
+                    
+                    // Set up interval for continuous dropping and sound
+                    spaceHoldInterval = setInterval(() => {
+                        dropChip();
+                    }, 100); // Adjust interval as needed
+                }
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.code === 'Space') {
+                isSpaceHeld = false;
+                clearInterval(spaceHoldInterval);
+            }
+        });
+		
+		const playMusicOnInteraction = () => {
+	  const backgroundMusic = document.getElementById('background-music');
+	  backgroundMusic.play().catch(error => {
+		console.error("Autoplay failed:", error);
+	  });
+	};
+
+	// List of events to trigger the music
+	const events = ['click', 'mousedown', 'mouseup', 'touchstart', 'keydown', 'mouseover'];
+
+	events.forEach(event => {
+	  document.addEventListener(event, playMusicOnInteraction);
+	});
+	
+	const muteBtn = document.getElementById('mute-btn');
+        const backgroundMusic = document.getElementById('background-music');
+
+        let isMuted = false;
+
+        muteBtn.addEventListener('click', () => {
+            isMuted = !isMuted;
+            backgroundMusic.muted = isMuted;
+            muteBtn.textContent = isMuted ? '🔈' : '🔊';
+        });
+    </script>
+</body>
+</html>

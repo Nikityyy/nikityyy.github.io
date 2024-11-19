@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>HAK Stonks</title>
@@ -147,7 +148,7 @@
         }
 
         .bucket {
-            width: calc(100% / 16 - 4px);
+            width: calc(100% / 13);
             height: 60px;
             border-radius: 5px 5px 0 0;
             display: flex;
@@ -193,9 +194,19 @@
         }
 
         @keyframes sparkle {
-            0% { transform: scale(0); opacity: 1; }
-            70% { opacity: 0.7; }
-            100% { transform: scale(3); opacity: 0; }
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+
+            70% {
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
         }
 
         #streak-display {
@@ -208,7 +219,7 @@
             border-radius: 10px;
             display: none;
         }
-		
+
         #mute-btn {
             position: absolute;
             top: 20px;
@@ -237,7 +248,7 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
             background: rgb(255, 255, 255);
-			color: #000000;
+            color: #000000;
             padding: 20px;
             border-radius: 10px;
             text-align: center;
@@ -257,10 +268,11 @@
             padding: 10px;
             border-radius: 10px;
             text-align: center;
-			z-index: 10;
+            z-index: 10;
         }
     </style>
 </head>
+
 <body>
     <h1 class="game-title">HAK Stonks</h1>
     <div id="daily-challenge">
@@ -281,30 +293,31 @@
     </div>
     <div class="game-container">
         <div class="controls-panel">
-            <!-- <div class="mode-switch"> -->
-                <!-- <button class="active">Manual</button> -->
-            <!-- </div> -->
+            <div class="mode-switch">
+                <button class="active">Manual</button>
+                <button>Auto</button>
+            </div>
             <div class="control-group">
                 <label>Bet Amount</label>
                 <input type="number" id="bet-amount" value="1" min="1" step="1">
                 <div class="game-stats">
                     <span>Balance: <br>€<span id="balance">1000.00</span></span>
-                    <span>Level XP: <br><span id="level-xp">0/100</span></span>
+                    <span align="right">Level XP: <br><span id="level-xp">0/100</span></span>
                 </div>
             </div>
             <button class="bet-button" id="drop-btn">Place Bet</button>
         </div>
-        
+
         <div id="plinko-board">
             <div class="buckets"></div>
         </div>
     </div>
 
-	<audio id="background-music" src="bg.mp3" autoplay loop></audio>
+    <audio id="background-music" src="bg.mp3" autoplay loop></audio>
     <audio id="coin-drop-sound" src="coin-drop-1.mp3"></audio>
     <audio id="win-sound" src="cash-register-01.mp3"></audio>
-    <audio id="big-win-sound" src="applause-01.mp3"></audio>
-	
+    <audio id="big-win-sound" src="big-win-audio.mp3"></audio>
+
     <button id="mute-btn">🔊</button>
 
     <script>
@@ -323,13 +336,18 @@
         const dailyChallengeDesc = document.getElementById('challenge-description');
         const dailyChallengeProgress = document.getElementById('challenge-progress');
 
-        // Sound Elements
         const coinDropSound = document.getElementById('coin-drop-sound');
         const winSound = document.getElementById('win-sound');
         const bigWinSound = document.getElementById('big-win-sound');
-		
+
         let isSpaceHeld = false;
         let spaceHoldInterval;
+        let isPageFocused = true;
+
+        let isAutoMode = false;
+        let autoDropInterval;
+
+        let isMuted = false;
 
         let gameState = {
             balance: 1000,
@@ -350,47 +368,43 @@
             },
             gameCount: 0
         };
-		
-		    // Load game state from localStorage if available
-    function loadGameState() {
-        const savedState = localStorage.getItem('hakStonksState');
-        if (savedState) {
-            gameState = JSON.parse(savedState);
-            // Ensure the balance is not less than 1000
+
+        function loadGameState() {
+            const savedState = localStorage.getItem('hakStonksState');
+            if (savedState) {
+                gameState = JSON.parse(savedState);
+                if (gameState.balance < 1000) {
+                    gameState.balance = 1000;
+                }
+                updateGameStateUI();
+            }
+        }
+
+        function saveGameState() {
             if (gameState.balance < 1000) {
                 gameState.balance = 1000;
             }
-            updateGameStateUI();
+            localStorage.setItem('hakStonksState', JSON.stringify(gameState));
         }
-    }
 
-    // Save game state to localStorage
-    function saveGameState() {
-        // Ensure balance is at least 1000 before saving
-        if (gameState.balance < 1000) {
-            gameState.balance = 1000;
+        function updateGameStateUI() {
+            balanceEl.textContent = gameState.balance.toFixed(2);
+            levelEl.textContent = gameState.level;
+            levelXpEl.textContent = `${gameState.xp.toFixed(2)}/${gameState.level.toFixed(2) * 100}`;
+            streakCountEl.textContent = gameState.streak;
+            streakBonusEl.textContent = `${gameState.streak}x`;
         }
-        localStorage.setItem('hakStonksState', JSON.stringify(gameState));
-    }
-
-    // Update the UI based on gameState
-    function updateGameStateUI() {
-        balanceEl.textContent = gameState.balance.toFixed(2);
-        levelEl.textContent = gameState.level;
-        levelXpEl.textContent = `${gameState.xp.toFixed(2)}/${gameState.level.toFixed(2) * 100}`;
-        streakCountEl.textContent = gameState.streak;
-        streakBonusEl.textContent = `${gameState.streak}x`;
-    }
 
         const multipliers = [
             1000, 10, 5, 2.5, 1, 0.5, 0.5, 1, 2.5, 5, 10, 1000
         ];
 
-		function playSound(soundElement) {
-			const newSound = new Audio(soundElement.src);
-			newSound.play();
-		}
-		
+        function playSound(soundElement) {
+            const newSound = new Audio(soundElement.src);
+            newSound.muted = isMuted;
+            newSound.play();
+        }
+
         function showMessage(message, color = '#fff') {
             messageOverlay.textContent = message;
             messageOverlay.style.color = color;
@@ -413,34 +427,34 @@
                 }, 600);
             }
         }
-        
+
         // Colors for buckets based on multiplier
         function getMultiplierColor(multiplier) {
-            if (multiplier >= 20) return '#ff0000';  // Extreme jackpot
-            if (multiplier >= 10) return '#ff4444';  // Big win
-            if (multiplier >= 3) return '#ff8c00';   // Significant win
-            if (multiplier >= 2) return '#ffd700';   // Good win
-            return '#4682B4';  // Loss or small return
+            if (multiplier >= 20) return '#ff0000';
+            if (multiplier >= 10) return '#ff4444';
+            if (multiplier >= 3) return '#ff8c00';
+            if (multiplier >= 2) return '#ffd700';
+            return '#4682B4';
         }
 
-		const pegRows = 15;
-		const boardWidth = board.offsetWidth;
-		const boardHeight = board.offsetHeight;
+        const pegRows = 15;
+        const boardWidth = board.offsetWidth;
+        const boardHeight = board.offsetHeight;
 
-		for (let row = 0; row < pegRows; row++) {
-			const pegsInRow = row + 13;
-			const yPos = (row + 1) * (boardHeight - 100) / (pegRows + 1);
+        for (let row = 0; row < pegRows; row++) {
+            const pegsInRow = row + 13;
+            const yPos = (row + 1) * (boardHeight - 100) / (pegRows + 1);
 
-			for (let col = 0; col < pegsInRow; col++) {
-				const peg = document.createElement('div');
-				peg.className = 'peg';
-				
-				const xPos = (boardWidth / 2) + (col - (pegsInRow / 2)) * (boardWidth / (pegRows * 2));
-				peg.style.left = `${xPos}px`;
-				peg.style.top = `${yPos}px`;
-				board.appendChild(peg);
-			}
-		}
+            for (let col = 0; col < pegsInRow; col++) {
+                const peg = document.createElement('div');
+                peg.className = 'peg';
+
+                const xPos = (boardWidth / 2) + (col - (pegsInRow / 2)) * (boardWidth / (pegRows * 2));
+                peg.style.left = `${xPos}px`;
+                peg.style.top = `${yPos}px`;
+                board.appendChild(peg);
+            }
+        }
 
         function createBuckets() {
             const bucketsContainer = document.querySelector('.buckets');
@@ -448,11 +462,10 @@
                 const bucket = document.createElement('div');
                 bucket.className = 'bucket';
                 bucket.style.backgroundColor = getMultiplierColor(multiplier);
-                
-                // More dramatic bucket visual
+
                 const intensity = Math.min(1, multiplier / 20);
-                bucket.style.boxShadow = `0 0 ${15 * intensity}px rgba(255, 255, 255, ${0.5 * intensity})`;
-                
+                bucket.style.boxShadow = `0 0 ${15 * intensity}px rgba(255, 0, 0, ${0.5 * intensity})`;
+
                 bucket.innerHTML = `
                     <div class="multiplier">${multiplier}x</div>
                 `;
@@ -503,8 +516,7 @@
                 gameState.xp -= xpToNextLevel;
                 levelEl.textContent = gameState.level;
                 showMessage(`Level Up! 🆙 Now at Level ${gameState.level}`, '#00ff4c');
-                
-                // Potential level-up rewards
+
                 if (gameState.level % 5 === 0) {
                     gameState.balance += gameState.level * 50;
                     balanceEl.textContent = gameState.balance.toFixed(2);
@@ -517,11 +529,11 @@
 
         function updateDailyChallenge(multiplier) {
             const challenge = gameState.dailyChallenge;
-            
+
             if (challenge.type === 'multiplier' && multiplier >= challenge.target) {
                 challenge.current++;
                 dailyChallengeProgress.textContent = `${challenge.current}/1`;
-                
+
                 if (challenge.current >= 1) {
                     challenge.completed = true;
                     gameState.balance += 10000;
@@ -531,33 +543,88 @@
             }
         }
 
+        function bigWinVideo() {
+            const videoContainer = document.createElement('div');
+            videoContainer.style.position = 'absolute';
+            videoContainer.style.right = '-300px';
+            videoContainer.style.animation = 'floatIn 3s forwards, rotateAndDisappear 3s forwards';
+
+            const video = document.createElement('video');
+            video.setAttribute('autoplay', '');
+            video.muted = isMuted;
+            video.style.width = '400px';
+            video.style.height = 'auto';
+            video.style.border = '5px solid #333';
+            video.style.borderRadius = '30%';
+
+            const source = document.createElement('source');
+            source.setAttribute('src', 'big-win-video.mp4');
+            source.setAttribute('type', 'video/mp4');
+            video.appendChild(source);
+
+            videoContainer.appendChild(video);
+
+            document.body.appendChild(videoContainer);
+
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes floatIn {
+                    0% {
+                        right: -400px;
+                        transform: rotate(0deg);
+                    }
+                    100% {
+                        right: 40%;
+                        transform: translateX(50%) rotate(0deg);
+                    }
+                }
+                @keyframes rotateAndDisappear {
+                    0% {
+                        transform: rotate(-1400deg) scale(1);
+                    }
+                    50% {
+                        transform: rotate(0deg) scale(1);
+                    }
+                    80% {
+                        transform: rotate(0deg) scale(1);
+                    }
+                    100% {
+                        transform: rotate(0deg) scale(0);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+
+            setTimeout(() => {
+                videoContainer.remove();
+            }, 3000);
+        }
+
         function createChipPath() {
             const path = [];
             for (let i = 0; i < pegRows; i++) {
-                // Introduce more unpredictability with weighted randomness
                 const random = Math.random();
-                if (random < 0.4) path.push(-1);     // Left bias
-                else if (random < 0.8) path.push(1); // Right bias
-                else path.push(0);  // Occasional straight path
+                if (random < 0.4) path.push(-1);
+                else if (random < 0.8) path.push(1);
+                else path.push(0);
             }
             return path;
         }
 
         function updateStreak(multiplier) {
             const baseMultipliers = [1, 1.25, 1.5, 1.75, 2, 2.25, 2.5];
-            
+
             if (multiplier >= 2) {
                 gameState.streak++;
                 streakCountEl.textContent = gameState.streak;
-                
-                // Logarithmic streak bonus to prevent runaway wins
+
                 const streakBonus = baseMultipliers[
                     Math.min(gameState.streak - 1, baseMultipliers.length - 1)
                 ];
-                
+
                 streakBonusEl.textContent = streakBonus.toFixed(2);
                 streakDisplay.style.display = 'block';
-                
+
                 return streakBonus;
             } else {
                 gameState.streak = 0;
@@ -567,18 +634,18 @@
         }
 
         function dropChip() {
-			const trimmedInput = betInput.value.trim();
-			const betAmount = parseFloat(trimmedInput) || 0;
+            const trimmedInput = betInput.value.trim();
+            const betAmount = parseFloat(trimmedInput) || 0;
 
-			if (betAmount > gameState.balance) {
-				showMessage('Insufficient balance!', '#ff0000');
-				return;
-			}
-			if (betAmount <= 0) {
-				showMessage('Not enough money bet!', '#ff0000');
-				return;
-			}
-            
+            if (betAmount > gameState.balance) {
+                showMessage('Insufficient balance!', '#ff0000');
+                return;
+            }
+            if (betAmount <= 0) {
+                showMessage('Not enough money bet!', '#ff0000');
+                return;
+            }
+
             gameState.balance -= betAmount;
             balanceEl.textContent = gameState.balance.toFixed(2);
             playSound(coinDropSound);
@@ -600,59 +667,55 @@
                     const direction = path[currentStep];
                     currentX += direction * (boardWidth / 32);
                     currentY += (boardHeight - 100) / (pegRows + 1);
-                    
+
                     chip.style.left = `${currentX}px`;
                     chip.style.top = `${currentY}px`;
-                    
+
                     currentStep++;
                     setTimeout(animate, 80);
                 } else {
-                    // Determine bucket and calculate winnings
                     const bucketIndex = Math.floor((currentX / boardWidth) * multipliers.length);
                     const actualBucketIndex = Math.max(0, Math.min(multipliers.length - 1, bucketIndex));
                     const baseMultiplier = multipliers[actualBucketIndex];
-                    
+
                     const streakBonus = updateStreak(baseMultiplier);
                     const totalMultiplier = baseMultiplier * streakBonus;
                     const winnings = betAmount * totalMultiplier;
-                    
+
                     gameState.balance += winnings;
                     balanceEl.textContent = gameState.balance.toFixed(2);
 
-                    // Highlight bucket
                     const buckets = document.querySelectorAll('.bucket');
                     buckets[actualBucketIndex].classList.add('winning');
                     setTimeout(() => {
                         buckets[actualBucketIndex].classList.remove('winning');
                     }, 100);
 
-                    // Create sparkles
                     createSparkles(currentX, currentY);
 
-                    // Sound effects
                     if (baseMultiplier >= 10) {
-                        playSound(bigWinSound);
+                        bigWinVideo();
+                        setTimeout(() => {
+                            playSound(bigWinSound);
+                        }, 150);
                     } else if (baseMultiplier >= 3) {
                         playSound(winSound);
                     }
 
-                    // XP and Level Progression
                     const xpGained = Math.max(1, Math.log2(totalMultiplier) * 10);
                     updateLevel(xpGained);
 
-                    // Achievements & Challenges
                     const achievementData = {
                         multiplier: totalMultiplier
                     };
                     updateAchievements(achievementData);
                     updateDailyChallenge(totalMultiplier);
-					saveGameState();
-					updateGameStateUI();
+                    saveGameState();
+                    updateGameStateUI();
 
-                    // Show win message
                     if (baseMultiplier > 1) {
                         const messageColor = baseMultiplier >= 10 ? '#ff4444' : '#ffd700';
-                        showMessage(`${totalMultiplier.toFixed(1)}x Win!`, messageColor);
+                        showMessage(`${baseMultiplier.toFixed(1)}x Win!`, messageColor);
                     }
 
                     setTimeout(() => {
@@ -664,19 +727,70 @@
             animate();
         }
 
-        // Initialization
         createBuckets();
 
-        // Rest of the event listeners remain the same as in the previous implementation
-        dropBtn.addEventListener('click', dropChip);
-        
+        const manualButton = document.querySelector('.mode-switch button:nth-child(1)');
+        const autoButton = document.querySelector('.mode-switch button:nth-child(2)');
+
+        manualButton.addEventListener('click', () => {
+            isAutoMode = false;
+            clearInterval(autoDropInterval);
+            manualButton.classList.add('active');
+            autoButton.classList.remove('active');
+            dropBtn.disabled = false;
+            dropBtn.style.display = "block"
+        });
+
+        autoButton.addEventListener('click', () => {
+            isAutoMode = true;
+            manualButton.classList.remove('active');
+            autoButton.classList.add('active');
+            dropBtn.disabled = true;
+            dropBtn.style.display = "none"
+            startAutoDrop();
+        });
+
+        function startAutoDrop() {
+            if (autoDropInterval) clearInterval(autoDropInterval);
+
+            autoDropInterval = setInterval(() => {
+                if (gameState.balance >= parseFloat(betInput.value.trim()) || 0) {
+                    dropChip();
+                } else {
+                    clearInterval(autoDropInterval);
+                    showMessage('Insufficient balance for Auto mode!', '#ff0000');
+                    isAutoMode = false;
+                    manualButton.classList.add('active');
+                    autoButton.classList.remove('active');
+                    dropBtn.disabled = false;
+                }
+            }, 100);
+        }
+
+        window.addEventListener('focus', () => {
+            isPageFocused = true;
+        });
+
+        window.addEventListener('blur', () => {
+            isPageFocused = false;
+
+            isSpaceHeld = false;
+            clearInterval(spaceHoldInterval);
+        });
+
+        dropBtn.addEventListener('click', () => {
+            if (!isAutoMode) {
+                dropChip();
+            }
+        });
+
         document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
+            if (e.code === 'Space' && isPageFocused && !isAutoMode) {
                 e.preventDefault();
                 if (!isSpaceHeld) {
                     isSpaceHeld = true;
                     dropChip();
-                    
+
                     spaceHoldInterval = setInterval(() => {
                         dropChip();
                     }, 100);
@@ -690,35 +804,48 @@
                 clearInterval(spaceHoldInterval);
             }
         });
-		
-		const playMusicOnInteraction = () => {
-	  const backgroundMusic = document.getElementById('background-music');
-	  backgroundMusic.play().catch(error => {
-		console.error("Autoplay failed");
-	  });
-	};
 
-	// List of events to trigger the music
-	const events = ['click', 'mousedown', 'mouseup', 'touchstart', 'keydown', 'mouseover'];
+        const playMusicOnInteraction = () => {
+            const backgroundMusic = document.getElementById('background-music');
+            backgroundMusic.play().catch(error => {
+                console.error("Autoplay failed");
+            });
+        };
 
-	events.forEach(event => {
-	  document.addEventListener(event, playMusicOnInteraction);
-	});
-	
-	const muteBtn = document.getElementById('mute-btn');
+        const events = ['click', 'touchstart', 'keydown'];
+
+        events.forEach(event => {
+            document.addEventListener(event, playMusicOnInteraction);
+        });
+
+        const muteBtn = document.getElementById('mute-btn');
         const backgroundMusic = document.getElementById('background-music');
 
-        let isMuted = false;
+        function saveMutedState() {
+            localStorage.setItem('isMuted', isMuted);
+        }
+
+        function loadMutedState() {
+            const savedState = localStorage.getItem('isMuted');
+            if (savedState !== null) {
+                isMuted = JSON.parse(savedState);
+                backgroundMusic.muted = isMuted;
+                muteBtn.textContent = isMuted ? '🔈' : '🔊';
+            }
+        }
 
         muteBtn.addEventListener('click', () => {
             isMuted = !isMuted;
             backgroundMusic.muted = isMuted;
             muteBtn.textContent = isMuted ? '🔈' : '🔊';
+            saveMutedState();
         });
-		
-	window.addEventListener('load', () => {
-        loadGameState();
-    });
+
+        window.addEventListener('load', () => {
+            loadGameState();
+            loadMutedState();
+        });
     </script>
 </body>
+
 </html>

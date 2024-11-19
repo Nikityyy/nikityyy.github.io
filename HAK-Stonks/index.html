@@ -24,7 +24,7 @@
 
         .game-title {
             font-size: 3rem;
-            margin: 0;
+            margin-bottom: 2rem;
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
             letter-spacing: 3px;
         }
@@ -111,7 +111,7 @@
         #plinko-board {
             position: relative;
             width: 800px;
-            height: 600px;
+            height: 550px;
             background: rgba(255, 255, 255, 0.02);
             border-radius: 10px;
             overflow: hidden;
@@ -257,22 +257,23 @@
             padding: 10px;
             border-radius: 10px;
             text-align: center;
+			z-index: 10;
         }
     </style>
 </head>
 <body>
     <h1 class="game-title">HAK Stonks</h1>
-    <div id="message-overlay"></div>
-    <div id="level-display">Level: <span id="current-level">1</span></div>
-    <div id="streak-display">
-        Streak: <span id="streak-count">0</span>
-        Bonus: <span id="streak-bonus">0x</span>
-    </div>
     <div id="daily-challenge">
         Daily Challenge: <br>
         <span id="challenge-description">Win 1000x multiplier</span>
         <br>
         Progress: <span id="challenge-progress">0/1</span>
+    </div>
+    <div id="message-overlay"></div>
+    <div id="level-display">Level: <span id="current-level">1</span></div>
+    <div id="streak-display">
+        Streak: <span id="streak-count">0</span>
+        Bonus: <span id="streak-bonus">0x</span>
     </div>
     <div id="achievement-popup" class="achievement-popup">
         🏆 Achievement Unlocked! <br>
@@ -376,7 +377,7 @@
     function updateGameStateUI() {
         balanceEl.textContent = gameState.balance.toFixed(2);
         levelEl.textContent = gameState.level;
-        levelXpEl.textContent = `${gameState.xp.toFixed(2)}/100`;
+        levelXpEl.textContent = `${gameState.xp.toFixed(2)}/${gameState.level.toFixed(2) * 100}`;
         streakCountEl.textContent = gameState.streak;
         streakBonusEl.textContent = `${gameState.streak}x`;
     }
@@ -427,7 +428,7 @@
 		const boardHeight = board.offsetHeight;
 
 		for (let row = 0; row < pegRows; row++) {
-			const pegsInRow = row + 14;
+			const pegsInRow = row + 13;
 			const yPos = (row + 1) * (boardHeight - 100) / (pegRows + 1);
 
 			for (let col = 0; col < pegsInRow; col++) {
@@ -523,8 +524,8 @@
                 
                 if (challenge.current >= 1) {
                     challenge.completed = true;
-                    gameState.balance += 10000;  // Daily challenge reward
-                    showMessage('Daily Challenge Completed! +€10000 Bonus', '#00ff4c');
+                    gameState.balance += 10000;
+                    showMessage('Daily Challenge Completed! + €10000 Bonus', '#00ff4c');
                     balanceEl.textContent = gameState.balance.toFixed(2);
                 }
             }
@@ -566,14 +567,16 @@
         }
 
         function dropChip() {
-            const betAmount = parseFloat(betInput.value);
-            if (betAmount > gameState.balance) {
-                showMessage('Insufficient balance!', '#ff0000');
-                return;
-            }
-            if (betAmount <= 0) {
-                showMessage('Not enough money bet!', '#ff0000');
-                return;
+			const trimmedInput = betInput.value.trim();
+			const betAmount = parseFloat(trimmedInput) || 0;
+
+			if (betAmount > gameState.balance) {
+				showMessage('Insufficient balance!', '#ff0000');
+				return;
+			}
+			if (betAmount <= 0) {
+				showMessage('Not enough money bet!', '#ff0000');
+				return;
 			}
             
             gameState.balance -= betAmount;

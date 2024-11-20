@@ -754,16 +754,7 @@
             if (autoDropInterval) clearInterval(autoDropInterval);
 
             autoDropInterval = setInterval(() => {
-                if (gameState.balance >= parseFloat(betInput.value.trim()) || 0) {
-                    dropChip();
-                } else {
-                    clearInterval(autoDropInterval);
-                    showMessage('Insufficient balance for Auto mode!', '#ff0000');
-                    isAutoMode = false;
-                    manualButton.classList.add('active');
-                    autoButton.classList.remove('active');
-                    dropBtn.disabled = false;
-                }
+				dropChip();
             }, 100);
         }
 

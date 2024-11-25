@@ -179,6 +179,15 @@
             letter-spacing: 1px;
             position: relative;
         }
+		
+		#drop-btn:disabled {
+			background: linear-gradient(135deg, var(--accent-color), #00cc6a);
+			cursor: not-allowed;
+			filter: brightness(0.5);
+			opacity: 0.6;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+			transform: scale(0.98);
+		}
 
         .bet-button:hover {
             transform: translateY(-2px);
@@ -1370,6 +1379,7 @@
             canvas.style.position = "absolute";
             canvas.style.top = "0";
             canvas.style.left = "0";
+			canvas.style.pointerEvents = "none";
 
             coin.src = 'coin.png';
             coin.onload = () => {
@@ -1569,11 +1579,23 @@
             clearInterval(spaceHoldInterval);
         });
 
-        dropBtn.addEventListener('click', () => {
-            if (!isAutoMode) {
-                dropChip();
-            }
-        });
+		let lastClickTime = 0;
+		const minClickInterval = 60;
+
+		dropBtn.addEventListener('click', () => {
+			const currentTime = Date.now();
+			
+			if (!isAutoMode && (currentTime - lastClickTime) > minClickInterval) {
+				dropChip();
+				lastClickTime = currentTime;
+			} else {
+				showMessage('AUTOCLICKER DETECTED', '#ff0000');
+				dropBtn.disabled = true;
+				setTimeout(() => {
+					dropBtn.disabled = false;
+				}, 3000);
+			}
+		});
 
         dropBtnAll.addEventListener('click', () => {
             if (!isAutoMode) {

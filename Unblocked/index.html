@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Play Games Unblocked">
     <meta name="author" content="Nikita Berger">
     <title>Nikita Berger | Games</title>
+	<link rel="icon" href="media/favicon.webp">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,44 +16,105 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-			overflow: hidden;
-        }
-
-        iframe {
-            border: none;
-            width: 100vw;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #ffffff;
             height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
 
         .container {
-            text-align: center;
-            padding: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 50px;
+            perspective: 1000px;
         }
 
-        button {
-            margin: 20px;
-            padding: 15px 30px;
-            font-size: 18px;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
+        .game-card {
+            width: 300px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            transition: all 0.5s ease;
+            transform-style: preserve-3d;
+            position: relative;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
         }
 
-        button:hover {
-            background-color: #0056b3;
+        .game-card:hover {
+            transform: scale(1.05) rotateY(10deg);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.3);
+        }
+		
+		.game-card2:hover {
+            transform: scale(1.05) rotateY(-10deg);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.3);
+		}
+
+        .game-card-inner {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.8) 100%);
+        }
+
+        .game-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .game-description {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+
+        .play-btn {
+            background-color: #ff6b6b;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+			cursor: pointer;
+        }
+
+        .play-btn:hover {
+            background-color: #ff4757;
+            transform: scale(1.05);
         }
 
         #iframe-container {
-            position: relative;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100vw;
             height: 100vh;
-			display: none;
+            z-index: 1000;
+            display: none;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
         .fullscreen-btn {
@@ -60,64 +122,76 @@
             top: 10px;
             right: 10px;
             padding: 10px 20px;
-            font-size: 16px;
-            color: #fff;
             background-color: #28a745;
+            color: white;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
-            z-index: 1000;
+            z-index: 1001;
             display: none;
-            transition: background-color 0.3s ease;
         }
 
-        .fullscreen-btn:hover {
-            background-color: #218838;
-        }
-
-        .fullscreen-enabled .fullscreen-btn {
-            display: none;
+        .game-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.7);
+            z-index: -1;
         }
     </style>
 </head>
-
 <body>
     <div class="container" id="buttons-container">
-        <button id="build-now-btn">Play Build Now GG</button>
-        <button id="game-btn">Play 1v1.LOL</button>
+        <div class="game-card" id="build-now-btn">
+            <div class="game-background" style="background-image: url('media/build-now.png')"></div>
+            <div class="game-card-inner">
+                <h2 class="game-title">Build Now GG</h2>
+                <p class="game-description">Creative building and battle royale gameplay!</p>
+                <button class="play-btn">Play Now <i class="fas fa-gamepad"></i></button>
+            </div>
+        </div>
+        <div class="game-card game-card2" id="game-btn">
+            <div class="game-background" style="background-image: url('media/1v1-lol.png')"></div>
+            <div class="game-card-inner">
+                <h2 class="game-title">1v1.LOL</h2>
+                <p class="game-description">Intense 1v1 multiplayer action!</p>
+                <button class="play-btn">Play Now <i class="fas fa-gamepad"></i></button>
+            </div>
+        </div>
     </div>
-        <button class="fullscreen-btn" id="fullscreen-btn">Fullscreen</button>
 
-    <div id="iframe-container">
-    </div>
+    <button class="fullscreen-btn" id="fullscreen-btn">
+        <i class="fas fa-expand"></i> Fullscreen
+    </button>
+
+    <div id="iframe-container"></div>
 
     <script>
         const buttonsContainer = document.getElementById('buttons-container');
         const iframeContainer = document.getElementById('iframe-container');
         const fullscreenBtn = document.getElementById('fullscreen-btn');
 
-        document.getElementById('build-now-btn').addEventListener('click', function () {
+        function loadGame(src, title) {
             buttonsContainer.style.display = 'none';
             iframeContainer.style.display = 'block';
             iframeContainer.innerHTML = `
                 <iframe 
-                    title="Build Now" 
-                    src="https://buildnow-gg.io/buildnow-gg.embed" 
+                    title="${title}" 
+                    src="${src}" 
                     allowfullscreen="allowfullscreen">
                 </iframe>`;
             fullscreenBtn.style.display = 'block';
+        }
+
+        document.getElementById('build-now-btn').addEventListener('click', function () {
+            loadGame("https://buildnow-gg.io/buildnow-gg.embed", "Build Now");
         });
 
         document.getElementById('game-btn').addEventListener('click', function () {
-            buttonsContainer.style.display = 'none';
-            iframeContainer.style.display = 'block';
-            iframeContainer.innerHTML = `
-                <iframe 
-                    title="Play 1v1.LOL Unblocked" 
-                    src="https://education76.github.io/g77/1v1-lol-3/" 
-                    allowfullscreen="allowfullscreen">
-                </iframe>`;
-            fullscreenBtn.style.display = 'block';
+            loadGame("games/1v1", "1v1.LOL");
         });
 
         fullscreenBtn.addEventListener('click', function () {
@@ -137,5 +211,4 @@
         });
     </script>
 </body>
-
 </html>

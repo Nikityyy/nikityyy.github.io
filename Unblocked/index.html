@@ -55,6 +55,11 @@
         }
 		
 		.game-card2:hover {
+            transform: scale(1.05);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.3);
+		}
+		
+		.game-card3:hover {
             transform: scale(1.05) rotateY(-10deg);
             box-shadow: 0 25px 45px rgba(0,0,0,0.3);
 		}
@@ -153,11 +158,19 @@
                 <button class="play-btn">Play Now <i class="fas fa-gamepad"></i></button>
             </div>
         </div>
-        <div class="game-card game-card2" id="game-btn">
+        <div class="game-card game-card2" id="1v1-btn">
             <div class="game-background" style="background-image: url('media/1v1-lol.png')"></div>
             <div class="game-card-inner">
                 <h2 class="game-title">1v1.LOL</h2>
                 <p class="game-description">Intense 1v1 multiplayer action!</p>
+                <button class="play-btn">Play Now <i class="fas fa-gamepad"></i></button>
+            </div>
+        </div>
+        <div class="game-card game-card3" id="smash-karts-btn">
+            <div class="game-background" style="background-image: url('media/smash-karts.png')"></div>
+            <div class="game-card-inner">
+                <h2 class="game-title">Smash Karts</h2>
+                <p class="game-description">A Multiplayer Kart Battle Arena game. Drive fast. Fire rockets. Make big explosions.</p>
                 <button class="play-btn">Play Now <i class="fas fa-gamepad"></i></button>
             </div>
         </div>
@@ -190,8 +203,12 @@
             loadGame("https://buildnow-gg.io/buildnow-gg.embed", "Build Now");
         });
 
-        document.getElementById('game-btn').addEventListener('click', function () {
+        document.getElementById('1v1-btn').addEventListener('click', function () {
             loadGame("games/1v1", "1v1.LOL");
+        });
+
+        document.getElementById('smash-karts-btn').addEventListener('click', function () {
+            loadGame("games/Smash Karts", "Smash Karts");
         });
 
         fullscreenBtn.addEventListener('click', function () {

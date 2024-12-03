@@ -1,0 +1,2 @@
+const IS_DEV = false;
+const DISCORD_CLIENT_ID = "1217877285923979415";

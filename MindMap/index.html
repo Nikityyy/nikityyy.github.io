@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Map Creator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        @keyframes nodePopIn {
+            0% { transform: scale(0.5) rotate(-15deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        .tooltip {
+            position: relative;
+        }
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            white-space: nowrap;
+            opacity: 0.9;
+            z-index: 10;
+        }
+        #nodeContextMenu {
+            position: fixed;
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            border-radius: 6px;
+            display: none;
+        }
+        #nodeContextMenu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #nodeContextMenu ul li {
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        #nodeContextMenu ul li:hover {
+            background-color: #f0f0f0;
+        }
+		#mindMapSVG * {
+			user-select: none;
+		}
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen flex flex-col font-sans">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600 mb-4">
+                Mind Map Creator
+            </h1>
+            <p class="text-gray-600 max-w-xl mx-auto">
+                Visualize your thoughts, connect ideas, and explore creativity with an intuitive mind mapping tool.<br>Just r-click and start creating!
+            </p>
+        </header>
+        
+        <div class="flex flex-wrap space-x-4 mb-6 justify-center items-center gap-4">
+            
+            <button 
+                id="exportPNGBtn" 
+                class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition transform hover:scale-105 tooltip"
+                data-tooltip="Download your mind map as an image"
+            >
+                Export PNG
+            </button>
+        </div>
+
+        <div 
+            class="relative w-full h-[700px] bg-white rounded-xl shadow-2xl border-2 border-gray-100 overflow-hidden"
+            id="svgContainer"
+        >
+            <svg 
+                id="mindMapSVG" 
+                xmlns="http://www.w3.org/2000/svg" 
+                class="w-full h-full"
+                preserveAspectRatio="xMinYMin meet"
+            ></svg>
+        </div>
+    </div>
+
+    <div 
+        id="nodeContextMenu" 
+        class="absolute p-2 rounded-lg shadow-lg bg-white border border-gray-200"
+    >
+        <ul>
+            <li id="deleteNodeBtn" class="hover:bg-red-50 text-red-600 rounded-md">
+                <i class="fas fa-trash mr-2"></i>Delete Node
+            </li>
+        </ul>
+    </div>
+
+    <input 
+        type="text" 
+        id="nodeInputField" 
+        class="fixed z-50 px-3 py-2 border rounded shadow-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 hidden"
+    >
+
+    <script>
+    class MindMap {
+        constructor() {
+            this.svg = document.getElementById('mindMapSVG');
+            this.svgContainer = document.getElementById('svgContainer');
+            this.nodes = [];
+            this.connections = [];
+			this.colorPalette = [
+				'#37b6fd',
+				'#a462d9',
+				'#ffa500',
+				'#ff4000',
+				'#ff69b4',
+				'#00ff7f',
+			];
+            this.levelColors = {};
+            this.draggedNode = null;
+            this.selectedNode = null;
+            this.setupEventListeners();
+            this.setupContextMenu();
+            this.setupResponsiveness();
+        }
+
+        setupResponsiveness() {
+            const updateSVGSize = () => {
+                // Recalculate node positions based on new container size
+                const containerWidth = this.svgContainer.clientWidth;
+                const containerHeight = this.svgContainer.clientHeight;
+
+                this.nodes.forEach(node => {
+                    // Normalize node positions relative to container
+                    node.x = (node.x / this.lastContainerWidth) * containerWidth;
+                    node.y = (node.y / this.lastContainerHeight) * containerHeight;
+                    
+                    this.updateNodePosition(node);
+                });
+
+                // Rerender all connections
+                this.connections.forEach(conn => {
+                    this.rerenderConnection(conn.parent, conn.child);
+                });
+
+                this.lastContainerWidth = containerWidth;
+                this.lastContainerHeight = containerHeight;
+            };
+
+            this.lastContainerWidth = this.svgContainer.clientWidth;
+            this.lastContainerHeight = this.svgContainer.clientHeight;
+
+            window.addEventListener('resize', updateSVGSize);
+        }
+
+setupContextMenu() {
+    const contextMenu = document.getElementById('nodeContextMenu');
+	
+    const hideContextMenu = () => {
+        contextMenu.style.display = 'none';
+    };
+    
+    // Hide on window resize
+    window.addEventListener('resize', hideContextMenu);
+    
+    // Hide when window loses focus
+    window.addEventListener('blur', hideContextMenu);
+    
+    // Hide on page scroll
+    window.addEventListener('scroll', hideContextMenu);
+    
+    // Hide when SVG container scrolls (if scrollable)
+    this.svgContainer.addEventListener('scroll', hideContextMenu);
+    
+    // Hide when input field is focused
+    const nodeInput = document.getElementById('nodeInputField');
+    nodeInput.addEventListener('focus', hideContextMenu);
+    
+    // Hide when export PNG button is clicked
+    document.getElementById('exportPNGBtn').addEventListener('click', hideContextMenu);
+    
+    // Hide on Escape key press
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            hideContextMenu();
+        }
+    });
+	
+    this.svg.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        const svgPoint = this.getSVGPoint(e);
+        
+        const nodeElement = e.target.closest('.node');
+        
+        // Check if a root node exists
+        const rootNodeExists = this.nodes.some(node => node.level === 0);
+        
+        if (nodeElement) {
+            // If clicking on an existing node, show delete and create options
+            contextMenu.innerHTML = `
+                <ul>
+                    <li id="createNodeBtn" class="hover:bg-blue-50 text-blue-600 rounded-md">
+                        <i class="fas fa-plus mr-2"></i>Create Child Node
+                    </li>
+                    <li id="deleteNodeBtn" class="hover:bg-red-50 text-red-600 rounded-md">
+                        <i class="fas fa-trash mr-2"></i>Delete Node
+                    </li>
+                </ul>
+            `;
+            
+            this.selectedNode = this.nodes.find(n => n.id === nodeElement.getAttribute('data-node-id'));
+        } else if (!rootNodeExists) {
+            // If no root node exists, show create root node option
+            contextMenu.innerHTML = `
+                <ul>
+                    <li id="createNodeBtn" class="hover:bg-blue-50 text-blue-600 rounded-md">
+                        <i class="fas fa-plus mr-2"></i>Create Root Node
+                    </li>
+                </ul>
+            `;
+            this.selectedNode = null;
+        } else {
+            // If root node exists and clicking on empty SVG, hide context menu
+            contextMenu.style.display = 'none';
+            return;
+        }
+        
+        // Setup event listeners for context menu items
+        const createNodeBtn = contextMenu.querySelector('#createNodeBtn');
+        const deleteNodeBtn = contextMenu.querySelector('#deleteNodeBtn');
+        
+        if (createNodeBtn) {
+            createNodeBtn.addEventListener('click', () => {
+                if (!this.selectedNode) {
+                    // If no node selected, create a root node
+                    this.createNodeAtPosition(svgPoint.x, svgPoint.y);
+                } else {
+                    // Create a child node
+                    this.createNodeAtPosition(svgPoint.x + 100, svgPoint.y + 100, this.selectedNode);
+                }
+                contextMenu.style.display = 'none';
+            });
+        }
+        
+        if (deleteNodeBtn) {
+            deleteNodeBtn.addEventListener('click', () => {
+                if (this.selectedNode) {
+                    this.deleteNode(this.selectedNode);
+                    contextMenu.style.display = 'none';
+                }
+            });
+        }
+        
+        // Position and show context menu
+        contextMenu.style.display = 'block';
+        contextMenu.style.left = `${e.clientX}px`;
+        contextMenu.style.top = `${e.clientY}px`;
+    });
+    
+    // Hide context menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('#nodeContextMenu')) {
+            contextMenu.style.display = 'none';
+        }
+    });
+}
+
+calculateOptimalChildPosition(parentNode) {
+    // Use the existing method that calculates optimal angle
+    const angle = this.calculateOptimalAngle(parentNode);
+    
+    // Calculate radius based on parent node's dimensions
+    const radius = Math.max(parentNode.width, parentNode.height) * 1.5;
+    
+    return {
+        x: parentNode.x + Math.cos(angle) * radius,
+        y: parentNode.y + Math.sin(angle) * radius
+    };
+}
+
+createNodeAtPosition(x, y, parentNode = null) {
+    const nodeInput = document.getElementById('nodeInputField');
+    
+    // Reset input and position
+    nodeInput.value = "";
+    nodeInput.style.transform = 'translate(-50%, -50%)';
+	nodeInput.style.left = `${event.clientX}px`;
+	nodeInput.style.top = `${event.clientY}px`;
+	
+    nodeInput.style.display = 'block';
+    nodeInput.focus();
+	
+	if (parentNode) {
+        const optimalPos = this.calculateOptimalChildPosition(parentNode);
+        x = optimalPos.x;
+        y = optimalPos.y;
+    }
+
+    // Store context for node creation
+    nodeInput.dataset.createX = x;
+    nodeInput.dataset.createY = y;
+    if (parentNode) {
+        nodeInput.dataset.parentNodeId = parentNode.id;
+    } else {
+        delete nodeInput.dataset.parentNodeId;
+    }
+
+    // Add one-time event listener for input confirmation
+    const handleInput = (e) => {
+        if (e.key === 'Enter') {
+            const text = nodeInput.value.trim();
+            if (text) {
+                const createX = parseFloat(nodeInput.dataset.createX);
+                const createY = parseFloat(nodeInput.dataset.createY);
+                const parentNodeId = nodeInput.dataset.parentNodeId;
+                const parentNode = parentNodeId 
+                    ? this.nodes.find(n => n.id === parentNodeId) 
+                    : null;
+
+                // Create node at specified position
+                const newNode = this.createCustomNode(text, createX, createY, parentNode);
+                
+                // Hide input field
+                nodeInput.style.display = 'none';
+                
+                // Remove this event listener
+                nodeInput.removeEventListener('keydown', handleInput);
+            }
+        }
+    };
+
+    nodeInput.addEventListener('keydown', handleInput);
+}
+
+createCustomNode(text, x, y, parentNode = null) {
+    // Create a temporary SVG text element to calculate dimensions
+    const tempText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    tempText.textContent = text;
+    tempText.setAttribute('font-size', '14');
+    tempText.setAttribute('text-anchor', 'middle');
+    this.svg.appendChild(tempText);
+    const textMetrics = tempText.getBBox();
+    this.svg.removeChild(tempText);
+
+    const newNode = {
+        id: `node-${Date.now()}`,
+        text: text,
+        x: x,
+        y: y,
+        color: parentNode 
+            ? this.getLevelColor(parentNode.level + 1) 
+            : this.getLevelColor(0),
+        children: [],
+        level: parentNode ? parentNode.level + 1 : 0,
+        width: Math.max(120, textMetrics.width + 40),
+        height: Math.max(50, textMetrics.height + 30)
+    };
+
+    this.nodes.push(newNode);
+
+    // If there's a parent, add this node to parent's children
+    if (parentNode) {
+        parentNode.children.push(newNode);
+        setTimeout(() => {
+            this.renderConnection(parentNode, newNode);
+        }, 850);
+    }
+
+    this.renderNode(newNode);
+    return newNode;
+}
+
+deleteNode(node) {
+    // Recursive function to delete a node and all its children
+    const recursiveDelete = (nodeToDelete) => {
+        // Remove connections involving this node
+        this.connections = this.connections.filter(conn => 
+            conn.parent.id !== nodeToDelete.id && conn.child.id !== nodeToDelete.id
+        );
+
+        // Remove SVG elements for this node
+        const nodeGroup = this.svg.querySelector(`[data-node-id="${nodeToDelete.id}"]`);
+        if (nodeGroup) {
+            this.svg.removeChild(nodeGroup);
+        }
+
+        // Remove connection paths for this node
+        const connectionPaths = Array.from(this.svg.querySelectorAll(`.connection[data-parent="${nodeToDelete.id}"], .connection[data-child="${nodeToDelete.id}"]`));
+        connectionPaths.forEach(path => this.svg.removeChild(path));
+
+        // Recursively delete children
+        if (nodeToDelete.children && nodeToDelete.children.length > 0) {
+            nodeToDelete.children.forEach(child => {
+                recursiveDelete(child);
+            });
+        }
+
+        // Remove the node from nodes array
+        this.nodes = this.nodes.filter(n => n.id !== nodeToDelete.id);
+    };
+
+    // If the node to delete is the root (level 0), clear everything
+    if (node.level === 0) {
+        this.svg.innerHTML = '';
+        this.nodes = [];
+        this.connections = [];
+        this.levelColors = {};
+        return;
+    }
+
+    // Remove this node from its parent's children
+    const parentNode = this.nodes.find(n => n.children.some(child => child.id === node.id));
+    if (parentNode) {
+        parentNode.children = parentNode.children.filter(child => child.id !== node.id);
+    }
+
+    // Start recursive deletion
+    recursiveDelete(node);
+}
+
+setupEventListeners() {
+    document.getElementById('exportPNGBtn').addEventListener('click', () => this.exportAsPNG());
+    
+    // Drag event listeners
+    this.svg.addEventListener('mousedown', (e) => this.startDrag(e));
+    this.svg.addEventListener('mousemove', (e) => this.drag(e));
+    this.svg.addEventListener('mouseup', (e) => this.endDrag(e));
+    this.svg.addEventListener('mouseleave', (e) => this.endDrag(e));
+    
+    // Remove old root node creation listeners
+    // Retain node input handling
+    const nodeInput = document.getElementById('nodeInputField');
+    nodeInput.addEventListener('blur', () => {
+        nodeInput.style.display = 'none';
+    });
+}
+
+		startDrag(e) {
+			const nodeElement = e.target.closest('.node');
+			if (!nodeElement) return;
+
+			const nodeId = nodeElement.getAttribute('data-node-id');
+			const node = this.nodes.find(n => n.id === nodeId);
+			
+			if (node) {
+				this.draggedNode = {
+					node: node,
+					element: nodeElement,
+					offsetX: e.clientX - node.x,
+					offsetY: e.clientY - node.y
+				};
+				this.isDragging = false;  // Initialize drag flag
+			}
+		}
+
+		drag(e) {
+			if (!this.draggedNode) return;
+
+			// Set dragging flag to true during actual movement
+			this.isDragging = true;
+
+			// Rest of the existing drag method remains the same
+			const svgPoint = this.getSVGPoint(e);
+			
+			this.draggedNode.node.x = svgPoint.x;
+			this.draggedNode.node.y = svgPoint.y;
+
+			this.updateNodePosition(this.draggedNode.node);
+			this.updateNodeConnections(this.draggedNode.node);
+		}
+
+		endDrag(e) {
+			this.draggedNode = null;
+		}
+
+        getSVGPoint(evt) {
+            const svg = this.svg;
+            const pt = svg.createSVGPoint();
+            pt.x = evt.clientX;
+            pt.y = evt.clientY;
+            
+            // Transform screen coordinates to SVG coordinates
+            const svgPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
+            return svgPoint;
+        }
+
+        updateNodePosition(node) {
+            const nodeElement = this.svg.querySelector(`[data-node-id="${node.id}"]`);
+            if (!nodeElement) return;
+
+            // Move rect
+            const rect = nodeElement.querySelector('rect');
+            rect.setAttribute('x', node.x - node.width/2);
+            rect.setAttribute('y', node.y - node.height/2);
+
+            // Move text
+            const text = nodeElement.querySelector('text');
+            text.setAttribute('x', node.x);
+            text.setAttribute('y', node.y);
+        }
+
+        updateNodeConnections(node) {
+            // Find and update connections where this node is either parent or child
+            this.connections.forEach(conn => {
+                if (conn.parent.id === node.id || conn.child.id === node.id) {
+                    this.rerenderConnection(conn.parent, conn.child);
+                }
+            });
+        }
+
+        rerenderConnection(parentNode, childNode) {
+            // Find existing connection path
+            const connections = Array.from(this.svg.querySelectorAll('.connection'));
+            const connectionPath = connections.find(path => 
+                this.pathMatchesNodes(path, parentNode, childNode)
+            );
+
+            if (connectionPath) {
+                // Recalculate path
+                const midX = (parentNode.x + childNode.x) / 2;
+                const midY = (parentNode.y + childNode.y) / 2;
+                
+                connectionPath.setAttribute('d', 
+                    `M${parentNode.x},${parentNode.y} 
+                     Q${midX},${midY} 
+                     ${childNode.x},${childNode.y}`
+                );
+            }
+        }
+
+        pathMatchesNodes(path, parentNode, childNode) {
+            // This is a simplistic matching - might need refinement
+            return path.getAttribute('data-parent') === parentNode.id &&
+                   path.getAttribute('data-child') === childNode.id;
+        }
+
+        createRootNode() {
+            const rootText = document.getElementById('rootNodeInput').value.trim();
+            if (!rootText) return;
+            
+            document.getElementById('rootNodeInput').value = "";
+            
+            // Clear any existing nodes and reset level colors
+            this.svg.innerHTML = '';
+            this.nodes = [];
+            this.connections = [];
+            this.levelColors = {}; // Reset level colors
+
+            // Create a temporary SVG text element to calculate dimensions
+            const tempText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            tempText.textContent = rootText;
+            tempText.setAttribute('font-size', '14');
+            tempText.setAttribute('text-anchor', 'middle');
+            this.svg.appendChild(tempText);
+            const textMetrics = tempText.getBBox();
+            this.svg.removeChild(tempText);
+
+            const node = {
+                id: `node-${Date.now()}`,
+                text: rootText,
+                x: this.svgContainer.clientWidth / 2,
+                y: 100,
+                color: this.getLevelColor(0), // Get color for level 0 (root)
+                children: [],
+                level: 0, // Add level tracking
+                width: Math.max(120, textMetrics.width + 40),
+                height: Math.max(50, textMetrics.height + 30)
+            };
+
+            this.nodes.push(node);
+            this.renderNode(node);
+        }
+
+		handleSVGClick(e) {
+			// Check if this is a genuine click, not the end of a drag
+			if (!this.isDragging && e.target.closest('.node')) {
+				const nodeElement = e.target.closest('.node');
+				const nodeId = nodeElement.getAttribute('data-node-id');
+				const node = this.nodes.find(n => n.id === nodeId);
+				this.showNodeInput(node, nodeElement);
+			}
+			// Reset drag flag after click
+			this.isDragging = false;
+		}
+
+		showNodeInput(parentNode, parentElement) {
+			const nodeInput = document.getElementById('nodeInputField');
+
+			// Add a blur event to hide the input field when it loses focus
+			nodeInput.addEventListener('blur', () => {
+				nodeInput.style.display = 'none';
+			}, { once: true });
+			
+			// If input is already visible for this node, hide it
+			if (nodeInput.style.display === 'block') {
+				nodeInput.style.display = 'none';
+				return;
+			}
+
+			// Reset input
+			nodeInput.value = "";
+			nodeInput.style.display = 'block';
+
+			// Position the input
+			const rect = parentElement.getBoundingClientRect();
+			nodeInput.style.left = `${rect.right + 10}px`;
+			nodeInput.style.top = `${rect.top}px`;
+			nodeInput.focus();
+
+			// Store parent node reference
+			nodeInput.dataset.parentNodeId = parentNode.id;
+		}
+
+        addNodeFromInput(text) {
+            const nodeInput = document.getElementById('nodeInputField');
+            const parentNodeId = nodeInput.dataset.parentNodeId;
+            const parentNode = this.nodes.find(n => n.id === parentNodeId);
+
+            if (!text || !parentNode) return;
+
+            // Calculate optimal position for new node
+            const angle = this.calculateOptimalAngle(parentNode);
+            const radius = 150;
+            
+            // Create a temporary SVG text element to calculate dimensions
+            const tempText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            tempText.textContent = text;
+            tempText.setAttribute('font-size', '14');
+            tempText.setAttribute('text-anchor', 'middle');
+            this.svg.appendChild(tempText);
+            const textMetrics = tempText.getBBox();
+            this.svg.removeChild(tempText);
+
+            const newNode = {
+                id: `node-${Date.now()}`,
+                text: text,
+                x: parentNode.x + Math.cos(angle) * radius,
+                y: parentNode.y + Math.sin(angle) * radius,
+                color: this.getLevelColor(parentNode.level + 1), // Get color for next level
+                children: [],
+                level: parentNode.level + 1, // Track node level
+                width: Math.max(120, textMetrics.width + 40),
+                height: Math.max(50, textMetrics.height + 30)
+            };
+
+            this.nodes.push(newNode);
+            parentNode.children.push(newNode);
+
+            this.renderNode(newNode);
+            setTimeout(() => {
+                this.renderConnection(parentNode, newNode);
+            }, 850);
+        }
+
+        calculateOptimalAngle(parentNode) {
+            // Calculate existing child angles to distribute new nodes
+            const childCount = parentNode.children.length;
+            const baseAngles = [0, Math.PI/4, -Math.PI/4, Math.PI/2, -Math.PI/2, Math.PI*3/4, -Math.PI*3/4];
+            return baseAngles[childCount % baseAngles.length];
+        }
+
+        renderNode(node) {
+            const existingNode = document.querySelector(`[data-node-id="${node.id}"]`);
+            if (existingNode) return;
+
+            const nodeGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            nodeGroup.setAttribute('class', 'node cursor-move');
+            nodeGroup.setAttribute('data-node-id', node.id);
+            
+            // Add pop-in animation
+            nodeGroup.style.animation = 'nodePopIn 0.85s cubic-bezier(0.68, -0.55, 0.27, 1.85)';
+
+            const nodeRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            nodeRect.setAttribute('x', node.x - node.width/2);
+            nodeRect.setAttribute('y', node.y - node.height/2);
+            nodeRect.setAttribute('width', node.width);
+            nodeRect.setAttribute('height', node.height);
+            nodeRect.setAttribute('rx', '10');
+            nodeRect.setAttribute('ry', '10');
+            nodeRect.setAttribute('fill', node.color);
+
+            const nodeText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            nodeText.setAttribute('x', node.x);
+            nodeText.setAttribute('y', node.y);
+            nodeText.setAttribute('text-anchor', 'middle');
+            nodeText.setAttribute('alignment-baseline', 'middle');
+            nodeText.setAttribute('fill', 'white');
+            nodeText.setAttribute('font-weight', 'bold');
+            nodeText.setAttribute('font-size', '14');
+            nodeText.setAttribute('pointer-events', 'none');
+			nodeText.textContent = node.text;
+            nodeGroup.appendChild(nodeRect);
+            nodeGroup.appendChild(nodeText);
+            this.svg.appendChild(nodeGroup);
+        }
+
+        renderConnection(parentNode, childNode) {
+            // Create a curved path between nodes
+            const connection = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            
+            // Calculate control points for curved connection
+            const midX = (parentNode.x + childNode.x) / 2;
+            const midY = (parentNode.y + childNode.y) / 2;
+            
+            connection.setAttribute('d', 
+                `M${parentNode.x},${parentNode.y} 
+                 Q${midX},${midY} 
+                 ${childNode.x},${childNode.y}`
+            );
+            connection.setAttribute('stroke', '#666');
+            connection.setAttribute('class', 'connection');
+            connection.setAttribute('fill', 'none');
+            
+            // Add data attributes to help with connection tracking
+            connection.setAttribute('data-parent', parentNode.id);
+            connection.setAttribute('data-child', childNode.id);
+            
+            // Store connection reference
+            this.connections.push({
+                path: connection,
+                parent: parentNode,
+                child: childNode
+            });
+            
+            // Insert connection before nodes so it appears behind
+            this.svg.insertBefore(connection, this.svg.firstChild);
+        }
+
+        getRandomColor() {
+            return this.colorPalette[Math.floor(Math.random() * this.colorPalette.length)];
+        }
+		
+		getLevelColor(level) {
+			const availableColors = this.colorPalette.filter(color => 
+				!Object.values(this.levelColors).includes(color)
+			);
+
+			if (availableColors.length === 0) {
+				this.levelColors = {};
+				return this.getRandomColor();
+			}
+
+			if (!this.levelColors[level]) {
+				const randomIndex = Math.floor(Math.random() * availableColors.length);
+				this.levelColors[level] = availableColors[randomIndex];
+			}
+
+			return this.levelColors[level];
+		}
+
+        exportAsPNG() {
+            const svgContainer = document.getElementById('svgContainer');
+            html2canvas(svgContainer, { 
+                scale: 2,
+                backgroundColor: null 
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'mind-map.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+    }
+
+    // Initialize the Mind Map
+    document.addEventListener('DOMContentLoaded', () => {
+        window.mindMap = new MindMap();
+		document.getElementById('rootNodeInput').focus();
+    });
+    </script>
+</body>
+</html>

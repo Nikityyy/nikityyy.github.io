@@ -150,7 +150,7 @@
     }
   </style>
 </head>
-<body class="dark flex flex-col items-center min-h-screen justify-center">
+<body class="dark flex flex-col items-center justify-center" style="height: 100svh;">
 
   <header class="mt-4 mb-2">
     <h1 class="text-7xl font-bold title">Sudoku</h1>
@@ -461,10 +461,11 @@
 
       while (board.length) structuredBoard.push(board.splice(0, 9));
 
-      solve(structuredBoard);
+      solve(backupBoard);
     });
 
     const newBoard = generateSudoku();
+	const backupBoard = newBoard;
     renderBoard(newBoard);
   </script>
 </body>

@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="preload">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <title>Nikita Berger | Minesweeper</title>
+  <title>Nikita Berger | Sudoku</title>
   <style>
     body {
       background-color: #1a1a1a;
@@ -21,7 +21,7 @@
       width: 100%;
       aspect-ratio: 1 / 1;
       text-align: center;
-      font-size: 100%;
+      font-size: 1.2rem;
       border: 2px solid #444;
       background-color: #333;
       color: white;
@@ -29,9 +29,12 @@
       padding: 0;
       margin: 0;
       box-sizing: border-box;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    }
+
+    @media (min-width: 768px) {
+      .cell {
+        font-size: 1.5rem;
+      }
     }
 
     .cell:focus {
@@ -49,40 +52,29 @@
       background-color: #555 !important;
     }
 
-    .cell.revealed {
-      background-color: #444;
-      color: white;
-    }
-
-    .cell.bomb {
-      background-color: #ff4444;
-    }
-
-    .cell.flag {
-      background-color: #38bdf8;
-    }
-
     .grid {
       display: grid;
+      grid-template-columns: repeat(9, 1fr);
       gap: 1px;
       width: 100%;
       max-width: 500px;
       margin: 20px auto;
       padding: 0 10px;
       box-sizing: border-box;
-      justify-items: center;
+	  justify-items: center;
     }
 
-    .grid-easy {
-      grid-template-columns: repeat(9, 1fr);
+    .grid > .cell:nth-child(3n) {
+      margin-right: 3px;
     }
 
-    .grid-medium {
-      grid-template-columns: repeat(12, 1fr);
+    .grid > .cell:nth-child(3n+1) {
+      margin-left: 3px;
     }
 
-    .grid-hard {
-      grid-template-columns: repeat(15, 1fr);
+    .grid > .cell:nth-child(n+19):nth-child(-n+27),
+    .grid > .cell:nth-child(n+46):nth-child(-n+54) {
+      margin-bottom: 3px;
     }
 
     header {
@@ -90,13 +82,49 @@
       text-align: center;
     }
 
-    .difficulty-select {
-      background-color: #333;
-      color: white;
-      padding: 10px;
+    .button-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      padding: 0 10px;
+    }
+
+    .button {
+      flex-grow: 1;
+      max-width: 200px;
+      padding: 12px 20px;
+      margin: 0 10px;
       border-radius: 5px;
-      margin-bottom: 20px;
-      text-align: center;
+      cursor: pointer;
+      font-size: 1rem;
+      border: none;
+      transition: background-color 0.15s ease;
+    }
+
+    @media (max-width: 480px) {
+      .button {
+        font-size: 0.9rem;
+        padding: 10px 15px;
+        margin: 0 5px;
+      }
+    }
+
+    .button:hover {
+      background-color: #38bdf8;
+    }
+
+    .button:focus {
+      outline: none;
+    }
+
+    .solve-button {
+      background-color: #60a5fa;
+      color: white;
+    }
+
+    .check-button {
+      background-color: #38bdf8;
+      color: white;
     }
 
     .notification {
@@ -115,366 +143,333 @@
       text-align: center;
     }
 
-    .game-mode-select {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
+    input[type=tel]::-webkit-inner-spin-button, 
+    input[type=tel]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
     }
-
-    .game-mode-button {
-      background-color: #333;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.15s ease;
+    input[type=tel] {
+      -moz-appearance: textfield;
     }
-
-    .game-mode-button.active {
-      background-color: #38bdf8;
-    }
-	
-	#action-dropdown {
-	  display: none;
-	  position: fixed;
-	  bottom: 16px;
-	  left: 50%;
-	  transform: translateX(-50%);
-	  z-index: 50;
-	}
-
-	#action-select {
-	  background-color: #333;
-	  color: white;
-	  border: 1px solid #555;
-	  border-radius: 5px;
-	  padding: 10px;
-	  font-size: 1rem;
-	  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-	}
-	
-	@media (max-width: 600px) {
-	  .grid-hard .cell {
-		font-size: 11px;
-	  }
-	  #action-dropdown {
-		display: block;
-	  }
-	}
   </style>
 </head>
 <body class="dark flex flex-col items-center justify-center" style="height: 100svh;">
 
   <header class="mt-4 mb-2">
-    <h1 class="text-5xl font-bold title">Minesweeper</h1>
+    <h1 class="text-7xl font-bold title">Sudoku</h1>
   </header>
 
-  <div class="game-mode-select">
-    <button class="game-mode-button active" data-difficulty="easy">Easy</button>
-    <button class="game-mode-button" data-difficulty="medium">Medium</button>
-    <button class="game-mode-button" data-difficulty="hard">Hard</button>
+  <div id="board" class="grid grid-cols-9 gap-1"></div>
+
+  <div class="button-container w-full max-w-md">
+    <button id="check" class="button check-button">Check</button>
+    <button id="solve" class="button solve-button">Solve</button>
   </div>
 
-  <div class="difficulty-select">
-    Flags: <span id="flags-count">10</span>
-  </div>
-
-  <div id="board" class="grid grid-easy"></div>
-  
-	<div id="action-dropdown" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
-	  <select
-		id="action-select"
-		class="bg-gray-800 text-white px-4 py-2 rounded-md border border-gray-600">
-		<option value="reveal">Reveal</option>
-		<option value="flag">Flag</option>
-	  </select>
-	</div>
-
-  <div id="notification" class="notification">Game Over!</div>
+  <div id="notification" class="notification">Puzzle Solved!</div>
 
   <script>
     const boardEl = document.getElementById('board');
+    const checkButton = document.getElementById('check');
+    const solveButton = document.getElementById('solve');
     const notification = document.getElementById('notification');
-    const flagsCountEl = document.getElementById('flags-count');
-    const difficultyButtons = document.querySelectorAll('.game-mode-button');
-
     let selectedCell = null;
-    let gameMode = 'bomb';
-    let difficulty = 'easy';
-    let board = [];
-    let bombs = [];
-    let flagsUsed = 0;
-    let maxFlags = 10;
-    let gameOver = false;
-    let isFirstClick = true;
 
-    const difficultyConfig = {
-      easy: { gridSize: 9, bombCount: 10 },
-      medium: { gridSize: 12, bombCount: 25 },
-      hard: { gridSize: 15, bombCount: 50 }
-    };
-
-    difficultyButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        difficultyButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-        difficulty = button.dataset.difficulty;
-        initializeGame();
-      });
+    boardEl.addEventListener('touchstart', (e) => {
+      if (e.target.tagName === 'INPUT') {
+        e.preventDefault();
+      }
     });
 
-    function generateBombs(gridSize, bombCount, safeIndex) {
-      const totalCells = gridSize * gridSize;
-      const bombPositions = new Set();
-      
-      const safePositions = new Set();
-      const directions = [
-        [-1, -1], [-1, 0], [-1, 1],
-        [0, -1], [0, 1],
-        [1, -1], [1, 0], [1, 1]
-      ];
-
-      const safeRow = Math.floor(safeIndex / gridSize);
-      const safeCol = safeIndex % gridSize;
-
-      safePositions.add(safeIndex);
-      directions.forEach(([dx, dy]) => {
-        const newRow = safeRow + dx;
-        const newCol = safeCol + dy;
-        
-        if (newRow >= 0 && newRow < gridSize && 
-            newCol >= 0 && newCol < gridSize) {
-          const index = newRow * gridSize + newCol;
-          safePositions.add(index);
-        }
-      });
-      
-      while (bombPositions.size < bombCount) {
-        const randomPosition = Math.floor(Math.random() * totalCells);
-        if (!safePositions.has(randomPosition)) {
-          bombPositions.add(randomPosition);
-        }
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
       }
-      
-      return Array.from(bombPositions);
     }
 
-    function getAdjacentBombs(row, col, gridSize) {
-      let bombCount = 0;
-      const directions = [
-        [-1, -1], [-1, 0], [-1, 1],
-        [0, -1], [0, 1],
-        [1, -1], [1, 0], [1, 1]
-      ];
+    function generateSudoku() {
+      const board = Array.from({ length: 9 }, () => Array(9).fill(null));
+      const base = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-      for (const [dx, dy] of directions) {
-        const newRow = row + dx;
-        const newCol = col + dy;
-        
-        if (newRow >= 0 && newRow < gridSize && 
-            newCol >= 0 && newCol < gridSize) {
-          const index = newRow * gridSize + newCol;
-          if (bombs.includes(index)) {
-            bombCount++;
+      for (let i = 0; i < 9; i += 3) {
+        shuffle(base);
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 3; c++) {
+            board[i + r][i + c] = base[r * 3 + c];
           }
         }
       }
 
-      return bombCount;
-    }
-
-    function renderBoard() {
-      const { gridSize } = difficultyConfig[difficulty];
-      boardEl.className = `grid grid-${difficulty} gap-1`;
-      boardEl.innerHTML = '';
-      board = [];
-
-      for (let i = 0; i < gridSize * gridSize; i++) {
-        const cell = document.createElement('div');
-        cell.className = 'cell';
-        cell.dataset.index = i;
-        cell.dataset.row = Math.floor(i / gridSize);
-        cell.dataset.col = i % gridSize;
-
-        cell.addEventListener('click', () => handleCellClick(cell));
-        cell.addEventListener('contextmenu', (e) => {
-          e.preventDefault();
-          handleRightClick(cell);
-        });
-
-        cell.addEventListener('touchstart', (e) => {
-		  e.preventDefault();
-		  
-		  const startTime = e.timeStamp;
-
-		  const touchTimer = setTimeout(() => {
-			handleRightClick(cell);
-		  }, 150);
-
-		  cell.addEventListener('touchend', (e) => {
-			clearTimeout(touchTimer);
-
-			if (e.timeStamp - startTime < 150) {
-			  handleCellClick(cell);
-			}
-		  }, { once: true });
-		});
-
-        boardEl.appendChild(cell);
-        board.push(cell);
+      function isValid(board, row, col, num) {
+        for (let i = 0; i < 9; i++) {
+          if (board[row][i] === num || board[i][col] === num) return false;
+          const subGridRow = Math.floor(row / 3) * 3 + Math.floor(i / 3);
+          const subGridCol = Math.floor(col / 3) * 3 + (i % 3);
+          if (board[subGridRow][subGridCol] === num) return false;
+        }
+        return true;
       }
 
-      initializeBombs();
+      function fillBoard(row, col) {
+        if (row === 9) return true;
+        if (col === 9) return fillBoard(row + 1, 0);
+        if (board[row][col] !== null) return fillBoard(row, col + 1);
+
+        for (let num = 1; num <= 9; num++) {
+          if (isValid(board, row, col, num)) {
+            board[row][col] = num;
+            if (fillBoard(row, col + 1)) return true;
+            board[row][col] = null;
+          }
+        }
+        return false;
+      }
+
+      fillBoard(0, 0);
+
+      const cellsToRemove = 45;
+      for (let i = 0; i < cellsToRemove; i++) {
+        const row = Math.floor(Math.random() * 9);
+        const col = Math.floor(Math.random() * 9);
+        board[row][col] = null;
+      }
+
+      return board;
     }
 
-    function initializeBombs() {
-      const { gridSize, bombCount } = difficultyConfig[difficulty];
-      bombs = [];
-      flagsUsed = 0;
-      maxFlags = bombCount;
-      flagsCountEl.textContent = maxFlags;
-      gameOver = false;
-      isFirstClick = true;
-      notification.style.display = 'none';
+    function renderBoard(board) {
+      boardEl.innerHTML = '';
+      board.forEach((row, rowIndex) => {
+        row.forEach((cell, colIndex) => {
+          const input = document.createElement('input');
+          input.type = 'tel';
+          input.inputMode = 'numeric';
+          input.maxLength = 1;
+          input.className = 'cell';
+          input.dataset.row = rowIndex;
+          input.dataset.col = colIndex;
+          input.value = cell || '';
+          input.readOnly = cell !== null;
 
-      board.forEach(cell => {
-        cell.classList.remove('revealed', 'bomb', 'flag');
-        cell.textContent = '';
+          input.pattern = "[1-9]";
+          input.addEventListener('input', function(event) {
+            if (!/^[1-9]$/.test(event.target.value)) {
+              event.target.value = '';
+            }
+          });
+
+          if (input.readOnly) {
+            input.setAttribute('readonly', true);
+          }
+
+          input.addEventListener('click', (event) => {
+            event.preventDefault();
+            
+            if (selectedCell) {
+              selectedCell.classList.remove('selected');
+            }
+            input.classList.add('selected');
+            selectedCell = input;
+            highlightAffectedCells(rowIndex, colIndex);
+          });
+
+          input.addEventListener('touchstart', (event) => {
+            event.preventDefault();
+            
+            if (input.readOnly) return;
+
+            if (selectedCell) {
+              selectedCell.classList.remove('selected');
+            }
+            input.classList.add('selected');
+            selectedCell = input;
+            highlightAffectedCells(rowIndex, colIndex);
+            input.focus();
+          });
+
+          boardEl.appendChild(input);
+        });
       });
     }
 
-    const actionSelect = document.getElementById('action-select');
+    function highlightAffectedCells(row, col) {
+      const cells = Array.from(boardEl.children);
+      cells.forEach(cell => {
+        cell.classList.remove('highlight');
+      });
 
-	function handleCellClick(cell) {
-	  if (gameOver) return;
+      cells.forEach((cell) => {
+        const cellRow = parseInt(cell.dataset.row);
+        const cellCol = parseInt(cell.dataset.col);
+        if (cellRow === row || cellCol === col) {
+          cell.classList.add('highlight');
+        }
+        const squareRow = Math.floor(row / 3);
+        const squareCol = Math.floor(col / 3);
+        const cellSquareRow = Math.floor(cellRow / 3);
+        const cellSquareCol = Math.floor(cellCol / 3);
+        if (squareRow === cellSquareRow && squareCol === cellSquareCol) {
+          cell.classList.add('highlight');
+        }
+      });
+    }
 
-	  const action = actionSelect.value;
-	  if (action === 'flag') {
-		handleRightClick(cell);
-	  } else if (action === 'reveal') {
-		const index = parseInt(cell.dataset.index);
-		const row = parseInt(cell.dataset.row);
-		const col = parseInt(cell.dataset.col);
-		const { gridSize, bombCount } = difficultyConfig[difficulty];
+    document.body.addEventListener('click', (event) => {
+      if (!boardEl.contains(event.target)) {
+        const cells = Array.from(boardEl.children);
+        cells.forEach(cell => {
+          cell.classList.remove('highlight');
+          cell.classList.remove('selected');
+        });
+        selectedCell = null;
+      }
+    });
 
-		if (isFirstClick) {
-		  bombs = generateBombs(gridSize, bombCount, index);
-		  isFirstClick = false;
-		}
-		
-		if (cell.classList.contains('flag')) {
-			cell.classList.remove('flag');
-			flagsUsed--;
-			return;
-		}
+    let lastTap = 0;
+    document.body.addEventListener('touchend', (event) => {
+      const now = new Date().getTime();
+      if (now - lastTap <= 300) {
+        event.preventDefault();
+      }
+      lastTap = now;
+    });
 
-		if (bombs.includes(index)) {
-		  cell.classList.add('bomb');
-		  gameOver = true;
-		  notification.textContent = 'Game Over! You hit a bomb.';
-		  notification.style.display = 'block';
-		  revealAllBombs();
-		} else {
-		  const adjacentBombs = getAdjacentBombs(row, col, gridSize);
-		  cell.classList.add('revealed');
-		  
-		  if (adjacentBombs > 0) {
-			cell.textContent = adjacentBombs;
-		  } else {
-			revealAdjacentCells(row, col);
-		  }
+    function isValidSudoku(board) {
+      for (let row = 0; row < 9; row++) {
+        const rowSet = new Set();
+        for (let col = 0; col < 9; col++) {
+          const val = board[row][col];
+          if (val !== null) {
+            if (rowSet.has(val)) return false;
+            rowSet.add(val);
+          }
+        }
+      }
 
-		  checkGameWin();
-		}
-	  }
-	}
+      for (let col = 0; col < 9; col++) {
+        const colSet = new Set();
+        for (let row = 0; row < 9; row++) {
+          const val = board[row][col];
+          if (val !== null) {
+            if (colSet.has(val)) return false;
+            colSet.add(val);
+          }
+        }
+      }
 
-    function revealAdjacentCells(row, col) {
-      const { gridSize } = difficultyConfig[difficulty];
-      const directions = [
-        [-1, -1], [-1, 0], [-1, 1],
-        [0, -1], [0, 1],
-        [1, -1], [1, 0], [1, 1]
-      ];
-
-      for (const [dx, dy] of directions) {
-        const newRow = row + dx;
-        const newCol = col + dy;
-        
-        if (newRow >= 0 && newRow < gridSize && 
-            newCol >= 0 && newCol < gridSize) {
-          const index = newRow * gridSize + newCol;
-          const cell = board[index];
-
-          if (!cell.classList.contains('revealed') && 
-              !cell.classList.contains('flag')) {
-            cell.classList.add('revealed');
-            const adjacentBombs = getAdjacentBombs(newRow, newCol, gridSize);
-            
-            if (adjacentBombs > 0) {
-              cell.textContent = adjacentBombs;
-            } else {
-              revealAdjacentCells(newRow, newCol);
+      for (let boxRow = 0; boxRow < 3; boxRow++) {
+        for (let boxCol = 0; boxCol < 3; boxCol++) {
+          const boxSet = new Set();
+          for (let row = boxRow * 3; row < boxRow * 3 + 3; row++) {
+            for (let col = boxCol * 3; col < boxCol * 3 + 3; col++) {
+              const val = board[row][col];
+              if (val !== null) {
+                if (boxSet.has(val)) return false;
+                boxSet.add(val);
+              }
             }
           }
         }
       }
+
+      return true;
     }
 
-function handleRightClick(cell) {
-	  if (gameOver) return;
+    checkButton.addEventListener('click', () => {
+      const board = Array.from(boardEl.children).map((input) =>
+        Number(input.value) || null
+      );
+      const structuredBoard = [];
 
-	  if (isFirstClick) {
-		notification.textContent = "You must reveal a cell first!";
-		notification.style.display = "block";
-		setTimeout(() => {
-		  notification.style.display = "none";
-		}, 2000);
-		return;
-	  }
+      while (board.length) structuredBoard.push(board.splice(0, 9));
 
-	  if (cell.classList.contains('revealed')) return;
+      const isComplete = structuredBoard.every(row => row.every(cell => cell !== null));
+      const isCorrect = isValidSudoku(structuredBoard);
 
-	  if (cell.classList.contains('flag')) {
-		cell.classList.remove('flag');
-		flagsUsed--;
-	  } else {
-		if (flagsUsed >= maxFlags) return;
-		cell.classList.add('flag');
-		flagsUsed++;
-	  }
-
-	  flagsCountEl.textContent = maxFlags - flagsUsed;
-	}
-
-    function revealAllBombs() {
-      const { gridSize } = difficultyConfig[difficulty];
-      bombs.forEach(index => {
-        const cell = board[index];
-        cell.classList.add('bomb');
-      });
-    }
-
-    function checkGameWin() {
-      const { gridSize } = difficultyConfig[difficulty];
-      const totalCells = gridSize * gridSize;
-      const revealedCells = board.filter(cell => 
-        cell.classList.contains('revealed')
-      ).length;
-
-      if (totalCells - revealedCells === bombs.length) {
-        gameOver = true;
-        notification.textContent = 'Congratulations! You won!';
+      if (isComplete && isCorrect) {
+        notification.textContent = 'Puzzle Solved!';
         notification.style.display = 'block';
+        setTimeout(() => {
+          notification.style.display = 'none';
+        }, 2000);
+      } else if (!isCorrect) {
+        notification.textContent = 'There are mistakes.';
+        notification.style.display = 'block';
+        setTimeout(() => {
+          notification.style.display = 'none';
+        }, 2000);
+      } else {
+        notification.textContent = 'You are not done.';
+        notification.style.display = 'block';
+        setTimeout(() => {
+          notification.style.display = 'none';
+        }, 2000);
       }
+    });
+
+    async function solve(board) {
+      function delay(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      function isValid(board, row, col, num) {
+        for (let i = 0; i < 9; i++) {
+          if (board[row][i] === num || board[i][col] === num) return false;
+          const subGridRow = Math.floor(row / 3) * 3 + Math.floor(i / 3);
+          const subGridCol = Math.floor(col / 3) * 3 + (i % 3);
+          if (board[subGridRow][subGridCol] === num) return false;
+        }
+        return true;
+      }
+
+      async function backtrack() {
+        for (let row = 0; row < 9; row++) {
+          for (let col = 0; col < 9; col++) {
+            if (!board[row][col]) {
+              for (let num = 1; num <= 9; num++) {
+                if (isValid(board, row, col, num)) {
+                  board[row][col] = num;
+                  renderBoard(board);
+                  
+                  const updatedCell = boardEl.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                  
+                  await delay(10);
+
+                  if (await backtrack()) return true;
+
+                  board[row][col] = null;
+                  renderBoard(board);
+                }
+              }
+              return false;
+            }
+          }
+        }
+        return true;
+      }
+      await backtrack();
+      notification.textContent = 'Puzzle Solved!';
+      notification.style.display = 'block';
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 2000);
     }
 
-    function initializeGame() {
-      renderBoard();
-    }
+    solveButton.addEventListener('click', () => {
+      const board = Array.from(boardEl.children).map((input) =>
+        Number(input.value) || null
+      );
+      const structuredBoard = [];
 
-    initializeGame();
+      while (board.length) structuredBoard.push(board.splice(0, 9));
+
+      solve(backupBoard);
+    });
+
+    const newBoard = generateSudoku();
+	const backupBoard = newBoard;
+    renderBoard(newBoard);
   </script>
 </body>
 </html>

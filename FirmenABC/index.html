@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nikita Berger | FirmenABC Scraper</title>
-    <meta name="description" content="Discover the FirmenABC Scraper, a powerful tool for extracting company information effortlessly, complete with options for exporting data in CSV format and filtering results to include only companies with websites.">
+    <meta name="description"
+        content="Discover the FirmenABC Scraper, a powerful tool for extracting company information effortlessly, complete with options for exporting data in CSV format and filtering results to include only companies with websites.">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js"></script>
     <link rel="icon" href="favicon.webp">
@@ -168,6 +169,10 @@
                             const name = nameElement.textContent.trim();
                             const address = addressElement.innerHTML.trim();
                             const detailsLink = new URL(nameElement.getAttribute('href'), 'https://www.firmenabc.at').href;
+
+                            if (companies.some(c => c.name === name)) {
+                                continue;
+                            }
 
                             let website = null;
                             try {

@@ -1,292 +1,289 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FirmenABC Scraper</title>
-    <style>
-      :root {
-        --primary-color: #3498db;
-        --secondary-color: #2c3e50;
-        --background-color: #ecf0f1;
-        --text-color: #34495e;
-      }
-
-      body {
-        font-family: 'Arial', sans-serif;
-        line-height: 1.6;
-        color: var(--text-color);
-        background-color: var(--background-color);
-        margin: 0;
-        padding: 20px;
-      }
-
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        background-color: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-
-      h1 {
-        color: var(--secondary-color);
-        text-align: center;
-        margin-bottom: 20px;
-      }
-
-      .search-container {
-        display: flex;
-        margin-bottom: 20px;
-        flex-direction: column;
-      }
-
-      #urlInput {
-        flex-grow: 1;
-        padding: 10px;
-        font-size: 16px;
-        border: 1px solid #ddd;
-        border-radius: 4px 0 0 4px;
-      }
-
-      #scrapeButton {
-        padding: 10px 20px;
-        background-color: var(--primary-color);
-        color: white;
-        border: none;
-        border-radius: 0 4px 4px 0;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
-
-      #scrapeButton:hover {
-        background-color: #2980b9;
-      }
-
-      #results {
-        margin-top: 20px;
-      }
-
-      .company-card {
-        background-color: white;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        padding: 15px;
-        margin-bottom: 15px;
-        transition: box-shadow 0.3s ease;
-      }
-
-      .company-card:hover {
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-
-      .company-name {
-        font-weight: bold;
-        color: var(--secondary-color);
-        margin-bottom: 5px;
-      }
-
-      .company-address,
-      .company-website {
-        font-size: 14px;
-        color: #7f8c8d;
-      }
-
-      #exportButton {
-        display: none;
-        margin-left: auto;
-        padding: 10px 20px;
-        background-color: var(--secondary-color);
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
-
-      #exportButton:hover {
-        background-color: #34495e;
-      }
-
-      #loadingIndicator {
-        text-align: center;
-        display: none;
-      }
-
-      .spinner {
-        border: 4px solid #f3f3f3;
-        border-top: 4px solid var(--primary-color);
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        animation: spin 1s linear infinite;
-        margin: 20px auto;
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>FirmenABC Scraper</h1>
-      <div class="search-container">
-        <input type="text" id="urlInput" placeholder="https://www.firmenabc.at/firmen/enns_PId">
-        <button id="scrapeButton">Scrape</button>
-        <label>
-          <input type="checkbox" id="websitesOnly"> With Websites only
-        </label>
-        <label>
-          <input type="checkbox" id="gmbhKgOnly"> Only GmbH and KG
-        </label>
-      </div>
-      <div id="loadingIndicator">
-        <div class="spinner"></div>
-        <p>Scraping companies...</p>
-      </div>
-      <button id="exportButton">Export to CSV</button>
-      <div id="results"></div>
-    </div>
+    <title>Nikita Berger | FirmenABC Scraper</title>
+    <meta name="description" content="Discover the FirmenABC Scraper, a powerful tool for extracting company information effortlessly, complete with options for exporting data in CSV format and filtering results to include only companies with websites.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js"></script>
+    <link rel="icon" href="favicon.webp">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
     <script>
-		const urlInput = document.getElementById('urlInput');
-		const scrapeButton = document.getElementById('scrapeButton');
-		const resultsDiv = document.getElementById('results');
-		const exportButton = document.getElementById('exportButton');
-		const loadingIndicator = document.getElementById('loadingIndicator');
-		const websitesOnlyCheckbox = document.getElementById('websitesOnly');
-		const gmbhKgOnlyCheckbox = document.getElementById('gmbhKgOnly');
-		let companies = [];
-		let currentPageNumber = 1;
-		scrapeButton.addEventListener('click', scrapeCompanies);
-		exportButton.addEventListener('click', exportToCSV);
-		const proxyURL = "https://cors.nikity.workers.dev/proxy?proxyUrl=";
-
-		async function scrapeCompanies() {
-			let baseURL = urlInput.value.trim();
-			if (!baseURL.startsWith('https://www.firmenabc.at/firmen/')) {
-				alert('Please enter a valid FirmenABC URL.');
-				return;
-			}
-			currentPageNumber = 1;
-			loadingIndicator.style.display = 'block';
-			resultsDiv.innerHTML = '';
-			companies = [];
-			exportButton.style.display = 'none';
-			const seenCompanyNames = new Set();
-			try {
-				while (true) {
-					const url = `${baseURL}/${currentPageNumber}`;
-					const response = await fetch(proxyURL + encodeURIComponent(url));
-					const html = await response.text();
-					const parser = new DOMParser();
-					const doc = parser.parseFromString(html, 'text/html');
-					const cards = doc.querySelectorAll('li.card.result');
-					let duplicateFound = false;
-					for (const card of cards) {
-						const name = card.querySelector('h2.card-heading.pull-left')?.textContent.trim();
-						const address = card.querySelector('span[itemprop="streetAddress"]')?.textContent.trim();
-						const link = card.querySelector('a[itemprop="url"]')?.getAttribute('href');
-						if (name && address) {
-							if (websitesOnlyCheckbox.checked && !link) {
-								continue; // Skip companies without a website if checkbox is checked
-							}
-							if (gmbhKgOnlyCheckbox.checked && !/(GmbH|KG)/.test(name)) {
-								continue; // Skip companies not matching GmbH/KG if checkbox is checked
-							}
-							if (seenCompanyNames.has(name)) {
-								duplicateFound = true;
-								exportButton.style.display = 'block';
-								break;
-							}
-							seenCompanyNames.add(name);
-							const website = link ? await scrapeCompanyDetails(link) : null;
-							if (website || !websitesOnlyCheckbox.checked) { // Ensure only add companies with website if checkbox is checked
-								companies.push({
-									name,
-									address,
-									website
-								});
-								displayCompany({
-									name,
-									address,
-									website
-								});
-							}
-						}
-					}
-					if (duplicateFound) {
-						break;
-					}
-					currentPageNumber++;
-				}
-				if (companies.length === 0) {
-					resultsDiv.innerHTML = '<p>No companies found.</p>';
-				}
-			} catch (error) {
-				console.error('Error scraping companies:', error);
-				resultsDiv.innerHTML = '<p>An error occurred while scraping companies. Please try again.</p>';
-			} finally {
-				loadingIndicator.style.display = 'none';
-			}
-		}
-
-		async function scrapeCompanyDetails(url) {
-			try {
-				const response = await fetch(proxyURL + encodeURIComponent(url));
-				const html = await response.text();
-				const parser = new DOMParser();
-				const doc = parser.parseFromString(html, 'text/html');
-				const webDiv = doc.querySelector('div.mobile-portrait-row.url');
-				if (webDiv) {
-					const aTag = webDiv.querySelector('a[itemprop="url"]');
-					if (aTag && aTag.hasAttribute('href')) {
-						return aTag.getAttribute('href');
-					}
-				}
-			} catch (error) {
-				console.error('Error scraping company details:', error);
-			}
-			return null;
-		}
-
-		function displayCompany(company) {
-			const companyCard = document.createElement('div');
-			companyCard.className = 'company-card';
-			companyCard.innerHTML = `
-				<div class="company-name">${company.name}</div>
-				<div class="company-address">${company.address}</div>
-				<div class="company-website">
-					${company.website ? `<a href="${company.website}" target="_blank">${company.website}</a>` : 'No website available'}
-				</div>
-			`;
-			resultsDiv.appendChild(companyCard);
-		}
-
-		function exportToCSV() {
-			let csvContent = "data:text/csv;charset=utf-8,";
-			csvContent += "Firma;Adresse;Website\n";
-			companies.forEach(company => {
-				const name = company.name.replace(/;/g, ",");
-				const address = company.address.replace(/;/g, ",");
-				const website = company.website ? company.website.replace(/;/g, ",") : '';
-				csvContent += `${name};${address};${website}\n`;
-			});
-			const encodedUri = encodeURI(csvContent);
-			const link = document.createElement("a");
-			link.setAttribute("href", encodedUri);
-			link.setAttribute("download", "firmenabc_export.csv");
-			document.body.appendChild(link);
-			link.click();
-			document.body.removeChild(link);
-		}
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'background': '#f4f6f9',
+                        'card': '#ffffff',
+                        'primary': '#3b82f6',
+                        'secondary': '#4338ca',
+                        'text-primary': '#1f2937',
+                        'text-secondary': '#6b7280'
+                    },
+                    fontFamily: {
+                        'sans': ['Geist', 'ui-sans-serif', 'system-ui']
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 25px rgba(0, 0, 0, 0.05)',
+                        'hover': '0 15px 35px rgba(0, 0, 0, 0.1)'
+                    }
+                }
+            }
+        }
     </script>
-  </body>
+    <style>
+        .word-break-link {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.85;
+            filter: brightness(0.6);
+        }
+
+        .front {
+            z-index: 1;
+            position: relative;
+        }
+
+        input {
+            outline: none;
+        }
+    </style>
+</head>
+
+<body class="bg-background text-text-primary min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-4xl bg-white rounded-3xl shadow-soft overflow-hidden relative">
+        <div class="bg-gradient-to-r from-primary to-secondary p-8 relative">
+            <video autoplay muted loop class="video-background">
+                <source src="video.mp4" type="video/mp4">
+            </video>
+            <h1 class="front text-4xl font-bold text-white text-center tracking-tight">FirmenABC Scraper</h1>
+            <p class="front text-white/80 text-center mt-2">Extract company information effortlessly</p>
+            <div class="front text-white/40 text-xs text-center mt-2">
+                <a href="https://www.freepik.com/free-video/fiber-optics-macro_4775#fromView=search&page=1&position=22&uuid=06978792-2ba1-4a7a-8cf0-cb985897d546"
+                    target="_blank" class="hover:underline">
+                    Background Video by Freepik
+                </a>
+            </div>
+        </div>
+
+        <div class="p-8">
+            <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                <input type="text" id="urlInput"
+                    placeholder="Enter FirmenABC URL (e.g., https://www.firmenabc.at/firmen/enns_PId)"
+                    class="flex-grow px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary transition duration-300">
+                <button id="scrapeButton"
+                    class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-secondary transition duration-300 flex items-center justify-center space-x-2">
+                    <i data-feather="search" class="w-5 h-5"></i>
+                    <span>Scrape</span>
+                </button>
+            </div>
+
+            <div class="flex items-center justify-between mb-4">
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" id="websitesOnly"
+                        class="form-checkbox text-primary rounded focus:ring-primary">
+                    <span class="text-text-secondary">With Websites Only</span>
+                </label>
+                <button id="exportButton"
+                    class="hidden bg-secondary text-white px-4 py-2 rounded-lg hover:bg-primary transition duration-300 flex items-center space-x-2 opacity-75 hover:opacity-100">
+                    <i data-feather="download" class="w-5 h-5"></i>
+                    <span>Export CSV</span>
+                </button>
+            </div>
+
+            <div id="loadingIndicator" class="hidden w-full flex-col items-center justify-center space-y-4 py-8">
+                <div class="animate-spin w-10 h-10 border-4 border-primary/30 border-t-primary rounded-full"></div>
+                <p class="text-text-secondary">Scraping companies...</p>
+            </div>
+
+            <div id="results"
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[500px] overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <script>
+        const urlInput = document.getElementById('urlInput');
+        const scrapeButton = document.getElementById('scrapeButton');
+        const resultsDiv = document.getElementById('results');
+        const exportButton = document.getElementById('exportButton');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const websitesOnlyCheckbox = document.getElementById('websitesOnly');
+
+        let companies = [];
+        let currentPageNumber = 1;
+
+        urlInput.focus();
+
+        scrapeButton.addEventListener('click', scrapeCompanies);
+        exportButton.addEventListener('click', exportToCSV);
+
+        const proxyURL = "https://cors.nikity.workers.dev/proxy?proxyUrl=";
+
+        async function scrapeCompanies() {
+            let baseURL = urlInput.value.trim();
+            if (!baseURL.startsWith('https://www.firmenabc.at/firmen/')) {
+                alert('Please enter a valid FirmenABC URL.');
+                return;
+            }
+
+            currentPageNumber = 1;
+            loadingIndicator.style.display = 'flex';
+            resultsDiv.innerHTML = '';
+            companies = [];
+            exportButton.style.display = 'none';
+
+            try {
+                while (true) {
+                    const url = `${baseURL}/${currentPageNumber}`;
+                    const response = await fetch(proxyURL + encodeURIComponent(url));
+                    const html = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+
+                    const cards = doc.querySelectorAll('div[role="region"]');
+
+                    if (cards.length === 0) {
+                        break;
+                    }
+
+                    for (const card of cards) {
+                        const nameElement = card.querySelector('h3 a');
+                        const addressElement = card.querySelector('p');
+
+                        if (nameElement && addressElement) {
+                            const name = nameElement.textContent.trim();
+                            const address = addressElement.innerHTML.trim();
+                            const detailsLink = new URL(nameElement.getAttribute('href'), 'https://www.firmenabc.at').href;
+
+                            let website = null;
+                            try {
+                                website = await scrapeCompanyDetails(detailsLink);
+                            } catch (detailError) {
+                                console.warn(`Could not scrape website for ${name}:`, detailError);
+                            }
+
+                            if (websitesOnlyCheckbox.checked && !website) {
+                                continue;
+                            }
+
+                            const company = {
+                                name,
+                                address,
+                                website,
+                                detailsLink
+                            };
+
+                            companies.push(company);
+                            displayCompany(company);
+                        }
+                    }
+
+                    currentPageNumber++;
+                }
+
+                if (companies.length === 0) {
+                    resultsDiv.innerHTML = '<p>No companies found.</p>';
+                } else {
+                    exportButton.style.display = 'flex';
+                }
+            } catch (error) {
+                console.error('Error scraping companies:', error);
+                resultsDiv.innerHTML = '<p>An error occurred while scraping companies. Please try again.</p>';
+            } finally {
+                loadingIndicator.style.display = 'none';
+            }
+        }
+
+        async function scrapeCompanyDetails(relativeUrl) {
+            const fullUrl = new URL(relativeUrl, 'https://www.firmenabc.at').href;
+            try {
+                const response = await fetch(proxyURL + encodeURIComponent(fullUrl));
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                const websiteSelectors = [
+                    'a[href^="http"][href*="www"]',
+                    'div.company-contact a[href^="http"]',
+                    '.company-website a[href^="http"]',
+                    'a:not([href^="#"]):not([href^="/"])'
+                ];
+
+                let websiteElement = null;
+                for (const selector of websiteSelectors) {
+                    websiteElement = doc.querySelector(selector);
+                    if (websiteElement) break;
+                }
+
+                const website = websiteElement ? websiteElement.getAttribute('href') : null;
+
+                if (website && website.startsWith("https://www.firmenabc.at/login?")) {
+                    return null;
+                }
+
+                return website && website.startsWith('http') ? website.replace("http:", "https:") : null;
+            } catch (error) {
+                console.error('Error scraping company details:', error);
+                return null;
+            }
+        }
+
+        function displayCompany(company) {
+            const companyCard = document.createElement('div');
+            companyCard.classList.add(
+                'bg-white', 'rounded-lg', 'border', 'border-gray-200',
+                'p-4', 'hover:shadow-hover', 'transition', 'duration-300',
+                'transform', 'hover:-translate-y-1'
+            );
+            companyCard.innerHTML = `
+                <a href="${company.detailsLink}" target="_blank" class="block">
+                    <h3 class="text-lg font-semibold text-text-primary mb-2">${company.name}</h3>
+                    <p class="text-text-secondary text-sm mb-2">${company.address}</p>
+                    <div class="text-xs text-primary">
+                        ${company.website ? `<a href="${company.website}" target="_blank" class="hover:underline word-break-link">${company.website}</a>` : 'No website available'}
+                    </div>
+                </a>
+            `;
+            resultsDiv.appendChild(companyCard);
+        }
+
+        function exportToCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Firma;Adresse;Website;Details Link\n";
+            companies.forEach(company => {
+                const name = company.name.replace(/;/g, ",").replace("\n", ", ");
+                const address = company.address.replace(/;/g, ",").replace("\n", ", ").replace(" <br>", ", ").replace("<br>", ", ");
+                const website = company.website ? company.website.replace(/;/g, ",").replace("\n", ", ") : '';
+                const detailsLink = company.detailsLink.replace(/;/g, ",").replace("\n", ", ");
+                csvContent += `${name};${address};${website};${detailsLink}\n`;
+            });
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "firmenabc_export.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            feather.replace();
+        });
+    </script>
+</body>
+
 </html>

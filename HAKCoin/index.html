@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nikita Berger | HAKCoin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Oswald&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'background': '#fdfdfd',
+                        'card': '#ffffff',
+                        'text-primary': '#1a1a1a',
+                        'text-secondary': '#666666',
+                        'accent-buy': '#4285F4',
+                        'accent-sell': '#F74C3C'
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 25px rgba(0, 0, 0, 0.1)',
+                        'hover': '0 15px 35px rgba(0, 0, 0, 0.15)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        h1 {
+            font-family: 'Oswald', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background text-text-primary min-h-screen p-6 flex items-center justify-center">
+    <div class="w-full max-w-2xl">
+        <div class="bg-card rounded-3xl shadow-soft p-8 space-y-6">
+            <h1 class="text-5xl font-bold text-center text-text-primary mb-6">
+                HAKCoin
+            </h1>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6 text-center">
+                <div class="bg-background p-4 rounded-xl">
+                    <p class="text-sm text-text-secondary mb-2">My Coins</p>
+                    <p id="coinBalance" class="text-2xl font-semibold text-text-primary">0</p>
+                </div>
+                <div class="bg-background p-4 rounded-xl">
+                    <p class="text-sm text-text-secondary mb-2">My Money</p>
+                    <p id="euroBalance" class="text-2xl font-semibold text-text-primary">€1000</p>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <p class="text-xl font-semibold text-center text-text-primary mb-4">
+                    Current Coin Price: <span id="currentPrice" class="text-text-secondary">€0.00</span>
+                </p>
+                <canvas id="priceChart" class="w-full bg-background rounded-xl"></canvas>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <button id="buyBtn" class="bg-accent-buy/10 text-accent-buy hover:bg-accent-buy hover:text-white 
+                    p-4 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2 
+                    font-semibold group">
+                    <i data-feather="shopping-cart" class="w-6 h-6 group-hover:scale-110"></i>
+                    <span>Buy</span>
+                </button>
+                <button id="sellBtn" class="bg-accent-sell/10 text-accent-sell hover:bg-accent-sell hover:text-white 
+                    p-4 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2 
+                    font-semibold group">
+                    <i data-feather="trending-up" class="w-6 h-6 group-hover:scale-110"></i>
+                    <span>Sell</span>
+                </button>
+            </div>
+            
+            <div class="mt-4">
+                <button id="resetBtn" class="w-full bg-text-secondary/10 text-text-secondary 
+                    hover:bg-text-secondary hover:text-white p-3 rounded-xl 
+                    transition-all duration-300 flex items-center justify-center space-x-2 
+                    font-semibold group">
+                    <i data-feather="refresh-cw" class="w-5 h-5 group-hover:rotate-180"></i>
+                    <span>Reset Game</span>
+                </button>
+            </div>
+            
+            <div id="gameInfo" class="text-center text-text-secondary text-sm mt-4 p-3 bg-background rounded-xl">
+                Buy low, sell high! 📈
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state (same as original)
+        const gameState = {
+            euroBalance: 1000,
+            coinBalance: 0
+        };
+
+        // LocalStorage management (same as original)
+        function saveGameState() {
+            try {
+                localStorage.setItem('coinClickerGameState', JSON.stringify({
+                    euroBalance: gameState.euroBalance,
+                    coinBalance: gameState.coinBalance
+                }));
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        function loadGameState() {
+            try {
+                const savedState = localStorage.getItem('coinClickerGameState');
+                if (savedState) {
+                    const parsedState = JSON.parse(savedState);
+                    gameState.euroBalance = parsedState.euroBalance;
+                    gameState.coinBalance = parsedState.coinBalance;
+                    document.getElementById('gameInfo').textContent = 'Game loaded successfully! 🎉';
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        loadGameState();
+
+        function resetGameState() {
+            try {
+                localStorage.removeItem('coinClickerGameState');
+                gameState.euroBalance = 1000;
+                gameState.coinBalance = 0;
+                updateUI(Date.now(), 10);
+                document.getElementById('gameInfo').textContent = 'Game reset to default! 🔄';
+            } catch (error) {
+                document.getElementById('gameInfo').textContent = 'Failed to reset game. 😢';
+            }
+        }
+
+        // Price generation algorithm with dynamic, fair pricing
+        let priceGenerator = null;
+
+        function createPriceGenerator() {
+			let currentTick = 0;
+			let trend = 0; // Introduce a trend variable
+			let volatility = 0.25; // Dynamic volatility
+
+			return function() {
+				currentTick++;
+				
+				// More complex trend calculation
+				trend += (Math.random() - 0.5) * volatility;
+				
+				// Increased randomness and non-linear movement
+				const randomWalk = (Math.random() - 0.5) * 2 * volatility;
+				const momentumFactor = Math.sin(currentTick * 0.1) * trend;
+				
+				// Add external market sentiment factors
+				const marketSentiment = Math.random() > 0.5 ? 1 : -1;
+				
+				const price = 10 + randomWalk + momentumFactor + marketSentiment;
+				
+				// Adjust volatility dynamically
+				volatility *= 1 + (Math.random() - 0.5) * 0.1;
+				volatility = Math.min(Math.max(volatility, 0.1), 1);
+
+				return Math.max(0.01, Number(price.toFixed(2)));
+			};
+		}
+
+        // Price generation algorithm with consistent pricing
+        function generatePriceHistory(duration, startTime) {
+            // Initialize price generator if not exists
+            if (!priceGenerator) {
+                priceGenerator = createPriceGenerator();
+            }
+
+            const priceHistory = [];
+            const timePoints = 10 + 1; // number of points in the chart
+            
+            for (let i = 0; i < timePoints; i++) {
+                priceHistory.push(priceGenerator());
+            }
+            
+            return priceHistory;
+        }
+
+        // Modified continuous update to use the same price generator
+        function continuousUpdate() {
+            const duration = 10;
+            updateUI(Date.now(), duration);
+        }
+
+        // Modify the main script to reset price generator on game reset
+        function resetGameState() {
+            try {
+                localStorage.removeItem('coinClickerGameState');
+                gameState.euroBalance = 1000;
+                gameState.coinBalance = 0;
+                
+                // Reset the price generator
+                priceGenerator = createPriceGenerator();
+                
+                updateUI(Date.now(), 10);
+                document.getElementById('gameInfo').textContent = 'Game reset to default! 🔄';
+            } catch (error) {
+                document.getElementById('gameInfo').textContent = 'Failed to reset game. 😢';
+            }
+        }
+
+        // Chart setup
+        const ctx = document.getElementById('priceChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Coin Price',
+                    data: [],
+                    borderColor: '#4285F4',
+                    backgroundColor: 'rgba(66, 133, 244, 0.1)',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+						suggestedMax: 15,
+                        grid: {
+							color: 'rgba(0,0,0,0.05)',
+							drawBorder: false
+						}
+					},
+                    x: {
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Update UI (same as original)
+        function updateUI(startTime, duration) {
+            const priceHistory = generatePriceHistory(duration, startTime);
+            const currentPrice = priceHistory[priceHistory.length - 1];
+
+            chart.data.labels = priceHistory.map((_, i) => i);
+            chart.data.datasets[0].data = priceHistory;
+            chart.update();
+
+            document.getElementById('currentPrice').textContent = `€${currentPrice.toFixed(2)}`;
+            document.getElementById('coinBalance').textContent = gameState.coinBalance.toFixed(2);
+            document.getElementById('euroBalance').textContent = `€${gameState.euroBalance.toFixed(2)}`;
+            
+            saveGameState();
+        }
+
+        // Buy coins
+		const TRANSACTION_FEE_PERCENTAGE = 0.02
+		
+        document.getElementById('buyBtn').addEventListener('click', () => {
+            const duration = 10;
+            const priceHistory = generatePriceHistory(duration, Date.now());
+            const currentPrice = priceHistory[priceHistory.length - 1];
+			const transactionFee = currentPrice * TRANSACTION_FEE_PERCENTAGE;
+			const totalCost = currentPrice + transactionFee;
+            
+            const maxCoins = Math.floor(gameState.euroBalance / totalCost);
+            if (maxCoins > 0) {
+                gameState.coinBalance += maxCoins;
+                gameState.euroBalance -= maxCoins * totalCost;
+                updateUI(Date.now(), duration);
+                document.getElementById('gameInfo').textContent = `Bought ${maxCoins} coins at a price of ${currentPrice.toFixed(2)}€! 🎊`;
+            } else {
+                document.getElementById('gameInfo').textContent = 'Not enough money to buy coins! 😢';
+            }
+        });
+
+        // Sell coins
+        document.getElementById('sellBtn').addEventListener('click', () => {
+            const duration = 10;
+            const priceHistory = generatePriceHistory(duration, Date.now());
+            const currentPrice = priceHistory[priceHistory.length - 1];
+            
+            if (gameState.coinBalance > 0) {
+                gameState.euroBalance += gameState.coinBalance * currentPrice;
+                document.getElementById('gameInfo').textContent = `Sold all ${gameState.coinBalance.toFixed(2)} coins! 💰`;
+                gameState.coinBalance = 0;
+                updateUI(Date.now(), duration);
+            } else {
+                document.getElementById('gameInfo').textContent = 'No coins to sell! 🤷‍♀️';
+            }
+        });
+
+        // Reset game button
+        document.getElementById('resetBtn').addEventListener('click', resetGameState);
+
+        // Continuous price updates
+        function continuousUpdate() {
+            const duration = 10;
+            updateUI(Date.now(), duration);
+        }
+
+        // Initial setup
+        continuousUpdate();
+        setInterval(continuousUpdate, 1000);
+
+        // Initialize Feather icons
+        document.addEventListener('DOMContentLoaded', () => {
+            feather.replace();
+        });
+    </script>
+</body>
+</html>

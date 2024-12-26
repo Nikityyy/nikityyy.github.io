@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relax</title>
+    <meta name="description" content="Just relax.">
+    <link rel="icon" href="./pexels-ezra-komo-1788979943-29876516_favicon.webp">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="preload" as="script" href="motivational-quotes.js">
+    <link rel="preload" href="noise.svg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="./images/processed/pexels-andrew-3178786.jpg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="./images/processed/pexels-anh-nguyen-517648218-29861537.jpg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="./images/processed/pexels-axp-photography-500641970-29864461.jpg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="./images/processed/pexels-didsss-3705001.jpg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="./images/processed/pexels-eunhyuk-ahn-1478827-2894292.jpg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="./images/processed/pexels-hikaique-3135801.jpg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="./images/processed/pexels-innamykytas-29898890.jpg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="./images/processed/pexels-ioanamtc-9683896.jpg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="./images/processed/pexels-jeric-delos-angeles-1586876-3049508.jpg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="./images/processed/pexels-joymarino-3052651.jpg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="./images/processed/pexels-maksgelatin-4348556.jpg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="./images/processed/pexels-olya-prutskova-35454617-7121392.jpg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="./images/processed/pexels-polina-tankilevitch-5581787.jpg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="./images/processed/pexels-sanaan-3116969.jpg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="./images/processed/pexels-tetiana-androshchuk-1524362819-29908760.jpg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="./images/processed/pexels-thought-catalog-317580-2228580.jpg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="./images/processed/pexels-valeriya-kobzar-42371713-7407771.jpg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="./images/processed/pexels-vie-studio-7006364.jpg" as="image" type="image/svg+xml" />
+    <style>
+        body {
+            font-family: "Lexend", sans-serif;
+            margin: 0;
+            background-color: #111111;
+        }
+
+        .container {
+            max-width: 800px;
+            height: 350px;
+            width: 80%;
+            border-radius: 3rem;
+            position: absolute;
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .container img {
+            border-radius: 3rem;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.3);
+        }
+
+        .noise {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            z-index: 1;
+            border-radius: 3rem;
+            background-image: url(noise.svg);
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        .quote {
+            display: flex;
+            flex-direction: column;
+            min-width: 60%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            font-weight: 500;
+            font-size: 20px;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: calc(3rem - 1rem);
+            padding: 10px;
+            gap: 5px;
+        }
+
+        .quote span:nth-child(2) {
+            font-weight: 300;
+        }
+    </style>
+    <script type="module">
+
+        // extract the quotes and set one
+        import motivationalQuotes from './motivational-quotes.js';
+
+        const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)].split(' - ');
+
+        const quote = document.getElementById('quote');
+        const author = document.getElementById('author');
+
+        quote.textContent = randomQuote[0];
+        author.textContent = randomQuote[1];
+
+        // load the images and set one
+        const images = [
+            'pexels-maksgelatin-4348556.jpg',
+            'pexels-thought-catalog-317580-2228580.jpg',
+            'pexels-vie-studio-7006364.jpg',
+            'pexels-eunhyuk-ahn-1478827-2894292.jpg',
+            'pexels-sanaan-3116969.jpg',
+            'pexels-joymarino-3052651.jpg',
+            'pexels-andrew-3178786.jpg',
+            'pexels-hikaique-3135801.jpg',
+            'pexels-tetiana-androshchuk-1524362819-29908760.jpg',
+            'pexels-innamykytas-29898890.jpg',
+            'pexels-axp-photography-500641970-29864461.jpg',
+            'pexels-anh-nguyen-517648218-29861537.jpg',
+            'pexels-polina-tankilevitch-5581787.jpg',
+            'pexels-didsss-3705001.jpg',
+            'pexels-jeric-delos-angeles-1586876-3049508.jpg',
+            'pexels-ioanamtc-9683896.jpg',
+            'pexels-valeriya-kobzar-42371713-7407771.jpg',
+            'pexels-olya-prutskova-35454617-7121392.jpg'
+        ];
+
+        const randomImage = images[Math.floor(Math.random() * images.length)];
+
+        const imageDir = './images/processed/' + randomImage;
+
+        const image = document.getElementById('image');
+
+        image.src = imageDir;
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="noise"></div>
+        <img id="image" alt="Aesthetic Image">
+        <div class="quote"><span id="quote"></span><span id="author"></span></div>
+    </div>
+</body>
+</html>

@@ -202,6 +202,11 @@
         }
 
         @media (max-width: 900px) {
+            .noise-grid {
+                scroll-snap-type: none;
+                scroll-behavior: unset;
+            }
+
             .noise-card {
                 flex: 0 0 calc(50vw - 0.75rem);
                 padding: min(1.5rem, 3vw);
@@ -425,7 +430,7 @@
         const player = new NoisePlayer();
 
         document.querySelector('.noise-grid').addEventListener('wheel', (e) => {
-            if (window.innerWidth <= 900) {
+            if (window.innerWidth <= 0) {
                 e.preventDefault();
                 const container = e.currentTarget;
                 container.scrollLeft += e.deltaY;

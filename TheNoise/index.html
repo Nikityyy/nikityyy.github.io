@@ -45,7 +45,6 @@
             background: var(--bg-color);
             font-family: 'Space Grotesk', sans-serif;
             color: var(--text-primary);
-            overflow: hidden;
         }
 
         .noise-grid {
@@ -53,13 +52,7 @@
             gap: 0.5rem;
             padding: 0.5rem;
             min-height: 100svh;
-            overflow-x: auto;
-            overflow-y: hidden;
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
+            overflow: auto;
         }
 
         .noise-grid::-webkit-scrollbar {
@@ -431,12 +424,14 @@
         const player = new NoisePlayer();
 
         document.querySelector('.noise-grid').addEventListener('wheel', (e) => {
-            if (window.innerWidth <= 0) {
-                e.preventDefault();
-                const container = e.currentTarget;
-                container.scrollLeft += e.deltaY;
-            }
+            e.preventDefault();
+            const container = e.currentTarget;
+            const scrollDelta = e.deltaY || e.deltaX;
+            container.scrollLeft += scrollDelta;
+            container.scrollTop += scrollDelta;
         });
+
+
 
         const grid = document.querySelector('.noise-grid');
         const progressBar = document.querySelector('.scroll-progress-bar');

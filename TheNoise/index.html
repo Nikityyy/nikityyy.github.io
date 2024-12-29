@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Noise</title>
+    <meta name="description" content="Listen to different types of noise to help you focus, relax, or sleep.">
+    <meta name="theme-color" content="#090909">
+    <link rel="icon" href="favicon.webp" type="image/webp">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap"
+        as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" as="style">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap"
+        media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" media="print"
+        onload="this.media='all'">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" media="print"
+        onload="this.media='all'">
+    <style>
+        :root {
+            --bg-color: #090909;
+            --card-bg: #131313;
+            --card-hover: #171717;
+            --text-primary: #ffffff;
+            --text-secondary: #999999;
+            --accent: #4f46e5;
+            --accent-hover: #6366f1;
+            --card-width: 280px;
+            --loading-color: #4f46e5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        body {
+            min-height: 100svh;
+            background: var(--bg-color);
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--text-primary);
+            overflow: hidden;
+        }
+
+        .noise-grid {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            min-height: 100svh;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .noise-grid::-webkit-scrollbar {
+            display: none;
+        }
+
+        .noise-card {
+            position: relative;
+            display: grid;
+            grid-template-rows: 2fr 1fr 2fr;
+            grid-template-areas:
+                "title"
+                "button"
+                "desc";
+            justify-content: center;
+            align-items: center;
+            padding: min(2rem, 4vw);
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.3s ease;
+            min-width: var(--card-width);
+            height: calc(100svh - 2rem);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.5s ease forwards;
+            flex: 0 0 min(400px, 45vw);
+            scroll-snap-align: center;
+            scroll-snap-stop: always;
+            min-height: calc(100svh - 2rem);
+            max-height: calc(100svh - 2rem);
+            margin: auto 0;
+            gap: min(2rem, 4vw);
+            animation-delay: calc(var(--index) * 100ms);
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .noise-card.loading .play-button::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 3px solid transparent;
+            border-top-color: var(--loading-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .noise-card.playing {
+            background: var(--card-hover);
+            border-color: var(--accent) !important;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .noise-card:hover {
+            background: var(--card-hover);
+            border-color: rgba(255, 255, 255, 0.07);
+        }
+
+        .text-container {
+            display: flex;
+            height: 100%;
+            gap: 2rem;
+        }
+
+        .vertical-title {
+            display: flex;
+            align-items: center;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-size: clamp(3.25rem, 4vw, 3.5rem);
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin: 0;
+            height: min-content;
+            grid-area: title;
+            align-self: end;
+        }
+
+        .vertical-desc {
+            display: flex;
+            align-items: center;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-size: clamp(0.875rem, 1.5vw, 1.125rem);
+            color: var(--text-secondary);
+            max-height: 40vh;
+            line-height: 1.6;
+            margin: 0;
+            overflow-x: hidden;
+            grid-area: desc;
+            align-self: start;
+        }
+
+        .play-button {
+            position: relative;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            width: clamp(60px, 10vw, 80px);
+            height: clamp(60px, 10vw, 80px);
+            place-self: center;
+            margin: 0;
+            grid-area: button;
+            align-self: center;
+            margin: min(2rem, 4vw) 0;
+        }
+
+        .play-button .material-icons-round {
+            font-size: clamp(3rem, 8vw, 4rem);
+            color: var(--accent);
+            transition: color 0.3s ease;
+        }
+
+        .play-button:hover .material-icons-round {
+            color: var(--accent-hover);
+        }
+
+        .pause-icon {
+            display: none;
+        }
+
+        .playing .play-icon {
+            display: none;
+        }
+
+        .playing .pause-icon {
+            display: block;
+        }
+
+        @media (max-width: 900px) {
+            .noise-card {
+                flex: 0 0 calc(50vw - 0.75rem);
+                padding: min(1.5rem, 3vw);
+                font-size: 0.9em;
+            }
+
+            .vertical-title {
+                font-size: clamp(4rem, 5vw, 4.5rem);
+            }
+
+            .vertical-desc {
+                font-size: clamp(1.5rem, 2vw, 1.75rem);
+                max-height: 35vh;
+            }
+
+            .play-button {
+                width: clamp(50px, 8vw, 60px);
+                height: clamp(50px, 8vw, 60px);
+            }
+
+            .play-button .material-icons-round {
+                font-size: clamp(2.5rem, 6vw, 3rem);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .noise-card {
+                flex: 0 0 calc(50vw - 0.75rem);
+            }
+        }
+
+        .scroll-progress {
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 4px;
+            width: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+
+        .scroll-progress-bar {
+            height: 100%;
+            width: 0;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: width 0.2s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="noise-grid">
+        <div class="noise-card" data-sound="white-noise.mp3">
+            <div class="vertical-title">White Noise</div>
+            <button class="play-button">
+                <span class="material-icons-round play-icon">play_circle</span>
+                <span class="material-icons-round pause-icon">pause_circle</span>
+            </button>
+            <div class="vertical-desc">Equal intensity across all frequencies, producing a consistent, balanced sound
+                spectrum.</div>
+        </div>
+
+        <div class="noise-card" data-sound="pink-noise.mp3">
+            <div class="vertical-title">Pink Noise</div>
+            <button class="play-button">
+                <span class="material-icons-round play-icon">play_circle</span>
+                <span class="material-icons-round pause-icon">pause_circle</span>
+            </button>
+            <div class="vertical-desc">Equal power per octave with more energy in lower frequencies, creating a
+                balanced, natural sound.</div>
+        </div>
+
+        <div class="noise-card" data-sound="brown-noise.mp3">
+            <div class="vertical-title">Brown Noise</div>
+            <button class="play-button">
+                <span class="material-icons-round play-icon">play_circle</span>
+                <span class="material-icons-round pause-icon">pause_circle</span>
+            </button>
+            <div class="vertical-desc">Decreases 6 dB per octave, emphasizing low frequencies for a deep, rich sound
+                profile.</div>
+        </div>
+
+        <div class="noise-card" data-sound="blue-noise.mp3">
+            <div class="vertical-title">Blue Noise</div>
+            <button class="play-button">
+                <span class="material-icons-round play-icon">play_circle</span>
+                <span class="material-icons-round pause-icon">pause_circle</span>
+            </button>
+            <div class="vertical-desc">Increasing power with frequency, producing a bright, high-pitched hissing sound.
+            </div>
+        </div>
+
+        <div class="noise-card" data-sound="violet-noise.mp3">
+            <div class="vertical-title">Violet Noise</div>
+            <button class="play-button">
+                <span class="material-icons-round play-icon">play_circle</span>
+                <span class="material-icons-round pause-icon">pause_circle</span>
+            </button>
+            <div class="vertical-desc">Extreme high-frequency emphasis, creating an intense, piercing sound quality.
+            </div>
+        </div>
+
+        <div class="noise-card" data-sound="grey-noise.mp3">
+            <div class="vertical-title">Grey Noise</div>
+            <button class="play-button">
+                <span class="material-icons-round play-icon">play_circle</span>
+                <span class="material-icons-round pause-icon">pause_circle</span>
+            </button>
+            <div class="vertical-desc">Psychoacoustically adjusted for equal perceived loudness across all frequencies.
+            </div>
+        </div>
+
+    </div>
+    <div class="scroll-progress">
+        <div class="scroll-progress-bar"></div>
+    </div>
+    <script>
+        class NoisePlayer {
+            constructor() {
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                this.noiseNodes = new Map();
+                this.buffers = new Map();
+                this.currentlyPlaying = null;
+                this.init();
+                this.preloadAllAudio();
+            }
+
+            async init() {
+                const cards = document.querySelectorAll('.noise-card');
+                cards.forEach((card, index) => {
+                    card.style.setProperty('--index', index);
+                    const button = card.querySelector('.play-button');
+                    button.addEventListener('click', () => this.toggleNoise(card));
+                });
+            }
+
+            async preloadAllAudio() {
+                const cards = document.querySelectorAll('.noise-card');
+                const soundFiles = Array.from(cards).map(card => card.dataset.sound);
+
+                cards.forEach(card => card.classList.add('loading'));
+
+                try {
+                    await Promise.all(soundFiles.map(sound => this.loadBuffer(sound)));
+                } catch (error) {
+                    console.error('Error preloading audio:', error);
+                } finally {
+                    cards.forEach(card => card.classList.remove('loading'));
+                }
+            }
+
+            async loadBuffer(soundFile) {
+                if (this.buffers.has(soundFile)) return this.buffers.get(soundFile);
+
+                const response = await fetch(`audio/${soundFile}`);
+                const arrayBuffer = await response.arrayBuffer();
+                const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+                this.buffers.set(soundFile, audioBuffer);
+                return audioBuffer;
+            }
+
+            async toggleNoise(card) {
+                let soundFile = card.dataset.sound;
+
+                if (this.noiseNodes.has(soundFile)) {
+                    this.stopNoise(soundFile);
+                    card.classList.remove('playing');
+                    this.currentlyPlaying = null;
+                    return;
+                }
+
+                if (this.currentlyPlaying) {
+                    const oldCard = document.querySelector(`[data-sound="${this.currentlyPlaying}"]`);
+                    this.stopNoise(this.currentlyPlaying);
+                    oldCard.classList.remove('playing');
+                }
+
+                card.classList.add('loading');
+                this.currentlyPlaying = soundFile;
+                try {
+                    const buffer = await this.loadBuffer(soundFile);
+                    const source = this.audioContext.createBufferSource();
+                    const gainNode = this.audioContext.createGain();
+
+                    source.buffer = buffer;
+                    source.loop = true;
+                    source.connect(gainNode);
+                    gainNode.connect(this.audioContext.destination);
+
+                    source.start();
+                    this.noiseNodes.set(soundFile, { source, gainNode });
+
+                    card.classList.add('playing');
+
+                    gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                    gainNode.gain.linearRampToValueAtTime(1, this.audioContext.currentTime + 0.5);
+
+                } catch (error) {
+                    console.error('Error loading sound:', error);
+                } finally {
+                    card.classList.remove('loading');
+                }
+            }
+
+            stopNoise(soundFile) {
+                const noise = this.noiseNodes.get(soundFile);
+                if (!noise) return;
+
+                const { source, gainNode } = noise;
+
+                gainNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 0.25);
+                setTimeout(() => {
+                    source.stop();
+                    this.noiseNodes.delete(soundFile);
+                }, 250);
+            }
+        }
+
+        const player = new NoisePlayer();
+
+        document.querySelector('.noise-grid').addEventListener('wheel', (e) => {
+            if (window.innerWidth <= 900) {
+                e.preventDefault();
+                const container = e.currentTarget;
+                container.scrollLeft += e.deltaY;
+            }
+        });
+
+        const grid = document.querySelector('.noise-grid');
+        const progressBar = document.querySelector('.scroll-progress-bar');
+
+        function updateScrollProgress() {
+            const progress = (grid.scrollLeft / (grid.scrollWidth - grid.clientWidth)) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        grid.addEventListener('scroll', updateScrollProgress);
+        window.addEventListener('resize', updateScrollProgress);
+
+        document.addEventListener('keydown', (e) => {
+            const cardWidth = grid.querySelector('.noise-card').offsetWidth + 16; // width + gap
+            if (e.key === 'ArrowRight') {
+                grid.scrollBy({ left: cardWidth, behavior: 'smooth' });
+            } else if (e.key === 'ArrowLeft') {
+                grid.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+            }
+        });
+
+        let touchStart = 0;
+        grid.addEventListener('touchstart', e => {
+            touchStart = e.touches[0].clientX;
+        });
+
+        grid.addEventListener('touchmove', e => {
+            if (!touchStart) return;
+            const touch = e.touches[0].clientX;
+            const diff = touchStart - touch;
+            grid.scrollLeft += diff;
+            touchStart = touch;
+        });
+
+        grid.addEventListener('touchend', () => {
+            touchStart = null;
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            window.player = new NoisePlayer();
+        });
+    </script>
+</body>
+
+</html>

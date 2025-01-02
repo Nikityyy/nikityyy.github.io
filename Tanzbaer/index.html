@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Tanzbär - Premium Kosmetik</title>
+    <meta name="description"
+        content="Entdecken Sie die Premium Kosmetikprodukte von Dr. Tanzbär. Hochwertige Pflege für Ihre Schönheit.">
+    <link rel="icon" href="media/favicon.avif" type="image/avif">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #000000;
+            --secondary: #ffffff;
+            --text-primary: #000000;
+            --text-secondary: #666666;
+            --background: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'HM Sans Regular', Arial, sans-serif;
+            letter-spacing: -0.02em;
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent !important;
+            outline: none !important;
+        }
+
+        *::selection {
+            background: var(--primary);
+            color: var(--secondary);
+        }
+
+        @font-face {
+            font-family: 'HM Sans Regular';
+            src: local('Arial');
+            font-display: swap;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.5;
+            padding-top: 60px;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: var(--background);
+            padding: 1rem;
+            border-bottom: 1px solid #f2f2f2;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-size: 1.25rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #000000;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-secondary);
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .nav-icons i {
+            cursor: pointer;
+        }
+
+        .cart-count-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: black;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.6rem;
+            display: none;
+            pointer-events: none;
+        }
+
+        .search-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 1001;
+            padding: 2rem;
+        }
+
+        .search-overlay.active {
+            display: block;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.2rem;
+            border: none;
+            border-bottom: 2px solid var(--primary);
+            background: transparent;
+        }
+
+        .search-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100%;
+            background: var(--background);
+            padding: 2rem;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 1001;
+        }
+
+        .cart-sidebar.active {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .cart-items {
+            max-height: calc(100vh - 250px);
+            overflow-y: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f2f2f2;
+        }
+
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
+
+        .cart-total {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--primary);
+        }
+
+        .cart-item-details {
+            flex-grow: 1;
+        }
+
+        .cart-item-details h4 {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+
+        .cart-item-price {
+            font-size: 0.9rem;
+        }
+
+        .cart-item-remove {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .cart-item-remove:hover {
+            color: var(--text-primary);
+        }
+
+        .hero {
+            height: 85svh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .hero-content {
+            text-align: center;
+            padding: 2rem;
+            margin: 2rem;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 3rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            margin-bottom: 2rem;
+            max-width: 800px;
+        }
+
+        .cta-button {
+            background: var(--primary);
+            color: var(--secondary);
+            padding: 1rem 2.5rem;
+            border: none;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            border-radius: 3rem;
+        }
+
+        .cta-button:hover {
+            opacity: 0.8;
+        }
+
+        .products {
+            padding: 4rem 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        .product-image {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+
+        .product-info {
+            padding: 1rem 0;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .product-info h3 {
+            font-size: 0.9rem;
+            font-weight: 400;
+            margin-bottom: 0;
+            text-transform: none;
+        }
+
+        .product-price {
+            font-size: 0.9rem;
+        }
+
+        .product-add-to-cart {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 0.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .product-card:hover .product-add-to-cart {
+            opacity: 1;
+        }
+
+        .collections {
+            padding: 4rem 2rem;
+            background: var(--background);
+        }
+
+        .collection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .collection-tile {
+            position: relative;
+            aspect-ratio: 3/4;
+            overflow: hidden;
+        }
+
+        .collection-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .collection-tile:hover .collection-image {
+            transform: scale(1.05);
+        }
+
+        .collection-info {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            color: var(--background);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .collection-info h2 {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            font-weight: 400;
+        }
+
+        .promotion-banner {
+            background: var(--primary);
+            color: var(--secondary);
+            text-align: center;
+            padding: 0.75rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        footer {
+            background: var(--background);
+            padding: 4rem 2rem;
+            border-top: 1px solid #f2f2f2;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-section h3 {
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        .footer-section a:hover {
+            color: var(--text-primary);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1002;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: var(--text-secondary);
+        }
+
+        #cart-close {
+            cursor: pointer;
+        }
+
+        .fas {
+            display: flex;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background: var(--background);
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+                border-bottom: 1px solid #f2f2f2;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .products {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                padding: 2rem 1rem;
+            }
+
+            .collection-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .collection-tile {
+                aspect-ratio: 16/9;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <button class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+        <a href="./" class="nav-brand">Dr. Tanzbär</a>
+        <div class="nav-links">
+            <a href="#" onclick="window.scrollTo(0, 0)">Startseite</a>
+            <a href="#produkte">Produkte</a>
+            <a href="#kollektionen">Kollektionen</a>
+            <a href="#hilfe">Hilfe</a>
+        </div>
+        <div class="nav-icons">
+            <i class="fas fa-search" id="search-toggle"></i>
+            <div style="position: relative;">
+                <i class="fas fa-shopping-cart" id="cart-toggle"></i>
+                <span class="cart-count-badge" id="cart-count">0</span>
+            </div>
+        </div>
+    </nav>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">×</span>
+            <div id="modal-text">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="search-overlay">
+        <i class="fas fa-times search-close"></i>
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Suchen Sie nach Produkten...">
+        </div>
+    </div>
+
+    <div class="cart-sidebar">
+        <div class="cart-header">
+            <h3>Warenkorb</h3>
+            <i class="fas fa-times" id="cart-close"></i>
+        </div>
+        <div class="cart-items">
+            <!-- Cart Items will be added here -->
+        </div>
+        <div class="cart-total">
+            <h4>Gesamt: <span id="cart-total-price">0,00</span>€</h4>
+            <button class="cta-button" style="width: 100%; margin-top: 1rem;" onclick="alert('404 NOT FOUND')">Zur
+                Kasse</button>
+        </div>
+    </div>
+
+    <section class="hero" id="startseite">
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="media/hero-video-mannequin.webm" type="video/webm">
+            Your browser does not support the video tag.
+        </video>
+        <div class="hero-content">
+            <h1>Entdecke deine Schönheit mit Dr. Tanzbär</h1>
+            <a href="#produkte">
+                <button class="cta-button">Jetzt Shoppen</button>
+            </a>
+        </div>
+    </section>
+
+    <div class="promotion-banner">
+        Winter-Special: 20% Rabatt auf alle Produkte
+    </div>
+
+    <section class="products" id="produkte">
+        <div class="product-card" data-name="Lippenstift Rot" data-price="19.99"
+            data-image="media/product-images/lippenstift_rot_dr_tanzbaer.avif">
+            <img src="media/product-images/lippenstift_rot_dr_tanzbaer.avif" alt="Lippenstift" class="product-image">
+            <span class="product-add-to-cart"><i class="fas fa-plus"></i></span>
+            <div class="product-info">
+                <h3>Lippenstift Rot</h3>
+                <p class="product-price">19,99€</p>
+            </div>
+        </div>
+        <div class="product-card" data-name="Perfect Match Foundation" data-price="29.99"
+            data-image="media/product-images/perfect_match_foundation_dr_tanzbaer.avif">
+            <img src="media/product-images/perfect_match_foundation_dr_tanzbaer.avif" alt="Foundation"
+                class="product-image">
+            <span class="product-add-to-cart"><i class="fas fa-plus"></i></span>
+            <div class="product-info">
+                <h3>Perfect Match Foundation</h3>
+                <p class="product-price">29,99€</p>
+            </div>
+        </div>
+        <div class="product-card" data-name="Volume Plus Mascara" data-price="24.99"
+            data-image="media/product-images/volume_plus_mascara_dr_tanzbaer.avif">
+            <img src="media/product-images/volume_plus_mascara_dr_tanzbaer.avif" alt="Mascara" class="product-image">
+            <span class="product-add-to-cart"><i class="fas fa-plus"></i></span>
+            <div class="product-info">
+                <h3>Volume Plus Mascara</h3>
+                <p class="product-price">24,99€</p>
+            </div>
+        </div>
+        <div class="product-card" data-name="Smokey Eyes Palette" data-price="39.99"
+            data-image="media/product-images/smokey_eyes_palette_dr_tanzbaer.avif">
+            <img src="media/product-images/smokey_eyes_palette_dr_tanzbaer.avif" alt="Lidschatten"
+                class="product-image">
+            <span class="product-add-to-cart"><i class="fas fa-plus"></i></span>
+            <div class="product-info">
+                <h3>Smokey Eyes Palette</h3>
+                <p class="product-price">39,99€</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="collections" id="kollektionen">
+        <div class="collection-grid">
+            <div class="collection-tile">
+                <img src="media/product-images/luxurioese_lippen_collection_dr_tanzbaer.avif" alt="Luxuriöse Lippen"
+                    class="collection-image">
+                <div class="collection-info">
+                    <h2>Luxuriöse Lippen</h2>
+                </div>
+            </div>
+            <div class="collection-tile">
+                <img src="media/product-images/strahlender_teint_collection_dr_tanzbaer.avif" alt="Strahlender Teint"
+                    class="collection-image">
+                <div class="collection-info">
+                    <h2>Strahlender Teint</h2>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="hilfe">
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h3>Social Media</h3>
+                <a href="https://www.instagram.com/sabrinatanzmayr/" target="_blank"><i class="fab fa-instagram"></i>
+                    Instagram</a>
+                <a href="https://www.freepik.com/free-video/ai-headshots-beautiful-mannequin-females_3509448#fromView=search&page=1&position=33&uuid=ae385f29-30d1-493f-81c9-e5fe6d06a940"
+                    target="_blank"><i class="fa-solid fa-video"></i> Video
+                    by Dan Talson</a>
+            </div>
+            <div class="footer-section">
+                <h3>Rechtliches</h3>
+                <a id="impressum-link">Impressum</a>
+                <a id="datenschutz-link">Datenschutz</a>
+                <a id="agb-link">AGB</a>
+            </div>
+            <div class="footer-section">
+                <h3>Service</h3>
+                <a id="versand-link">Versand und Rückgabe</a>
+                <a id="zahlung-link">Zahlungsmethoden</a>
+                <a id="faq-link">Hilfe & FAQ</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        const modal = document.getElementById('modal');
+        const modalText = document.getElementById('modal-text');
+        const modalClose = document.querySelector('.modal-close');
+
+
+        modalClose.addEventListener('click', () => {
+            modal.style.display = "none";
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+
+        const impressumLink = document.getElementById('impressum-link');
+        const datenschutzLink = document.getElementById('datenschutz-link');
+        const agbLink = document.getElementById('agb-link');
+        const versandLink = document.getElementById('versand-link');
+        const zahlungLink = document.getElementById('zahlung-link');
+        const faqLink = document.getElementById('faq-link');
+
+
+        impressumLink.addEventListener('click', () => {
+            modalText.innerHTML = '<h3>Impressum</h3><p>Dr. Tanzbär Kosmetik GmbH<br>Resthofstraße 1<br>4400 Steyr</p>';
+            modal.style.display = "block";
+        });
+
+        datenschutzLink.addEventListener('click', () => {
+            modalText.innerHTML = '<h3>Datenschutz</h3><p>Ihre Daten sind bei uns sicher!</p>';
+            modal.style.display = "block";
+        });
+
+
+        agbLink.addEventListener('click', () => {
+            modalText.innerHTML = '<h3>AGB</h3><p>Unsere Allgemeinen Geschäftsbedingungen gibt es nicht.</p>';
+            modal.style.display = "block";
+        });
+
+
+        versandLink.addEventListener('click', () => {
+            modalText.innerHTML = '<h3>Versand</h3><p>Wir versenden nichts.</p>';
+            modal.style.display = "block";
+        });
+
+
+        zahlungLink.addEventListener('click', () => {
+            modalText.innerHTML = '<h3>Zahlungsmethoden</h3><p>Ihr zahlt bar.</p>';
+            modal.style.display = "block";
+        });
+
+
+        faqLink.addEventListener('click', () => {
+            modalText.innerHTML = '<h3>FAQ</h3><p>Wir haben keine Fragen.</p>';
+            modal.style.display = "block";
+        });
+
+        const searchToggle = document.getElementById('search-toggle');
+        const searchOverlay = document.querySelector('.search-overlay');
+        const searchClose = document.querySelector('.search-close');
+        const searchInput = document.querySelector('.search-input');
+
+        searchToggle.addEventListener('click', () => {
+            searchOverlay.classList.add('active');
+            searchInput.focus();
+        });
+
+        searchClose.addEventListener('click', () => {
+            searchOverlay.classList.remove('active');
+        });
+
+        const cartToggle = document.getElementById('cart-toggle');
+        const cartSidebar = document.querySelector('.cart-sidebar');
+        const cartClose = document.getElementById('cart-close');
+        const cartItemsContainer = document.querySelector('.cart-items');
+        const cartTotalPriceElement = document.getElementById('cart-total-price');
+        const cartCountElement = document.getElementById('cart-count');
+        let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+        let cartItemCount = cart.length;
+
+        function updateCartCountDisplay() {
+            cartItemCount = cart.length;
+            cartCountElement.textContent = cartItemCount;
+            cartCountElement.style.display = cartItemCount > 0 ? 'block' : 'none';
+        }
+
+        function saveCartToLocalStorage() {
+            localStorage.setItem('shoppingCart', JSON.stringify(cart));
+        }
+
+        cartToggle.addEventListener('click', () => {
+            cartSidebar.classList.add('active');
+        });
+
+        cartClose.addEventListener('click', () => {
+            cartSidebar.classList.remove('active');
+        });
+
+
+        function updateCartDisplay() {
+            cartItemsContainer.innerHTML = '';
+            let totalPrice = 0;
+
+            cart.forEach((item, index) => {
+                const cartItemElement = document.createElement('div');
+                cartItemElement.classList.add('cart-item');
+
+                const itemImage = document.createElement('img');
+                itemImage.src = item.image;
+                itemImage.alt = item.name;
+
+                const itemDetails = document.createElement('div');
+                itemDetails.classList.add('cart-item-details')
+
+                const itemName = document.createElement('h4');
+                itemName.textContent = item.name;
+                const itemPrice = document.createElement('p');
+                itemPrice.textContent = `${item.price}€`;
+                itemPrice.classList.add('cart-item-price');
+
+                itemDetails.appendChild(itemName);
+                itemDetails.appendChild(itemPrice)
+
+                const removeButton = document.createElement('button');
+                removeButton.classList.add('cart-item-remove');
+                removeButton.innerHTML = '<i class="fas fa-times"></i>';
+                removeButton.addEventListener('click', () => {
+                    removeItemFromCart(index);
+                });
+
+
+                cartItemElement.appendChild(itemImage);
+                cartItemElement.appendChild(itemDetails);
+                cartItemElement.appendChild(removeButton)
+                cartItemsContainer.appendChild(cartItemElement);
+
+                totalPrice += parseFloat(item.price);
+            });
+            cartTotalPriceElement.textContent = totalPrice.toFixed(2);
+        }
+
+
+        function addItemToCart(product) {
+            cart.push(product);
+            updateCartDisplay();
+            updateCartCountDisplay();
+            saveCartToLocalStorage();
+        }
+
+
+        function removeItemFromCart(index) {
+            cart.splice(index, 1);
+            updateCartDisplay();
+            updateCartCountDisplay();
+            saveCartToLocalStorage();
+        }
+
+
+        document.querySelectorAll('.product-card').forEach(card => {
+            const addToCartButton = card.querySelector('.product-add-to-cart');
+            addToCartButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                const productName = card.getAttribute('data-name');
+                const productPrice = card.getAttribute('data-price');
+                const productImage = card.getAttribute('data-image');
+                addItemToCart({ name: productName, price: productPrice, image: productImage });
+            });
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                searchOverlay.classList.remove('active');
+                cartSidebar.classList.remove('active');
+                navLinks.classList.remove('active');
+                modal.style.display = "none";
+
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target === searchOverlay) {
+                searchOverlay.classList.remove('active');
+            }
+        });
+
+        updateCartDisplay();
+        updateCartCountDisplay();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Germanize</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .text-area {
+            width: 100%;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            color: #fff;
+            font-size: 1.1rem;
+            resize: none;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .text-area:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .germanize-btn {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .germanize-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .germanize-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @keyframes fadeBlur {
+            0% {
+                opacity: 1;
+                filter: blur(0);
+            }
+
+            50% {
+                opacity: 0.5;
+                filter: blur(4px);
+            }
+
+            100% {
+                opacity: 1;
+                filter: blur(0);
+            }
+        }
+
+        .animating {
+            animation: fadeBlur 1s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Germanize</h1>
+        <textarea class="text-area" placeholder="Enter English text here..." spellcheck="false"></textarea>
+        <button class="germanize-btn">Germanize</button>
+    </div>
+
+    <script>
+        const textarea = document.querySelector('.text-area');
+        const germanizeBtn = document.querySelector('.germanize-btn');
+        let dict = {};
+
+        async function loadDictionary() {
+            try {
+                const response = await fetch('https://utfs.io/f/g7gRy1GdCL4SE3RapJn0thRIyu3KaoWOemVMXZcbQT12FUjs');
+                const text = await response.text();
+                const lines = text.split('\n');
+
+                lines.forEach(line => {
+                    const [englishTerm, germanTerm] = line.split('\t').map(item => item.trim());
+                    if (englishTerm && germanTerm) {
+                        dict[englishTerm.toLowerCase()] = germanTerm;
+                    }
+                });
+
+                console.log('Dictionary loaded');
+            } catch (error) {
+                console.error('Error loading dictionary:', error);
+            }
+        }
+
+        function getRandomTranslation(translation) {
+            const options = translation.split(' / ').map(option => option.trim());
+            const randomIndex = Math.floor(Math.random() * options.length);
+            return options[randomIndex];
+        }
+
+        async function germanize() {
+            if (!textarea.value.trim()) return;
+
+            germanizeBtn.disabled = true;
+            const originalText = textarea.value;
+            textarea.dataset.original = originalText;
+
+            const wordsWithSpaces = originalText.match(/(\s+|[\w']+|[.,!?;:"()\[\]{}])/g) || [];
+
+            textarea.classList.add('animating');
+
+            for (let i = 0; i < wordsWithSpaces.length; i++) {
+                const token = wordsWithSpaces[i];
+                if (/\w/.test(token)) {
+                    const lowerCaseWord = token.toLowerCase();
+                    let germanWord = dict[lowerCaseWord] || token;
+
+                    if (germanWord.includes(' / ')) {
+                        germanWord = getRandomTranslation(germanWord);
+                    }
+
+                    wordsWithSpaces[i] = token[0].toUpperCase() === token[0]
+                        ? germanWord.charAt(0).toUpperCase() + germanWord.slice(1)
+                        : germanWord;
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 100));
+                textarea.value = wordsWithSpaces.join('');
+            }
+
+            textarea.classList.remove('animating');
+            germanizeBtn.disabled = false;
+        }
+
+        window.addEventListener('load', loadDictionary);
+        germanizeBtn.addEventListener('click', germanize);
+
+        textarea.addEventListener('input', () => {
+            if (textarea.classList.contains('animating')) {
+                textarea.value = textarea.dataset.original || '';
+            }
+        });
+    </script>
+</body>
+
+</html>

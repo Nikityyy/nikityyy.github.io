@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Match | Find Your Perfect Plant</title>
+    <link rel="icon" href="favicon.avif" type="image/avif">
+    <meta name="description" content="Discover your ideal plant companion through our thoughtfully curated matching process">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #00A97F;
+            --secondary: #1A1A1A;
+            --accent: #E7F6F2;
+            --background: #FAFAFA;
+            --surface: #FFFFFF;
+            --text: #111111;
+            --text-secondary: #666666;
+            --error: #FF4444;
+            --success: #00C68E;
+            --border: #E5E5E5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            background: var(--surface);
+            padding: 6rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 169, 127, 0.1), rgba(231, 246, 242, 0.2));
+            z-index: 0;
+            border-bottom-right-radius: 1rem;
+            border-bottom-left-radius: 1rem;
+        }
+
+        header .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, var(--primary), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            font-weight: 500;
+        }
+
+        .quiz-form {
+            display: grid;
+            gap: 3rem;
+            background: var(--surface);
+            padding: 4rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
+        }
+
+        .question {
+            display: grid;
+            gap: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .question:hover {
+            transform: translateX(8px);
+        }
+
+        .question-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .question-number {
+            background: var(--accent);
+            color: var(--primary);
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .question h3 {
+            color: var(--text);
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 1.25rem 1.25rem 1.25rem 3rem;
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--background);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text);
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--surface);
+            box-shadow: 0 0 0 4px var(--accent);
+        }
+
+        input[type="text"]::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem 2rem;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        button:hover::before {
+            transform: translateX(100%);
+        }
+
+        button:hover {
+            background: var(--success);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 169, 127, 0.2);
+        }
+
+        #result {
+            margin-top: 1rem;
+            padding: 3rem;
+            background: var(--surface);
+            border-radius: 24px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
+        }
+
+        #result.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            header {
+                padding: 4rem 1rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .quiz-form {
+                padding: 2rem;
+                gap: 2rem;
+            }
+
+            .question-number {
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--accent);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .plant-image {
+            max-width: 300px;
+            margin: 1.5rem auto;
+            display: block;
+            border-radius: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>Plant Match</h1>
+            <p class="subtitle">Discover your ideal plant companion through our thoughtfully curated matching process
+            </p>
+        </div>
+    </header>
+
+    <main class="container">
+        <form id="plantQuiz" class="quiz-form">
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">1</span>
+                    <h3>Daily Routine & Care Time</h3>
+                </div>
+                <div class="input-wrapper">
+                    <i class="fas fa-clock"></i>
+                    <input type="text" name="time" required autocomplete="off" spellcheck="false"
+                        placeholder="How much time can you dedicate to plant care?" />
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">2</span>
+                    <h3>Living Space</h3>
+                </div>
+                <div class="input-wrapper">
+                    <i class="fas fa-home"></i>
+                    <input type="text" name="space" required autocomplete="off" spellcheck="false"
+                        placeholder="Tell us about your living environment..." />
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">3</span>
+                    <h3>Natural Light</h3>
+                </div>
+                <div class="input-wrapper">
+                    <i class="fas fa-sun"></i>
+                    <input type="text" name="light" required autocomplete="off" spellcheck="false"
+                        placeholder="How's the natural light in your space?" />
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">4</span>
+                    <h3>Plant Experience</h3>
+                </div>
+                <div class="input-wrapper">
+                    <i class="fas fa-seedling"></i>
+                    <input type="text" name="experience" required autocomplete="off" spellcheck="false"
+                        placeholder="Share your plant care journey..." />
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">5</span>
+                    <h3>Pets</h3>
+                </div>
+                <div class="input-wrapper">
+                    <i class="fas fa-paw"></i>
+                    <input type="text" name="pets" required autocomplete="off" spellcheck="false"
+                        placeholder="Tell us about your furry friends..." />
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">6</span>
+                    <h3>Plant Goals</h3>
+                </div>
+                <div class="input-wrapper">
+                    <i class="fas fa-bullseye"></i>
+                    <input type="text" name="goal" required autocomplete="off" spellcheck="false"
+                        placeholder="What do you hope to achieve?" />
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">7</span>
+                    <h3>Preferred Size</h3>
+                </div>
+                <div class="input-wrapper">
+                    <i class="fas fa-ruler-vertical"></i>
+                    <input type="text" name="size" required autocomplete="off" spellcheck="false"
+                        placeholder="What size plant works best for you?" />
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">8</span>
+                    <h3>Travel Habits</h3>
+                </div>
+                <div class="input-wrapper">
+                    <i class="fas fa-plane"></i>
+                    <input type="text" name="travel" required autocomplete="off" spellcheck="false"
+                        placeholder="How often do you travel?" />
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">9</span>
+                    <h3>Air Quality & Humidity</h3>
+                </div>
+                <div class="input-wrapper">
+                    <i class="fas fa-wind"></i>
+                    <input type="text" name="humidity" required autocomplete="off" spellcheck="false"
+                        placeholder="Describe your home's environment..." />
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-header">
+                    <span class="question-number">10</span>
+                    <h3>Investment Approach</h3>
+                </div>
+                <div class="input-wrapper">
+                    <i class="fas fa-wallet"></i>
+                    <input type="text" name="budget" required autocomplete="off" spellcheck="false"
+                        placeholder="What's your budget for plant care?" />
+                </div>
+            </div>
+
+            <button type="submit">
+                Find My Perfect Plant Match
+                <div class="loading" style="display: none;"></div>
+            </button>
+        </form>
+
+        <div id="result"></div>
+    </main>
+
+    <script type="module">
+        import { MLCEngine } from 'https://esm.run/@mlc-ai/web-llm';
+
+        const form = document.getElementById('plantQuiz');
+        const result = document.getElementById('result');
+        const submitButton = form.querySelector('button[type="submit"]');
+        const loading = submitButton.querySelector('.loading');
+        let engine;
+
+        async function initEngine() {
+            try {
+                engine = new MLCEngine();
+                await engine.reload("Qwen2.5-0.5B-Instruct-q0f16-MLC");
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function fetchImage(query) {
+            const searchUrl = `https://cors.nikity.workers.dev/proxy?modify&proxyUrl=https://www.bing.com/images/search?q=${encodeURIComponent(query)}&qft=+filterui:photo-photo`;
+
+            try {
+                const response = await fetch(searchUrl);
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                // Select the first img inside a div with class "img_cont hoff"
+                const imageElement = doc.querySelector('.img_cont.hoff img');
+
+                // Return the src attribute of the first img found
+                if (imageElement) {
+                    return imageElement.getAttribute('src');
+                } else {
+                    console.log("No images found in .img_cont.hoff");
+                    return null;
+                }
+
+            } catch (error) {
+                console.error("Failed to fetch image:", error);
+                return null;
+            }
+        }
+
+        if (form) {
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                if (!engine) {
+                    return;
+                }
+
+                // Show loading state
+                loading.style.display = 'inline-block';
+                submitButton.disabled = true;
+
+                const formData = new FormData(e.target);
+                const userInput = Array.from(formData.entries())
+                    .map(([key, value]) => `${key}: ${value}`)
+                    .join('\n');
+
+                const messages = [
+                    {
+                        role: "system",
+                        content: "You are a plant expert. Suggest one specific plant based on the user's requirements. Keep the response under 20 tokens. Only answer with the plant name."
+                    },
+                    {
+                        role: "user",
+                        content: userInput
+                    }
+                ];
+
+                try {
+                    const response = await engine.chat.completions.create({
+                        messages,
+                        max_tokens: 20
+                    });
+
+                    const suggestion = response.choices[0].message.content;
+
+                    // Search for image and get its base64 src
+                    const imageUrl = await fetchImage(suggestion + " plant");
+
+                    let imageHtml = '';
+                    if (imageUrl) {
+                        imageHtml = `<img src="${imageUrl}" alt="${suggestion} image" class="plant-image" />`;
+                    } else {
+                        imageHtml = `<p style="color: var(--text-secondary);">Image not found.</p>`
+                    }
+
+                    result.innerHTML = `
+                        <h2 style="color: var(--primary); margin-bottom: 1.5rem; font-size: 2rem;">Your Perfect Plant Match</h2>
+                        <i class="fas fa-leaf" style="font-size: 3rem; color: var(--success); margin-bottom: 1.5rem;"></i>
+                        <p style="font-size: 2rem; font-weight: 700; color: var(--text);">${suggestion}</p>
+                        ${imageHtml}
+                    `;
+                    result.classList.add('show');
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                } catch (error) {
+                    console.error('Error:', error);
+                    result.innerHTML = `
+                        <h2 style="color: var(--error); margin-bottom: 1.5rem;">Oops! Something went wrong</h2>
+                        <p style="color: var(--text-secondary);">Please try again later.</p>
+                    `;
+                    result.classList.add('show');
+                } finally {
+                    // Hide loading state
+                    loading.style.display = 'none';
+                    submitButton.disabled = false;
+                }
+            });
+        }
+
+
+        // Initialize the engine when the page loads
+        initEngine();
+
+        // Add smooth animations on scroll
+        const questions = document.querySelectorAll('.question');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateX(0)';
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        questions.forEach(question => {
+            question.style.opacity = 0;
+            question.style.transform = 'translateX(-20px)';
+            question.style.transition = 'all 0.5s ease';
+            observer.observe(question);
+        });
+    </script>
+</body>
+
+</html>

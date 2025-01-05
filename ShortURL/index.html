@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener using LLM Tokenization</title>
+    <script type="module">
+        import { getEncoding } from 'https://cdn.jsdelivr.net/npm/js-tiktoken/+esm';
+
+        const enc = getEncoding("cl100k_base");
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const name = urlParams.get('url');
+
+        if (name) {
+            const decoded = name.split('-').map(Number);
+            const url = enc.decode(decoded);
+            const fixedUrl = "https://" + url;
+            window.location.href = fixedUrl;
+        }
+
+        window.shorten = async function () {
+            const url = document.getElementById('url').value;
+            if (url) {
+                const fixedUrl = url.replace("https://", "").replace("http://", "");
+                const encoded = enc.encode(fixedUrl);
+                const shortened = encoded.join('-');
+                const baseUrl = window.location.href.replace(/index\.html$/, '');
+                const newUrl = `${baseUrl}?url=${shortened}`;
+                try {
+                    await navigator.clipboard.writeText(newUrl);
+                    alert(`Shortened URL copied to clipboard: ${newUrl}`);
+                } catch (err) {
+                    alert('Failed to copy the shortened URL');
+                }
+            } else {
+                alert('Please enter a URL');
+            }
+        };
+    </script>
+</head>
+
+<body>
+    <h1>URL Shortener using LLM Tokenization</h1>
+    <input type="text" id="url" placeholder="Enter URL">
+    <button onclick="shorten()">Shorten</button>
+    </script>
+</body>
+
+</html>

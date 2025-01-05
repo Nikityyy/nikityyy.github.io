@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Nikita Berger | TicTacToe</title>
+    <meta name="description" content="Just a minimalistic TicTacToe game but with more fun!">
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            touch-action: manipulation;
+        }
+
+        .cell {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            text-align: center;
+            font-size: 2rem;
+            border: 2px solid #444;
+            background-color: #333;
+            color: white;
+            transition: all 0.15s ease;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .cell:hover {
+            background-color: #444;
+            border-color: #38bdf8;
+        }
+
+        .cell.x {
+            color: #38bdf8;
+        }
+
+        .cell.o {
+            color: #ef4444;
+        }
+
+        .grid {
+            display: grid;
+            gap: 1px;
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        .grid-3x3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .grid-5x5 {
+            grid-template-columns: repeat(5, 1fr);
+        }
+
+        .notification {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #38bdf8;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            font-size: 1rem;
+            display: none;
+            z-index: 50;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .game-mode-select {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .game-mode-button {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        .game-mode-button.active {
+            background-color: #38bdf8;
+        }
+    </style>
+</head>
+
+<body class="dark flex flex-col items-center justify-center min-h-screen py-8">
+    <header class="mt-4 mb-2">
+        <h1 class="text-5xl text-center mb-2 font-bold title">TicTacToe</h1>
+        <p class="text-center text-gray-400 hidden" id="info">Get 4 in a row in 5x5 mode!</p>
+    </header>
+
+    <div class="game-mode-select">
+        <button class="game-mode-button active" data-size="3">3x3</button>
+        <button class="game-mode-button" data-size="5">5x5</button>
+    </div>
+
+    <div id="board" class="grid grid-3x3"></div>
+    <div id="notification" class="notification">Game Over!</div>
+
+    <script>
+        const boardEl = document.getElementById('board');
+        const notification = document.getElementById('notification');
+        const sizeButtons = document.querySelectorAll('.game-mode-button');
+
+        let currentPlayer = 'X';
+        let boardSize = 3;
+        let gameBoard = [];
+        let gameOver = false;
+
+        function initializeGame() {
+            gameBoard = Array(boardSize * boardSize).fill('');
+            gameOver = false;
+            currentPlayer = 'X';
+            renderBoard();
+            notification.style.display = 'none';
+        }
+
+        function renderBoard() {
+            if (boardSize === 5) {
+                document.getElementById('info').classList.remove('hidden');
+            } else {
+                document.getElementById('info').classList.add('hidden');
+            }
+
+            boardEl.className = `grid grid-${boardSize}x${boardSize}`;
+            boardEl.innerHTML = '';
+
+            for (let i = 0; i < boardSize * boardSize; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.index = i;
+                cell.textContent = gameBoard[i];
+                if (gameBoard[i] === 'X') cell.classList.add('x');
+                if (gameBoard[i] === 'O') cell.classList.add('o');
+                cell.addEventListener('click', () => handleCellClick(i));
+                boardEl.appendChild(cell);
+            }
+        }
+
+        function handleCellClick(index) {
+            if (gameOver || gameBoard[index] !== '' || currentPlayer === 'O') return;
+
+            makeMove(index);
+
+            if (!gameOver) {
+                currentPlayer = 'O';
+                makeAIMove();
+            }
+        }
+
+        function makeMove(index) {
+            gameBoard[index] = currentPlayer;
+            renderBoard();
+
+            if (checkWinner()) {
+                gameOver = true;
+                notification.textContent = `${currentPlayer} wins!`;
+                notification.style.display = 'block';
+                return;
+            }
+
+            if (checkTie()) {
+                gameOver = true;
+                notification.textContent = "It's a tie!";
+                notification.style.display = 'block';
+                return;
+            }
+        }
+
+        function checkWinner() {
+            const winLength = boardSize === 5 ? 4 : 3;
+
+            for (let i = 0; i < boardSize; i++) {
+                for (let j = 0; j <= boardSize - winLength; j++) {
+                    let row = [];
+                    for (let k = 0; k < winLength; k++) {
+                        row.push(gameBoard[i * boardSize + j + k]);
+                    }
+                    if (row.every(cell => cell === 'X') || row.every(cell => cell === 'O')) {
+                        return true;
+                    }
+                }
+            }
+
+            for (let i = 0; i <= boardSize - winLength; i++) {
+                for (let j = 0; j < boardSize; j++) {
+                    let column = [];
+                    for (let k = 0; k < winLength; k++) {
+                        column.push(gameBoard[(i + k) * boardSize + j]);
+                    }
+                    if (column.every(cell => cell === 'X') || column.every(cell => cell === 'O')) {
+                        return true;
+                    }
+                }
+            }
+
+            for (let i = 0; i <= boardSize - winLength; i++) {
+                for (let j = 0; j <= boardSize - winLength; j++) {
+                    let diagonal = [];
+                    for (let k = 0; k < winLength; k++) {
+                        diagonal.push(gameBoard[(i + k) * boardSize + (j + k)]);
+                    }
+                    if (diagonal.every(cell => cell === 'X') || diagonal.every(cell => cell === 'O')) {
+                        return true;
+                    }
+                }
+            }
+
+            for (let i = 0; i <= boardSize - winLength; i++) {
+                for (let j = boardSize - 1; j >= winLength - 1; j--) {
+                    let diagonal = [];
+                    for (let k = 0; k < winLength; k++) {
+                        diagonal.push(gameBoard[(i + k) * boardSize + (j - k)]);
+                    }
+                    if (diagonal.every(cell => cell === 'X') || diagonal.every(cell => cell === 'O')) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        function makeAIMove() {
+            const maxDepth = getMaxDepth();
+            const move = findBestMove(maxDepth);
+
+            if (move !== null) {
+                makeMove(move);
+                currentPlayer = 'X';
+            }
+        }
+
+        function getMaxDepth() {
+            const emptySpaces = gameBoard.filter(cell => cell === '').length;
+            if (boardSize === 3) return Infinity;
+            return emptySpaces <= 6 ? Infinity : 1;
+        }
+
+        function findBestMove(maxDepth) {
+            let bestScore = -Infinity;
+            let bestMove = null;
+
+            const winningMove = findWinningMove('O');
+            if (winningMove !== null) return winningMove;
+
+            const blockingMove = findWinningMove('X');
+            if (blockingMove !== null) return blockingMove;
+
+            for (let i = 0; i < gameBoard.length; i++) {
+                if (gameBoard[i] === '') {
+                    gameBoard[i] = 'O';
+                    let score = minimax(gameBoard, maxDepth, false, -Infinity, Infinity);
+                    gameBoard[i] = '';
+
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestMove = i;
+                    }
+                }
+            }
+
+            return bestMove;
+        }
+
+        function findWinningMove(player) {
+            for (let i = 0; i < gameBoard.length; i++) {
+                if (gameBoard[i] === '') {
+                    gameBoard[i] = player;
+                    if (checkWinner()) {
+                        gameBoard[i] = '';
+                        return i;
+                    }
+                    gameBoard[i] = '';
+                }
+            }
+            return null;
+        }
+
+        function evaluateBoard() {
+            if (checkWinner()) {
+                return currentPlayer === 'O' ? -1 : 1;
+            }
+            return 0;
+        }
+
+        function minimax(board, depth, isMaximizing, alpha, beta) {
+            if (checkWinner()) {
+                return isMaximizing ? -1000 + (1000 - depth) : 1000 - (1000 - depth);
+            }
+
+            if (checkTie() || depth === 0) {
+                return evaluatePosition();
+            }
+
+            if (isMaximizing) {
+                let bestScore = -Infinity;
+                for (let i = 0; i < board.length; i++) {
+                    if (board[i] === '') {
+                        board[i] = 'O';
+                        let score = minimax(board, depth - 1, false, alpha, beta);
+                        board[i] = '';
+                        bestScore = Math.max(score, bestScore);
+                        alpha = Math.max(alpha, score);
+                        if (beta <= alpha) break;
+                    }
+                }
+                return bestScore;
+            } else {
+                let bestScore = Infinity;
+                for (let i = 0; i < board.length; i++) {
+                    if (board[i] === '') {
+                        board[i] = 'X';
+                        let score = minimax(board, depth - 1, true, alpha, beta);
+                        board[i] = '';
+                        bestScore = Math.min(score, bestScore);
+                        beta = Math.min(beta, score);
+                        if (beta <= alpha) break;
+                    }
+                }
+                return bestScore;
+            }
+        }
+
+        function evaluatePosition() {
+            let score = 0;
+            const winLength = boardSize === 5 ? 4 : 3;
+
+            for (let i = 0; i < boardSize; i++) {
+                for (let j = 0; j <= boardSize - winLength; j++) {
+                    let window = [];
+                    for (let k = 0; k < winLength; k++) {
+                        window.push(gameBoard[i * boardSize + j + k]);
+                    }
+                    score += evaluateWindow(window);
+                }
+            }
+
+            for (let i = 0; i <= boardSize - winLength; i++) {
+                for (let j = 0; j < boardSize; j++) {
+                    let window = [];
+                    for (let k = 0; k < winLength; k++) {
+                        window.push(gameBoard[(i + k) * boardSize + j]);
+                    }
+                    score += evaluateWindow(window);
+                }
+            }
+
+            for (let i = 0; i <= boardSize - winLength; i++) {
+                for (let j = 0; j <= boardSize - winLength; j++) {
+                    let window = [];
+                    for (let k = 0; k < winLength; k++) {
+                        window.push(gameBoard[(i + k) * boardSize + (j + k)]);
+                    }
+                    score += evaluateWindow(window);
+                }
+            }
+
+            for (let i = 0; i <= boardSize - winLength; i++) {
+                for (let j = boardSize - 1; j >= winLength - 1; j--) {
+                    let window = [];
+                    for (let k = 0; k < winLength; k++) {
+                        window.push(gameBoard[(i + k) * boardSize + (j - k)]);
+                    }
+                    score += evaluateWindow(window);
+                }
+            }
+
+            return score;
+        }
+
+        function evaluateWindow(window) {
+            const xCount = window.filter(cell => cell === 'X').length;
+            const oCount = window.filter(cell => cell === 'O').length;
+
+            if (xCount === 0) return oCount;
+            if (oCount === 0) return -xCount;
+            return 0;
+        }
+
+        function checkTie() {
+            return gameBoard.every(cell => cell !== '');
+        }
+
+        sizeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                sizeButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                boardSize = parseInt(button.dataset.size);
+                initializeGame();
+            });
+        });
+
+        initializeGame();
+    </script>
+</body>
+
+</html>

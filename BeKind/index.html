@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Be Kind</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&display=swap" rel="stylesheet">
@@ -22,7 +21,7 @@
         }
 
         body {
-            min-height: 100vh;
+            min-height: 100svh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -34,7 +33,7 @@
 
         .kindness {
             text-align: center;
-            max-width: 700px;
+            max-width: 600px;
             padding: 3rem;
             border-radius: 15px;
             transition: transform 0.3s ease;
@@ -185,7 +184,7 @@
     <div class="cloud_two"></div>
     <div class="cloud_three"></div>
     <div class="kindness">
-        <video autoplay muted loop id="backgroundVideo">
+        <video autoplay muted loop playsinline id="backgroundVideo">
             <source src="media/video.mp4" type="video/mp4">
         </video>
         <div class="content-wrapper">

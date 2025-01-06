@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be Kind</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        :root {
+            --primary: #2C3E50;
+            --text: #ffffff;
+            --button-hover: #34495E;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Geist', sans-serif;
+            padding: 0 20px;
+            background-image: linear-gradient(to bottom, #0487E2, #65C2F5);
+            overflow: hidden;
+        }
+
+        .kindness {
+            text-align: center;
+            max-width: 700px;
+            padding: 3rem;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(233, 48, 23, 0.8);
+        }
+
+
+        .kindness:hover {
+            transform: scale(1.02);
+        }
+
+        #backgroundVideo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            border-radius: 15px;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+
+        .act {
+            font-size: 2.2rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+            color: white
+        }
+
+        button {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 16px 32px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            backdrop-filter: blur(1px);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .attribution {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.7rem;
+            opacity: 0.7;
+            z-index: 2;
+        }
+
+        .attribution a {
+            color: var(--text);
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+        }
+
+        .attribution a:hover {
+            opacity: 1;
+        }
+
+        .cloud,
+        .cloud_two,
+        .cloud_three {
+            animation: move 6s ease infinite;
+            border-radius: 50%;
+            position: absolute;
+            top: 10%;
+            left: 60%;
+            margin-top: -30px;
+            margin-left: -30px;
+            background: #FFFFFF;
+            height: 60px;
+            width: 60px;
+            box-shadow:
+                #FFFFFF 65px -15px 0 -5px,
+                #FFFFFF 25px -25px,
+                #FFFFFF 30px 10px,
+                #FFFFFF 60px 15px 0 -10px,
+                #FFFFFF 85px 5px 0 -5px;
+        }
+
+        .cloud_two {
+            top: 12%;
+            left: 20%;
+            animation-duration: 8s;
+        }
+
+        .cloud_three {
+            top: 27%;
+            left: 50%;
+            animation-duration: 8s;
+
+        }
+
+        @keyframes move {
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .act {
+                font-size: 1.8rem;
+            }
+
+            .kindness {
+                padding: 2rem;
+                width: 100%;
+            }
+
+            button {
+                width: 100%;
+                padding: 16px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cloud"></div>
+    <div class="cloud_two"></div>
+    <div class="cloud_three"></div>
+    <div class="kindness">
+        <video autoplay muted loop id="backgroundVideo">
+            <source src="media/video.mp4" type="video/mp4">
+        </video>
+        <div class="content-wrapper">
+            <p class="act" id="kindnessText">Click for a kind act</p>
+            <button onclick="generateAct()">New Act of Kindness</button>
+        </div>
+        <div class="attribution">
+            <a target="_blank"
+                href="https://www.freepik.com/free-video/windy-day-autumn-forest_1707390#fromView=search&page=1&position=8&uuid=3ce532bc-787c-41db-a694-daca48f436e9">Video
+                by Addictive Stock</a>
+        </div>
+    </div>
+
+    <script>
+        const acts = [
+            "Smile at someone",
+            "Hold the door for someone",
+            "Say 'thank you' to someone",
+            "Give someone a compliment",
+            "Ask someone how their day is going",
+            "Let someone go ahead of you in line",
+            "Say 'good morning' to someone",
+            "Pick up a piece of litter",
+            "Give someone your full attention when they speak",
+            "Send a nice message to a friend",
+            "Share your snack with someone",
+            "Tell someone why you appreciate them",
+            "Wave hello to a neighbor",
+            "Ask someone if they need help",
+            "Tell someone they did a good job",
+            "Share something that made you laugh",
+            "Give someone directions when they look lost",
+            "Make space for someone to sit or walk by",
+            "Turn down your music if it might bother others",
+            "Wash your dishes right after using them",
+            "Hold the elevator for someone",
+            "Help someone carry something heavy",
+            "Ask someone if they're okay",
+            "Give someone a high five",
+            "Say 'good job' to someone",
+            "Ask someone if they need anything",
+            "Give someone a hug",
+            "Say 'good night' to someone",
+            "Ask someone if they're feeling okay",
+            "Give someone a smile",
+            "Say 'goodbye' to someone",
+            "Ask someone if they're feeling better",
+            "Give someone a thumbs up",
+            "Say 'good luck' to someone",
+            "Ask someone if they're feeling well",
+            "Give someone a pat on the back",
+            "Say 'good evening' to someone",
+            "Ask someone if they're feeling alright",
+            "Give someone a round of applause",
+            "Offer your seat to someone on public transport",
+            "Bake something and share it with someone",
+            "Water someone's plants while they're away",
+            "Offer to help a neighbor with yard work",
+            "Leave a kind note for someone to find",
+            "Donate to a charity",
+            "Volunteer your time",
+            "Mentor someone",
+            "Teach someone a new skill",
+            "Help someone with a difficult task",
+            "Listen to someone without interrupting",
+            "Offer encouragement to someone who is struggling",
+            "Forgive someone",
+            "Let go of a grudge",
+            "Offer constructive feedback kindly",
+            "Be patient with someone who is learning",
+            "Respect someone's opinion, even if you disagree",
+            "Offer a genuine apology when you've made a mistake",
+            "Be on time for appointments",
+            "Keep your promises",
+            "Return borrowed items promptly",
+            "Clean up after yourself in public spaces",
+            "Drive safely and courteously",
+            "Be mindful of noise levels in shared spaces",
+            "Respect others' personal space",
+            "Avoid gossiping",
+            "Speak kindly about others when they're not around",
+            "Be honest and truthful",
+            "Offer a helping hand to someone struggling with technology",
+            "Share helpful resources with others",
+            "Welcome a new person to a group",
+            "Include someone who is feeling left out",
+            "Make eye contact when speaking to someone",
+            "Remember someone's name",
+            "Ask follow-up questions to show you're listening",
+            "Express gratitude for small things",
+            "Celebrate someone's accomplishments",
+            "Support someone's dreams",
+            "Believe in someone",
+            "Offer a shoulder to cry on",
+            "Send a thinking-of-you message",
+            "Offer to run an errand for someone",
+            "Bring someone a cup of coffee or tea",
+            "Offer to proofread someone's work",
+            "Help someone move",
+            "Offer to watch someone's pet",
+            "Offer to babysit for someone",
+            "Leave a positive review for a business",
+            "Recommend a good book or movie",
+            "Share your knowledge and expertise",
+            "Connect people who could benefit from knowing each other",
+            "Offer to teach someone your native language",
+            "Learn a few phrases in someone else's language",
+            "Be open to new perspectives",
+            "Challenge your own biases",
+            "Educate yourself on social issues",
+            "Speak up against injustice",
+            "Support local businesses",
+            "Shop ethically",
+            "Reduce your waste",
+            "Conserve energy",
+            "Plant a tree",
+            "Respect nature",
+            "Take care of animals",
+            "Donate blood",
+            "Become an organ donor",
+            "Check in on elderly neighbors",
+            "Offer assistance to someone with a disability",
+            "Be kind to yourself",
+            "Practice self-compassion",
+            "Forgive yourself",
+            "Celebrate your own small victories",
+            "Take a break when you need it",
+            "Get enough sleep",
+            "Eat nutritious food",
+            "Exercise regularly",
+            "Spend time in nature",
+            "Practice mindfulness",
+            "Meditate",
+            "Journal your thoughts and feelings",
+            "Set healthy boundaries",
+            "Say 'no' when you need to",
+            "Ask for help when you need it",
+            "Be vulnerable with someone you trust",
+            "Express your feelings in a healthy way",
+            "Seek professional help if you're struggling",
+            "Learn from your mistakes",
+            "Embrace change",
+            "Be open to new experiences",
+            "Travel and learn about different cultures",
+            "Read books and expand your knowledge",
+            "Learn a new hobby",
+            "Spend time with loved ones",
+            "Tell your loved ones how much you appreciate them",
+            "Forgive family members",
+            "Strengthen your relationships",
+            "Make time for fun and laughter",
+            "Don't take yourself too seriously",
+            "Be optimistic",
+            "Look for the good in every situation",
+            "Practice gratitude daily",
+            "Focus on the present moment",
+            "Let go of the past",
+            "Don't worry about the future",
+            "Be content with what you have",
+            "Find joy in the simple things",
+            "Live with intention",
+            "Be authentic",
+            "Follow your passions",
+            "Make a positive impact on the world",
+            "Leave the world a better place than you found it",
+            "Offer a genuine compliment about someone's skills",
+            "Praise someone's creativity",
+            "Acknowledge someone's hard work",
+            "Recognize someone's resilience",
+            "Appreciate someone's positive attitude",
+            "Admire someone's courage",
+            "Respect someone's boundaries",
+            "Value someone's time",
+            "Be present in conversations",
+            "Actively listen to understand, not just to respond",
+            "Show empathy towards others' struggles",
+            "Offer support without judgment",
+            "Be a source of encouragement",
+            "Inspire others through your actions",
+            "Lead by example",
+            "Empower others to succeed",
+            "Share opportunities with others",
+            "Collaborate effectively with others",
+            "Celebrate team achievements",
+            "Acknowledge individual contributions",
+            "Foster a positive and inclusive environment",
+            "Treat everyone with respect, regardless of their background",
+            "Learn about different cultures and perspectives",
+            "Challenge stereotypes and prejudices",
+            "Promote equality and fairness",
+            "Advocate for those who are marginalized",
+            "Speak out against discrimination",
+            "Be an ally to underrepresented groups",
+            "Educate others about important social issues",
+            "Participate in peaceful protests or activism",
+            "Support organizations working for social justice",
+            "Vote in elections",
+            "Contact your elected officials about important issues",
+            "Engage in civil discourse",
+            "Seek common ground with those who have different views",
+            "Work towards building bridges between communities",
+            "Promote understanding and tolerance",
+            "Encourage empathy and compassion",
+            "Foster a sense of community",
+            "Help build a more just and equitable world",
+            "Offer to help someone struggling with their groceries",
+            "Return a misplaced item to its owner",
+            "Alert someone if they've dropped something",
+            "Offer your umbrella to someone caught in the rain",
+            "Help someone find their way in a new place",
+            "Offer assistance to a tourist",
+            "Translate for someone who doesn't speak the local language",
+            "Help someone jump-start their car",
+            "Offer a ride to someone in need",
+            "Share your extra supplies with someone who needs them",
+            "Offer to take someone's photo",
+            "Help someone carry their luggage",
+            "Offer a snack or drink to someone who is hungry or thirsty",
+            "Share your notes with someone who missed a class",
+            "Help someone study for an exam",
+            "Offer to tutor someone in a subject you're good at",
+            "Share your knowledge and skills with others freely",
+            "Mentor someone in your field",
+            "Offer career advice to someone starting out",
+            "Write a letter of recommendation for someone",
+            "Nominate someone for an award or recognition",
+            "Publicly acknowledge someone's achievements",
+            "Celebrate the successes of others",
+            "Be genuinely happy for others' good fortune",
+            "Avoid being envious or jealous",
+            "Practice contentment and gratitude",
+            "Focus on your own journey and growth",
+            "Compare yourself only to your past self",
+            "Strive for progress, not perfection",
+            "Embrace imperfections",
+            "Be patient with yourself",
+            "Celebrate your strengths",
+            "Work on your weaknesses",
+            "Continuously learn and grow",
+            "Seek out new challenges",
+            "Step outside your comfort zone",
+            "Take calculated risks",
+            "Don't be afraid to fail",
+            "Learn from your failures",
+            "Persist through difficulties",
+            "Develop resilience",
+            "Cultivate a growth mindset",
+            "Believe in your ability to improve",
+            "Set meaningful goals",
+            "Work towards your goals with dedication",
+            "Stay focused and disciplined",
+            "Manage your time effectively",
+            "Prioritize your tasks",
+            "Avoid procrastination",
+            "Be organized and efficient",
+            "Practice good self-care",
+            "Maintain a healthy work-life balance",
+            "Set boundaries to protect your time and energy",
+            "Delegate tasks when possible",
+            "Don't overcommit yourself",
+            "Learn to say 'no' gracefully",
+            "Protect your mental and emotional health",
+            "Seek support when you need it",
+            "Be there for others when they need you",
+            "Build strong and supportive relationships",
+            "Invest in meaningful connections",
+            "Nurture your friendships",
+            "Spend quality time with loved ones",
+            "Express your love and appreciation",
+            "Show affection to those you care about",
+            "Be a loving and supportive partner",
+            "Be a good parent or guardian",
+            "Be a caring and supportive family member",
+            "Be a loyal and trustworthy friend",
+            "Be a reliable and dependable colleague",
+            "Be a responsible and engaged citizen",
+            "Contribute positively to your community",
+            "Make the world a better place, one small act at a time",
+            "Offer specific praise, like 'I really admire your patience'",
+            "Acknowledge someone's effort, not just the outcome",
+            "Thank someone for their specific contribution",
+            "Offer a genuine and heartfelt compliment",
+            "Notice and appreciate small details about someone",
+            "Compliment someone's taste or style",
+            "Express gratitude for someone's kindness",
+            "Tell someone how they've positively impacted your life",
+            "Share a specific instance where someone helped you",
+            "Offer words of encouragement during a difficult time",
+            "Send a handwritten note of appreciation",
+            "Leave a positive comment on someone's social media",
+            "Share someone's work or achievement with others",
+            "Recommend someone for a job or opportunity",
+            "Offer to be a reference for someone",
+            "Help someone practice a presentation or speech",
+            "Offer constructive criticism in a supportive way",
+            "Be a mentor or mentee",
+            "Share your network and connections with others",
+            "Offer to collaborate on a project",
+            "Brainstorm ideas together",
+            "Provide support and resources for someone's goals",
+            "Help someone overcome a challenge",
+            "Offer practical assistance to someone in need",
+            "Run errands for someone who is sick or busy",
+            "Cook a meal for someone",
+            "Offer to help with household chores",
+            "Provide transportation for someone",
+            "Help someone organize their belongings",
+            "Offer to pet-sit or house-sit for someone",
+            "Be a listening ear without offering unsolicited advice",
+            "Validate someone's feelings",
+            "Show empathy and understanding",
+            "Offer comfort and support during a difficult time",
+            "Be present and attentive when someone is sharing their struggles",
+            "Avoid minimizing someone's problems",
+            "Offer a safe and non-judgmental space for someone to talk",
+            "Respect someone's privacy and confidentiality",
+            "Be a trustworthy confidant",
+            "Keep your promises and commitments",
+            "Be reliable and dependable",
+            "Follow through on your word",
+            "Be on time for appointments and meetings",
+            "Communicate clearly and honestly",
+            "Be direct but kind in your communication",
+            "Avoid passive-aggressive behavior",
+            "Address conflicts directly and respectfully",
+            "Be willing to apologize and forgive",
+            "Practice active listening skills",
+            "Pay attention to nonverbal cues",
+            "Ask clarifying questions",
+            "Summarize what you've heard to ensure understanding",
+            "Show genuine interest in what others are saying",
+            "Be present in conversations",
+            "Put away distractions when talking to someone",
+            "Make eye contact",
+            "Give your full attention",
+            "Show respect for others' opinions and perspectives",
+            "Be open to hearing different viewpoints",
+            "Engage in respectful debate",
+            "Avoid personal attacks or insults",
+            "Focus on the issues, not the person",
+            "Find common ground and build consensus",
+            "Work collaboratively towards shared goals",
+            "Be a team player",
+            "Share credit and acknowledge contributions",
+            "Support and encourage your teammates",
+            "Celebrate collective successes",
+            "Offer help to those who are struggling",
+            "Be inclusive and welcoming of diverse perspectives",
+            "Create a positive and supportive environment",
+            "Foster a sense of belonging",
+            "Treat everyone with kindness and compassion",
+            "Practice empathy in your daily interactions",
+            "Be understanding and forgiving of others' mistakes",
+            "Offer second chances",
+            "Believe in the best in people",
+            "Spread positivity and optimism",
+            "Be a source of joy and inspiration",
+            "Make someone's day a little brighter",
+            "Leave a positive impact wherever you go"
+        ];
+
+        function generateAct() {
+            const text = document.getElementById('kindnessText');
+            let newAct;
+            do {
+                newAct = acts[Math.floor(Math.random() * acts.length)];
+            } while (newAct === text.textContent);
+            text.textContent = newAct;
+        }
+
+        window.onload = generateAct;
+    </script>
+</body>
+
+</html>

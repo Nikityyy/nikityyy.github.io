@@ -1,769 +1,566 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nikita Berger | Full Stack Developer | Portfolio</title>
-    <meta name="description" content="Full Stack Developer with knowledge in web development, machine learning, and data analysis. View my projects and professional experience.">
-    <meta property="og:title" content="Nikita Berger | Full Stack Developer">
-    <meta property="og:description" content="Full Stack Developer with knowledge in web development, machine learning, and data analysis.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://nikityyy.github.io/">
-    <meta property="og:image" content="media/profile-picture.webp">
-    <meta name="twitter:title" content="Nikita Berger | Full Stack Developer">
-    <meta name="twitter:description" content="Full Stack Developer with knowledge in web development and machine learning.">
-    <meta name="twitter:image" content="media/profile-picture.webp">
-    <meta name="keywords" content="Nikita Berger, Full Stack Developer, Web Development, Machine Learning, Portfolio">
-    <link rel="icon" type="image/webp" href="media/profile-picture.webp">
-    <link rel="apple-touch-icon" sizes="180x180" href="media/profile-picture.webp">
-    <meta name="google-site-verification" content="tcFMsrHfb1DfkNKlIoHM9qpqEPRq4SpNs8QlQOh7l1I" />
+    <title>Be Kind</title>
+    <link rel="icon" href="media/favicon.avif" type="image/avif">
+    <meta name="description" content="Just be kind...">
+    <meta name="keywords" content="kindness, act of kindness, random act of kindness, be kind, kindness generator">
+    <meta name="author" content="Nikita Berger">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="dns-prefetch" href="//fonts.googleapis.com">
-    <link rel="prefetch" href="media/profile-picture.webp" />
-    <link rel="prefetch" href="media/anqodo-icon.webp" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&display=swap" rel="stylesheet">
     <style>
-      :root {
-        --bg-color: #ffffff;
-        --heading-color: #000000;
-        --subheading-color: #333333;
-        --text-color: #666666;
-      }
-
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Poppins', sans-serif;
-        list-style-type: disc;
-        list-style-position: inside;
-      }
-
-      a:hover {
-        text-decoration: underline;
-      }
-
-      body {
-        background-color: var(--bg-color);
-        margin: 0;
-        padding: 0 20px;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      .hero-section {
-        text-align: center;
-        padding: 40px 0;
-        margin-bottom: 60px;
-        margin-top: 0px;
-      }
-
-      .hero-section h1 {
-        margin-bottom: 0;
-      }
-
-      .profile-image {
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        margin-bottom: 20px;
-        background-color: #f0f0f0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto;
-      }
-
-      .profile-image img {
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-      }
-
-      .quote {
-        font-style: italic;
-        color: var(--text-color);
-        margin: 0;
-        margin-bottom: 20px;
-      }
-
-      .contact-links {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin: 20px 0;
-      }
-
-      .contact-links a {
-        padding: 10px 20px;
-        border: 2px solid var(--heading-color);
-        border-radius: 25px;
-        color: var(--heading-color);
-        text-decoration: none;
-        font-weight: bold;
-      }
-
-      .support a {
-        border: 2px solid #ff0000;
-        color: #ff0000;
-      }
-
-      .contact-links a:hover {
-        background-color: var(--heading-color);
-        border: 2px solid var(--heading-color);
-        color: var(--bg-color);
-      }
-
-      .fix {
-        width: 100px;
-      }
-
-      .language-switch {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        display: flex;
-        gap: 10px;
-        z-index: 1000;
-      }
-
-      .language-btn {
-        padding: 5px 10px;
-        border: 2px solid var(--heading-color);
-        background: var(--bg-color);
-        cursor: pointer;
-        font-weight: bold;
-        text-decoration: none !important;
-        color: var(--heading-color);
-      }
-
-      .language-btn:hover {
-        background: var(--heading-color);
-        color: var(--bg-color);
-      }
-
-      h1,
-      h2 {
-        color: var(--heading-color);
-        margin: 30px 0 20px 0;
-      }
-
-      h3 {
-        color: var(--subheading-color);
-        margin: 20px 0 10px 0;
-      }
-
-      p {
-        color: var(--text-color);
-        line-height: 1.6;
-        margin-bottom: 15px;
-      }
-
-      .project-item {
-        padding: 20px;
-        margin: 20px 0;
-        border-radius: 10px;
-        background-color: #f9f9f9;
-        transition: transform 0.3s ease;
-      }
-
-      .project-item:hover {
-        transform: translateY(-5px);
-      }
-
-      .experience-item {
-        margin: 20px 0;
-        padding: 20px;
-        border-left: 3px solid var(--subheading-color);
-        background-color: #f9f9f9;
-        transition: transform 0.3s ease;
-      }
-
-      .experience-item:hover {
-        transform: translateX(10px);
-      }
-
-      section {
-        margin: 40px 0;
-        opacity: 1;
-      }
-
-      .more-link {
-        display: inline-block;
-        margin-top: 10px;
-        color: var(--subheading-color);
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 0.3s ease;
-      }
-
-      .more-link:hover {
-        color: var(--heading-color);
-      }
-
-      [lang="de"] {
-        display: none;
-        opacity: 0;
-      }
-
-      #de:target~* [lang="en"] {
-        display: none;
-        opacity: 0;
-      }
-
-      #de:target~* [lang="de"] {
-        display: block;
-        opacity: 1;
-      }
-
-      #de:target~* [lang="de"].rank-label,
-      #de:target~* [lang="de"].rank-value {
-        display: inline-block;
-        /* Change to inline-block */
-        opacity: 1;
-      }
-
-      .section-subtitle {
-        color: var(--text-color);
-        text-align: center;
-        margin-bottom: 40px;
-      }
-
-      .rating-card {
-        background-color: #f9f9f9;
-        border-radius: 10px;
-        padding: 20px;
-        margin: 20px 0;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
-
-      .rating-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      }
-
-      .company-info {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-      }
-
-      .company-logo {
-        width: 60px;
-        height: 60px;
-        background-color: var(--heading-color);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 24px;
-        font-weight: bold;
-      }
-
-      .stars {
-        color: #FFD700;
-        font-size: 20px;
-        margin: 0;
-        margin-bottom: 10px;
-      }
-
-      .testimonial {
-        margin: 0;
-        font-weight: bold;
-      }
-
-      .st0 {
-        opacity: 0;
-        fill: #FDDD00;
-      }
-
-      .competition-card {
-        background-color: #f9f9f9;
-        border-radius: 10px;
-        padding: 20px;
-        margin: 20px 0;
-        transition: transform 0.3s ease;
-        display: flex;
-        justify-content: space-between;
-      }
-
-      .competition-card:hover {
-        transform: translateX(10px);
-        background-color: #060606;
-      }
-
-      .competition-card:hover h4 {
-        color: #FDDD00;
-      }
-
-      .competition-card:hover h5 {
-        color: #ffffff;
-      }
-
-      .competition-card:hover p {
-        color: #cccccc;
-      }
-
-      .competition-card:hover .rank-label {
-        color: #999999;
-      }
-
-      .competition-card:hover .rank-value {
-        color: #ffffff;
-      }
-
-      .competition-card:hover .st0 {
-        opacity: 1;
-      }
-
-      .competition-date {
-        color: var(--text-color);
-        font-size: 0.9em;
-        margin: 5px 0;
-      }
-
-      .competition-name {
-        color: var(--subheading-color);
-      }
-
-      .competition-results a {
-        text-decoration: none;
-        color: inherit;
-      }
-
-      .competition-results a:hover,
-      .competition-results a:visited,
-      .competition-results a:focus {
-        text-decoration: none;
-        color: inherit;
-      }
-
-      .ranking {
-        margin: 10px 0;
-        display: flex;
-        justify-content: space-between;
-      }
-
-      .rank-label {
-        color: var(--subheading-color);
-        margin-right: 10px;
-      }
-
-      .rank-value {
-        font-weight: bold;
-      }
-
-      .language-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-        margin: 20px 0;
-      }
-
-      .language-card {
-        background-color: #f9f9f9;
-        border-radius: 10px;
-        padding: 20px;
-        position: relative;
-        transition: transform 0.3s ease;
-      }
-
-      .language-card:hover {
-        transform: translateY(-5px);
-      }
-
-      .language-icon {
-        font-size: 24px;
-        margin-bottom: 10px;
-      }
-
-      .proficiency-bar {
-        width: 100%;
-        height: 8px;
-        background-color: #e0e0e0;
-        border-radius: 4px;
-        margin: 10px 0;
-        overflow: hidden;
-      }
-
-      .progress {
-        height: 100%;
-        background-color: var(--heading-color);
-        border-radius: 4px;
-        transition: width 0.3s ease;
-      }
-
-      .level {
-        position: absolute;
-        right: 20px;
-        top: 20px;
-        font-weight: bold;
-      }
-
-      .language-card[data-tooltip] {
-        cursor: help;
-      }
-
-      .language-card[data-tooltip]::after {
-        content: attr(data-tooltip);
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 8px;
-        background-color: var(--heading-color);
-        color: white;
-        border-radius: 4px;
-        font-size: 0.8em;
-        width: max-content;
-        max-width: 200px;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
-        z-index: 1000;
-      }
-
-      .language-card:hover[data-tooltip]::after {
-        opacity: 1;
-        visibility: visible;
-      }
-
-      .logo-placeholder,
-      .logo-placeholder img {
-        height: 60px;
-        width: 60px;
-      }
-
-      .blog-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-      }
-
-      .blog-item {
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
-      }
-	  
-	  .blog-item:hover {
-        transform: translateY(-5px);
-      }
-
-      .blog-item img {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-      }
-
-      .blog-item h3 {
-        margin: 10px 15px;
-        font-size: 18px;
-        font-weight: 600;
-      }
-
-      .blog-item p {
-        margin: 5px 15px 15px;
-        color: #666;
-        font-size: 14px;
-      }
-
-      .blog-grid a {
-        text-decoration: inherit;
-      }
-
-      footer {
-        text-align: right;
-      }
-
-      @media (max-width: 1000px) {
-        .blog-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-
-      @media (max-width: 768px) {
-        .language-grid {
-          grid-template-columns: 1fr;
+        * {
+            box-sizing: border-box;
+            margin: 0;
         }
 
-        .company-info {
-          flex-direction: column;
-          text-align: center;
+        :root {
+            --primary: #2C3E50;
+            --text: #ffffff;
+            --button-hover: #34495E;
         }
 
-        .language-card[data-tooltip]::after {
-          width: 80%;
+        body {
+            min-height: 100svh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Geist', sans-serif;
+            padding: 0 20px;
+            background-image: linear-gradient(to bottom, #0487E2, #65C2F5);
+            overflow: hidden;
         }
 
-        .competition-card {
-          background-color: #060606;
-          flex-direction: column;
-          flex-wrap: wrap;
-          align-items: center;
-          gap: 20px;
+        .kindness {
+            text-align: center;
+            max-width: 600px;
+            padding: 3rem;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(233, 48, 23, 0.8);
         }
 
-        .competition-card h4 {
-          color: #FDDD00;
+
+        .kindness:hover {
+            transform: scale(1.02);
         }
 
-        .competition-card h5 {
-          color: #ffffff;
+        #backgroundVideo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            border-radius: 15px;
         }
 
-        .competition-card p {
-          color: #cccccc;
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
         }
 
-        .competition-card .rank-label {
-          color: #999999;
+        .act {
+            font-size: 2.2rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+            color: white
         }
 
-        .competition-card .rank-value {
-          color: #ffffff;
+        button {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 16px 32px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            backdrop-filter: blur(1px);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
 
-        .competition-card .st0 {
-          opacity: 1;
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
         }
-      }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .attribution {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.7rem;
+            opacity: 0.7;
+            z-index: 2;
+        }
+
+        .attribution a {
+            color: var(--text);
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+        }
+
+        .attribution a:hover {
+            opacity: 1;
+        }
+
+        .cloud,
+        .cloud_two,
+        .cloud_three {
+            animation: move 6s ease infinite;
+            border-radius: 50%;
+            position: absolute;
+            top: 10%;
+            left: 60%;
+            margin-top: -30px;
+            margin-left: -30px;
+            background: #FFFFFF;
+            height: 60px;
+            width: 60px;
+            box-shadow:
+                #FFFFFF 65px -15px 0 -5px,
+                #FFFFFF 25px -25px,
+                #FFFFFF 30px 10px,
+                #FFFFFF 60px 15px 0 -10px,
+                #FFFFFF 85px 5px 0 -5px;
+        }
+
+        .cloud_two {
+            top: 12%;
+            left: 20%;
+            animation-duration: 8s;
+        }
+
+        .cloud_three {
+            top: 27%;
+            left: 50%;
+            animation-duration: 8s;
+
+        }
+
+        @keyframes move {
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .act {
+                font-size: 1.8rem;
+            }
+
+            .kindness {
+                padding: 2rem;
+                width: 100%;
+            }
+
+            button {
+                width: 100%;
+                padding: 16px 0;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <div id="en"></div>
-    <div id="de"></div>
-    <div class="language-switch">
-      <a href="#de" class="language-btn">DE</a>
-      <a href="#en" class="language-btn">EN</a>
+</head>
+
+<body>
+    <div class="cloud"></div>
+    <div class="cloud_two"></div>
+    <div class="cloud_three"></div>
+    <div class="kindness">
+        <video autoplay muted loop playsinline id="backgroundVideo">
+            <source src="media/video.mp4" type="video/mp4">
+        </video>
+        <div class="content-wrapper">
+            <p class="act" id="kindnessText">Click for a kind act</p>
+            <button onclick="generateAct()">New Act of Kindness</button>
+        </div>
+        <div class="attribution">
+            <a target="_blank"
+                href="https://www.freepik.com/free-video/windy-day-autumn-forest_1707390#fromView=search&page=1&position=8&uuid=3ce532bc-787c-41db-a694-daca48f436e9">Video
+                by Addictive Stock</a>
+        </div>
     </div>
-    <section class="hero-section">
-      <div class="profile-image">
-        <img draggable="false" alt="Profile Picture" src="media/profile-picture.webp"></img>
-      </div>
-      <h1>Nikita Berger</h1>
-      <p class="quote">"don't die"</p>
-      <div class="contact-links support">
-        <a lang="de" href="https://buymeacoffee.com/nikity" target="_blank">❤️ Unterstütze mich ❤️</a>
-        <a lang="en" href="https://buymeacoffee.com/nikity" target="_blank">❤️ Support me ❤️</a>
-      </div>
-      <div class="contact-links">
-        <a class="fix" href="mailto:bergernikita1807@gmail.com">Email</a>
-        <a href="https://huggingface.co/Nikity" target="_blank">HuggingFace</a>
-        <a class="fix" href="https://github.com/Nikityyy" target="_blank">GitHub</a>
-      </div>
-    </section>
-    <section>
-      <h2 lang="de">Leistungen & Empfehlungen</h2>
-      <h2 lang="en">Achievements & Endorsements</h2>
-      <div class="company-rating">
-        <h3 lang="de">Unternehmensempfehlungen</h3>
-        <h3 lang="en">Company Endorsements</h3>
-        <div class="rating-card">
-          <div class="company-info">
-            <div class="company-logo">
-              <div class="logo-placeholder">
-                <img draggable="false" alt="Anqodo GmbH" src="media/anqodo-icon.webp"></img>
-              </div>
-            </div>
-            <div class="company-details">
-              <h4>Anqodo GmbH</h4>
-              <p class="testimonial">❝Top❞</p>
-              <div class="rating">
-                <div class="stars">
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="competition-results">
-        <h3 lang="en">Competition Achievements</h3>
-        <h3 lang="de">Wettbewerbsleistungen</h3>
-        <a href="https://register.codingcontest.org/contest/5679/results?page.page=1&amp;activeId=35500#35500" target="_blank">
-          <div class="competition-card" style="
-    display: flex;
-    justify-content: space-between;
-">
-            <div class="competition-info">
-              <h4>Cloudflight Coding Contest</h4>
-              <h5 class="competition-name">40th School CCC</h5>
-              <p class="competition-date" lang="de">25. Oktober 2024</p>
-              <p class="competition-date" lang="en">October 25, 2024</p>
-              <div class="ranking">
-                <span class="rank-label" lang="de">Schulranking:</span>
-                <span class="rank-value" lang="de">1. / 27</span>
-                <span class="rank-label" lang="en">School Ranking:</span>
-                <span class="rank-value" lang="en">1st / 27</span>
-              </div>
-              <div class="ranking">
-                <span class="rank-label" lang="de">Gesamtranking:</span>
-                <span class="rank-value" lang="de">38. / 729</span>
-                <span class="rank-label" lang="en">Overall Ranking:</span>
-                <span class="rank-value" lang="en">38th / 729</span>
-              </div>
-            </div>
-            <svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 175 125" width="150px" xml:space="preserve">
-              <g>
-                <path class="st0" d="M61.6,111.8v-3.2h3.2v3.2v3.2v3.2h-3.2V115V111.8z M68.1,121.5v-3.2h-3.2v3.2H68.1z M6.5,1.6H3.2v3.2h3.2h3.2
-						V1.6H6.5z M110.2,111.8v3.2v3.2h3.2V115v-3.2v-3.2h-3.2V111.8z M106.9,121.5h3.2v-3.2h-3.2V121.5z M175,24.3v3.2v3.2V34v3.2v3.2
-						v3.2h-3.2V47h-3.2v3.2h-3.2H162h-3.2h-3.2h-3.2h-3.2h-3.2v3.2h-3.2h-3.2h-3.2h-3.2v3.2h-3.2V60h-3.2v3.2v3.2v3.2v3.2h-3.2v3.2h-3.2
-						v3.2v3.2v3.2v3.2v3.2v3.2h-3.2v3.2v3.2v3.2v3.2h-3.2v-3.2h-3.2v-3.2h-3.2h-3.2h-3.2h-3.2v-3.2H94h-3.2v-3.2h-3.2h-3.2v3.2H81h-3.2
-						v3.2h-3.2h-3.2h-3.2h-3.2v3.2h-3.2v3.2h-3.2v-3.2v-3.2v-3.2v-3.2h-3.2v-3.2v-3.2v-3.2v-3.2v-3.2v-3.2h-3.2v-3.2h-3.2v-3.2v-3.2
-						v-3.2V60h-3.2v-3.2h-3.2v-3.2h-3.2h-3.2h-3.2h-3.2v-3.2h-3.2h-3.2h-3.2h-3.2H13H9.7H6.5V47H3.2v-3.2H0v-3.2v-3.2V34v-3.2v-3.2v-3.2
-						h3.2v-3.2v-3.2h3.2v-3.2v-3.2h3.2V8.1V4.9H13v3.2h3.2v3.2v3.2H13v3.2H9.7v3.2v3.2H6.5v3.2v3.2V34h3.2v3.2v3.2H13h3.2h3.2h3.2h3.2
-						h3.2h3.2h3.2h3.2h3.2h3.2h3.2v3.2h3.2h3.2h3.2V47h3.2h3.2v3.2h3.2V47h3.2h3.2v-3.2h3.2H81h3.2h3.2h3.2H94h3.2h3.2V47h3.2h3.2v3.2
-						h3.2V47h3.2h3.2v-3.2h3.2h3.2h3.2v-3.2h3.2h3.2h3.2h3.2h3.2h3.2h3.2h3.2h3.2h3.2h3.2h3.2v-3.2V34h3.2v-3.2v-3.2v-3.2h-3.2v-3.2
-						v-3.2H162v-3.2h-3.2v-3.2V8.1h3.2V4.9h3.2v3.2v3.2h3.2v3.2v3.2h3.2v3.2v3.2H175z M110.2,76.2h-3.2v3.2h-3.2h-3.2v3.2h-3.2H94v3.2
-						v3.2h3.2h3.2h3.2h3.2v-3.2h3.2v-3.2v-3.2V76.2z M81,89.1v-3.2v-3.2h-3.2h-3.2v-3.2h-3.2h-3.2v-3.2h-3.2v3.2v3.2v3.2h3.2v3.2h3.2
-						h3.2h3.2H81z M171.8,4.9V1.6h-3.2h-3.2v3.2h3.2H171.8z"></path>
-              </g>
-            </svg>
-          </div>
-        </a>
-      </div>
-      <div class="language-proficiency">
-        <h3 lang="en">Language Skills</h3>
-        <h3 lang="de">Sprachkenntnisse</h3>
-        <div class="language-grid">
-          <div class="language-card" data-tooltip="C2 - Mastery: Can express themselves spontaneously, very fluently and precisely">
-            <div class="language-icon">🇩🇪</div>
-            <h4 lang="de">Deutsch</h4>
-            <h4 lang="en">German</h4>
-            <div class="proficiency-bar">
-              <div class="progress" style="width: 100%"></div>
-            </div>
-            <span class="level">C2</span>
-          </div>
-          <div class="language-card" data-tooltip="B2 - Upper Intermediate: Can interact with a degree of fluency and spontaneity">
-            <div class="language-icon">🇬🇧</div>
-            <h4 lang="de">Englisch</h4>
-            <h4 lang="en">English</h4>
-            <div class="proficiency-bar">
-              <div class="progress" style="width: 80%"></div>
-            </div>
-            <span class="level">B2</span>
-          </div>
-          <div class="language-card" data-tooltip="A2 - Elementary: Can communicate in simple and routine tasks">
-            <div class="language-icon">🇪🇸</div>
-            <h4 lang="de">Spanisch</h4>
-            <h4 lang="en">Spanish</h4>
-            <div class="proficiency-bar">
-              <div class="progress" style="width: 30%"></div>
-            </div>
-            <span class="level">A2</span>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section>
-      <h2 lang="en">Work Experience</h2>
-      <h2 lang="de">Berufserfahrung</h2>
-      <div class="experience-item">
-        <h3 lang="de">Freelancer - GCT Gruber Consulting & Technology</h3>
-        <h3 lang="en">Freelancer - GCT Gruber Consulting & Technology</h3>
-        <p lang="de">April 2024 - Juli 2024</p>
-        <p lang="en">April 2024 - July 2024</p>
-        <ul lang="de">
-          <li>Verantwortlich für die Gestaltung und Umsetzung der Website, einschließlich der Benutzeroberfläche und Benutzererfahrung.</li>
-        </ul>
-        <ul lang="en">
-          <li>Responsible for the design and implementation of the website, including the user interface and user experience.</li>
-        </ul>
-      </div>
-      <div class="experience-item">
-        <h3 lang="de">Praktikant - anqodo GmbH</h3>
-        <h3 lang="en">Intern - anqodo GmbH</h3>
-        <p lang="de">5. August 2024 – 30. August 2024</p>
-        <p lang="en">August 5, 2024 – August 30, 2024</p>
-        <ul lang="de">
-          <li>Optimierung und Erweiterung bestehender Unit-Tests zur Verbesserung der Softwarequalität und -stabilität.</li>
-          <li>Aktive Auseinandersetzung mit und Erlernung neuer Programmiersprachen und Frameworks zur Förderung persönlicher und teaminterner Kompetenzen.</li>
-          <li>Erstellung eines strategischen Konzepts zur Evaluierung und Auswahl eines neuen Frameworks, basierend auf technischen Anforderungen und Projektzielen.</li>
-          <li>Implementierung grundlegender Layout-Komponenten in den neuen Frameworks zur Unterstützung der Benutzeroberfläche und Verbesserung der Nutzererfahrung.</li>
-        </ul>
-        <ul lang="en">
-          <li>Optimization and expansion of existing unit tests to improve software quality and stability.</li>
-          <li>Active involvement with and learning of new programming languages and frameworks to promote personal and team-internal skills.</li>
-          <li>Creating a strategic concept for evaluating and selecting a new framework based on technical requirements and project goals.</li>
-          <li>Implementation of basic layout components in the new frameworks to support the user interface and improve the user experience.</li>
-        </ul>
-      </div>
-    </section>
-    <section>
-      <h2 lang="en">My Projects</h2>
-      <h2 lang="de">Meine Projekte</h2>
-      <div class="project-item">
-        <h3>Conomy</h3>
-        <p lang="de">Entwickeln einer Software, die es Unternehmen ermöglicht Ihre Website auf viele betriebswirtschaftliche Eigenschaften zu überprüfen und zu optimieren.</p>
-        <p lang="en">Development of software that enables companies to check and optimize their website for various business management characteristics.</p>
-        <a href="https://nikityyy.github.io/Conomy/" target="_blank" class="more-link" lang="de">Mehr erfahren →</a>
-        <a href="https://nikityyy.github.io/Conomy/" target="_blank" class="more-link" lang="en">Learn more →</a>
-      </div>
-      <div class="project-item">
-        <h3>Musify</h3>
-        <p lang="de">Eine werbefreie Musik-Streaming-Webanwendung, die mit Spotify funktioniert, indem es Spotify embedded.</p>
-        <p lang="en">An ad-free music streaming web application that works with Spotify by embedding it.</p>
-        <a href="https://nikityyy.github.io/Musify/" target="_blank" class="more-link" lang="de">Mehr erfahren →</a>
-        <a href="https://nikityyy.github.io/Musify/" target="_blank" class="more-link" lang="en">Learn more →</a>
-      </div>
-      <div class="project-item">
-        <h3>WhatsBreak</h3>
-        <p lang="de">Eine Webanwendung, die Benutzern hilft, eine passende Nachricht für die Beendigung einer Beziehung zu formulieren. Die Nutzer können aus verschiedenen Kategorien und Sprachen wählen, um eine personalisierte Trennungsnachricht zu erstellen.</p>
-        <p lang="en">A web application that helps users formulate an appropriate message for ending a relationship. Users can choose from various categories and languages to create a personalized breakup message.</p>
-        <a href="https://nikityyy.github.io/WhatsBreak/" target="_blank" class="more-link" lang="de">Mehr erfahren →</a>
-        <a href="https://nikityyy.github.io/WhatsBreak/" target="_blank" class="more-link" lang="en">Learn more →</a>
-      </div>
-      <div class="project-item">
-        <h3>Lille</h3>
-        <p lang="de">Entwicklung und Training eines eigenen Large Language Models (LLM) basierend auf selbst gescrapten Daten aus dem Internet. Alle Daten wurden legal durch Web-Scraping gesammelt und zu einem Datensatz zusammengestellt. Anschließend wurde das LLM auf diesen Daten trainiert und im Chat-Modus weiter feinabgestimmt.</p>
-        <p lang="en">Development and training of a custom Large Language Model (LLM) based on self-scraped data from the internet. All data was legally collected through web scraping and compiled into a dataset. Subsequently, the LLM was trained on this data and further fine-tuned in chat mode.</p>
-        <a href="#" class="more-link" target="_blank" lang="de">Mehr erfahren →</a>
-        <a href="#" class="more-link" target="_blank" lang="en">Learn more →</a>
-      </div>
-      <div class="project-item">
-        <h3>Knowpedia</h3>
-        <p lang="de">Eine genauere und benutzerfreundlichere Alternative zu Wikipedia.</p>
-        <p lang="en">A more accurate and user-friendly alternative to Wikipedia.</p>
-        <a href="https://knowpedia.vercel.app/" class="more-link" target="_blank" lang="de">Mehr erfahren →</a>
-        <a href="https://knowpedia.vercel.app/" class="more-link" target="_blank" lang="en">Learn more →</a>
-      </div>
-    </section>
-    <section>
-      <h2 lang="en">Thesis</h2>
-      <h2 lang="de">Diplomarbeit</h2>
-      <h3 lang="de">Die Rolle der Datenanalyse im Sport</h3>
-      <h3 lang="en">The Role of Data Analysis in Sports</h3>
-      <p lang="de">In dieser Arbeit habe ich mich mit der KI-Seite der Datenanalyse im Sport befasst.</p>
-      <p lang="en">In this thesis, I focused on the AI aspect of data analysis in sports.</p>
-      <a href="#" class="more-link" target="_blank" lang="de">Mehr erfahren →</a>
-      <a href="#" class="more-link" target="_blank" lang="en">Learn more →</a>
-    </section>
-    <hr>
-    <h2 lang="de">Blog</h2>
-    <h2 lang="en">Blog</h2>
-    <section class="blog-grid">
-      <a href="blog/blog-1" target="_blank">
-        <div class="blog-item">
-          <img src="media/blog-1.webp" alt="Blog Post 1">
-          <h3 lang="de">HAK-Schüler Nikita ist Steyrs bester Nachwuchsprogrammierer</h3>
-          <h3 lang="en">HAK student Nikita is Steyr's best young programmer</h3>
-          <p lang="de">11. November 2024</p>
-          <p lang="en">November 11, 2024</p>
-        </div>
-      </a>
-    </section>
-    <footer>
-      <p lang="de">© 2024 Nikita Berger. Alle Rechte vorbehalten.</p>
-      <p lang="en">© 2024 Nikita Berger. All Rights Reserved.</p>
-    </footer>
-  </body>
+
+    <script>
+        const acts = [
+            "Smile at someone",
+            "Hold the door for someone",
+            "Say 'thank you' to someone",
+            "Give someone a compliment",
+            "Ask someone how their day is going",
+            "Let someone go ahead of you in line",
+            "Say 'good morning' to someone",
+            "Pick up a piece of litter",
+            "Give someone your full attention when they speak",
+            "Send a nice message to a friend",
+            "Share your snack with someone",
+            "Tell someone why you appreciate them",
+            "Wave hello to a neighbor",
+            "Ask someone if they need help",
+            "Tell someone they did a good job",
+            "Share something that made you laugh",
+            "Give someone directions when they look lost",
+            "Make space for someone to sit or walk by",
+            "Turn down your music if it might bother others",
+            "Wash your dishes right after using them",
+            "Hold the elevator for someone",
+            "Help someone carry something heavy",
+            "Ask someone if they're okay",
+            "Give someone a high five",
+            "Say 'good job' to someone",
+            "Ask someone if they need anything",
+            "Give someone a hug",
+            "Say 'good night' to someone",
+            "Ask someone if they're feeling okay",
+            "Give someone a smile",
+            "Say 'goodbye' to someone",
+            "Ask someone if they're feeling better",
+            "Give someone a thumbs up",
+            "Say 'good luck' to someone",
+            "Ask someone if they're feeling well",
+            "Give someone a pat on the back",
+            "Say 'good evening' to someone",
+            "Ask someone if they're feeling alright",
+            "Give someone a round of applause",
+            "Offer your seat to someone on public transport",
+            "Bake something and share it with someone",
+            "Water someone's plants while they're away",
+            "Offer to help a neighbor with yard work",
+            "Leave a kind note for someone to find",
+            "Donate to a charity",
+            "Volunteer your time",
+            "Mentor someone",
+            "Teach someone a new skill",
+            "Help someone with a difficult task",
+            "Listen to someone without interrupting",
+            "Offer encouragement to someone who is struggling",
+            "Forgive someone",
+            "Let go of a grudge",
+            "Offer constructive feedback kindly",
+            "Be patient with someone who is learning",
+            "Respect someone's opinion, even if you disagree",
+            "Offer a genuine apology when you've made a mistake",
+            "Be on time for appointments",
+            "Keep your promises",
+            "Return borrowed items promptly",
+            "Clean up after yourself in public spaces",
+            "Drive safely and courteously",
+            "Be mindful of noise levels in shared spaces",
+            "Respect others' personal space",
+            "Avoid gossiping",
+            "Speak kindly about others when they're not around",
+            "Be honest and truthful",
+            "Offer a helping hand to someone struggling with technology",
+            "Share helpful resources with others",
+            "Welcome a new person to a group",
+            "Include someone who is feeling left out",
+            "Make eye contact when speaking to someone",
+            "Remember someone's name",
+            "Ask follow-up questions to show you're listening",
+            "Express gratitude for small things",
+            "Celebrate someone's accomplishments",
+            "Support someone's dreams",
+            "Believe in someone",
+            "Offer a shoulder to cry on",
+            "Send a thinking-of-you message",
+            "Offer to run an errand for someone",
+            "Bring someone a cup of coffee or tea",
+            "Offer to proofread someone's work",
+            "Help someone move",
+            "Offer to watch someone's pet",
+            "Offer to babysit for someone",
+            "Leave a positive review for a business",
+            "Recommend a good book or movie",
+            "Share your knowledge and expertise",
+            "Connect people who could benefit from knowing each other",
+            "Offer to teach someone your native language",
+            "Learn a few phrases in someone else's language",
+            "Be open to new perspectives",
+            "Challenge your own biases",
+            "Educate yourself on social issues",
+            "Speak up against injustice",
+            "Support local businesses",
+            "Shop ethically",
+            "Reduce your waste",
+            "Conserve energy",
+            "Plant a tree",
+            "Respect nature",
+            "Take care of animals",
+            "Donate blood",
+            "Become an organ donor",
+            "Check in on elderly neighbors",
+            "Offer assistance to someone with a disability",
+            "Be kind to yourself",
+            "Practice self-compassion",
+            "Forgive yourself",
+            "Celebrate your own small victories",
+            "Take a break when you need it",
+            "Get enough sleep",
+            "Eat nutritious food",
+            "Exercise regularly",
+            "Spend time in nature",
+            "Practice mindfulness",
+            "Meditate",
+            "Journal your thoughts and feelings",
+            "Set healthy boundaries",
+            "Say 'no' when you need to",
+            "Ask for help when you need it",
+            "Be vulnerable with someone you trust",
+            "Express your feelings in a healthy way",
+            "Seek professional help if you're struggling",
+            "Learn from your mistakes",
+            "Embrace change",
+            "Be open to new experiences",
+            "Travel and learn about different cultures",
+            "Read books and expand your knowledge",
+            "Learn a new hobby",
+            "Spend time with loved ones",
+            "Tell your loved ones how much you appreciate them",
+            "Forgive family members",
+            "Strengthen your relationships",
+            "Make time for fun and laughter",
+            "Don't take yourself too seriously",
+            "Be optimistic",
+            "Look for the good in every situation",
+            "Practice gratitude daily",
+            "Focus on the present moment",
+            "Let go of the past",
+            "Don't worry about the future",
+            "Be content with what you have",
+            "Find joy in the simple things",
+            "Live with intention",
+            "Be authentic",
+            "Follow your passions",
+            "Make a positive impact on the world",
+            "Leave the world a better place than you found it",
+            "Offer a genuine compliment about someone's skills",
+            "Praise someone's creativity",
+            "Acknowledge someone's hard work",
+            "Recognize someone's resilience",
+            "Appreciate someone's positive attitude",
+            "Admire someone's courage",
+            "Respect someone's boundaries",
+            "Value someone's time",
+            "Be present in conversations",
+            "Actively listen to understand, not just to respond",
+            "Show empathy towards others' struggles",
+            "Offer support without judgment",
+            "Be a source of encouragement",
+            "Inspire others through your actions",
+            "Lead by example",
+            "Empower others to succeed",
+            "Share opportunities with others",
+            "Collaborate effectively with others",
+            "Celebrate team achievements",
+            "Acknowledge individual contributions",
+            "Foster a positive and inclusive environment",
+            "Treat everyone with respect, regardless of their background",
+            "Learn about different cultures and perspectives",
+            "Challenge stereotypes and prejudices",
+            "Promote equality and fairness",
+            "Advocate for those who are marginalized",
+            "Speak out against discrimination",
+            "Be an ally to underrepresented groups",
+            "Educate others about important social issues",
+            "Participate in peaceful protests or activism",
+            "Support organizations working for social justice",
+            "Vote in elections",
+            "Contact your elected officials about important issues",
+            "Engage in civil discourse",
+            "Seek common ground with those who have different views",
+            "Work towards building bridges between communities",
+            "Promote understanding and tolerance",
+            "Encourage empathy and compassion",
+            "Foster a sense of community",
+            "Help build a more just and equitable world",
+            "Offer to help someone struggling with their groceries",
+            "Return a misplaced item to its owner",
+            "Alert someone if they've dropped something",
+            "Offer your umbrella to someone caught in the rain",
+            "Help someone find their way in a new place",
+            "Offer assistance to a tourist",
+            "Translate for someone who doesn't speak the local language",
+            "Help someone jump-start their car",
+            "Offer a ride to someone in need",
+            "Share your extra supplies with someone who needs them",
+            "Offer to take someone's photo",
+            "Help someone carry their luggage",
+            "Offer a snack or drink to someone who is hungry or thirsty",
+            "Share your notes with someone who missed a class",
+            "Help someone study for an exam",
+            "Offer to tutor someone in a subject you're good at",
+            "Share your knowledge and skills with others freely",
+            "Mentor someone in your field",
+            "Offer career advice to someone starting out",
+            "Write a letter of recommendation for someone",
+            "Nominate someone for an award or recognition",
+            "Publicly acknowledge someone's achievements",
+            "Celebrate the successes of others",
+            "Be genuinely happy for others' good fortune",
+            "Avoid being envious or jealous",
+            "Practice contentment and gratitude",
+            "Focus on your own journey and growth",
+            "Compare yourself only to your past self",
+            "Strive for progress, not perfection",
+            "Embrace imperfections",
+            "Be patient with yourself",
+            "Celebrate your strengths",
+            "Work on your weaknesses",
+            "Continuously learn and grow",
+            "Seek out new challenges",
+            "Step outside your comfort zone",
+            "Take calculated risks",
+            "Don't be afraid to fail",
+            "Learn from your failures",
+            "Persist through difficulties",
+            "Develop resilience",
+            "Cultivate a growth mindset",
+            "Believe in your ability to improve",
+            "Set meaningful goals",
+            "Work towards your goals with dedication",
+            "Stay focused and disciplined",
+            "Manage your time effectively",
+            "Prioritize your tasks",
+            "Avoid procrastination",
+            "Be organized and efficient",
+            "Practice good self-care",
+            "Maintain a healthy work-life balance",
+            "Set boundaries to protect your time and energy",
+            "Delegate tasks when possible",
+            "Don't overcommit yourself",
+            "Learn to say 'no' gracefully",
+            "Protect your mental and emotional health",
+            "Seek support when you need it",
+            "Be there for others when they need you",
+            "Build strong and supportive relationships",
+            "Invest in meaningful connections",
+            "Nurture your friendships",
+            "Spend quality time with loved ones",
+            "Express your love and appreciation",
+            "Show affection to those you care about",
+            "Be a loving and supportive partner",
+            "Be a good parent or guardian",
+            "Be a caring and supportive family member",
+            "Be a loyal and trustworthy friend",
+            "Be a reliable and dependable colleague",
+            "Be a responsible and engaged citizen",
+            "Contribute positively to your community",
+            "Make the world a better place, one small act at a time",
+            "Offer specific praise, like 'I really admire your patience'",
+            "Acknowledge someone's effort, not just the outcome",
+            "Thank someone for their specific contribution",
+            "Offer a genuine and heartfelt compliment",
+            "Notice and appreciate small details about someone",
+            "Compliment someone's taste or style",
+            "Express gratitude for someone's kindness",
+            "Tell someone how they've positively impacted your life",
+            "Share a specific instance where someone helped you",
+            "Offer words of encouragement during a difficult time",
+            "Send a handwritten note of appreciation",
+            "Leave a positive comment on someone's social media",
+            "Share someone's work or achievement with others",
+            "Recommend someone for a job or opportunity",
+            "Offer to be a reference for someone",
+            "Help someone practice a presentation or speech",
+            "Offer constructive criticism in a supportive way",
+            "Be a mentor or mentee",
+            "Share your network and connections with others",
+            "Offer to collaborate on a project",
+            "Brainstorm ideas together",
+            "Provide support and resources for someone's goals",
+            "Help someone overcome a challenge",
+            "Offer practical assistance to someone in need",
+            "Run errands for someone who is sick or busy",
+            "Cook a meal for someone",
+            "Offer to help with household chores",
+            "Provide transportation for someone",
+            "Help someone organize their belongings",
+            "Offer to pet-sit or house-sit for someone",
+            "Be a listening ear without offering unsolicited advice",
+            "Validate someone's feelings",
+            "Show empathy and understanding",
+            "Offer comfort and support during a difficult time",
+            "Be present and attentive when someone is sharing their struggles",
+            "Avoid minimizing someone's problems",
+            "Offer a safe and non-judgmental space for someone to talk",
+            "Respect someone's privacy and confidentiality",
+            "Be a trustworthy confidant",
+            "Keep your promises and commitments",
+            "Be reliable and dependable",
+            "Follow through on your word",
+            "Be on time for appointments and meetings",
+            "Communicate clearly and honestly",
+            "Be direct but kind in your communication",
+            "Avoid passive-aggressive behavior",
+            "Address conflicts directly and respectfully",
+            "Be willing to apologize and forgive",
+            "Practice active listening skills",
+            "Pay attention to nonverbal cues",
+            "Ask clarifying questions",
+            "Summarize what you've heard to ensure understanding",
+            "Show genuine interest in what others are saying",
+            "Be present in conversations",
+            "Put away distractions when talking to someone",
+            "Make eye contact",
+            "Give your full attention",
+            "Show respect for others' opinions and perspectives",
+            "Be open to hearing different viewpoints",
+            "Engage in respectful debate",
+            "Avoid personal attacks or insults",
+            "Focus on the issues, not the person",
+            "Find common ground and build consensus",
+            "Work collaboratively towards shared goals",
+            "Be a team player",
+            "Share credit and acknowledge contributions",
+            "Support and encourage your teammates",
+            "Celebrate collective successes",
+            "Offer help to those who are struggling",
+            "Be inclusive and welcoming of diverse perspectives",
+            "Create a positive and supportive environment",
+            "Foster a sense of belonging",
+            "Treat everyone with kindness and compassion",
+            "Practice empathy in your daily interactions",
+            "Be understanding and forgiving of others' mistakes",
+            "Offer second chances",
+            "Believe in the best in people",
+            "Spread positivity and optimism",
+            "Be a source of joy and inspiration",
+            "Make someone's day a little brighter",
+            "Leave a positive impact wherever you go"
+        ];
+
+        function generateAct() {
+            const text = document.getElementById('kindnessText');
+            let newAct;
+            do {
+                newAct = acts[Math.floor(Math.random() * acts.length)];
+            } while (newAct === text.textContent);
+            text.textContent = newAct;
+        }
+
+        window.onload = generateAct;
+    </script>
+</body>
+
 </html>

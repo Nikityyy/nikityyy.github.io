@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Be Kind</title>
+    <link rel="icon" href="media/favicon.avif" type="image/avif">
+    <meta name="description" content="Just be kind...">
+    <meta name="keywords" content="kindness, act of kindness, random act of kindness, be kind, kindness generator">
+    <meta name="author" content="Nikita Berger">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&display=swap" rel="stylesheet">
@@ -13,13 +16,11 @@
             box-sizing: border-box;
             margin: 0;
         }
-
         :root {
             --primary: #2C3E50;
             --text: #ffffff;
             --button-hover: #34495E;
         }
-
         body {
             min-height: 100svh;
             display: flex;
@@ -30,7 +31,6 @@
             background-image: linear-gradient(to bottom, #0487E2, #65C2F5);
             overflow: hidden;
         }
-
         .kindness {
             text-align: center;
             max-width: 600px;
@@ -43,12 +43,9 @@
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 15px rgba(233, 48, 23, 0.8);
         }
-
-
         .kindness:hover {
             transform: scale(1.02);
         }
-
         #backgroundVideo {
             position: absolute;
             top: 0;
@@ -59,12 +56,10 @@
             z-index: 0;
             border-radius: 15px;
         }
-
         .content-wrapper {
             position: relative;
             z-index: 1;
         }
-
         .act {
             font-size: 2.2rem;
             font-weight: 500;
@@ -72,7 +67,6 @@
             line-height: 1.5;
             color: white
         }
-
         button {
             background: rgba(255, 255, 255, 0.2);
             color: var(--text);
@@ -87,16 +81,13 @@
             backdrop-filter: blur(1px);
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
-
         button:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
         }
-
         button:active {
             transform: translateY(0);
         }
-
         .attribution {
             position: absolute;
             bottom: 10px;
@@ -105,7 +96,6 @@
             opacity: 0.7;
             z-index: 2;
         }
-
         .attribution a {
             color: var(--text);
             text-decoration: none;
@@ -116,11 +106,9 @@
                 -1px 1px 0 #000,
                 1px 1px 0 #000;
         }
-
         .attribution a:hover {
             opacity: 1;
         }
-
         .cloud,
         .cloud_two,
         .cloud_three {
@@ -141,36 +129,29 @@
                 #FFFFFF 60px 15px 0 -10px,
                 #FFFFFF 85px 5px 0 -5px;
         }
-
         .cloud_two {
             top: 12%;
             left: 20%;
             animation-duration: 8s;
         }
-
         .cloud_three {
             top: 27%;
             left: 50%;
             animation-duration: 8s;
-
         }
-
         @keyframes move {
             50% {
                 transform: translateY(-15px);
             }
         }
-
         @media (max-width: 768px) {
             .act {
                 font-size: 1.8rem;
             }
-
             .kindness {
                 padding: 2rem;
                 width: 100%;
             }
-
             button {
                 width: 100%;
                 padding: 16px 0;
@@ -178,7 +159,6 @@
         }
     </style>
 </head>
-
 <body>
     <div class="cloud"></div>
     <div class="cloud_two"></div>
@@ -197,7 +177,6 @@
                 by Addictive Stock</a>
         </div>
     </div>
-
     <script>
         const acts = [
             "Smile at someone",
@@ -545,7 +524,6 @@
             "Make someone's day a little brighter",
             "Leave a positive impact wherever you go"
         ];
-
         function generateAct() {
             const text = document.getElementById('kindnessText');
             let newAct;
@@ -554,9 +532,7 @@
             } while (newAct === text.textContent);
             text.textContent = newAct;
         }
-
         window.onload = generateAct;
     </script>
 </body>
-
 </html>

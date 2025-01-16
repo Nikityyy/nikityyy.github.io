@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OIIAOIIA</title>
+    <link rel="icon" href="favicon.avif" type="image/avif">
+    <meta name="description" content="OIIAOIIA">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.0/lame.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .drop-zone {
+            width: 300px;
+            height: 200px;
+            border: 2px solid #ffffff;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 auto;
+        }
+
+        .drop-zone.dragover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-style: dashed;
+        }
+
+        .drop-zone input {
+            display: none;
+        }
+
+        .file-preview {
+            display: none;
+            padding: 1rem;
+            border: 2px solid #fff;
+            border-radius: 10px;
+            width: 300px;
+            margin: 0 auto;
+            margin-bottom: 2rem;
+        }
+
+        .button-group {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        button {
+            border: 3px solid #fff;
+            background-color: #000;
+            color: #fff;
+            padding: 0.8rem 1.5rem;
+            border-radius: 1rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        button:hover {
+            border: 3px solid #000;
+            background-color: #fff;
+            color: #000;
+        }
+
+        button:disabled {
+            background-color: #444;
+            cursor: not-allowed;
+        }
+
+        .preview-container {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .preview-item {
+            padding: 1rem;
+            background: #1a1a1a;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ffffff;
+        }
+
+        .preview-info {
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        .file-name {
+            font-size: 1rem;
+        }
+
+        .file-size {
+            font-size: 0.8rem;
+            color: #888888;
+        }
+
+        .download-btn {
+            background-color: #000000;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .download-btn:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        #status {
+            margin-top: 2rem;
+            font-size: 1rem;
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>OIIAOIIA</h1>
+        <div id="drop-zone-container">
+            <div class="drop-zone" id="drop-zone">
+                <p>Add your song<br>Get OIIAOIIA</p>
+                <input type="file" id="audioFile" accept="audio/mp3">
+            </div>
+            <div class="file-preview" id="file-preview">
+                <div class="file-name" id="file-name"></div>
+                <div class="file-size" id="file-size"></div>
+            </div>
+        </div>
+        <div class="button-group">
+            <button onclick="processAudio()">Process</button>
+            <button id="playBtn" disabled onclick="playModifiedAudio()">Play</button>
+        </div>
+        <div class="preview-container" id="preview-container"></div>
+        <div id="status"></div>
+    </div>
+
+    <script>
+        let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        let beats = [];
+        const O = 'data:audio/mpeg;base64,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opmHJKhtLxiMyVyCFwppHDiLorMh/NFpmE2JIiBAyGlIqqQ1MtBCmpdltKhfLheLpuXy4mhZ/9u+vLpsaIHUj5oXzpl//2//zx43MDI1N0zBZqfNEDv////////+580TMUjx5NBJE3TMFmp80AAAAI8///////////zWhv8QITVKGiqjRIoaHkAClLaXFUtyicyUiEoU2qGZiZrp00RwkAhKLEiVS8mkZYGASJxJLQVdEQdKhsShosDQx4lLBwRB1YKjzvWCqgaGB38FR4Kyx7iKRv/7kmShAAbei8nGbiAAGkAVosAAAAtMUxq88wAAogAPR4AAAFTv8se/rO/57gr/iL/EoA+//+VO////+oK5YO1grFQV5Z9QMgq4jwVgyGod/qBoGhKCv6/+JTtMQU1FMy4xMDEgKGJldGEgMilVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDEgKGJldGEgMilVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/+5JkQI/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAxIChiZXRhIDIpVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//uSZECP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAEVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVQ==';
+        const I = 'data:audio/mpeg;base64,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qqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAxIChiZXRhIDIpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uSZECP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAEqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqg==';
+        const A = 'data:audio/mpeg;base64,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VVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAxIChiZXRhIDIpVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//uSZECP8AAAaQcAAAgAAA0g4AABAAABpAAAACAAADSAAAAEVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVQ==';
+        let soundSequence = [O, I, I, A, I, O, I, I, I, A, I];
+        let buffer, modifiedBuffer;
+
+        document.getElementById('drop-zone').addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            e.currentTarget.classList.add('dragover');
+        });
+
+        document.getElementById('drop-zone').addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            e.currentTarget.classList.remove('dragover');
+        });
+
+        document.getElementById('drop-zone').addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            e.currentTarget.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('audioFile').files = files;
+                updateFilePreview(files[0]);
+            }
+        });
+
+        document.getElementById('drop-zone').addEventListener('click', function () {
+            document.getElementById('audioFile').click();
+        });
+
+        document.getElementById('audioFile').addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                updateFilePreview(e.target.files[0]);
+            }
+        });
+
+        async function processAudio() {
+            const file = document.getElementById('audioFile').files[0];
+            if (!file) {
+                document.getElementById('status').textContent = 'Please select an MP3 file.';
+                return;
+            }
+
+            document.getElementById('status').textContent = 'Processing...';
+            const arrayBuffer = await file.arrayBuffer();
+            buffer = await audioContext.decodeAudioData(arrayBuffer);
+            beats = detectBeats(buffer);
+            modifiedBuffer = await replaceBeats(buffer, beats);
+            displayPreview(file);
+            document.getElementById('playBtn').disabled = false;
+            document.getElementById('status').textContent = 'Processing complete!';
+        }
+
+        function detectBeats(audioBuffer) {
+            let peaks = [];
+            let channelData = audioBuffer.getChannelData(0);
+            let threshold = 0.3;
+            let minGap = audioContext.sampleRate * 0.2;
+            let lastPeak = 0;
+
+            for (let i = 0; i < channelData.length; i++) {
+                if (channelData[i] > threshold && (i - lastPeak) > minGap) {
+                    peaks.push(i / audioContext.sampleRate);
+                    lastPeak = i;
+                }
+            }
+            return peaks;
+        }
+
+        async function replaceBeats(audioBuffer, beats) {
+            let outputBuffer = audioContext.createBuffer(1, audioBuffer.length, audioBuffer.sampleRate);
+            let outputData = outputBuffer.getChannelData(0);
+            let originalData = audioBuffer.getChannelData(0);
+            outputData.set(originalData);
+
+            for (let i = 0; i < beats.length; i++) {
+                let soundFile = soundSequence[i % soundSequence.length];
+                let soundBuffer = await loadSound(soundFile);
+                mixAudio(outputData, soundBuffer, beats[i] * audioBuffer.sampleRate, 1.5);
+            }
+            return outputBuffer;
+        }
+
+        async function loadSound(file) {
+            let response = await fetch(file);
+            let arrayBuffer = await response.arrayBuffer();
+            return await audioContext.decodeAudioData(arrayBuffer);
+        }
+
+        function mixAudio(outputData, soundBuffer, position, volumeMultiplier = 1.5) {
+            let soundData = soundBuffer.getChannelData(0);
+            for (let i = 0; i < soundData.length; i++) {
+                let index = Math.floor(position) + i;
+                if (index < outputData.length) {
+                    outputData[index] += soundData[i] * volumeMultiplier;
+                }
+            }
+        }
+
+        function playModifiedAudio() {
+            if (!modifiedBuffer) {
+                document.getElementById('status').textContent = 'No processed audio available.';
+                return;
+            }
+            let source = audioContext.createBufferSource();
+            source.buffer = modifiedBuffer;
+            source.connect(audioContext.destination);
+            source.start();
+        }
+
+        function downloadAudio() {
+            if (!modifiedBuffer) {
+                document.getElementById('status').textContent =
+                    'No processed audio available.';
+                return;
+            }
+
+            const fileName = document.getElementById('file-name').textContent.replace(/\.[^/.]+$/, '').replace(' ', '_') + '_OIIAOIIA' + '.wav';
+
+            const bufferSource = audioContext.createBufferSource();
+            bufferSource.buffer = modifiedBuffer;
+
+            const audioData = bufferSource.buffer.getChannelData(0);
+
+            const wav = new Uint8Array(44 + audioData.length * 2);
+            let view = new DataView(wav.buffer);
+
+            writeString(view, 0, 'RIFF');
+            view.setUint32(4, 36 + audioData.length * 2, true);
+            writeString(view, 8, 'WAVE');
+            writeString(view, 12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, 1, true);
+            view.setUint32(24, 44100, true);
+            view.setUint32(28, 44100 * 2, true);
+            view.setUint16(32, 2, true);
+            view.setUint16(34, 16, true);
+            writeString(view, 36, 'data');
+            view.setUint32(40, audioData.length * 2, true);
+
+            for (let i = 0; i < audioData.length; i++) {
+                view.setInt16(44 + i * 2, audioData[i] * 0x7FFF, true);
+            }
+
+            const blob = new Blob([wav], { type: 'audio/wav' });
+
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = fileName;
+
+            link.click();
+        }
+
+        function writeString(view, offset, string) {
+            for (let i = 0; i < string.length; i++) {
+                view.setUint8(offset + i, string.charCodeAt(i));
+            }
+        }
+
+        function updateFilePreview(file) {
+            document.getElementById('drop-zone').style.display = 'none';
+            document.getElementById('file-preview').style.display = 'block';
+            document.getElementById('file-name').textContent = file.name;
+            document.getElementById('file-size').textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+        }
+
+        function displayPreview(file) {
+            const previewContainer = document.getElementById('preview-container');
+            const previewItem = document.createElement('div');
+            previewItem.className = 'preview-item';
+
+            const fileName = document.createElement('div');
+            fileName.className = 'file-name';
+            fileName.textContent = file.name;
+
+            const fileSize = document.createElement('div');
+            fileSize.className = 'file-size';
+            fileSize.textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+
+            const downloadBtn = document.createElement('a');
+            downloadBtn.className = 'download-btn';
+            downloadBtn.textContent = 'Download';
+            downloadBtn.onclick = downloadAudio;
+            previewItem.appendChild(fileName);
+            previewItem.appendChild(fileSize);
+            previewItem.appendChild(downloadBtn);
+
+            previewContainer.appendChild(previewItem);
+        }
+    </script>
+</body>
+
+</html>

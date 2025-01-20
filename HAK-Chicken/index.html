@@ -888,9 +888,10 @@
 			player.style.left = '100px';
 			player.style.bottom = '50%';
 			gameContent.style.transform = 'translateX(0)';
-
+			
 			document.querySelectorAll('.multiplier').forEach((m, i) => {
-				m.classList.remove('active', 'current');
+				m.classList.toggle('active', i === 0);
+				m.classList.remove('current');
 			});
 
 			if (balance <= 0) balance = minAmount;

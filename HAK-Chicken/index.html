@@ -673,6 +673,10 @@
             currentLaneIndex = -1;
             safeLanes = [];
             carSpawnChance = 0.1;
+			document.querySelectorAll('.multiplier').forEach((m, i) => {
+				m.classList.toggle('active', i === 0);
+				m.classList.remove('current');
+			});
 			updateBalance();
             document.querySelectorAll('.barrier').forEach(b => b.remove());
         }

@@ -680,12 +680,22 @@
             }
         };
 		
-		window.onclick = () => {
-		  if (gameOverScreen.style.display === 'block') {
-			gameOverScreen.style.display = 'none';
-			resetGame();
-            }
-        };
+		window.addEventListener('keydown', (event) => {
+			if (event.code === 'Space') {
+				toggleGameOverScreen();
+			}
+		});
+
+		window.addEventListener('click', () => {
+			toggleGameOverScreen();
+		});
+
+		function toggleGameOverScreen() {
+			if (gameOverScreen.style.display === 'block') {
+				gameOverScreen.style.display = 'none';
+				resetGame();
+			}
+		}
 
         function startGame() {
             isGameActive = true;

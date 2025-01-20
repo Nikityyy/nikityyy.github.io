@@ -591,7 +591,9 @@
 		}
 
 		document.addEventListener("keydown", function(event) {
-			if (event.code === "Space") {
+			if (!isGameActive) startGame();
+			console.log(isGameActive);
+			if (event.code === "Space" && isGameActive) {
 				event.preventDefault();
 				jumpToMultiplier(selectedIndex, multipliers[selectedIndex]);
 			}

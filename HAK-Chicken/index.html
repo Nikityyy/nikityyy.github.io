@@ -570,21 +570,32 @@
             { image: 'cars/van.png', width: 111, height: 175 },
         ];
 
-        for (let i = 0; i < 10; i++) {
-            const lane = document.createElement('div');
-            lane.className = 'lane';
-            lane.style.left = `${i * 160}px`;
+		let selectedIndex = 0;
 
-            const multiplier = document.createElement('div');
-            multiplier.className = 'multiplier';
-            multiplier.innerHTML = `<span class="multiplier-text">${multipliers[i]}x</span>`;
-            multiplier.dataset.multiplier = multipliers[i];
-            multiplier.dataset.laneIndex = i;
-            multiplier.onclick = () => jumpToMultiplier(i, multipliers[i]);
+		for (let i = 0; i < 10; i++) {
+			const lane = document.createElement('div');
+			lane.className = 'lane';
+			lane.style.left = `${i * 160}px`;
 
-            lane.appendChild(multiplier);
-            road.appendChild(lane);
-        }
+			const multiplier = document.createElement('div');
+			multiplier.className = 'multiplier';
+			multiplier.innerHTML = `<span class="multiplier-text">${multipliers[i]}x</span>`;
+			multiplier.dataset.multiplier = multipliers[i];
+			multiplier.dataset.laneIndex = i;
+			multiplier.onclick = () => {
+				jumpToMultiplier(i, multipliers[i]);
+			};
+
+			lane.appendChild(multiplier);
+			road.appendChild(lane);
+		}
+
+		document.addEventListener("keydown", function(event) {
+			if (event.code === "Space") {
+				event.preventDefault();
+				jumpToMultiplier(selectedIndex, multipliers[selectedIndex]);
+			}
+		});
 
         player.style.left = '100px';
         player.style.bottom = '50%';
@@ -714,6 +725,8 @@
 			coin.loop = false;
 			coin.volume = 0.3;
 			coin.play();
+			
+			selectedIndex += 1;
 
 			if (laneIndex === 9) {
 				gameOver(true, Math.floor(currentBet * currentMultiplier));
@@ -873,6 +886,7 @@
         }
 
 		function resetGame() {
+			selectedIndex = 0;
 			gameOverScreen.style.display = 'none';
 			placeBetBtn.disabled = false;
 			allInBtn.disabled = false;

@@ -590,12 +590,21 @@
 			road.appendChild(lane);
 		}
 
+		let spacePressed = false;
+
 		document.addEventListener("keydown", function(event) {
 			if (!isGameActive) startGame();
-			console.log(isGameActive);
-			if (event.code === "Space" && isGameActive) {
+			
+			if (event.code === "Space" && isGameActive && !spacePressed) {
 				event.preventDefault();
+				spacePressed = true;
 				jumpToMultiplier(selectedIndex, multipliers[selectedIndex]);
+			}
+		});
+
+		document.addEventListener("keyup", function(event) {
+			if (event.code === "Space") {
+				spacePressed = false;
 			}
 		});
 

@@ -571,7 +571,7 @@
                 });
 
                 this.canvasContainer.addEventListener('mousedown', (e) => {
-                    if (this.activeMode !== 'drawing' && !e.target.closest('.text-field')) {
+                    if (this.activeMode !== 'drawing' && !e.target.closest('.text-field') && e.button == 0) {
                         const pos = this.getMousePosition(e);
                         const drawing = this.getDrawingAtPosition(pos);
 

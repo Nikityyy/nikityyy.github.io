@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroNote</title>
+    <link rel="icon" href="favicon.avif" type="image/avif">
+    <meta name="description" content="A simple note-taking app with text, maths and drawing capabilities.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+    <meta property="og:title" content="ZeroNote">
+    <meta property="og:description" content="A simple note-taking app with text, maths and drawing capabilities.">
+    <meta property="og:image" content="https://files.catbox.moe/2eou8g.png">
+    <meta property="og:url" content="https://nikityyy.github.io/ZeroNote/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ZeroNote">
+    <meta name="twitter:description" content="A simple note-taking app with text, maths and drawing capabilities.">
+    <meta name="twitter:image" content="https://files.catbox.moe/2eou8g.png">
+    <meta name="twitter:url" content="https://nikityyy.github.io/ZeroNote/">
+    <meta name="twitter:site" content="@itsnikity">
+    <meta name="twitter:creator" content="@itsnikity">
+    <style>
+        :root {
+            --sidebar-width: 250px;
+            --sidebar-bg: #1a1a1a;
+            --main-bg: #000000;
+            --text-color: #ffffff;
+            --button-bg: #333333;
+            --button-hover: #444444;
+            --border-color: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--main-bg);
+            color: var(--text-color);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--sidebar-bg);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sidebar-toggle {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--button-bg);
+            border: none;
+            color: var(--text-color);
+            padding: 0.5rem;
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+            z-index: 1001;
+        }
+
+        .sidebar-toggle.open {
+            transform: translateX(var(--sidebar-width));
+        }
+
+        .notes-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .note-item {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: var(--button-bg);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .note-item:hover {
+            background: var(--button-hover);
+        }
+
+        .note-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            outline: none;
+            cursor: text;
+        }
+
+        .note-date {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .note-delete {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .note-delete:hover {
+            opacity: 1;
+        }
+
+        .new-note {
+            margin: 1rem;
+            padding: 0.75rem;
+            background: var(--button-bg);
+            border: none;
+            color: var(--text-color);
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .new-note:hover {
+            background: var(--button-hover);
+        }
+
+        .main-content {
+            position: relative;
+            height: 100vh;
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.sidebar-open {
+            margin-left: var(--sidebar-width);
+        }
+
+        .top-buttons {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1001;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .mode-button {
+            background: var(--button-bg);
+            border: none;
+            color: var(--text-color);
+            padding: 0.5rem;
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mode-button.active {
+            background: var(--button-hover);
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            cursor: grab;
+            touch-action: none;
+        }
+
+        .canvas-container.grabbing {
+            cursor: grabbing;
+        }
+
+        .canvas-wrapper {
+            position: absolute;
+            transform-origin: 0 0;
+            will-change: transform;
+        }
+
+        .text-fields-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: all;
+            z-index: 2;
+        }
+
+        .drawing-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2000;
+        }
+
+        .drawing-layer.active {
+            pointer-events: all;
+            z-index: 4;
+            cursor: crosshair;
+        }
+
+        .text-field {
+            position: absolute;
+            background: rgba(40, 40, 40, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.5rem;
+            min-width: 20px;
+            min-height: 30px;
+            cursor: move;
+            touch-action: none;
+            width: max-content;
+            max-width: 500px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            z-index: 3;
+            font-family: "Patrick Hand", sans-serif;
+            font-size: 2rem;
+        }
+
+        .katex {
+            font-size: 1.8rem;
+        }
+
+        .text-field.selected {
+            border-color: #4a9eff;
+        }
+
+        .selection-box {
+            position: absolute;
+            border: 1px dashed #4a9eff;
+            background: rgba(74, 158, 255, 0.1);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--sidebar-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .modal-buttons {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .modal-button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: var(--button-bg);
+            color: var(--text-color);
+        }
+
+        .modal-button:hover {
+            background: var(--button-hover);
+        }
+
+        .modal-button.delete {
+            background: #ff4444;
+        }
+
+        .modal-button.delete:hover {
+            background: #ff6666;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--main-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--button-bg);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--button-hover);
+        }
+    </style>
+</head>
+
+<body>
+    <button class="sidebar-toggle">
+        <span class="material-icons">menu</span>
+    </button>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>ZeroNote</h2>
+        </div>
+        <button class="new-note">
+            <span class="material-icons">add</span>
+            New Note
+        </button>
+        <div class="notes-list"></div>
+    </div>
+
+    <div class="main-content">
+        <div class="top-buttons">
+            <button class="mode-button math-mode" title="Math Mode">
+                <span class="material-icons">functions</span>
+            </button>
+            <button class="mode-button drawing-mode" title="Drawing Mode">
+                <span class="material-icons">brush</span>
+            </button>
+        </div>
+        <div class="canvas-container">
+            <div class="canvas-wrapper">
+                <div class="text-fields-layer"></div>
+                <canvas class="drawing-layer"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <p>Are you sure you want to delete this note?</p>
+            <div class="modal-buttons">
+                <button class="modal-button cancel">Cancel</button>
+                <button class="modal-button delete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class Note {
+            static lastId = 0;
+
+            constructor(id = null, title = null) {
+                this.id = id !== null ? Number(id) : ++Note.lastId;
+                this.title = title || `Note ${this.id}`;
+                this.textFields = [];
+                this.drawings = [];
+                this.scale = 1;
+                this.lastEdited = Date.now();
+            }
+        }
+
+        class TextField {
+            constructor(x, y, content = '', isMath = false) {
+                this.id = crypto.randomUUID();
+                this.x = x;
+                this.y = y;
+                this.content = content;
+                this.isMath = isMath;
+            }
+        }
+
+        class ZeroNote {
+            constructor() {
+                this.notes = [];
+                this.currentNote = null;
+                this.activeMode = 'text';
+                this.scale = 1;
+                this.selectedFields = new Set();
+                this.selectedDrawings = new Set();
+                this.isDrawing = false;
+                this.undoStack = [];
+                this.redoStack = [];
+                this.canvasOffset = { x: 0, y: 0 };
+                this.isPanning = false;
+                this.lastPanPosition = { x: 0, y: 0 };
+                this.isDraggingDrawing = false;
+                this.dragStartPositions = new Map();
+                this.deleteButton = null;
+
+                this.setupDOM();
+                this.setupEventListeners();
+                this.loadNotes();
+                this.setupInteract();
+                this.setupDrawing();
+            }
+
+            setupDOM() {
+                this.sidebar = document.querySelector('.sidebar');
+                this.sidebarToggle = document.querySelector('.sidebar-toggle');
+                this.notesList = document.querySelector('.notes-list');
+                this.newNoteButton = document.querySelector('.new-note');
+                this.mainContent = document.querySelector('.main-content');
+                this.mathModeButton = document.querySelector('.math-mode');
+                this.drawingModeButton = document.querySelector('.drawing-mode');
+                this.textFieldsLayer = document.querySelector('.text-fields-layer');
+                this.drawingLayer = document.querySelector('.drawing-layer');
+                this.deleteModal = document.querySelector('#deleteModal');
+                this.canvasContainer = document.querySelector('.canvas-container');
+
+                this.ctx = this.drawingLayer.getContext('2d');
+                this.resizeCanvas();
+                this.mathModeButton.disabled = true;
+                this.mathModeButton.style.opacity = '0.5';
+
+                this.canvasWrapper = document.createElement('div');
+                this.canvasWrapper.className = 'canvas-wrapper';
+
+                this.canvasContainer.innerHTML = '';
+                this.canvasContainer.appendChild(this.canvasWrapper);
+
+                this.canvasWrapper.appendChild(this.textFieldsLayer);
+                this.canvasWrapper.appendChild(this.drawingLayer);
+
+                const sidebarState = localStorage.getItem('zeronote-sidebarState');
+                if (sidebarState === 'open') {
+                    this.sidebar.classList.add('open');
+                    this.sidebarToggle.classList.add('open');
+                    this.mainContent.classList.add('sidebar-open');
+                    const icon = this.sidebarToggle.querySelector('.material-icons');
+                    icon.textContent = 'close';
+                }
+            }
+
+            toggleSidebar() {
+                this.sidebar.classList.toggle('open');
+                this.sidebarToggle.classList.toggle('open');
+                this.mainContent.classList.toggle('sidebar-open');
+
+                const icon = this.sidebarToggle.querySelector('.material-icons');
+                const isOpen = this.sidebar.classList.contains('open');
+                icon.textContent = isOpen ? 'close' : 'menu';
+
+                if (isOpen) {
+                    this.sidebarToggle.style.transform = `translateX(${this.sidebar.offsetWidth}px)`;
+                } else {
+                    this.sidebarToggle.style.transform = 'translateX(0)';
+                }
+
+                localStorage.setItem('zeronote-sidebarState', isOpen ? 'open' : 'closed');
+            }
+
+            getMousePosition(e) {
+                const rect = this.canvasContainer.getBoundingClientRect();
+                const scale = this.scale;
+                const x = (e.clientX - rect.left - this.canvasOffset.x) / scale;
+                const y = (e.clientY - rect.top - this.canvasOffset.y) / scale;
+                return { x, y };
+            }
+
+            getDrawingAtPosition(pos) {
+                if (!this.currentNote) return null;
+
+                const padding = 5 / this.scale;
+
+                for (let i = this.currentNote.drawings.length - 1; i >= 0; i--) {
+                    const drawing = this.currentNote.drawings[i];
+                    const bounds = this.calculateBounds(drawing.path);
+
+                    if (pos.x >= bounds.minX - padding && pos.x <= bounds.maxX + padding &&
+                        pos.y >= bounds.minY - padding && pos.y <= bounds.maxY + padding) {
+
+                        if (this.isPointNearPath(pos, drawing.path, 8 / this.scale)) {
+                            return drawing;
+                        }
+                    }
+                }
+                return null;
+            }
+
+            isPointNearPath(point, path, tolerance) {
+                for (let i = 0; i < path.length - 1; i++) {
+                    const p1 = path[i];
+                    const p2 = path[i + 1];
+                    if (this.distanceToSegment(point, p1, p2) <= tolerance) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            distanceToSegment(p, p1, p2) {
+                const dx = p2.x - p1.x;
+                const dy = p2.y - p1.y;
+                const l2 = dx * dx + dy * dy;
+                if (l2 === 0) return Math.hypot(p.x - p1.x, p.y - p1.y);
+
+                const t = Math.max(0, Math.min(1, ((p.x - p1.x) * dx + (p.y - p1.y) * dy) / l2));
+                const proj = { x: p1.x + t * dx, y: p1.y + t * dy };
+                return Math.hypot(p.x - proj.x, p.y - proj.y);
+            }
+
+            setupEventListeners() {
+                this.sidebarToggle.addEventListener('click', () => this.toggleSidebar());
+                this.newNoteButton.addEventListener('click', () => this.createNote());
+                this.mathModeButton.addEventListener('click', () => this.toggleMathMode());
+                this.drawingModeButton.addEventListener('click', () => this.toggleDrawingMode());
+                this.canvasContainer.addEventListener('click', (e) => this.handleCanvasClick(e));
+
+                window.addEventListener('resize', () => this.resizeCanvas());
+                window.addEventListener('wheel', (e) => this.handleZoom(e), { passive: false });
+                window.addEventListener('keydown', (e) => this.handleKeyboard(e));
+                const deleteButtons = this.deleteModal.querySelectorAll('.modal-button');
+                deleteButtons.forEach(button => {
+                    if (button.classList.contains('delete')) {
+                        this.deleteButton = button;
+                    }
+                    button.addEventListener('click', () => {
+                        if (button.classList.contains('delete')) {
+                            this.deleteCurrentNote();
+                        }
+                        this.deleteModal.classList.remove('open');
+                    });
+                });
+
+                this.canvasContainer.addEventListener('mousedown', (e) => {
+                    if (this.activeMode !== 'drawing' && !e.target.closest('.text-field')) {
+                        const pos = this.getMousePosition(e);
+                        const drawing = this.getDrawingAtPosition(pos);
+
+                        if (drawing) {
+                            this.removeEmptyTextFields();
+                            this.selectedFields.clear();
+                            this.selectedDrawings.clear();
+                            this.selectedDrawings.add(drawing.id);
+                            this.redrawCanvas();
+                            this.startDrawingDrag(e);
+                        } else {
+                            if (this.selectedDrawings.size > 0) {
+                                this.startDrawingDrag(e);
+                            } else {
+                                this.startPanning(e);
+                            }
+                        }
+                    }
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (this.isPanning) {
+                        this.pan(e);
+                    } else if (this.isDraggingDrawing) {
+                        this.dragDrawing(e);
+                    }
+                });
+
+                document.addEventListener('mouseup', (e) => {
+                    if (this.isPanning) {
+                        this.stopPanning(e);
+                    } else if (this.isDraggingDrawing) {
+                        this.stopDraggingDrawing();
+                    }
+                });
+            }
+
+            setupInteract() {
+                interact('.text-field')
+                    .draggable({
+                        inertia: false,
+                        modifiers: [],
+                        listeners: {
+                            start: event => {
+                                event.stopPropagation();
+                            },
+                            move: event => {
+                                event.stopPropagation();
+                                const target = event.target;
+
+                                const currentX = parseFloat(target.getAttribute('data-x')) || 0;
+                                const currentY = parseFloat(target.getAttribute('data-y')) || 0;
+
+                                const newX = currentX + event.dx;
+                                const newY = currentY + event.dy;
+
+                                target.style.transform = `translate(${newX}px, ${newY}px)`;
+
+                                target.setAttribute('data-x', newX);
+                                target.setAttribute('data-y', newY);
+
+                                const fieldId = target.getAttribute('data-id');
+                                const field = this.currentNote.textFields.find(f => f.id === fieldId);
+                                if (field) {
+                                    field.x = newX;
+                                    field.y = newY;
+                                    this.currentNote.lastEdited = Date.now();
+                                    this.saveNotes();
+                                }
+                            }
+                        }
+                    });
+            }
+
+            setupDrawing() {
+                this.ctx.strokeStyle = '#ffffff';
+                this.ctx.lineWidth = 5 / (this.scale * (window.devicePixelRatio || 1));
+                this.ctx.lineCap = 'round';
+                this.ctx.lineJoin = 'round';
+
+                this.drawingLayer.addEventListener('pointerdown', (e) => {
+                    if (this.activeMode === 'drawing') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.startDrawing(e);
+                    }
+                }, { capture: true });
+
+                this.drawingLayer.addEventListener('pointermove', (e) => {
+                    if (this.isDrawing && this.activeMode === 'drawing') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.draw(e);
+                    }
+                }, { capture: true });
+
+                this.drawingLayer.addEventListener('pointerup', () => {
+                    if (this.isDrawing) {
+                        this.stopDrawing();
+                    }
+                }, { capture: true });
+
+                this.drawingLayer.addEventListener('pointerleave', () => {
+                    if (this.isDrawing) {
+                        this.stopDrawing();
+                    }
+                }, { capture: true });
+            }
+
+            startDrawingDrag(e) {
+                e.preventDefault();
+                this.isDraggingDrawing = true;
+                this.lastDragPosition = { x: e.clientX, y: e.clientY };
+                this.dragStartPositions.clear();
+
+                this.selectedDrawings.forEach(id => {
+                    const drawing = this.currentNote.drawings.find(d => d.id === id);
+                    if (drawing) {
+                        this.dragStartPositions.set(id, {
+                            path: drawing.path.map(p => ({ ...p })),
+                            offsetX: 0,
+                            offsetY: 0
+                        });
+                    }
+                });
+            }
+
+            dragDrawing(e) {
+                if (!this.isDraggingDrawing) return;
+
+                const deltaX = (e.clientX - this.lastDragPosition.x) / this.scale;
+                const deltaY = (e.clientY - this.lastDragPosition.y) / this.scale;
+
+                this.selectedDrawings.forEach(id => {
+                    const drawing = this.currentNote.drawings.find(d => d.id === id);
+                    if (drawing && this.dragStartPositions.has(id)) {
+                        const start = this.dragStartPositions.get(id);
+                        drawing.path.forEach((point, index) => {
+                            point.x = start.path[index].x + deltaX;
+                            point.y = start.path[index].y + deltaY;
+                        });
+                        drawing.bounds = this.calculateBounds(drawing.path);
+                    }
+                });
+
+                this.lastDragPosition = { x: e.clientX, y: e.clientY };
+                this.redrawCanvas();
+            }
+
+            stopDraggingDrawing() {
+                if (!this.isDraggingDrawing) return;
+
+                this.isDraggingDrawing = false;
+                this.pushToUndo();
+                this.saveNotes();
+                this.dragStartPositions.clear();
+            }
+
+            startDrawing(e) {
+                this.isDrawing = true;
+                const rect = this.canvasContainer.getBoundingClientRect();
+                const x = (e.clientX - rect.left - this.canvasOffset.x) / this.scale;
+                const y = (e.clientY - rect.top - this.canvasOffset.y) / this.scale;
+
+                this.ctx.beginPath();
+                this.ctx.moveTo(x, y);
+                this.currentPath = [{ x, y }];
+            }
+
+            stopDrawing() {
+                if (!this.isDrawing) return;
+
+                this.isDrawing = false;
+                if (this.currentPath && this.currentPath.length > 1) {
+                    this.pushToUndo();
+                    const drawing = {
+                        id: crypto.randomUUID(),
+                        path: this.currentPath,
+                        bounds: this.calculateBounds(this.currentPath)
+                    };
+                    this.currentNote.drawings.push(drawing);
+                    this.currentNote.lastEdited = Date.now();
+                    this.saveNotes();
+                }
+                this.currentPath = null;
+            }
+
+            calculateBounds(path) {
+                let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+                for (const point of path) {
+                    minX = Math.min(minX, point.x);
+                    minY = Math.min(minY, point.y);
+                    maxX = Math.max(maxX, point.x);
+                    maxY = Math.max(maxY, point.y);
+                }
+                return { minX, minY, maxX, maxY };
+            }
+
+            draw(e) {
+                if (!this.isDrawing) return;
+
+                const rect = this.canvasContainer.getBoundingClientRect();
+                const x = (e.clientX - rect.left - this.canvasOffset.x) / this.scale;
+                const y = (e.clientY - rect.top - this.canvasOffset.y) / this.scale;
+
+                this.ctx.lineTo(x, y);
+                this.ctx.stroke();
+                this.currentPath.push({ x, y });
+            }
+
+            redrawCanvas() {
+                const dpr = window.devicePixelRatio || 1;
+                this.ctx.clearRect(0, 0, this.drawingLayer.width / dpr, this.drawingLayer.height / dpr);
+
+                this.ctx.lineWidth = 5 / this.scale;
+                this.ctx.lineCap = 'round';
+                this.ctx.lineJoin = 'round';
+
+                this.currentNote?.drawings?.forEach(drawing => {
+                    this.ctx.strokeStyle = this.selectedDrawings.has(drawing.id) ? '#4a9eff' : '#ffffff';
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(drawing.path[0].x, drawing.path[0].y);
+                    for (let i = 1; i < drawing.path.length; i++) {
+                        this.ctx.lineTo(drawing.path[i].x, drawing.path[i].y);
+                    }
+                    this.ctx.stroke();
+                });
+            }
+
+            resizeCanvas() {
+                const dpr = window.devicePixelRatio || 1;
+                const container = this.canvasContainer;
+                const width = container.clientWidth;
+                const height = container.clientHeight;
+
+                this.drawingLayer.width = width * dpr;
+                this.drawingLayer.height = height * dpr;
+
+                this.drawingLayer.style.width = `${width}px`;
+                this.drawingLayer.style.height = `${height}px`;
+
+                this.ctx.scale(dpr, dpr);
+                this.redrawCanvas();
+            }
+
+            createNote() {
+                const note = new Note();
+                this.notes.unshift(note);
+                this.saveNotes();
+                this.renderNotesList();
+                this.loadNote(note.id);
+                return note;
+            }
+
+            loadNotes() {
+                const savedNotes = localStorage.getItem('zeronote-notes');
+                if (savedNotes) {
+                    this.notes = JSON.parse(savedNotes);
+
+                    if (this.notes.length > 0) {
+                        Note.lastId = Math.max(...this.notes.map(note => note.id));
+                    }
+
+                    this.renderNotesList();
+                    if (this.notes.length > 0) {
+                        this.loadNote(this.notes[0].id);
+                    }
+                }
+            }
+
+            saveNotes() {
+                localStorage.setItem('zeronote-notes', JSON.stringify(this.notes));
+                this.renderNotesList();
+            }
+
+            renderNotesList() {
+                this.notesList.innerHTML = '';
+                this.notes
+                    .sort((a, b) => b.lastEdited - a.lastEdited)
+                    .forEach(note => {
+                        const noteElement = document.createElement('div');
+                        noteElement.className = 'note-item';
+                        noteElement.innerHTML = `
+                            <div class="note-title">${note.title}</div>
+                            <div class="note-date">${this.formatDate(note.lastEdited)}</div>
+                            <button class="note-delete">
+                                <span class="material-icons">delete</span>
+                            </button>
+                        `;
+
+                        const deleteButton = noteElement.querySelector('.note-delete');
+                        deleteButton.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            if (this.currentNote?.id === note.id) {
+                                this.deleteModal.classList.add('open');
+                                this.deleteButton.focus();
+                            } else {
+                                this.deleteNote(note.id);
+                            }
+                        });
+
+                        noteElement.addEventListener('click', (e) => {
+                            if (e.target.closest('.note-title')?.isContentEditable || e.target.closest('.note-delete')) {
+                                return;
+                            }
+                            this.loadNote(note.id);
+                        });
+
+                        const titleElement = noteElement.querySelector('.note-title');
+                        titleElement.addEventListener('dblclick', (e) => {
+                            e.stopPropagation();
+                            titleElement.contentEditable = true;
+                            titleElement.focus();
+                        });
+
+                        titleElement.addEventListener('blur', () => {
+                            titleElement.contentEditable = false;
+                            const newTitle = titleElement.textContent.trim();
+                            if (newTitle !== note.title) {
+                                note.title = newTitle || `Note ${note.id}`;
+                                note.lastEdited = Date.now();
+                                this.saveNotes();
+                            }
+                        });
+
+                        titleElement.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                titleElement.blur();
+                            }
+                        });
+
+                        this.notesList.appendChild(noteElement);
+                    });
+            }
+
+            formatDate(timestamp) {
+                const date = new Date(timestamp);
+                return `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear().toString().slice(2)} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+            }
+
+            loadNote(noteId) {
+                this.currentNote = this.notes.find(note => note.id === noteId);
+                if (!this.currentNote) return;
+
+                this.textFieldsLayer.innerHTML = '';
+                this.currentNote.textFields.forEach(field => {
+                    this.createTextField(field.x, field.y, field.content, field.isMath, field.id);
+                });
+                this.removeEmptyTextFields();
+                this.redrawCanvas();
+            }
+
+            deleteNote(noteId) {
+                const index = this.notes.findIndex(note => note.id === noteId);
+                if (index !== -1) {
+                    this.notes.splice(index, 1);
+                    this.saveNotes();
+                    if (this.notes.length > 0) {
+                        this.loadNote(this.notes[0].id);
+                    } else {
+                        this.currentNote = null;
+                        this.textFieldsLayer.innerHTML = '';
+                        this.redrawCanvas();
+                    }
+                }
+            }
+
+            deleteCurrentNote() {
+                if (this.currentNote) {
+                    this.deleteNote(this.currentNote.id);
+                }
+            }
+
+            toggleMathMode() {
+                if (this.selectedFields.size !== 1) return;
+
+                const fieldId = Array.from(this.selectedFields)[0];
+                const element = this.textFieldsLayer.querySelector(`[data-id="${fieldId}"]`);
+                const textField = this.currentNote.textFields.find(f => f.id === fieldId);
+
+                if (element && textField) {
+                    textField.isMath = !textField.isMath;
+                    if (textField.isMath) {
+                        try {
+                            katex.render(textField.content, element);
+                            element.contentEditable = false;
+                        } catch (e) {
+                            textField.isMath = false;
+                        }
+                    } else {
+                        element.textContent = textField.content;
+                        element.contentEditable = true;
+                    }
+                    this.saveNotes();
+                }
+            }
+
+            toggleDrawingMode() {
+                this.activeMode = this.activeMode === 'drawing' ? 'text' : 'drawing';
+                this.drawingLayer.classList.toggle('active');
+                this.drawingModeButton.classList.toggle('active');
+                this.mathModeButton.classList.remove('active');
+
+                this.selectedFields.clear();
+                document.querySelectorAll('.text-field').forEach(f => f.classList.remove('selected'));
+
+                if (this.activeMode === 'drawing') {
+                    this.canvasContainer.style.cursor = 'crosshair';
+                    this.isPanning = false;
+                    this.canvasContainer.classList.remove('grabbing');
+                } else {
+                    this.canvasContainer.style.cursor = 'grab';
+                }
+            }
+
+            handleCanvasClick(e) {
+                if (this.activeMode === 'drawing') return;
+
+                const pos = this.getMousePosition(e);
+                const selectedDrawing = this.getDrawingAtPosition(pos);
+
+                if (selectedDrawing) {
+                    return;
+                }
+
+                this.selectedFields.clear();
+                this.selectedDrawings.clear();
+                document.querySelectorAll('.text-field').forEach(f => f.classList.remove('selected'));
+                this.redrawCanvas();
+            }
+
+            createTextField(x, y, content = '', isMath = false, id = null) {
+                this.textFieldsLayer.querySelectorAll('.text-field').forEach(field => {
+                    if (!field.textContent.trim()) {
+                        const fieldId = field.getAttribute('data-id');
+                        const index = this.currentNote.textFields.findIndex(f => f.id === fieldId);
+                        if (index !== -1) {
+                            this.currentNote.textFields.splice(index, 1);
+                        }
+                        field.remove();
+                    }
+                });
+
+                const field = document.createElement('div');
+                field.className = 'text-field';
+                field.contentEditable = true;
+                field.spellcheck = false;
+                field.setAttribute('data-id', id || crypto.randomUUID());
+                field.style.transform = `translate(${x}px, ${y}px)`;
+                field.setAttribute('data-x', x);
+                field.setAttribute('data-y', y);
+
+                if (content) {
+                    if (isMath) {
+                        try {
+                            katex.render(content, field);
+                            field.contentEditable = false;
+                        } catch (e) {
+                            field.textContent = content;
+                        }
+                    } else {
+                        field.textContent = content;
+                    }
+                }
+
+                field.addEventListener('input', () => {
+                    const fieldId = field.getAttribute('data-id');
+                    const textField = this.currentNote.textFields.find(f => f.id === fieldId);
+                    if (textField) {
+                        const content = field.innerText;
+                        if (!content.trim()) {
+                            field.remove();
+                            const index = this.currentNote.textFields.findIndex(f => f.id === fieldId);
+                            if (index !== -1) {
+                                this.currentNote.textFields.splice(index, 1);
+                            }
+                        } else {
+                            textField.content = content;
+                            this.currentNote.lastEdited = Date.now();
+                        }
+                        this.saveNotes();
+                    }
+                });
+                field.addEventListener('focus', () => {
+                    this.mathModeButton.disabled = false;
+                    this.mathModeButton.style.opacity = '1';
+                });
+
+                field.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    document.querySelectorAll('.text-field').forEach(f => {
+                        if (f !== field) f.classList.remove('selected');
+                    });
+                    field.classList.toggle('selected');
+                    const fieldId = field.getAttribute('data-id');
+                    this.selectedFields.clear();
+                    if (field.classList.contains('selected')) {
+                        this.selectedFields.add(fieldId);
+                        this.mathModeButton.disabled = false;
+                        this.mathModeButton.style.opacity = '1';
+                    } else {
+                        this.selectedFields.delete(fieldId);
+                        this.mathModeButton.disabled = true;
+                        this.mathModeButton.style.opacity = '0.5';
+                    }
+                });
+
+                this.textFieldsLayer.appendChild(field);
+                return field;
+            }
+
+            focusAndSelectTextField(element, fieldId) {
+                element.focus();
+                element.classList.add('selected');
+                this.selectedFields.clear();
+                this.selectedFields.add(fieldId);
+
+                const range = document.createRange();
+                range.selectNodeContents(element);
+                range.collapse(false);
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+
+                this.mathModeButton.disabled = false;
+                this.mathModeButton.style.opacity = '1';
+            }
+
+            removeEmptyTextFields() {
+                let removedAny = false;
+                this.textFieldsLayer.querySelectorAll('.text-field').forEach(field => {
+                    if (!field.textContent.trim()) {
+                        const fieldId = field.getAttribute('data-id');
+                        const index = this.currentNote.textFields.findIndex(f => f.id === fieldId);
+                        if (index !== -1) {
+                            this.currentNote.textFields.splice(index, 1);
+                        }
+                        field.remove();
+                        removedAny = true;
+                    }
+                });
+                return removedAny;
+            }
+
+            handleZoom(e) {
+                e.preventDefault();
+                const delta = e.deltaY;
+                const scaleFactor = 0.95;
+
+                const rect = this.canvasContainer.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left - this.canvasOffset.x;
+                const mouseY = e.clientY - rect.top - this.canvasOffset.y;
+
+                const oldScale = this.scale;
+                if (delta > 0) {
+                    this.scale *= scaleFactor;
+                } else {
+                    this.scale /= scaleFactor;
+                }
+
+                this.scale = Math.min(Math.max(0.1, this.scale), 5);
+
+                const scaleRatio = this.scale / oldScale;
+                this.canvasOffset.x -= (mouseX * (scaleRatio - 1));
+                this.canvasOffset.y -= (mouseY * (scaleRatio - 1));
+
+                this.updateCanvasTransform();
+
+                if (this.currentNote) {
+                    this.currentNote.scale = this.scale;
+                    this.saveNotes();
+                }
+            }
+
+            updateCanvasTransform() {
+                this.canvasWrapper.style.transform = `translate(${this.canvasOffset.x}px, ${this.canvasOffset.y}px) scale(${this.scale})`;
+            }
+
+            handleKeyboard(e) {
+                if (e.key === 'Delete') {
+                    e.preventDefault();
+                    this.deleteSelected();
+                }
+                else if (e.ctrlKey) {
+                    if (e.key === 'z') {
+                        e.preventDefault();
+                        this.undo();
+                    } else if (e.key === 'y') {
+                        e.preventDefault();
+                        this.redo();
+                    }
+                }
+            }
+
+            deleteSelected() {
+                this.pushToUndo();
+                this.selectedFields.forEach(id => {
+                    const index = this.currentNote.textFields.findIndex(f => f.id === id);
+                    if (index > -1) this.currentNote.textFields.splice(index, 1);
+                });
+                this.selectedDrawings.forEach(id => {
+                    const index = this.currentNote.drawings.findIndex(d => d.id === id);
+                    if (index > -1) this.currentNote.drawings.splice(index, 1);
+                });
+                this.selectedFields.clear();
+                this.selectedDrawings.clear();
+                this.saveNotes();
+                this.redrawCanvas();
+                this.textFieldsLayer.querySelectorAll('.text-field').forEach(f => {
+                    if (!this.currentNote.textFields.some(tf => tf.id === f.dataset.id)) f.remove();
+                });
+            }
+
+            applyState() {
+                this.textFieldsLayer.innerHTML = '';
+                this.currentNote.textFields.forEach(f => {
+                    this.createTextField(f.x, f.y, f.content, f.isMath, f.id);
+                });
+                this.updateCanvasTransform();
+                this.redrawCanvas();
+            }
+
+            pushToUndo() {
+                if (!this.currentNote) return;
+                const snapshot = JSON.stringify({
+                    textFields: [...this.currentNote.textFields],
+                    drawings: [...this.currentNote.drawings],
+                    scale: this.scale,
+                    lastEdited: Date.now()
+                });
+                this.undoStack.push(snapshot);
+                this.redoStack = [];
+            }
+
+            undo() {
+                if (this.undoStack.length === 0) return;
+                const currentState = JSON.stringify({
+                    textFields: [...this.currentNote.textFields],
+                    drawings: [...this.currentNote.drawings],
+                    scale: this.scale,
+                    lastEdited: this.currentNote.lastEdited
+                });
+                this.redoStack.push(currentState);
+
+                const snapshot = this.undoStack.pop();
+                const state = JSON.parse(snapshot);
+
+                this.currentNote.textFields = state.textFields;
+                this.currentNote.drawings = state.drawings;
+                this.scale = state.scale;
+                this.currentNote.lastEdited = state.lastEdited;
+
+                this.applyState();
+                this.saveNotes();
+            }
+
+            redo() {
+                if (this.redoStack.length === 0) return;
+                const currentState = JSON.stringify({
+                    textFields: [...this.currentNote.textFields],
+                    drawings: [...this.currentNote.drawings],
+                    scale: this.scale,
+                    lastEdited: this.currentNote.lastEdited
+                });
+                this.undoStack.push(currentState);
+
+                const snapshot = this.redoStack.pop();
+                const state = JSON.parse(snapshot);
+
+                this.currentNote.textFields = state.textFields;
+                this.currentNote.drawings = state.drawings;
+                this.scale = state.scale;
+                this.currentNote.lastEdited = state.lastEdited;
+
+                this.applyState();
+                this.saveNotes();
+            }
+
+            startPanning(e) {
+                if (this.activeMode === 'drawing' || e.target.closest('.text-field')) return;
+
+                this.isPanning = true;
+                this.mouseDownTime = Date.now();
+                this.mouseDownPosition = { x: e.clientX, y: e.clientY };
+                this.lastPanPosition = { x: e.clientX, y: e.clientY };
+                this.canvasContainer.classList.add('grabbing');
+
+                this.initialCanvasOffset = { ...this.canvasOffset };
+
+                const rect = this.textFieldsLayer.getBoundingClientRect();
+                this.clickPosition = {
+                    x: (e.clientX - rect.left) / this.scale,
+                    y: (e.clientY - rect.top) / this.scale
+                };
+            }
+
+            pan(e) {
+                if (!this.isPanning) return;
+
+                const deltaX = e.clientX - this.lastPanPosition.x;
+                const deltaY = e.clientY - this.lastPanPosition.y;
+
+                this.canvasOffset.x += deltaX;
+                this.canvasOffset.y += deltaY;
+
+                this.updateCanvasTransform();
+
+                this.lastPanPosition = { x: e.clientX, y: e.clientY };
+            }
+
+            stopPanning(e) {
+                if (!this.isPanning) return;
+
+                const moved = this.initialCanvasOffset.x !== this.canvasOffset.x ||
+                    this.initialCanvasOffset.y !== this.canvasOffset.y;
+
+                const mouseUpTime = Date.now();
+                const timeDiff = mouseUpTime - this.mouseDownTime;
+                const distanceX = Math.abs(e.clientX - this.mouseDownPosition.x);
+                const distanceY = Math.abs(e.clientY - this.mouseDownPosition.y);
+
+                this.removeEmptyTextFields();
+
+                if (!moved && timeDiff < 200 && distanceX < 5 && distanceY < 5 &&
+                    (e.target === this.canvasContainer || e.target === this.canvasWrapper)) {
+                    if (!this.currentNote) this.currentNote = this.createNote();
+
+                    const textField = new TextField(this.clickPosition.x, this.clickPosition.y);
+                    this.currentNote.textFields.push(textField);
+                    const domElement = this.createTextField(
+                        this.clickPosition.x,
+                        this.clickPosition.y,
+                        '',
+                        false,
+                        textField.id
+                    );
+                    this.focusAndSelectTextField(domElement, textField.id);
+                    this.saveNotes();
+                }
+
+                this.isPanning = false;
+                this.canvasContainer.classList.remove('grabbing');
+            }
+        }
+
+        const app = new ZeroNote();
+    </script>
+</body>
+
+</html>

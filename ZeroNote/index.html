@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>ZeroNote</title>
     <link rel="icon" href="favicon.avif" type="image/avif">
     <meta name="description" content="A simple note-taking app with text, maths and drawing capabilities.">
@@ -41,6 +41,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            user-select: none;
         }
 
         body {
@@ -193,10 +194,46 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            opacity: 0.7;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .mode-button::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: #4a9eff;
+            transition: width 0.2s ease;
+        }
+
+        .mode-button:hover {
+            opacity: 1;
+            background: var(--button-hover);
         }
 
         .mode-button.active {
             background: var(--button-hover);
+            opacity: 1;
+            box-shadow: 0 0 8px rgba(74, 158, 255, 0.3);
+        }
+
+        .mode-button.active::after {
+            width: 80%;
+        }
+
+        .mode-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .mode-button:disabled::after {
+            width: 0;
         }
 
         .canvas-container {
@@ -205,42 +242,6 @@
             height: 100%;
             overflow: hidden;
             cursor: grab;
-            touch-action: none;
-        }
-
-        .canvas-container.grabbing {
-            cursor: grabbing;
-        }
-
-        .canvas-wrapper {
-            position: absolute;
-            transform-origin: 0 0;
-            will-change: transform;
-        }
-
-        .text-fields-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: all;
-            z-index: 2;
-        }
-
-        .drawing-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 2000;
-        }
-
-        .drawing-layer.active {
-            pointer-events: all;
-            z-index: 4;
             cursor: crosshair;
         }
 
@@ -250,6 +251,7 @@
             border: 1px solid var(--border-color);
             border-radius: 4px;
             padding: 0.5rem;
+            /* Increased padding here */
             min-width: 20px;
             min-height: 30px;
             cursor: move;
@@ -261,6 +263,13 @@
             z-index: 3;
             font-family: "Patrick Hand", sans-serif;
             font-size: 2rem;
+            user-select: text;
+            /* Make text selectable */
+        }
+
+        .text-field * {
+            user-select: text;
+            /* Make sure all child elements are also selectable */
         }
 
         .katex {
@@ -347,10 +356,95 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--button-hover);
         }
+
+        .image-field {
+            position: absolute;
+            cursor: move;
+            touch-action: none;
+            z-index: 3;
+        }
+
+        .image-field img {
+            display: block;
+            height: auto;
+            pointer-events: none;
+            border-radius: 5px;
+        }
+
+        .image-field.selected {
+            outline: 2px solid #4a9eff;
+        }
+
+        .resize-handle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #4a9eff;
+            border-radius: 50%;
+            display: none;
+            /* Hide by default */
+        }
+
+        .image-field.selected .resize-handle {
+            display: block;
+            /* Show only when selected */
+        }
+
+        .resize-handle.top-left {
+            top: -5px;
+            left: -5px;
+            cursor: nw-resize;
+        }
+
+        .resize-handle.top-right {
+            top: -5px;
+            right: -5px;
+            cursor: ne-resize;
+        }
+
+        .resize-handle.bottom-left {
+            bottom: -5px;
+            left: -5px;
+            cursor: sw-resize;
+        }
+
+        .resize-handle.bottom-right {
+            bottom: -5px;
+            right: -5px;
+            cursor: se-resize;
+        }
+
+        .resize-handle.left {
+            left: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: w-resize;
+        }
+
+        .resize-handle.right {
+            right: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: e-resize;
+        }
+
+        .resize-handle.top {
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: n-resize;
+        }
+
+        .resize-handle.bottom {
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: s-resize;
+        }
     </style>
 </head>
 
-<body>
+<body oncontextmenu="return false">
     <button class="sidebar-toggle">
         <span class="material-icons">menu</span>
     </button>
@@ -402,6 +496,7 @@
                 this.title = title || `Note ${this.id}`;
                 this.textFields = [];
                 this.drawings = [];
+                this.imageFields = [];
                 this.scale = 1;
                 this.lastEdited = Date.now();
             }
@@ -417,11 +512,22 @@
             }
         }
 
+        class ImageField {
+            constructor(x, y, dataUrl, width, height) {
+                this.id = crypto.randomUUID();
+                this.x = x;
+                this.y = y;
+                this.dataUrl = dataUrl;
+                this.width = width;
+                this.height = height;
+            }
+        }
+
         class ZeroNote {
             constructor() {
                 this.notes = [];
                 this.currentNote = null;
-                this.activeMode = 'text';
+                this.activeMode = 'text';  // Changed from 'drawing' to 'text'
                 this.scale = 1;
                 this.selectedFields = new Set();
                 this.selectedDrawings = new Set();
@@ -440,6 +546,7 @@
                 this.loadNotes();
                 this.setupInteract();
                 this.setupDrawing();
+                this.setupImageHandlers();
             }
 
             setupDOM() {
@@ -474,9 +581,9 @@
                     this.sidebar.classList.add('open');
                     this.sidebarToggle.classList.add('open');
                     this.mainContent.classList.add('sidebar-open');
-                    const icon = this.sidebarToggle.querySelector('.material-icons');
-                    icon.textContent = 'close';
                 }
+                this.drawingModeButton.classList.remove('active'); // Ensure drawing mode is not active initially
+                this.canvasContainer.style.cursor = 'grab'; // Set initial cursor
             }
 
             toggleSidebar() {
@@ -540,7 +647,7 @@
                 const dx = p2.x - p1.x;
                 const dy = p2.y - p1.y;
                 const l2 = dx * dx + dy * dy;
-                if (l2 === 0) return Math.hypot(p.x - p1.x, p.y - p1.y);
+                if (l2 === 0) return Math.hypot(p.x - p1.x);
 
                 const t = Math.max(0, Math.min(1, ((p.x - p1.x) * dx + (p.y - p1.y) * dy) / l2));
                 const proj = { x: p1.x + t * dx, y: p1.y + t * dy };
@@ -555,7 +662,6 @@
                 this.canvasContainer.addEventListener('click', (e) => this.handleCanvasClick(e));
 
                 window.addEventListener('resize', () => this.resizeCanvas());
-                window.addEventListener('wheel', (e) => this.handleZoom(e), { passive: false });
                 window.addEventListener('keydown', (e) => this.handleKeyboard(e));
                 const deleteButtons = this.deleteModal.querySelectorAll('.modal-button');
                 deleteButtons.forEach(button => {
@@ -577,8 +683,7 @@
 
                         if (drawing) {
                             this.removeEmptyTextFields();
-                            this.selectedFields.clear();
-                            this.selectedDrawings.clear();
+                            this.clearSelections(); // Deselect all elements
                             this.selectedDrawings.add(drawing.id);
                             this.redrawCanvas();
                             this.startDrawingDrag(e);
@@ -593,57 +698,24 @@
                 });
 
                 document.addEventListener('mousemove', (e) => {
-                    if (this.isPanning) {
-                        this.pan(e);
-                    } else if (this.isDraggingDrawing) {
-                        this.dragDrawing(e);
-                    }
+                    this.pan(e);
                 });
 
                 document.addEventListener('mouseup', (e) => {
-                    if (this.isPanning) {
-                        this.stopPanning(e);
-                    } else if (this.isDraggingDrawing) {
-                        this.stopDraggingDrawing();
-                    }
+                    this.stopPanning(e);
+                });
+
+                document.addEventListener('mouseup', (e) => {
+                    this.stopDraggingDrawing(e);
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    this.dragDrawing(e);
                 });
             }
 
             setupInteract() {
-                interact('.text-field')
-                    .draggable({
-                        inertia: false,
-                        modifiers: [],
-                        listeners: {
-                            start: event => {
-                                event.stopPropagation();
-                            },
-                            move: event => {
-                                event.stopPropagation();
-                                const target = event.target;
-
-                                const currentX = parseFloat(target.getAttribute('data-x')) || 0;
-                                const currentY = parseFloat(target.getAttribute('data-y')) || 0;
-
-                                const newX = currentX + event.dx;
-                                const newY = currentY + event.dy;
-
-                                target.style.transform = `translate(${newX}px, ${newY}px)`;
-
-                                target.setAttribute('data-x', newX);
-                                target.setAttribute('data-y', newY);
-
-                                const fieldId = target.getAttribute('data-id');
-                                const field = this.currentNote.textFields.find(f => f.id === fieldId);
-                                if (field) {
-                                    field.x = newX;
-                                    field.y = newY;
-                                    this.currentNote.lastEdited = Date.now();
-                                    this.saveNotes();
-                                }
-                            }
-                        }
-                    });
+                interact('.text-field').styleCursor(false);
             }
 
             setupDrawing() {
@@ -682,9 +754,15 @@
             }
 
             startDrawingDrag(e) {
-                e.preventDefault();
+                const clientX = e.clientX ?? e.touches[0].clientX;
+                const clientY = e.clientY ?? e.touches[0].clientY;
+
+                if (e.preventDefault) {
+                    e.preventDefault();
+                }
+
                 this.isDraggingDrawing = true;
-                this.lastDragPosition = { x: e.clientX, y: e.clientY };
+                this.lastDragPosition = { x: clientX, y: clientY };
                 this.dragStartPositions.clear();
 
                 this.selectedDrawings.forEach(id => {
@@ -702,8 +780,11 @@
             dragDrawing(e) {
                 if (!this.isDraggingDrawing) return;
 
-                const deltaX = (e.clientX - this.lastDragPosition.x) / this.scale;
-                const deltaY = (e.clientY - this.lastDragPosition.y) / this.scale;
+                const clientX = e.clientX ?? e.touches[0].clientX;
+                const clientY = e.clientY ?? e.touches[0].clientY;
+
+                const deltaX = (clientX - this.lastDragPosition.x) / this.scale;
+                const deltaY = (clientY - this.lastDragPosition.y) / this.scale;
 
                 this.selectedDrawings.forEach(id => {
                     const drawing = this.currentNote.drawings.find(d => d.id === id);
@@ -717,9 +798,10 @@
                     }
                 });
 
-                this.lastDragPosition = { x: e.clientX, y: e.clientY };
+                this.lastDragPosition = { x: clientX, y: clientY };
                 this.redrawCanvas();
             }
+
 
             stopDraggingDrawing() {
                 if (!this.isDraggingDrawing) return;
@@ -731,6 +813,7 @@
             }
 
             startDrawing(e) {
+                this.pushToUndo(); // Add undo point before starting to draw
                 this.isDrawing = true;
                 const rect = this.canvasContainer.getBoundingClientRect();
                 const x = (e.clientX - rect.left - this.canvasOffset.x) / this.scale;
@@ -921,6 +1004,10 @@
                 this.currentNote.textFields.forEach(field => {
                     this.createTextField(field.x, field.y, field.content, field.isMath, field.id);
                 });
+                this.currentNote.imageFields = this.currentNote.imageFields || [];
+                this.currentNote.imageFields.forEach(field => {
+                    this.createImageField(field);
+                });
                 this.removeEmptyTextFields();
                 this.redrawCanvas();
             }
@@ -976,8 +1063,7 @@
                 this.drawingModeButton.classList.toggle('active');
                 this.mathModeButton.classList.remove('active');
 
-                this.selectedFields.clear();
-                document.querySelectorAll('.text-field').forEach(f => f.classList.remove('selected'));
+                this.clearSelections(); // Deselect all elements
 
                 if (this.activeMode === 'drawing') {
                     this.canvasContainer.style.cursor = 'crosshair';
@@ -991,17 +1077,17 @@
             handleCanvasClick(e) {
                 if (this.activeMode === 'drawing') return;
 
-                const pos = this.getMousePosition(e);
-                const selectedDrawing = this.getDrawingAtPosition(pos);
-
-                if (selectedDrawing) {
-                    return;
+                // Clear all selections if clicking on canvas
+                if (!e.target.closest('.text-field') && !e.target.closest('.image-field')) {
+                    this.clearSelections();
+                    this.redrawCanvas();
                 }
+            }
 
+            clearSelections() {
                 this.selectedFields.clear();
                 this.selectedDrawings.clear();
-                document.querySelectorAll('.text-field').forEach(f => f.classList.remove('selected'));
-                this.redrawCanvas();
+                document.querySelectorAll('.text-field, .image-field').forEach(f => f.classList.remove('selected'));
             }
 
             createTextField(x, y, content = '', isMath = false, id = null) {
@@ -1043,40 +1129,100 @@
                     const textField = this.currentNote.textFields.find(f => f.id === fieldId);
                     if (textField) {
                         const content = field.innerText;
-                        if (!content.trim()) {
-                            field.remove();
-                            const index = this.currentNote.textFields.findIndex(f => f.id === fieldId);
-                            if (index !== -1) {
-                                this.currentNote.textFields.splice(index, 1);
-                            }
-                        } else {
-                            textField.content = content;
-                            this.currentNote.lastEdited = Date.now();
-                        }
+                        this.pushToUndo(); 
+                        textField.content = content;
+                        this.currentNote.lastEdited = Date.now();
                         this.saveNotes();
                     }
+                    field.classList.add('selected'); // Add selected class
+                    this.selectedFields.add(field.getAttribute('data-id')); // Add to selected fields set
                 });
+
                 field.addEventListener('focus', () => {
                     this.mathModeButton.disabled = false;
                     this.mathModeButton.style.opacity = '1';
                 });
 
-                field.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    document.querySelectorAll('.text-field').forEach(f => {
-                        if (f !== field) f.classList.remove('selected');
+                let isDraggingTextField = false;
+
+                interact(field)
+                    .draggable({
+                        inertia: false,
+                        modifiers: [],
+                        listeners: {
+                            start: event => {
+                                const target = event.target;
+                                // Get the actual click target (might be text node)
+                                const clickTarget = document.elementFromPoint(event.clientX, event.clientY);
+
+                                // Don't start drag if we're selecting text
+                                if (window.getSelection().toString()) {
+                                    event.interaction.stop();
+                                    return;
+                                }
+
+                                // Check if the click is near the edges
+                                const rect = target.getBoundingClientRect();
+                                const clickX = event.clientX - rect.left;
+                                const clickY = event.clientY - rect.top;
+                                const padding = 20; // Clickable border area width
+
+                                const isInBorder =
+                                    clickX < padding ||
+                                    clickX > rect.width - padding ||
+                                    clickY < padding ||
+                                    clickY > rect.height - padding;
+
+                                // Only start dragging if clicking border or if already selected
+                                if (!isInBorder && !target.classList.contains('selected')) {
+                                    event.interaction.stop();
+                                    return;
+                                }
+
+                                event.stopPropagation();
+                                isDraggingTextField = true;
+                                this.pushToUndo(); // Add undo point before dragging starts
+                            },
+                            move: event => {
+                                if (!isDraggingTextField) return;
+                                event.stopPropagation();
+                                const target = event.target;
+
+                                const currentX = parseFloat(target.getAttribute('data-x')) || 0;
+                                const currentY = parseFloat(target.getAttribute('data-y')) || 0;
+
+                                const newX = currentX + event.dx;
+                                const newY = currentY + event.dy;
+
+                                target.style.transform = `translate(${newX}px, ${newY}px)`;
+
+                                target.setAttribute('data-x', newX);
+                                target.setAttribute('data-y', newY);
+
+                                const fieldId = target.getAttribute('data-id');
+                                const textField = this.currentNote.textFields.find(f => f.id === fieldId);
+                                if (textField) {
+                                    textField.x = newX;
+                                    textField.y = newY;
+                                    this.currentNote.lastEdited = Date.now();
+                                }
+                            },
+                            end: () => {
+                                isDraggingTextField = false;
+                                this.saveNotes(); // Save after dragging ends
+                            }
+                        }
                     });
-                    field.classList.toggle('selected');
-                    const fieldId = field.getAttribute('data-id');
-                    this.selectedFields.clear();
-                    if (field.classList.contains('selected')) {
-                        this.selectedFields.add(fieldId);
+
+                field.addEventListener('mousedown', (e) => {
+                    // Don't prevent default behavior to allow text selection
+                    if (e.target === field) {
+                        field.focus();
+                        this.clearSelections();
+                        field.classList.add('selected');
+                        this.selectedFields.add(field.getAttribute('data-id'));
                         this.mathModeButton.disabled = false;
                         this.mathModeButton.style.opacity = '1';
-                    } else {
-                        this.selectedFields.delete(fieldId);
-                        this.mathModeButton.disabled = true;
-                        this.mathModeButton.style.opacity = '0.5';
                     }
                 });
 
@@ -1087,7 +1233,7 @@
             focusAndSelectTextField(element, fieldId) {
                 element.focus();
                 element.classList.add('selected');
-                this.selectedFields.clear();
+                this.clearSelections();
                 this.selectedFields.add(fieldId);
 
                 const range = document.createRange();
@@ -1117,38 +1263,8 @@
                 return removedAny;
             }
 
-            handleZoom(e) {
-                e.preventDefault();
-                const delta = e.deltaY;
-                const scaleFactor = 0.95;
-
-                const rect = this.canvasContainer.getBoundingClientRect();
-                const mouseX = e.clientX - rect.left - this.canvasOffset.x;
-                const mouseY = e.clientY - rect.top - this.canvasOffset.y;
-
-                const oldScale = this.scale;
-                if (delta > 0) {
-                    this.scale *= scaleFactor;
-                } else {
-                    this.scale /= scaleFactor;
-                }
-
-                this.scale = Math.min(Math.max(0.1, this.scale), 5);
-
-                const scaleRatio = this.scale / oldScale;
-                this.canvasOffset.x -= (mouseX * (scaleRatio - 1));
-                this.canvasOffset.y -= (mouseY * (scaleRatio - 1));
-
-                this.updateCanvasTransform();
-
-                if (this.currentNote) {
-                    this.currentNote.scale = this.scale;
-                    this.saveNotes();
-                }
-            }
-
             updateCanvasTransform() {
-                this.canvasWrapper.style.transform = `translate(${this.canvasOffset.x}px, ${this.canvasOffset.y}px) scale(${this.scale})`;
+                this.canvasWrapper.style.transform = `translate(${this.canvasOffset.x}px, ${this.canvasOffset.y}px)`;
             }
 
             handleKeyboard(e) {
@@ -1168,22 +1284,45 @@
             }
 
             deleteSelected() {
+                if (!this.currentNote) return;
+
                 this.pushToUndo();
+
+                // Handle text fields
                 this.selectedFields.forEach(id => {
-                    const index = this.currentNote.textFields.findIndex(f => f.id === id);
-                    if (index > -1) this.currentNote.textFields.splice(index, 1);
+                    const textFieldIndex = this.currentNote.textFields.findIndex(f => f.id === id);
+                    if (textFieldIndex > -1) {
+                        this.currentNote.textFields.splice(textFieldIndex, 1);
+                        // Remove text field DOM element
+                        const textFieldElement = document.querySelector(`.text-field[data-id="${id}"]`);
+                        if (textFieldElement) {
+                            textFieldElement.remove();
+                        }
+                    }
+
+                    // Handle image fields
+                    const imageFieldIndex = this.currentNote.imageFields.findIndex(f => f.id === id);
+                    if (imageFieldIndex > -1) {
+                        this.currentNote.imageFields.splice(imageFieldIndex, 1);
+                        // Remove image field DOM element
+                        const imageFieldElement = document.querySelector(`.image-field[data-id="${id}"]`);
+                        if (imageFieldElement) {
+                            imageFieldElement.remove();
+                        }
+                    }
                 });
+
+                // Handle drawings
                 this.selectedDrawings.forEach(id => {
                     const index = this.currentNote.drawings.findIndex(d => d.id === id);
-                    if (index > -1) this.currentNote.drawings.splice(index, 1);
+                    if (index > -1) {
+                        this.currentNote.drawings.splice(index, 1);
+                    }
                 });
-                this.selectedFields.clear();
-                this.selectedDrawings.clear();
+
+                this.clearSelections();
                 this.saveNotes();
                 this.redrawCanvas();
-                this.textFieldsLayer.querySelectorAll('.text-field').forEach(f => {
-                    if (!this.currentNote.textFields.some(tf => tf.id === f.dataset.id)) f.remove();
-                });
             }
 
             applyState() {
@@ -1191,38 +1330,51 @@
                 this.currentNote.textFields.forEach(f => {
                     this.createTextField(f.x, f.y, f.content, f.isMath, f.id);
                 });
+                this.currentNote.imageFields.forEach(f => { // Re-render image fields as well
+                    this.createImageField(f);
+                });
                 this.updateCanvasTransform();
                 this.redrawCanvas();
             }
 
             pushToUndo() {
                 if (!this.currentNote) return;
-                const snapshot = JSON.stringify({
-                    textFields: [...this.currentNote.textFields],
-                    drawings: [...this.currentNote.drawings],
-                    scale: this.scale,
+
+                // Create deep copy of current state, excluding canvas position and zoom
+                const state = {
+                    textFields: JSON.parse(JSON.stringify(this.currentNote.textFields)),
+                    drawings: JSON.parse(JSON.stringify(this.currentNote.drawings)),
+                    imageFields: JSON.parse(JSON.stringify(this.currentNote.imageFields)),
                     lastEdited: Date.now()
-                });
-                this.undoStack.push(snapshot);
-                this.redoStack = [];
+                };
+
+                // Only push if state is different from last state
+                const lastState = this.undoStack[this.undoStack.length - 1];
+                if (!lastState || JSON.stringify(state) !== lastState) {
+                    this.undoStack.push(JSON.stringify(state));
+                    this.redoStack = []; // Clear redo stack when new action is performed
+                }
             }
 
             undo() {
                 if (this.undoStack.length === 0) return;
-                const currentState = JSON.stringify({
-                    textFields: [...this.currentNote.textFields],
-                    drawings: [...this.currentNote.drawings],
-                    scale: this.scale,
-                    lastEdited: this.currentNote.lastEdited
-                });
-                this.redoStack.push(currentState);
 
+                // Save current state to redo stack
+                const currentState = {
+                    textFields: JSON.parse(JSON.stringify(this.currentNote.textFields)),
+                    drawings: JSON.parse(JSON.stringify(this.currentNote.drawings)),
+                    imageFields: JSON.parse(JSON.stringify(this.currentNote.imageFields)),
+                    lastEdited: this.currentNote.lastEdited
+                };
+                this.redoStack.push(JSON.stringify(currentState));
+
+                // Apply previous state
                 const snapshot = this.undoStack.pop();
                 const state = JSON.parse(snapshot);
 
                 this.currentNote.textFields = state.textFields;
                 this.currentNote.drawings = state.drawings;
-                this.scale = state.scale;
+                this.currentNote.imageFields = state.imageFields;
                 this.currentNote.lastEdited = state.lastEdited;
 
                 this.applyState();
@@ -1231,20 +1383,23 @@
 
             redo() {
                 if (this.redoStack.length === 0) return;
-                const currentState = JSON.stringify({
-                    textFields: [...this.currentNote.textFields],
-                    drawings: [...this.currentNote.drawings],
-                    scale: this.scale,
-                    lastEdited: this.currentNote.lastEdited
-                });
-                this.undoStack.push(currentState);
 
+                // Save current state to undo stack
+                const currentState = {
+                    textFields: JSON.parse(JSON.stringify(this.currentNote.textFields)),
+                    drawings: JSON.parse(JSON.stringify(this.currentNote.drawings)),
+                    imageFields: JSON.parse(JSON.stringify(this.currentNote.imageFields)),
+                    lastEdited: this.currentNote.lastEdited
+                };
+                this.undoStack.push(JSON.stringify(currentState));
+
+                // Apply next state
                 const snapshot = this.redoStack.pop();
                 const state = JSON.parse(snapshot);
 
                 this.currentNote.textFields = state.textFields;
                 this.currentNote.drawings = state.drawings;
-                this.scale = state.scale;
+                this.currentNote.imageFields = state.imageFields;
                 this.currentNote.lastEdited = state.lastEdited;
 
                 this.applyState();
@@ -1252,7 +1407,14 @@
             }
 
             startPanning(e) {
-                if (this.activeMode === 'drawing' || e.target.closest('.text-field')) return;
+                // Only start panning with middle mouse button or when no elements are clicked
+                if (e.button !== 0 || e.target.closest('.text-field') || e.target.closest('.image-field')) return;
+
+                // If in drawing mode, don't start panning
+                if (this.activeMode === 'drawing') return;
+
+                this.removeEmptyTextFields();
+                this.clearSelections();
 
                 this.isPanning = true;
                 this.mouseDownTime = Date.now();
@@ -1262,10 +1424,10 @@
 
                 this.initialCanvasOffset = { ...this.canvasOffset };
 
-                const rect = this.textFieldsLayer.getBoundingClientRect();
+                const rect = this.canvasContainer.getBoundingClientRect();
                 this.clickPosition = {
-                    x: (e.clientX - rect.left) / this.scale,
-                    y: (e.clientY - rect.top) / this.scale
+                    x: (e.clientX - rect.left - this.canvasOffset.x) / this.scale,
+                    y: (e.clientY - rect.top - this.canvasOffset.y) / this.scale
                 };
             }
 
@@ -1294,10 +1456,7 @@
                 const distanceX = Math.abs(e.clientX - this.mouseDownPosition.x);
                 const distanceY = Math.abs(e.clientY - this.mouseDownPosition.y);
 
-                this.removeEmptyTextFields();
-
-                if (!moved && timeDiff < 200 && distanceX < 5 && distanceY < 5 &&
-                    (e.target === this.canvasContainer || e.target === this.canvasWrapper)) {
+                if (!moved && timeDiff < 200 && distanceX < 5 && distanceY < 5) {
                     if (!this.currentNote) this.currentNote = this.createNote();
 
                     const textField = new TextField(this.clickPosition.x, this.clickPosition.y);
@@ -1315,6 +1474,251 @@
 
                 this.isPanning = false;
                 this.canvasContainer.classList.remove('grabbing');
+            }
+
+            setupImageHandlers() {
+                document.addEventListener('paste', (e) => {
+                    if (this.activeMode !== 'drawing') {
+                        this.handleImagePaste(e);
+                    }
+                });
+
+                this.canvasContainer.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                });
+
+                this.canvasContainer.addEventListener('drop', (e) => {
+                    if (this.activeMode !== 'drawing') {
+                        this.handleImageDrop(e);
+                    }
+                });
+            }
+
+            async handleImagePaste(e) {
+                const items = Array.from(e.clipboardData.items);
+                const imageItem = items.find(item => item.type.startsWith('image'));
+
+                if (imageItem) {
+                    e.preventDefault();
+                    const mousePos = this.getMousePosition(e);
+                    await this.processImage(imageItem.getAsFile(), mousePos);
+                }
+            }
+
+            async handleImageDrop(e) {
+                e.preventDefault();
+                const file = Array.from(e.dataTransfer.files).find(file => file.type.startsWith('image'));
+                if (file) {
+                    await this.processImage(file);
+                }
+            }
+
+            async processImage(file, position = null) {
+                if (!this.currentNote) this.currentNote = this.createNote();
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        let pos;
+                        const rect = this.canvasContainer.getBoundingClientRect();
+                        const centerX = (-this.canvasOffset.x + rect.width / 2) / this.scale;
+                        const centerY = (-this.canvasOffset.y + rect.height / 2) / this.scale;
+                        pos = { x: centerX, y: centerY };
+
+                        let width = img.width;
+                        let height = img.height;
+                        const maxWidth = 500;
+
+                        if (width > maxWidth) {
+                            const ratio = maxWidth / width;
+                            width = maxWidth;
+                            height = height * ratio;
+                        }
+
+                        const imageField = new ImageField(pos.x - width / 2, pos.y - height / 2, e.target.result, width, height);
+                        this.currentNote.imageFields = this.currentNote.imageFields || [];
+                        this.currentNote.imageFields.push(imageField);
+                        this.createImageField(imageField);
+                        this.saveNotes();
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            createImageField(imageField) {
+                const container = document.createElement('div');
+                container.className = 'image-field';
+                container.setAttribute('data-id', imageField.id);
+                container.style.transform = `translate(${imageField.x}px, ${imageField.y}px)`;
+                container.setAttribute('data-x', imageField.x);
+                container.setAttribute('data-y', imageField.y);
+
+                const img = document.createElement('img');
+                img.src = imageField.dataUrl;
+                img.style.width = `${imageField.width}px`;
+                img.style.height = `${imageField.height}px`;
+                container.appendChild(img);
+
+                const handles = ['top-left', 'top-right', 'bottom-left', 'bottom-right',
+                    'left', 'right', 'top', 'bottom'];
+                handles.forEach(pos => {
+                    const handle = document.createElement('div');
+                    handle.className = `resize-handle ${pos}`;
+                    container.appendChild(handle);
+                });
+
+                this.setupImageInteractions(container);
+                this.textFieldsLayer.appendChild(container);
+                return container;
+            }
+
+            setupImageInteractions(container) {
+                const img = container.querySelector('img');
+                let aspectRatio = img.naturalWidth / img.naturalHeight;
+                let initialWidth, initialHeight, initialX, initialY;
+                let resizeStarted = false;
+                let currentWidth, currentHeight, currentX, currentY;
+
+                interact(container)
+                    .draggable({
+                        inertia: false,
+                        modifiers: [],
+                        listeners: {
+                            start: event => {
+                                event.stopPropagation();
+                                this.pushToUndo(); // Add undo point before dragging
+                                this.selectImage(container);
+                            },
+                            move: event => {
+                                event.stopPropagation();
+                                const target = event.target;
+                                const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                                const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                                target.style.transform = `translate(${x}px, ${y}px)`;
+                                target.setAttribute('data-x', x);
+                                target.setAttribute('data-y', y);
+
+                                const fieldId = target.getAttribute('data-id');
+                                const field = this.currentNote.imageFields.find(f => f.id === fieldId);
+                                if (field) {
+                                    field.x = x;
+                                    field.y = y;
+                                    this.currentNote.lastEdited = Date.now();
+                                }
+                            },
+                            end: () => {
+                                this.saveNotes();
+                            }
+                        }
+                    })
+                    .resizable({
+                        edges: {
+                            left: '.resize-handle.left, .resize-handle.top-left, .resize-handle.bottom-left',
+                            right: '.resize-handle.right, .resize-handle.top-right, .resize-handle.bottom-right',
+                            bottom: '.resize-handle.bottom, .resize-handle.bottom-left, .resize-handle.bottom-right',
+                            top: '.resize-handle.top, .resize-handle.top-left, .resize-handle.top-right'
+                        },
+                        modifiers: [
+                            interact.modifiers.restrictSize({
+                                min: { width: 10, height: 10 }
+                            })
+                        ],
+                        inertia: false,
+                        listeners: {
+                            start: event => {
+                                event.stopPropagation();
+                                this.pushToUndo(); // Add undo point before resizing
+                                initialWidth = parseFloat(img.style.width);
+                                initialHeight = parseFloat(img.style.height);
+                                initialX = parseFloat(event.target.getAttribute('data-x')) || 0;
+                                initialY = parseFloat(event.target.getAttribute('data-y')) || 0;
+                                currentWidth = initialWidth;
+                                currentHeight = initialHeight;
+                                currentX = initialX;
+                                currentY = initialY;
+                                aspectRatio = img.naturalWidth / img.naturalHeight;
+                                resizeStarted = true;
+                            },
+                            move: event => {
+                                if (!resizeStarted) return;
+                                event.stopPropagation();
+
+                                const target = event.target;
+                                const fieldId = target.getAttribute('data-id');
+                                const field = this.currentNote.imageFields.find(f => f.id === fieldId);
+
+                                // Smooth out the resize by using requestAnimationFrame
+                                requestAnimationFrame(() => {
+                                    let newWidth = event.rect.width;
+                                    let newHeight = event.rect.height;
+                                    let newX = initialX;
+                                    let newY = initialY;
+
+                                    // Apply smooth interpolation
+                                    currentWidth = currentWidth * 0.5 + newWidth * 0.5;
+                                    currentHeight = currentHeight * 0.5 + newHeight * 0.5;
+
+                                    if (event.edges.left) newX = initialX + (initialWidth - currentWidth);
+                                    if (event.edges.top) newY = initialY + (initialHeight - currentHeight);
+
+                                    // Apply changes with interpolated values
+                                    img.style.width = `${currentWidth}px`;
+                                    img.style.height = `${currentHeight}px`;
+                                    target.style.transform = `translate(${newX}px, ${newY}px)`;
+                                    target.setAttribute('data-x', newX);
+                                    target.setAttribute('data-y', newY);
+
+                                    if (field) {
+                                        field.width = currentWidth;
+                                        field.height = currentHeight;
+                                        field.x = newX;
+                                        field.y = newY;
+                                        this.currentNote.lastEdited = Date.now();
+                                    }
+                                });
+                            },
+                            end: () => {
+                                resizeStarted = false;
+                                this.saveNotes();
+                            }
+                        }
+                    });
+
+                container.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.selectImage(container);
+                });
+
+                // Add copy handler
+                container.addEventListener('keydown', async (e) => {
+                    if (e.ctrlKey && e.key === 'c' && container.classList.contains('selected')) {
+                        const img = container.querySelector('img');
+                        try {
+                            const response = await fetch(img.src);
+                            const blob = await response.blob();
+                            const item = new ClipboardItem({ 'image/png': blob });
+                            await navigator.clipboard.write([item]);
+                        } catch (err) {
+                            console.error('Failed to copy image:', err);
+                        }
+                    }
+                });
+
+                // Make container focusable for keyboard events
+                container.setAttribute('tabindex', '0');
+            }
+
+            selectImage(container) {
+                // Clear all selections first
+                this.clearSelections();
+
+                // Select this image
+                container.classList.add('selected');
+                const fieldId = container.getAttribute('data-id');
+                this.selectedFields.add(fieldId);
             }
         }
 

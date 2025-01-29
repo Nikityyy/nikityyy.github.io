@@ -9,7 +9,10 @@
     <meta name="description" content="A simple note-taking app with text, maths and drawing capabilities.">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -194,7 +197,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0.7;
             transition: all 0.2s ease;
             position: relative;
         }
@@ -212,7 +214,6 @@
         }
 
         .mode-button:hover {
-            opacity: 1;
             background: var(--button-hover);
         }
 
@@ -236,7 +237,13 @@
             width: 0;
         }
 
+        .drawing-layer {
+            touch-action: none;
+            pointer-events: auto;
+        }
+
         .canvas-container {
+            touch-action: none;
             position: relative;
             width: 100%;
             height: 100%;
@@ -251,7 +258,6 @@
             border: 1px solid var(--border-color);
             border-radius: 4px;
             padding: 0.5rem;
-            /* Increased padding here */
             min-width: 20px;
             min-height: 30px;
             cursor: move;
@@ -264,16 +270,34 @@
             font-family: "Patrick Hand", sans-serif;
             font-size: 2rem;
             user-select: text;
-            /* Make text selectable */
         }
 
         .text-field * {
             user-select: text;
-            /* Make sure all child elements are also selectable */
         }
 
-        .katex {
-            font-size: 1.8rem;
+        .mq-editable-field {
+            font-size: 1.8rem !important;
+            padding: 0.5rem;
+            border-radius: 4px;
+            min-width: 20px;
+            min-height: 30px;
+            cursor: text;
+            font-family: "Patrick Hand", sans-serif;
+        }
+
+        .mq-cursor {
+            background: white !important;
+            border-color: white !important;
+        }
+
+        .mq-root-block {
+            padding: 2px 5px !important;
+        }
+
+        .mq-focused {
+            box-shadow: 0 0 0 2px #4a9eff;
+            background: rgba(74, 158, 255, 0.1);
         }
 
         .text-field.selected {
@@ -382,12 +406,10 @@
             background: #4a9eff;
             border-radius: 50%;
             display: none;
-            /* Hide by default */
         }
 
         .image-field.selected .resize-handle {
             display: block;
-            /* Show only when selected */
         }
 
         .resize-handle.top-left {
@@ -488,6 +510,8 @@
     </div>
 
     <script>
+        const MQ = MathQuill.getInterface(2);
+
         class Note {
             static lastId = 0;
 
@@ -503,12 +527,23 @@
         }
 
         class TextField {
-            constructor(x, y, content = '', isMath = false) {
-                this.id = crypto.randomUUID();
+            constructor(x, y, content = '', isMath = false, id = null) {
+                this.id = id ?? crypto.randomUUID();
                 this.x = x;
                 this.y = y;
                 this.content = content;
                 this.isMath = isMath;
+                this.mathField = null;
+            }
+
+            toJSON() {
+                return {
+                    id: this.id,
+                    x: this.x,
+                    y: this.y,
+                    content: this.content,
+                    isMath: this.isMath
+                };
             }
         }
 
@@ -527,7 +562,8 @@
             constructor() {
                 this.notes = [];
                 this.currentNote = null;
-                this.activeMode = 'text';  // Changed from 'drawing' to 'text'
+                this.activeMode = 'text';
+                this.mathModeActive = false;
                 this.scale = 1;
                 this.selectedFields = new Set();
                 this.selectedDrawings = new Set();
@@ -540,6 +576,7 @@
                 this.isDraggingDrawing = false;
                 this.dragStartPositions = new Map();
                 this.deleteButton = null;
+                this.justCreatedTextField = false;
 
                 this.setupDOM();
                 this.setupEventListeners();
@@ -564,8 +601,8 @@
 
                 this.ctx = this.drawingLayer.getContext('2d');
                 this.resizeCanvas();
-                this.mathModeButton.disabled = true;
-                this.mathModeButton.style.opacity = '0.5';
+                this.mathModeButton.disabled = false;
+                this.mathModeButton.style.opacity = '1';
 
                 this.canvasWrapper = document.createElement('div');
                 this.canvasWrapper.className = 'canvas-wrapper';
@@ -582,8 +619,8 @@
                     this.sidebarToggle.classList.add('open');
                     this.mainContent.classList.add('sidebar-open');
                 }
-                this.drawingModeButton.classList.remove('active'); // Ensure drawing mode is not active initially
-                this.canvasContainer.style.cursor = 'grab'; // Set initial cursor
+                this.drawingModeButton.classList.remove('active');
+                this.canvasContainer.style.cursor = 'grab';
             }
 
             toggleSidebar() {
@@ -683,7 +720,7 @@
 
                         if (drawing) {
                             this.removeEmptyTextFields();
-                            this.clearSelections(); // Deselect all elements
+                            this.clearSelections();
                             this.selectedDrawings.add(drawing.id);
                             this.redrawCanvas();
                             this.startDrawingDrag(e);
@@ -724,33 +761,33 @@
                 this.ctx.lineCap = 'round';
                 this.ctx.lineJoin = 'round';
 
-                this.drawingLayer.addEventListener('pointerdown', (e) => {
-                    if (this.activeMode === 'drawing') {
+                const handlePointerStart = (e) => {
+                    if (this.activeMode === 'drawing' && e.isPrimary) {
                         e.preventDefault();
                         e.stopPropagation();
                         this.startDrawing(e);
                     }
-                }, { capture: true });
+                };
 
-                this.drawingLayer.addEventListener('pointermove', (e) => {
-                    if (this.isDrawing && this.activeMode === 'drawing') {
+                const handlePointerMove = (e) => {
+                    if (this.isDrawing && this.activeMode === 'drawing' && e.isPrimary) {
                         e.preventDefault();
                         e.stopPropagation();
                         this.draw(e);
                     }
-                }, { capture: true });
+                };
 
-                this.drawingLayer.addEventListener('pointerup', () => {
-                    if (this.isDrawing) {
+                const handlePointerEnd = (e) => {
+                    if (this.isDrawing && e.isPrimary) {
                         this.stopDrawing();
                     }
-                }, { capture: true });
+                };
 
-                this.drawingLayer.addEventListener('pointerleave', () => {
-                    if (this.isDrawing) {
-                        this.stopDrawing();
-                    }
-                }, { capture: true });
+                this.drawingLayer.addEventListener('pointerdown', handlePointerStart, { capture: true });
+                this.drawingLayer.addEventListener('pointermove', handlePointerMove, { capture: true });
+                this.drawingLayer.addEventListener('pointerup', handlePointerEnd, { capture: true });
+                this.drawingLayer.addEventListener('pointercancel', handlePointerEnd, { capture: true });
+                this.drawingLayer.addEventListener('pointerleave', handlePointerEnd, { capture: true });
             }
 
             startDrawingDrag(e) {
@@ -802,7 +839,6 @@
                 this.redrawCanvas();
             }
 
-
             stopDraggingDrawing() {
                 if (!this.isDraggingDrawing) return;
 
@@ -813,7 +849,9 @@
             }
 
             startDrawing(e) {
-                this.pushToUndo(); // Add undo point before starting to draw
+                if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+                this.pushToUndo();
                 this.isDrawing = true;
                 const rect = this.canvasContainer.getBoundingClientRect();
                 const x = (e.clientX - rect.left - this.canvasOffset.x) / this.scale;
@@ -912,7 +950,26 @@
             loadNotes() {
                 const savedNotes = localStorage.getItem('zeronote-notes');
                 if (savedNotes) {
-                    this.notes = JSON.parse(savedNotes);
+                    const parsedNotes = JSON.parse(savedNotes);
+
+                    this.notes = parsedNotes.map(noteData => {
+                        const note = new Note(noteData.id, noteData.title);
+                        note.textFields = noteData.textFields.map(fieldData =>
+                            new TextField(
+                                fieldData.x,
+                                fieldData.y,
+                                fieldData.content,
+                                fieldData.isMath,
+                                fieldData.id
+                            )
+                        );
+                        note.imageFields = noteData.imageFields.map(imgData =>
+                            new ImageField(imgData.x, imgData.y, imgData.dataUrl, imgData.width, imgData.height)
+                        );
+                        note.drawings = noteData.drawings || [];
+                        note.lastEdited = noteData.lastEdited;
+                        return note;
+                    });
 
                     if (this.notes.length > 0) {
                         Note.lastId = Math.max(...this.notes.map(note => note.id));
@@ -926,7 +983,26 @@
             }
 
             saveNotes() {
-                localStorage.setItem('zeronote-notes', JSON.stringify(this.notes));
+                const notesToSave = this.notes.map(note => ({
+                    ...note,
+                    textFields: note.textFields.map(field => ({
+                        id: field.id,
+                        x: field.x,
+                        y: field.y,
+                        content: field.content,
+                        isMath: field.isMath
+                    })),
+                    imageFields: note.imageFields.map(field => ({
+                        id: field.id,
+                        x: field.x,
+                        y: field.y,
+                        dataUrl: field.dataUrl,
+                        width: field.width,
+                        height: field.height
+                    }))
+                }));
+
+                localStorage.setItem('zeronote-notes', JSON.stringify(notesToSave));
                 this.renderNotesList();
             }
 
@@ -1034,26 +1110,40 @@
             }
 
             toggleMathMode() {
-                if (this.selectedFields.size !== 1) return;
+                if (this.selectedFields.size === 1) {
+                    const fieldId = Array.from(this.selectedFields)[0];
+                    const element = this.textFieldsLayer.querySelector(`[data-id="${fieldId}"]`);
+                    const textField = this.currentNote.textFields.find(f => f.id === fieldId);
 
-                const fieldId = Array.from(this.selectedFields)[0];
-                const element = this.textFieldsLayer.querySelector(`[data-id="${fieldId}"]`);
-                const textField = this.currentNote.textFields.find(f => f.id === fieldId);
+                    if (element && textField) {
+                        textField.isMath = !textField.isMath;
+                        const content = textField.content;
+                        const position = {
+                            x: parseFloat(element.getAttribute('data-x')),
+                            y: parseFloat(element.getAttribute('data-y'))
+                        };
 
-                if (element && textField) {
-                    textField.isMath = !textField.isMath;
-                    if (textField.isMath) {
-                        try {
-                            katex.render(textField.content, element);
-                            element.contentEditable = false;
-                        } catch (e) {
-                            textField.isMath = false;
+                        element.remove();
+
+                        const newField = this.createTextField(
+                            position.x,
+                            position.y,
+                            content,
+                            textField.isMath,
+                            fieldId
+                        );
+
+                        if (textField.isMath) {
+                            newField.querySelector('.mq-editable-field').focus();
+                        } else {
+                            newField.focus();
                         }
-                    } else {
-                        element.textContent = textField.content;
-                        element.contentEditable = true;
+
+                        this.saveNotes();
                     }
-                    this.saveNotes();
+                } else {
+                    this.mathModeActive = !this.mathModeActive;
+                    this.mathModeButton.classList.toggle('active');
                 }
             }
 
@@ -1063,7 +1153,7 @@
                 this.drawingModeButton.classList.toggle('active');
                 this.mathModeButton.classList.remove('active');
 
-                this.clearSelections(); // Deselect all elements
+                this.clearSelections();
 
                 if (this.activeMode === 'drawing') {
                     this.canvasContainer.style.cursor = 'crosshair';
@@ -1077,7 +1167,11 @@
             handleCanvasClick(e) {
                 if (this.activeMode === 'drawing') return;
 
-                // Clear all selections if clicking on canvas
+                if (this.justCreatedTextField) {
+                    this.justCreatedTextField = false;
+                    return;
+                }
+
                 if (!e.target.closest('.text-field') && !e.target.closest('.image-field')) {
                     this.clearSelections();
                     this.redrawCanvas();
@@ -1104,136 +1198,122 @@
 
                 const field = document.createElement('div');
                 field.className = 'text-field';
-                field.contentEditable = true;
-                field.spellcheck = false;
                 field.setAttribute('data-id', id || crypto.randomUUID());
                 field.style.transform = `translate(${x}px, ${y}px)`;
                 field.setAttribute('data-x', x);
                 field.setAttribute('data-y', y);
 
-                if (content) {
-                    if (isMath) {
-                        try {
-                            katex.render(content, field);
-                            field.contentEditable = false;
-                        } catch (e) {
-                            field.textContent = content;
+                const textField = this.currentNote.textFields.find(f => f.id === id) ||
+                    new TextField(x, y, content, isMath, id);
+
+                if (isMath) {
+                    const mqField = document.createElement('div');
+                    field.appendChild(mqField);
+                    const mathField = MQ.MathField(mqField, {
+                        spaceBehavesLikeTab: true,
+                        handlers: {
+                            edit: () => {
+                                textField.content = mathField.latex();
+                                this.currentNote.lastEdited = Date.now();
+                                this.saveNotes();
+                            }
                         }
-                    } else {
-                        field.textContent = content;
-                    }
+                    });
+                    mathField.latex(content || '');
+                    textField.mathField = mathField;
+                    field.classList.add('math-field');
+                } else {
+                    field.contentEditable = true;
+                    field.spellcheck = false;
+                    field.textContent = content;
                 }
 
                 field.addEventListener('input', () => {
-                    const fieldId = field.getAttribute('data-id');
-                    const textField = this.currentNote.textFields.find(f => f.id === fieldId);
-                    if (textField) {
-                        const content = field.innerText;
-                        this.pushToUndo(); 
-                        textField.content = content;
+                    if (!isMath) {
+                        textField.content = field.textContent;
                         this.currentNote.lastEdited = Date.now();
                         this.saveNotes();
                     }
-                    field.classList.add('selected'); // Add selected class
-                    this.selectedFields.add(field.getAttribute('data-id')); // Add to selected fields set
                 });
 
                 field.addEventListener('focus', () => {
                     this.mathModeButton.disabled = false;
                     this.mathModeButton.style.opacity = '1';
+                    if (isMath && textField.mathField) {
+                        textField.mathField.focus();
+                    }
                 });
 
-                let isDraggingTextField = false;
+                field.addEventListener('mousedown', (e) => {
+                    field.classList.add('selected');
+                    this.selectedFields.add(textField.id);
+
+                    if (window.getSelection().toString()) {
+                        return;
+                    }
+                });
+
+                this.setupTextFieldInteractions(field, textField);
+
+                this.textFieldsLayer.appendChild(field);
+                return field;
+            }
+
+            setupTextFieldInteractions(field, textField) {
+                let initialMousePos = { x: 0, y: 0 };
+                let initialFieldPos = { x: 0, y: 0 };
 
                 interact(field)
                     .draggable({
                         inertia: false,
                         modifiers: [],
                         listeners: {
-                            start: event => {
-                                const target = event.target;
-                                // Get the actual click target (might be text node)
-                                const clickTarget = document.elementFromPoint(event.clientX, event.clientY);
-
-                                // Don't start drag if we're selecting text
-                                if (window.getSelection().toString()) {
+                            start: (event) => {
+                                if (event.target.closest('.mq-editable-field')) {
                                     event.interaction.stop();
                                     return;
                                 }
 
-                                // Check if the click is near the edges
-                                const rect = target.getBoundingClientRect();
-                                const clickX = event.clientX - rect.left;
-                                const clickY = event.clientY - rect.top;
-                                const padding = 20; // Clickable border area width
+                                this.pushToUndo();
+                                initialMousePos = {
+                                    x: event.clientX,
+                                    y: event.clientY
+                                };
+                                initialFieldPos = {
+                                    x: parseFloat(field.getAttribute('data-x')) || 0,
+                                    y: parseFloat(field.getAttribute('data-y')) || 0
+                                };
 
-                                const isInBorder =
-                                    clickX < padding ||
-                                    clickX > rect.width - padding ||
-                                    clickY < padding ||
-                                    clickY > rect.height - padding;
-
-                                // Only start dragging if clicking border or if already selected
-                                if (!isInBorder && !target.classList.contains('selected')) {
-                                    event.interaction.stop();
-                                    return;
-                                }
-
-                                event.stopPropagation();
-                                isDraggingTextField = true;
-                                this.pushToUndo(); // Add undo point before dragging starts
+                                this.clearSelections();
+                                field.classList.add('selected');
+                                this.selectedFields.add(textField.id);
                             },
-                            move: event => {
-                                if (!isDraggingTextField) return;
-                                event.stopPropagation();
-                                const target = event.target;
+                            move: (event) => {
+                                const deltaX = event.clientX - initialMousePos.x;
+                                const deltaY = event.clientY - initialMousePos.y;
 
-                                const currentX = parseFloat(target.getAttribute('data-x')) || 0;
-                                const currentY = parseFloat(target.getAttribute('data-y')) || 0;
+                                const newX = initialFieldPos.x + deltaX;
+                                const newY = initialFieldPos.y + deltaY;
 
-                                const newX = currentX + event.dx;
-                                const newY = currentY + event.dy;
+                                field.style.transform = `translate(${newX}px, ${newY}px)`;
+                                field.setAttribute('data-x', newX);
+                                field.setAttribute('data-y', newY);
 
-                                target.style.transform = `translate(${newX}px, ${newY}px)`;
-
-                                target.setAttribute('data-x', newX);
-                                target.setAttribute('data-y', newY);
-
-                                const fieldId = target.getAttribute('data-id');
-                                const textField = this.currentNote.textFields.find(f => f.id === fieldId);
-                                if (textField) {
-                                    textField.x = newX;
-                                    textField.y = newY;
-                                    this.currentNote.lastEdited = Date.now();
-                                }
+                                textField.x = newX;
+                                textField.y = newY;
                             },
                             end: () => {
-                                isDraggingTextField = false;
-                                this.saveNotes(); // Save after dragging ends
+                                this.currentNote.lastEdited = Date.now();
+                                this.saveNotes();
                             }
                         }
                     });
-
-                field.addEventListener('mousedown', (e) => {
-                    // Don't prevent default behavior to allow text selection
-                    if (e.target === field) {
-                        field.focus();
-                        this.clearSelections();
-                        field.classList.add('selected');
-                        this.selectedFields.add(field.getAttribute('data-id'));
-                        this.mathModeButton.disabled = false;
-                        this.mathModeButton.style.opacity = '1';
-                    }
-                });
-
-                this.textFieldsLayer.appendChild(field);
-                return field;
             }
 
             focusAndSelectTextField(element, fieldId) {
                 element.focus();
-                element.classList.add('selected');
                 this.clearSelections();
+                element.classList.add('selected');
                 this.selectedFields.add(fieldId);
 
                 const range = document.createRange();
@@ -1286,25 +1366,43 @@
             deleteSelected() {
                 if (!this.currentNote) return;
 
-                this.pushToUndo();
+                let shouldPushUndo = false;
 
-                // Handle text fields
+                this.selectedFields.forEach(id => {
+                    const textField = this.currentNote.textFields.find(f => f.id === id);
+                    if (textField && textField.content.trim() !== '') {
+                        shouldPushUndo = true;
+                    }
+                });
+
+                this.selectedFields.forEach(id => {
+                    const imageField = this.currentNote.imageFields.find(f => f.id === id);
+                    if (imageField) {
+                        shouldPushUndo = true;
+                    }
+                });
+
+                if (this.selectedDrawings.size > 0) {
+                    shouldPushUndo = true;
+                }
+
+                if (shouldPushUndo) {
+                    this.pushToUndo();
+                }
+
                 this.selectedFields.forEach(id => {
                     const textFieldIndex = this.currentNote.textFields.findIndex(f => f.id === id);
                     if (textFieldIndex > -1) {
                         this.currentNote.textFields.splice(textFieldIndex, 1);
-                        // Remove text field DOM element
                         const textFieldElement = document.querySelector(`.text-field[data-id="${id}"]`);
                         if (textFieldElement) {
                             textFieldElement.remove();
                         }
                     }
 
-                    // Handle image fields
                     const imageFieldIndex = this.currentNote.imageFields.findIndex(f => f.id === id);
                     if (imageFieldIndex > -1) {
                         this.currentNote.imageFields.splice(imageFieldIndex, 1);
-                        // Remove image field DOM element
                         const imageFieldElement = document.querySelector(`.image-field[data-id="${id}"]`);
                         if (imageFieldElement) {
                             imageFieldElement.remove();
@@ -1312,7 +1410,6 @@
                     }
                 });
 
-                // Handle drawings
                 this.selectedDrawings.forEach(id => {
                     const index = this.currentNote.drawings.findIndex(d => d.id === id);
                     if (index > -1) {
@@ -1330,7 +1427,7 @@
                 this.currentNote.textFields.forEach(f => {
                     this.createTextField(f.x, f.y, f.content, f.isMath, f.id);
                 });
-                this.currentNote.imageFields.forEach(f => { // Re-render image fields as well
+                this.currentNote.imageFields.forEach(f => {
                     this.createImageField(f);
                 });
                 this.updateCanvasTransform();
@@ -1340,7 +1437,6 @@
             pushToUndo() {
                 if (!this.currentNote) return;
 
-                // Create deep copy of current state, excluding canvas position and zoom
                 const state = {
                     textFields: JSON.parse(JSON.stringify(this.currentNote.textFields)),
                     drawings: JSON.parse(JSON.stringify(this.currentNote.drawings)),
@@ -1348,18 +1444,16 @@
                     lastEdited: Date.now()
                 };
 
-                // Only push if state is different from last state
                 const lastState = this.undoStack[this.undoStack.length - 1];
                 if (!lastState || JSON.stringify(state) !== lastState) {
                     this.undoStack.push(JSON.stringify(state));
-                    this.redoStack = []; // Clear redo stack when new action is performed
+                    this.redoStack = [];
                 }
             }
 
             undo() {
                 if (this.undoStack.length === 0) return;
 
-                // Save current state to redo stack
                 const currentState = {
                     textFields: JSON.parse(JSON.stringify(this.currentNote.textFields)),
                     drawings: JSON.parse(JSON.stringify(this.currentNote.drawings)),
@@ -1368,13 +1462,16 @@
                 };
                 this.redoStack.push(JSON.stringify(currentState));
 
-                // Apply previous state
                 const snapshot = this.undoStack.pop();
                 const state = JSON.parse(snapshot);
 
-                this.currentNote.textFields = state.textFields;
+                this.currentNote.textFields = state.textFields.map(f =>
+                    new TextField(f.x, f.y, f.content, f.isMath, f.id)
+                );
+                this.currentNote.imageFields = state.imageFields.map(img =>
+                    new ImageField(img.x, img.y, img.dataUrl, img.width, img.height)
+                );
                 this.currentNote.drawings = state.drawings;
-                this.currentNote.imageFields = state.imageFields;
                 this.currentNote.lastEdited = state.lastEdited;
 
                 this.applyState();
@@ -1384,7 +1481,6 @@
             redo() {
                 if (this.redoStack.length === 0) return;
 
-                // Save current state to undo stack
                 const currentState = {
                     textFields: JSON.parse(JSON.stringify(this.currentNote.textFields)),
                     drawings: JSON.parse(JSON.stringify(this.currentNote.drawings)),
@@ -1393,13 +1489,16 @@
                 };
                 this.undoStack.push(JSON.stringify(currentState));
 
-                // Apply next state
                 const snapshot = this.redoStack.pop();
                 const state = JSON.parse(snapshot);
 
-                this.currentNote.textFields = state.textFields;
+                this.currentNote.textFields = state.textFields.map(f =>
+                    new TextField(f.x, f.y, f.content, f.isMath, f.id)
+                );
+                this.currentNote.imageFields = state.imageFields.map(img =>
+                    new ImageField(img.x, img.y, img.dataUrl, img.width, img.height)
+                );
                 this.currentNote.drawings = state.drawings;
-                this.currentNote.imageFields = state.imageFields;
                 this.currentNote.lastEdited = state.lastEdited;
 
                 this.applyState();
@@ -1407,10 +1506,8 @@
             }
 
             startPanning(e) {
-                // Only start panning with middle mouse button or when no elements are clicked
                 if (e.button !== 0 || e.target.closest('.text-field') || e.target.closest('.image-field')) return;
 
-                // If in drawing mode, don't start panning
                 if (this.activeMode === 'drawing') return;
 
                 this.removeEmptyTextFields();
@@ -1459,16 +1556,30 @@
                 if (!moved && timeDiff < 200 && distanceX < 5 && distanceY < 5) {
                     if (!this.currentNote) this.currentNote = this.createNote();
 
-                    const textField = new TextField(this.clickPosition.x, this.clickPosition.y);
+                    const textField = new TextField(this.clickPosition.x, this.clickPosition.y, '', this.mathModeActive);
                     this.currentNote.textFields.push(textField);
                     const domElement = this.createTextField(
                         this.clickPosition.x,
                         this.clickPosition.y,
                         '',
-                        false,
+                        this.mathModeActive,
                         textField.id
                     );
                     this.focusAndSelectTextField(domElement, textField.id);
+
+                    if (this.mathModeActive) {
+                        const mathQuillField = domElement.querySelector('.mq-editable-field');
+                        if (mathQuillField) {
+                            setTimeout(() => {
+                                textField.mathField.focus();
+                            }, 0);
+                        }
+                    }
+
+                    this.justCreatedTextField = true;
+                    setTimeout(() => {
+                        this.justCreatedTextField = false;
+                    }, 0);
                     this.saveNotes();
                 }
 
@@ -1588,7 +1699,7 @@
                         listeners: {
                             start: event => {
                                 event.stopPropagation();
-                                this.pushToUndo(); // Add undo point before dragging
+                                this.pushToUndo();
                                 this.selectImage(container);
                             },
                             move: event => {
@@ -1630,7 +1741,7 @@
                         listeners: {
                             start: event => {
                                 event.stopPropagation();
-                                this.pushToUndo(); // Add undo point before resizing
+                                this.pushToUndo();
                                 initialWidth = parseFloat(img.style.width);
                                 initialHeight = parseFloat(img.style.height);
                                 initialX = parseFloat(event.target.getAttribute('data-x')) || 0;
@@ -1650,21 +1761,18 @@
                                 const fieldId = target.getAttribute('data-id');
                                 const field = this.currentNote.imageFields.find(f => f.id === fieldId);
 
-                                // Smooth out the resize by using requestAnimationFrame
                                 requestAnimationFrame(() => {
                                     let newWidth = event.rect.width;
                                     let newHeight = event.rect.height;
                                     let newX = initialX;
                                     let newY = initialY;
 
-                                    // Apply smooth interpolation
                                     currentWidth = currentWidth * 0.5 + newWidth * 0.5;
                                     currentHeight = currentHeight * 0.5 + newHeight * 0.5;
 
                                     if (event.edges.left) newX = initialX + (initialWidth - currentWidth);
                                     if (event.edges.top) newY = initialY + (initialHeight - currentHeight);
 
-                                    // Apply changes with interpolated values
                                     img.style.width = `${currentWidth}px`;
                                     img.style.height = `${currentHeight}px`;
                                     target.style.transform = `translate(${newX}px, ${newY}px)`;
@@ -1692,7 +1800,6 @@
                     this.selectImage(container);
                 });
 
-                // Add copy handler
                 container.addEventListener('keydown', async (e) => {
                     if (e.ctrlKey && e.key === 'c' && container.classList.contains('selected')) {
                         const img = container.querySelector('img');
@@ -1707,15 +1814,12 @@
                     }
                 });
 
-                // Make container focusable for keyboard events
                 container.setAttribute('tabindex', '0');
             }
 
             selectImage(container) {
-                // Clear all selections first
                 this.clearSelections();
 
-                // Select this image
                 container.classList.add('selected');
                 const fieldId = container.getAttribute('data-id');
                 this.selectedFields.add(fieldId);

@@ -13,6 +13,8 @@
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.9.1/math.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -463,6 +465,57 @@
             transform: translateX(-50%);
             cursor: s-resize;
         }
+
+        .context-menu {
+            position: absolute;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.5rem 0;
+            z-index: 10000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .context-menu-item {
+            padding: 0.5rem 1rem;
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .context-menu-item:hover {
+            background: var(--button-hover);
+        }
+
+        .context-menu-item svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .graph-field {
+            position: absolute;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: move;
+            touch-action: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .graph-field.selected {
+            outline: 2px solid #4a9eff;
+        }
+
+        [contenteditable=true]:empty:before {
+            content: attr(data-ph);
+            color: grey;
+            font-style: italic;
+            pointer-events: none;
+        }
     </style>
 </head>
 
@@ -558,6 +611,20 @@
             }
         }
 
+        class GraphField {
+            constructor(x, y, fieldId, data, layout, config) {
+                this.id = crypto.randomUUID();
+                this.x = x;
+                this.y = y;
+                this.width = layout.width || 600;
+                this.height = layout.height || 400;
+                this.fieldId = fieldId;
+                this.data = data;
+                this.layout = layout;
+                this.config = config;
+            }
+        }
+
         class ZeroNote {
             constructor() {
                 this.notes = [];
@@ -621,6 +688,182 @@
                 }
                 this.drawingModeButton.classList.remove('active');
                 this.canvasContainer.style.cursor = 'grab';
+            }
+
+            setupContextMenu() {
+                this.textFieldsLayer.addEventListener('contextmenu', (e) => {
+                    const field = e.target.closest('.text-field.math-field');
+                    if (field) {
+                        e.preventDefault();
+                        this.showContextMenu(e.clientX, e.clientY, field);
+                    }
+                });
+            }
+
+            showContextMenu(x, y, fieldElement) {
+                const menu = document.createElement('div');
+                menu.className = 'context-menu';
+                menu.style.left = `${x}px`;
+                menu.style.top = `${y}px`;
+
+                const visualizeItem = document.createElement('div');
+                visualizeItem.className = 'context-menu-item';
+                visualizeItem.innerHTML = `
+                    <span class="material-icons">insert_chart</span>
+                    Visualize
+                `;
+                visualizeItem.onclick = () => this.visualizeFunction(fieldElement);
+                menu.appendChild(visualizeItem);
+
+                const derivativeItem = document.createElement('div');
+                derivativeItem.className = 'context-menu-item';
+                derivativeItem.innerHTML = `
+                    <span class="material-icons">calculate</span>
+                    Derivative
+                `;
+                derivativeItem.onclick = () => this.calculateDerivative(fieldElement);
+                menu.appendChild(derivativeItem);
+
+                document.body.appendChild(menu);
+
+                setTimeout(() => {
+                    const listener = () => {
+                        menu.remove();
+                        document.removeEventListener('click', listener);
+                    };
+                    document.addEventListener('click', listener);
+                });
+            }
+
+            latexToMathJS(latex) {
+                const parts = latex.split('=');
+                let expression = parts.length > 1 ? parts[1] : parts[0];
+
+                return this.cleanLatexForMathJS(expression);
+            }
+
+            cleanLatexForMathJS(latex) {
+                return latex
+                    .replace(/\\,/g, '')
+                    .replace(/\\cdot/g, '*')
+                    .replace(/\\times/g, '*')
+                    .replace(/\\frac\{(.*?)\}\{(.*?)\}/g, '($1)/($2)')
+                    .replace(/\^\{?(.*?)\}?/g, '^$1')
+                    .replace(/\\sqrt\{(.*?)\}/g, 'sqrt($1)')
+                    .replace(/([a-zA-Z])(?=[a-zA-Z\d])/g, '$1*')
+                    .replace(/(\d)(?=[a-zA-Z])/g, '$1*')
+                    .replace(/\\ln/g, 'log')
+                    .replace(/\\sin/g, 'sin')
+                    .replace(/\\cos/g, 'cos')
+                    .replace(/\\tan/g, 'tan')
+                    .replace(/\\pi/g, 'pi')
+                    .replace(/\\/g, '')
+                    .replace(/\{|\}/g, '')
+                    .trim();
+            }
+
+            async visualizeFunction(fieldElement) {
+                const fieldId = fieldElement.dataset.id;
+                const textField = this.currentNote.textFields.find(f => f.id === fieldId);
+                if (!textField) return;
+
+                try {
+                    const mathJSExpression = this.latexToMathJS(textField.content);
+                    const expr = math.parse(mathJSExpression);
+                    const xValues = Array.from({ length: 100 }, (_, i) => -10 + i * 0.2);
+                    const yValues = xValues.map(x => expr.evaluate({ x }));
+
+                    const trace = { x: xValues, y: yValues, mode: 'lines', name: 'f(x)' };
+                    const layout = { width: 600, height: 400, margin: { t: 20, b: 20, l: 40, r: 20 } };
+
+                    const imageUrl = await Plotly.toImage({ data: [trace], layout: layout }, { format: 'png' });
+
+                    const img = new Image();
+                    await new Promise((resolve) => {
+                        img.onload = resolve;
+                        img.src = imageUrl;
+                    });
+
+                    const imageField = new ImageField(
+                        textField.x + 50,
+                        textField.y,
+                        imageUrl,
+                        img.width * 0.5,
+                        img.height * 0.5
+                    );
+
+                    this.currentNote.imageFields.push(imageField);
+                    this.createImageField(imageField);
+                    this.saveNotes();
+
+                } catch (error) {
+                    alert(`Error visualizing function: ${error.message}`);
+                }
+            }
+
+            setupGraphInteractions(graphDiv) {
+                interact(graphDiv)
+                    .draggable({
+                        listeners: {
+                            start: () => graphDiv.classList.add('selected'),
+                            move: (e) => {
+                                const x = parseFloat(graphDiv.dataset.x || 0) + e.dx;
+                                const y = parseFloat(graphDiv.dataset.y || 0) + e.dy;
+                                graphDiv.style.transform = `translate(${x}px, ${y}px)`;
+                                graphDiv.dataset.x = x;
+                                graphDiv.dataset.y = y;
+                            }
+                        }
+                    })
+                    .resizable({
+                        edges: { left: true, right: true, bottom: true, top: true },
+                        listeners: {
+                            move: (e) => {
+                                graphDiv.style.width = `${e.rect.width}px`;
+                                graphDiv.style.height = `${e.rect.height}px`;
+                                Plotly.relayout(graphDiv, { width: e.rect.width, height: e.rect.height });
+                            }
+                        }
+                    });
+            }
+
+            getFunctionName(latex) {
+                const match = latex.match(/^\s*([a-zA-Z]+'*)\(([a-zA-z])\)\s*=/);
+                return match ? {
+                    name: match[1],
+                    variable: match[2]
+                } : { name: 'f', variable: 'x' };
+            }
+
+            calculateDerivative(fieldElement) {
+                const fieldId = fieldElement.dataset.id;
+                const textField = this.currentNote.textFields.find(f => f.id === fieldId);
+                if (!textField) return;
+
+                try {
+                    const originalLatex = textField.content;
+                    const { name: funcName, variable } = this.getFunctionName(originalLatex);
+                    const mathJSExpression = this.latexToMathJS(originalLatex);
+                    const expr = math.parse(mathJSExpression);
+
+                    const derivative = math.derivative(expr, variable);
+                    let derivativeLatex = derivative.toString();
+
+                    const newFuncName = `${funcName}'`;
+
+                    this.createTextField(
+                        textField.x + 50,
+                        textField.y + 50,
+                        `${newFuncName}(${variable}) = ${derivativeLatex}`,
+                        true
+                    );
+
+                    this.saveNotes();
+                    this.loadNotes();
+
+                } catch (error) {
+                    alert(`Error calculating derivative: ${error.message}`);
+                }
             }
 
             toggleSidebar() {
@@ -713,23 +956,37 @@
                     });
                 });
 
+                this.textFieldsLayer.addEventListener('mousedown', (e) => {
+                    const field = e.target.closest('.text-field');
+                    if (field) {
+                        this.clearSelections();
+                        const fieldId = field.dataset.id;
+                        const textField = this.currentNote.textFields.find(f => f.id === fieldId);
+                        if (textField) {
+                            field.classList.add('selected');
+                            this.selectedFields.add(fieldId);
+                        }
+                    }
+                }, true);
+
                 this.canvasContainer.addEventListener('mousedown', (e) => {
                     if (this.activeMode !== 'drawing' && !e.target.closest('.text-field') && e.button == 0) {
                         const pos = this.getMousePosition(e);
                         const drawing = this.getDrawingAtPosition(pos);
 
                         if (drawing) {
+                            e.stopPropagation();
                             this.removeEmptyTextFields();
                             this.clearSelections();
                             this.selectedDrawings.add(drawing.id);
                             this.redrawCanvas();
                             this.startDrawingDrag(e);
                         } else {
-                            if (this.selectedDrawings.size > 0) {
-                                this.startDrawingDrag(e);
-                            } else {
-                                this.startPanning(e);
+                            if (!e.target.closest('.text-field') && !e.target.closest('.image-field')) {
+                                this.clearSelections();
+                                this.redrawCanvas();
                             }
+                            this.startPanning(e);
                         }
                     }
                 });
@@ -746,9 +1003,7 @@
                     this.stopDraggingDrawing(e);
                 });
 
-                document.addEventListener('mousemove', (e) => {
-                    this.dragDrawing(e);
-                });
+                this.setupContextMenu();
             }
 
             setupInteract() {
@@ -791,6 +1046,8 @@
             }
 
             startDrawingDrag(e) {
+                if (!this.selectedDrawings.size) return;
+
                 const clientX = e.clientX ?? e.touches[0].clientX;
                 const clientY = e.clientY ?? e.touches[0].clientY;
 
@@ -812,31 +1069,6 @@
                         });
                     }
                 });
-            }
-
-            dragDrawing(e) {
-                if (!this.isDraggingDrawing) return;
-
-                const clientX = e.clientX ?? e.touches[0].clientX;
-                const clientY = e.clientY ?? e.touches[0].clientY;
-
-                const deltaX = (clientX - this.lastDragPosition.x) / this.scale;
-                const deltaY = (clientY - this.lastDragPosition.y) / this.scale;
-
-                this.selectedDrawings.forEach(id => {
-                    const drawing = this.currentNote.drawings.find(d => d.id === id);
-                    if (drawing && this.dragStartPositions.has(id)) {
-                        const start = this.dragStartPositions.get(id);
-                        drawing.path.forEach((point, index) => {
-                            point.x = start.path[index].x + deltaX;
-                            point.y = start.path[index].y + deltaY;
-                        });
-                        drawing.bounds = this.calculateBounds(drawing.path);
-                    }
-                });
-
-                this.lastDragPosition = { x: clientX, y: clientY };
-                this.redrawCanvas();
             }
 
             stopDraggingDrawing() {
@@ -1172,7 +1404,10 @@
                     return;
                 }
 
-                if (!e.target.closest('.text-field') && !e.target.closest('.image-field')) {
+                const pos = this.getMousePosition(e);
+                const drawing = this.getDrawingAtPosition(pos);
+
+                if (!e.target.closest('.text-field') && !e.target.closest('.image-field') && !drawing) {
                     this.clearSelections();
                     this.redrawCanvas();
                 }
@@ -1202,9 +1437,14 @@
                 field.style.transform = `translate(${x}px, ${y}px)`;
                 field.setAttribute('data-x', x);
                 field.setAttribute('data-y', y);
+                field.setAttribute('data-ph', 'Type here...');
 
                 const textField = this.currentNote.textFields.find(f => f.id === id) ||
                     new TextField(x, y, content, isMath, id);
+
+                if (!this.currentNote.textFields.some(f => f.id === textField.id)) {
+                    this.currentNote.textFields.push(textField);
+                }
 
                 if (isMath) {
                     const mqField = document.createElement('div');
@@ -1219,6 +1459,12 @@
                             }
                         }
                     });
+
+                    mqField.addEventListener('copy', (e) => {
+                        e.preventDefault();
+                        e.clipboardData.setData('text/plain', textField.content);
+                    });
+
                     mathField.latex(content || '');
                     textField.mathField = mathField;
                     field.classList.add('math-field');
@@ -1226,17 +1472,38 @@
                     field.contentEditable = true;
                     field.spellcheck = false;
                     field.textContent = content;
+
+                    field.addEventListener('copy', (e) => {
+                        const selection = window.getSelection();
+                        if (!selection.isCollapsed) return;
+
+                        e.preventDefault();
+                        e.clipboardData.setData('text/plain', field.textContent);
+                    });
                 }
 
                 field.addEventListener('input', () => {
                     if (!isMath) {
                         textField.content = field.textContent;
+                        if (!field.textContent.trim()) {
+                            field.textContent = '';
+                            field.classList.add('empty');
+                        } else {
+                            field.classList.remove('empty');
+                        }
                         this.currentNote.lastEdited = Date.now();
                         this.saveNotes();
                     }
                 });
 
+                field.addEventListener('blur', () => {
+                    if (!isMath && !field.textContent.trim()) {
+                        field.classList.add('empty');
+                    }
+                });
+
                 field.addEventListener('focus', () => {
+                    field.classList.remove('empty');
                     this.mathModeButton.disabled = false;
                     this.mathModeButton.style.opacity = '1';
                     if (isMath && textField.mathField) {
@@ -1367,11 +1634,17 @@
                 if (!this.currentNote) return;
 
                 let shouldPushUndo = false;
+                const originalState = JSON.parse(JSON.stringify(this.currentNote));
 
                 this.selectedFields.forEach(id => {
                     const textField = this.currentNote.textFields.find(f => f.id === id);
-                    if (textField && textField.content.trim() !== '') {
+                    if (textField) {
                         shouldPushUndo = true;
+                        const index = this.currentNote.textFields.indexOf(textField);
+                        this.currentNote.textFields.splice(index, 1);
+
+                        const element = this.textFieldsLayer.querySelector(`[data-id="${id}"]`);
+                        if (element) element.remove();
                     }
                 });
 
@@ -1379,46 +1652,29 @@
                     const imageField = this.currentNote.imageFields.find(f => f.id === id);
                     if (imageField) {
                         shouldPushUndo = true;
-                    }
-                });
+                        const index = this.currentNote.imageFields.indexOf(imageField);
+                        this.currentNote.imageFields.splice(index, 1);
 
-                if (this.selectedDrawings.size > 0) {
-                    shouldPushUndo = true;
-                }
-
-                if (shouldPushUndo) {
-                    this.pushToUndo();
-                }
-
-                this.selectedFields.forEach(id => {
-                    const textFieldIndex = this.currentNote.textFields.findIndex(f => f.id === id);
-                    if (textFieldIndex > -1) {
-                        this.currentNote.textFields.splice(textFieldIndex, 1);
-                        const textFieldElement = document.querySelector(`.text-field[data-id="${id}"]`);
-                        if (textFieldElement) {
-                            textFieldElement.remove();
-                        }
-                    }
-
-                    const imageFieldIndex = this.currentNote.imageFields.findIndex(f => f.id === id);
-                    if (imageFieldIndex > -1) {
-                        this.currentNote.imageFields.splice(imageFieldIndex, 1);
-                        const imageFieldElement = document.querySelector(`.image-field[data-id="${id}"]`);
-                        if (imageFieldElement) {
-                            imageFieldElement.remove();
-                        }
+                        const element = this.textFieldsLayer.querySelector(`[data-id="${id}"]`);
+                        if (element) element.remove();
                     }
                 });
 
                 this.selectedDrawings.forEach(id => {
-                    const index = this.currentNote.drawings.findIndex(d => d.id === id);
-                    if (index > -1) {
-                        this.currentNote.drawings.splice(index, 1);
+                    const drawingIndex = this.currentNote.drawings.findIndex(d => d.id === id);
+                    if (drawingIndex !== -1) {
+                        shouldPushUndo = true;
+                        this.currentNote.drawings.splice(drawingIndex, 1);
                     }
                 });
 
+                if (shouldPushUndo) {
+                    this.undoStack.push(JSON.stringify(originalState));
+                    this.redoStack = [];
+                    this.saveNotes();
+                }
+
                 this.clearSelections();
-                this.saveNotes();
                 this.redrawCanvas();
             }
 
@@ -1766,6 +2022,14 @@
                                     let newHeight = event.rect.height;
                                     let newX = initialX;
                                     let newY = initialY;
+
+                                    if (event.shiftKey) {
+                                        if (Math.abs(event.deltaRect.width) > Math.abs(event.deltaRect.height)) {
+                                            newHeight = newWidth / aspectRatio;
+                                        } else {
+                                            newWidth = newHeight * aspectRatio;
+                                        }
+                                    }
 
                                     currentWidth = currentWidth * 0.5 + newWidth * 0.5;
                                     currentHeight = currentHeight * 0.5 + newHeight * 0.5;

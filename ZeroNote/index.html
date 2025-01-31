@@ -21,13 +21,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
     <meta property="og:title" content="ZeroNote">
     <meta property="og:description" content="A simple note-taking app with text, maths and drawing capabilities.">
-    <meta property="og:image" content="https://files.catbox.moe/40ucap.png">
+    <meta property="og:image"
+        content="https://raw.githubusercontent.com/Nikityyy/nikityyy.github.io/refs/heads/main/ZeroNote/favicon.png">
     <meta property="og:url" content="https://nikityyy.github.io/ZeroNote/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="ZeroNote">
     <meta name="twitter:description" content="A simple note-taking app with text, maths and drawing capabilities.">
-    <meta name="twitter:image" content="https://files.catbox.moe/40ucap.png">
+    <meta name="twitter:image"
+        content="https://raw.githubusercontent.com/Nikityyy/nikityyy.github.io/refs/heads/main/ZeroNote/favicon.png">
     <meta name="twitter:url" content="https://nikityyy.github.io/ZeroNote/">
     <meta name="twitter:site" content="@itsnikity">
     <meta name="twitter:creator" content="@itsnikity">
@@ -239,11 +241,6 @@
             width: 0;
         }
 
-        .drawing-layer {
-            touch-action: none;
-            pointer-events: auto;
-        }
-
         .canvas-container {
             touch-action: none;
             position: relative;
@@ -251,7 +248,30 @@
             height: 100%;
             overflow: hidden;
             cursor: grab;
-            cursor: crosshair;
+        }
+
+        .background-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .text-fields-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .text-fields-layer>* {
+            pointer-events: auto;
         }
 
         .text-field {
@@ -274,12 +294,15 @@
             user-select: text;
         }
 
+        .math-field {
+            max-width: max-content;
+        }
+
         .text-field * {
             user-select: text;
         }
 
         .mq-editable-field {
-            font-size: 1.8rem !important;
             padding: 0.5rem;
             border-radius: 4px;
             min-width: 20px;
@@ -516,6 +539,63 @@
             font-style: italic;
             pointer-events: none;
         }
+
+        .text-field:not(.math-field) {
+            width: max-content;
+            position: relative;
+        }
+
+        .text-field:not(.math-field) .resize-handle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #4a9eff;
+            border-radius: 50%;
+            display: none;
+            pointer-events: auto;
+            overflow: visible;
+        }
+
+        .text-field:not(.math-field).selected .resize-handle {
+            display: block;
+        }
+
+        .text-field:not(.math-field) .resize-handle.left {
+            left: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: w-resize;
+            z-index: 100;
+        }
+
+        .text-field:not(.math-field) .resize-handle.right {
+            right: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: e-resize;
+            z-index: 100;
+        }
+
+        .text-field:not(.math-field) .resize-handle.top {
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: n-resize;
+        }
+
+        .text-field:not(.math-field) .resize-handle.bottom {
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: s-resize;
+        }
+
+        .text-field:not(.math-field) {
+            position: relative;
+            min-width: 20px;
+            height: fit-content;
+            cursor: move;
+        }
     </style>
 </head>
 
@@ -545,10 +625,8 @@
             </button>
         </div>
         <div class="canvas-container">
-            <div class="canvas-wrapper">
-                <div class="text-fields-layer"></div>
-                <canvas class="drawing-layer"></canvas>
-            </div>
+            <canvas class="background-canvas"></canvas>
+            <div class="text-fields-layer"></div>
         </div>
     </div>
 
@@ -580,13 +658,14 @@
         }
 
         class TextField {
-            constructor(x, y, content = '', isMath = false, id = null) {
+            constructor(x, y, content = '', isMath = false, id = null, width = null) {
                 this.id = id ?? crypto.randomUUID();
                 this.x = x;
                 this.y = y;
                 this.content = content;
                 this.isMath = isMath;
                 this.mathField = null;
+                this.width = width;
             }
 
             toJSON() {
@@ -595,7 +674,8 @@
                     x: this.x,
                     y: this.y,
                     content: this.content,
-                    isMath: this.isMath
+                    isMath: this.isMath,
+                    width: this.width
                 };
             }
         }
@@ -627,6 +707,11 @@
 
         class ZeroNote {
             constructor() {
+                this.minScale = 0.1;
+                this.maxScale = 5;
+                this.scale = 1;
+                this.lastPinchDistance = 0;
+
                 this.notes = [];
                 this.currentNote = null;
                 this.activeMode = 'text';
@@ -644,6 +729,7 @@
                 this.dragStartPositions = new Map();
                 this.deleteButton = null;
                 this.justCreatedTextField = false;
+                this.isStylusDrawing = false;
 
                 this.setupDOM();
                 this.setupEventListeners();
@@ -651,6 +737,79 @@
                 this.setupInteract();
                 this.setupDrawing();
                 this.setupImageHandlers();
+                this.setupZoom();
+            }
+
+            setupZoom() {
+                this.canvasContainer.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+
+                    const rect = this.canvasContainer.getBoundingClientRect();
+                    const mouseX = e.clientX - rect.left;
+                    const mouseY = e.clientY - rect.top;
+
+                    const canvasX = (mouseX - this.canvasOffset.x) / this.scale;
+                    const canvasY = (mouseY - this.canvasOffset.y) / this.scale;
+
+                    const delta = e.deltaY < 0 ? 1.1 : 0.9;
+                    const newScale = Math.min(Math.max(this.scale * delta, this.minScale), this.maxScale);
+
+                    const scaleDiff = newScale - this.scale;
+                    this.canvasOffset.x -= canvasX * scaleDiff;
+                    this.canvasOffset.y -= canvasY * scaleDiff;
+
+                    this.scale = newScale;
+                    this.updateCanvasTransform();
+                }, { passive: false });
+
+                this.canvasContainer.addEventListener('touchstart', (e) => {
+                    if (e.touches.length === 2) {
+                        e.preventDefault();
+                        const touch1 = e.touches[0];
+                        const touch2 = e.touches[1];
+                        this.lastPinchDistance = Math.hypot(
+                            touch1.clientX - touch2.clientX,
+                            touch1.clientY - touch2.clientY
+                        );
+                    }
+                }, { passive: false });
+
+                this.canvasContainer.addEventListener('touchmove', (e) => {
+                    if (e.touches.length === 2) {
+                        e.preventDefault();
+                        const touch1 = e.touches[0];
+                        const touch2 = e.touches[1];
+                        const currentDistance = Math.hypot(
+                            touch1.clientX - touch2.clientX,
+                            touch1.clientY - touch2.clientY
+                        );
+
+                        if (this.lastPinchDistance > 0) {
+                            const rect = this.canvasContainer.getBoundingClientRect();
+                            const centerX = (touch1.clientX + touch2.clientX) / 2 - rect.left;
+                            const centerY = (touch1.clientY + touch2.clientY) / 2 - rect.top;
+
+                            const canvasX = (centerX - this.canvasOffset.x) / this.scale;
+                            const canvasY = (centerY - this.canvasOffset.y) / this.scale;
+
+                            const delta = currentDistance / this.lastPinchDistance;
+                            const newScale = Math.min(Math.max(this.scale * delta, this.minScale), this.maxScale);
+
+                            const scaleDiff = newScale - this.scale;
+                            this.canvasOffset.x -= canvasX * scaleDiff;
+                            this.canvasOffset.y -= canvasY * scaleDiff;
+
+                            this.scale = newScale;
+                            this.updateCanvasTransform();
+                        }
+
+                        this.lastPinchDistance = currentDistance;
+                    }
+                }, { passive: false });
+
+                this.canvasContainer.addEventListener('touchend', () => {
+                    this.lastPinchDistance = 0;
+                });
             }
 
             setupDOM() {
@@ -662,23 +821,21 @@
                 this.mathModeButton = document.querySelector('.math-mode');
                 this.drawingModeButton = document.querySelector('.drawing-mode');
                 this.textFieldsLayer = document.querySelector('.text-fields-layer');
-                this.drawingLayer = document.querySelector('.drawing-layer');
+                this.backgroundCanvas = document.querySelector('.background-canvas');
                 this.deleteModal = document.querySelector('#deleteModal');
                 this.canvasContainer = document.querySelector('.canvas-container');
 
-                this.ctx = this.drawingLayer.getContext('2d');
+                this.ctx = this.backgroundCanvas.getContext('2d');
                 this.resizeCanvas();
                 this.mathModeButton.disabled = false;
                 this.mathModeButton.style.opacity = '1';
 
-                this.canvasWrapper = document.createElement('div');
-                this.canvasWrapper.className = 'canvas-wrapper';
-
                 this.canvasContainer.innerHTML = '';
-                this.canvasContainer.appendChild(this.canvasWrapper);
+                this.canvasContainer.appendChild(this.backgroundCanvas);
+                this.canvasContainer.appendChild(this.textFieldsLayer);
 
-                this.canvasWrapper.appendChild(this.textFieldsLayer);
-                this.canvasWrapper.appendChild(this.drawingLayer);
+                this.backgroundCanvas.style.transform = 'none';
+                this.textFieldsLayer.style.transform = 'none';
 
                 const sidebarState = localStorage.getItem('zeronote-sidebarState');
                 if (sidebarState === 'open') {
@@ -688,6 +845,7 @@
                 }
                 this.drawingModeButton.classList.remove('active');
                 this.canvasContainer.style.cursor = 'grab';
+                this.setupZoom();
             }
 
             setupContextMenu() {
@@ -885,7 +1043,7 @@
             }
 
             getMousePosition(e) {
-                const rect = this.canvasContainer.getBoundingClientRect();
+                const rect = this.backgroundCanvas.getBoundingClientRect();
                 const scale = this.scale;
                 const x = (e.clientX - rect.left - this.canvasOffset.x) / scale;
                 const y = (e.clientY - rect.top - this.canvasOffset.y) / scale;
@@ -965,6 +1123,8 @@
                         if (textField) {
                             field.classList.add('selected');
                             this.selectedFields.add(fieldId);
+
+                            this.removeEmptyTextFields();
                         }
                     }
                 }, true);
@@ -1004,6 +1164,34 @@
                 });
 
                 this.setupContextMenu();
+
+                // Add touch event listeners for mobile panning
+                this.canvasContainer.addEventListener('touchstart', (e) => {
+                    if (e.touches.length === 1) {
+                        const touch = e.touches[0];
+                        this.startPanning({
+                            button: 0,
+                            clientX: touch.clientX,
+                            clientY: touch.clientY,
+                            target: touch.target,
+                            pointerType: 'touch'
+                        });
+                    }
+                });
+
+                this.canvasContainer.addEventListener('touchmove', (e) => {
+                    if (e.touches.length === 1) {
+                        const touch = e.touches[0];
+                        this.pan({
+                            clientX: touch.clientX,
+                            clientY: touch.clientY
+                        });
+                    }
+                });
+
+                this.canvasContainer.addEventListener('touchend', () => {
+                    this.stopPanning({});
+                });
             }
 
             setupInteract() {
@@ -1011,21 +1199,32 @@
             }
 
             setupDrawing() {
+                // Initialize canvas transform
+                const dpr = window.devicePixelRatio || 1;
+                this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+                this.ctx.scale(dpr, dpr);
+                this.ctx.translate(this.canvasOffset.x, this.canvasOffset.y);
+                this.ctx.scale(this.scale, this.scale);
+
                 this.ctx.strokeStyle = '#ffffff';
                 this.ctx.lineWidth = 5 / (this.scale * (window.devicePixelRatio || 1));
                 this.ctx.lineCap = 'round';
                 this.ctx.lineJoin = 'round';
 
                 const handlePointerStart = (e) => {
-                    if (this.activeMode === 'drawing' && e.isPrimary) {
+                    if (e.pointerType === 'pen' || (this.activeMode === 'drawing' && e.isPrimary)) {
                         e.preventDefault();
                         e.stopPropagation();
                         this.startDrawing(e);
+                        if (e.pointerType === 'pen') {
+                            this.isStylusDrawing = true;
+                        }
                     }
                 };
 
                 const handlePointerMove = (e) => {
-                    if (this.isDrawing && this.activeMode === 'drawing' && e.isPrimary) {
+                    if ((this.isDrawing && this.activeMode === 'drawing' && e.isPrimary) ||
+                        (this.isStylusDrawing && e.pointerType === 'pen')) {
                         e.preventDefault();
                         e.stopPropagation();
                         this.draw(e);
@@ -1033,16 +1232,19 @@
                 };
 
                 const handlePointerEnd = (e) => {
-                    if (this.isDrawing && e.isPrimary) {
+                    if (this.isDrawing && (e.isPrimary || e.pointerType === 'pen')) {
                         this.stopDrawing();
+                        if (e.pointerType === 'pen') {
+                            this.isStylusDrawing = false;
+                        }
                     }
                 };
 
-                this.drawingLayer.addEventListener('pointerdown', handlePointerStart, { capture: true });
-                this.drawingLayer.addEventListener('pointermove', handlePointerMove, { capture: true });
-                this.drawingLayer.addEventListener('pointerup', handlePointerEnd, { capture: true });
-                this.drawingLayer.addEventListener('pointercancel', handlePointerEnd, { capture: true });
-                this.drawingLayer.addEventListener('pointerleave', handlePointerEnd, { capture: true });
+                this.backgroundCanvas.addEventListener('pointerdown', handlePointerStart, { capture: true });
+                this.backgroundCanvas.addEventListener('pointermove', handlePointerMove, { capture: true });
+                this.backgroundCanvas.addEventListener('pointerup', handlePointerEnd, { capture: true });
+                this.backgroundCanvas.addEventListener('pointercancel', handlePointerEnd, { capture: true });
+                this.backgroundCanvas.addEventListener('pointerleave', handlePointerEnd, { capture: true });
             }
 
             startDrawingDrag(e) {
@@ -1083,15 +1285,34 @@
             startDrawing(e) {
                 if (e.pointerType === 'mouse' && e.button !== 0) return;
 
+                if (!this.currentNote) {
+                    this.currentNote = this.createNote();
+                }
+
+                this.removeEmptyTextFields();
+                this.clearSelections();
+
                 this.pushToUndo();
                 this.isDrawing = true;
-                const rect = this.canvasContainer.getBoundingClientRect();
-                const x = (e.clientX - rect.left - this.canvasOffset.x) / this.scale;
-                const y = (e.clientY - rect.top - this.canvasOffset.y) / this.scale;
+                const pos = this.getMousePosition(e);
+
+                // Reset the transform state
+                const dpr = window.devicePixelRatio || 1;
+                this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+                this.ctx.scale(dpr, dpr);
+                this.ctx.translate(this.canvasOffset.x, this.canvasOffset.y);
+                this.ctx.scale(this.scale, this.scale);
+
+                // Set up drawing style
+                this.ctx.strokeStyle = '#ffffff';
+                this.ctx.lineWidth = 5 / (this.scale * (window.devicePixelRatio || 1));
+                this.ctx.lineCap = 'round';
+                this.ctx.lineJoin = 'round';
 
                 this.ctx.beginPath();
-                this.ctx.moveTo(x, y);
-                this.currentPath = [{ x, y }];
+                this.ctx.moveTo(pos.x, pos.y);
+
+                this.currentPath = [pos];
             }
 
             stopDrawing() {
@@ -1126,18 +1347,41 @@
             draw(e) {
                 if (!this.isDrawing) return;
 
-                const rect = this.canvasContainer.getBoundingClientRect();
-                const x = (e.clientX - rect.left - this.canvasOffset.x) / this.scale;
-                const y = (e.clientY - rect.top - this.canvasOffset.y) / this.scale;
+                const pos = this.getMousePosition(e);
 
-                this.ctx.lineTo(x, y);
+                this.ctx.save();
+
+                const dpr = window.devicePixelRatio || 1;
+                this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+                this.ctx.scale(dpr, dpr);
+                this.ctx.translate(this.canvasOffset.x, this.canvasOffset.y);
+                this.ctx.scale(this.scale, this.scale);
+
+                this.ctx.lineTo(pos.x, pos.y);
                 this.ctx.stroke();
-                this.currentPath.push({ x, y });
+
+                this.ctx.restore();
+
+                this.currentPath.push(pos);
             }
 
             redrawCanvas() {
                 const dpr = window.devicePixelRatio || 1;
-                this.ctx.clearRect(0, 0, this.drawingLayer.width / dpr, this.drawingLayer.height / dpr);
+                const rect = this.canvasContainer.getBoundingClientRect();
+                const width = rect.width;
+                const height = rect.height;
+
+                this.backgroundCanvas.width = width * dpr;
+                this.backgroundCanvas.height = height * dpr;
+                this.backgroundCanvas.style.width = `${width}px`;
+                this.backgroundCanvas.style.height = `${height}px`;
+
+                this.ctx.scale(dpr, dpr);
+                this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+                this.ctx.clearRect(0, 0, width, height);
+
+                this.ctx.translate(this.canvasOffset.x, this.canvasOffset.y);
+                this.ctx.scale(this.scale, this.scale);
 
                 this.ctx.lineWidth = 5 / this.scale;
                 this.ctx.lineCap = 'round';
@@ -1146,10 +1390,10 @@
                 this.currentNote?.drawings?.forEach(drawing => {
                     this.ctx.strokeStyle = this.selectedDrawings.has(drawing.id) ? '#4a9eff' : '#ffffff';
                     this.ctx.beginPath();
-                    this.ctx.moveTo(drawing.path[0].x, drawing.path[0].y);
-                    for (let i = 1; i < drawing.path.length; i++) {
-                        this.ctx.lineTo(drawing.path[i].x, drawing.path[i].y);
-                    }
+                    drawing.path.forEach((point, index) => {
+                        if (index === 0) this.ctx.moveTo(point.x, point.y);
+                        else this.ctx.lineTo(point.x, point.y);
+                    });
                     this.ctx.stroke();
                 });
             }
@@ -1160,11 +1404,11 @@
                 const width = container.clientWidth;
                 const height = container.clientHeight;
 
-                this.drawingLayer.width = width * dpr;
-                this.drawingLayer.height = height * dpr;
+                this.backgroundCanvas.width = width * dpr;
+                this.backgroundCanvas.height = height * dpr;
 
-                this.drawingLayer.style.width = `${width}px`;
-                this.drawingLayer.style.height = `${height}px`;
+                this.backgroundCanvas.style.width = `${width}px`;
+                this.backgroundCanvas.style.height = `${height}px`;
 
                 this.ctx.scale(dpr, dpr);
                 this.redrawCanvas();
@@ -1222,7 +1466,8 @@
                         x: field.x,
                         y: field.y,
                         content: field.content,
-                        isMath: field.isMath
+                        isMath: field.isMath,
+                        width: field.width
                     })),
                     imageFields: note.imageFields.map(field => ({
                         id: field.id,
@@ -1381,9 +1626,9 @@
 
             toggleDrawingMode() {
                 this.activeMode = this.activeMode === 'drawing' ? 'text' : 'drawing';
-                this.drawingLayer.classList.toggle('active');
                 this.drawingModeButton.classList.toggle('active');
                 this.mathModeButton.classList.remove('active');
+                this.backgroundCanvas.style.pointerEvents = this.activeMode === 'drawing' ? 'auto' : 'none';
 
                 this.clearSelections();
 
@@ -1434,7 +1679,7 @@
                 const field = document.createElement('div');
                 field.className = 'text-field';
                 field.setAttribute('data-id', id || crypto.randomUUID());
-                field.style.transform = `translate(${x}px, ${y}px)`;
+                field.style.transform = `translate(${x * this.scale + this.canvasOffset.x}px, ${y * this.scale + this.canvasOffset.y}px)`;
                 field.setAttribute('data-x', x);
                 field.setAttribute('data-y', y);
                 field.setAttribute('data-ph', 'Type here...');
@@ -1468,10 +1713,19 @@
                     mathField.latex(content || '');
                     textField.mathField = mathField;
                     field.classList.add('math-field');
-                } else {
+                }
+
+                field.style.fontSize = `${2 * this.scale}rem`;
+
+                if (!isMath) {
+
                     field.contentEditable = true;
                     field.spellcheck = false;
                     field.textContent = content;
+
+                    if (textField.width) {
+                        field.style.width = `${textField.width}px`;
+                    }
 
                     field.addEventListener('copy', (e) => {
                         const selection = window.getSelection();
@@ -1485,6 +1739,19 @@
                 field.addEventListener('input', () => {
                     if (!isMath) {
                         textField.content = field.textContent;
+
+                        const leftHandle = document.createElement('div');
+                        leftHandle.className = 'resize-handle left';
+                        field.appendChild(leftHandle);
+
+                        const rightHandle = document.createElement('div');
+                        rightHandle.className = 'resize-handle right';
+                        field.appendChild(rightHandle);
+
+                        leftHandle.addEventListener('dblclick', () => this.autoResizeTextField(field, textField));
+                        rightHandle.addEventListener('dblclick', () => this.autoResizeTextField(field, textField));
+
+
                         if (!field.textContent.trim()) {
                             field.textContent = '';
                             field.classList.add('empty');
@@ -1515,6 +1782,18 @@
                     field.classList.add('selected');
                     this.selectedFields.add(textField.id);
 
+                    const leftHandle = document.createElement('div');
+                    leftHandle.className = 'resize-handle left';
+                    field.appendChild(leftHandle);
+
+                    const rightHandle = document.createElement('div');
+                    rightHandle.className = 'resize-handle right';
+                    field.appendChild(rightHandle);
+
+                    leftHandle.addEventListener('dblclick', () => this.autoResizeTextField(field, textField));
+                    rightHandle.addEventListener('dblclick', () => this.autoResizeTextField(field, textField));
+
+
                     if (window.getSelection().toString()) {
                         return;
                     }
@@ -1524,6 +1803,25 @@
 
                 this.textFieldsLayer.appendChild(field);
                 return field;
+            }
+
+            autoResizeTextField(field, textField) {
+                const temp = document.createElement('div');
+                temp.style.cssText = window.getComputedStyle(field).cssText;
+                temp.style.position = 'absolute';
+                temp.style.visibility = 'hidden';
+                temp.style.width = 'auto';
+                temp.style.whiteSpace = 'pre-wrap';
+                temp.style.maxWidth = '1500px';
+                temp.textContent = field.textContent;
+                document.body.appendChild(temp);
+
+                const width = Math.min(1500, temp.offsetWidth + 20);
+                field.style.width = `${width}px`;
+                textField.width = width;
+                this.saveNotes();
+
+                document.body.removeChild(temp);
             }
 
             setupTextFieldInteractions(field, textField) {
@@ -1556,13 +1854,16 @@
                                 this.selectedFields.add(textField.id);
                             },
                             move: (event) => {
-                                const deltaX = event.clientX - initialMousePos.x;
-                                const deltaY = event.clientY - initialMousePos.y;
+                                const deltaX = (event.clientX - initialMousePos.x) / this.scale;
+                                const deltaY = (event.clientY - initialMousePos.y) / this.scale;
 
                                 const newX = initialFieldPos.x + deltaX;
                                 const newY = initialFieldPos.y + deltaY;
 
-                                field.style.transform = `translate(${newX}px, ${newY}px)`;
+                                const screenX = newX * this.scale + this.canvasOffset.x;
+                                const screenY = newY * this.scale + this.canvasOffset.y;
+
+                                field.style.transform = `translate(${screenX}px, ${screenY}px)`;
                                 field.setAttribute('data-x', newX);
                                 field.setAttribute('data-y', newY);
 
@@ -1575,6 +1876,46 @@
                             }
                         }
                     });
+
+                if (!textField.isMath) {
+                    interact(field)
+                        .resizable({
+                            edges: { left: '.resize-handle.left', right: '.resize-handle.right' },
+                            modifiers: [
+                                interact.modifiers.restrictSize({
+                                    min: { width: 20 },
+                                    max: { width: 1500 }
+                                })
+                            ],
+                            inertia: false,
+                            listeners: {
+                                start: event => {
+                                    event.stopPropagation();
+                                    this.pushToUndo();
+                                },
+                                move: event => {
+                                    const target = event.target;
+                                    let width = event.rect.width;
+
+                                    if (event.edges.left) {
+                                        const deltaX = event.deltaRect.left / this.scale;
+                                        const newX = parseFloat(target.getAttribute('data-x')) + deltaX;
+                                        target.setAttribute('data-x', newX);
+                                        const screenX = newX * this.scale + this.canvasOffset.x;
+                                        target.style.transform = `translate(${screenX}px, ${target.getAttribute('data-y') * this.scale + this.canvasOffset.y}px)`;
+                                        textField.x = newX;
+                                    }
+
+                                    target.style.width = `${width}px`;
+                                    textField.width = width;
+                                },
+                                end: () => {
+                                    this.currentNote.lastEdited = Date.now();
+                                    this.saveNotes();
+                                }
+                            }
+                        });
+                }
             }
 
             focusAndSelectTextField(element, fieldId) {
@@ -1611,7 +1952,31 @@
             }
 
             updateCanvasTransform() {
-                this.canvasWrapper.style.transform = `translate(${this.canvasOffset.x}px, ${this.canvasOffset.y}px)`;
+                this.ctx.lineWidth = 5 / this.scale;
+
+                this.redrawCanvas();
+
+                this.textFieldsLayer.querySelectorAll('.text-field, .image-field').forEach(element => {
+                    const virtualX = parseFloat(element.dataset.x);
+                    const virtualY = parseFloat(element.dataset.y);
+                    const screenX = virtualX * this.scale + this.canvasOffset.x;
+                    const screenY = virtualY * this.scale + this.canvasOffset.y;
+
+                    if (element.classList.contains('image-field')) {
+                        const img = element.querySelector('img');
+                        const field = this.currentNote.imageFields.find(f => f.id === element.dataset.id);
+                        if (field) {
+                            img.style.width = `${field.width * this.scale}px`;
+                            img.style.height = `${field.height * this.scale}px`;
+                        }
+                    } else if (element.classList.contains('text-field')) {
+                        element.style.fontSize = `${2 * this.scale}rem`;
+                        if (element.classList.contains('math-field')) {
+                        }
+                    }
+
+                    element.style.transform = `translate(${screenX}px, ${screenY}px)`;
+                });
             }
 
             handleKeyboard(e) {
@@ -1762,9 +2127,9 @@
             }
 
             startPanning(e) {
+                if (e.pointerType === 'pen') return;
                 if (e.button !== 0 || e.target.closest('.text-field') || e.target.closest('.image-field')) return;
-
-                if (this.activeMode === 'drawing') return;
+                if (this.activeMode === 'drawing' && e.pointerType !== 'touch') return;
 
                 this.removeEmptyTextFields();
                 this.clearSelections();
@@ -1918,7 +2283,7 @@
                 const container = document.createElement('div');
                 container.className = 'image-field';
                 container.setAttribute('data-id', imageField.id);
-                container.style.transform = `translate(${imageField.x}px, ${imageField.y}px)`;
+                container.style.transform = `translate(${imageField.x * this.scale + this.canvasOffset.x}px, ${imageField.y * this.scale + this.canvasOffset.y}px)`;
                 container.setAttribute('data-x', imageField.x);
                 container.setAttribute('data-y', imageField.y);
 
@@ -1946,7 +2311,7 @@
                 let aspectRatio = img.naturalWidth / img.naturalHeight;
                 let initialWidth, initialHeight, initialX, initialY;
                 let resizeStarted = false;
-                let currentWidth, currentHeight, currentX, currentY;
+                let initialMousePos = { x: 0, y: 0 };
 
                 interact(container)
                     .draggable({
@@ -1957,22 +2322,34 @@
                                 event.stopPropagation();
                                 this.pushToUndo();
                                 this.selectImage(container);
+
+                                initialMousePos = {
+                                    x: event.clientX,
+                                    y: event.clientY
+                                };
+                                initialX = parseFloat(container.getAttribute('data-x')) || 0;
+                                initialY = parseFloat(container.getAttribute('data-y')) || 0;
                             },
                             move: event => {
                                 event.stopPropagation();
-                                const target = event.target;
-                                const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-                                const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                                const deltaX = (event.clientX - initialMousePos.x) / this.scale;
+                                const deltaY = (event.clientY - initialMousePos.y) / this.scale;
 
-                                target.style.transform = `translate(${x}px, ${y}px)`;
-                                target.setAttribute('data-x', x);
-                                target.setAttribute('data-y', y);
+                                const newX = initialX + deltaX;
+                                const newY = initialY + deltaY;
 
-                                const fieldId = target.getAttribute('data-id');
+                                const screenX = newX * this.scale + this.canvasOffset.x;
+                                const screenY = newY * this.scale + this.canvasOffset.y;
+
+                                container.style.transform = `translate(${screenX}px, ${screenY}px)`;
+                                container.setAttribute('data-x', newX);
+                                container.setAttribute('data-y', newY);
+
+                                const fieldId = container.getAttribute('data-id');
                                 const field = this.currentNote.imageFields.find(f => f.id === fieldId);
                                 if (field) {
-                                    field.x = x;
-                                    field.y = y;
+                                    field.x = newX;
+                                    field.y = newY;
                                     this.currentNote.lastEdited = Date.now();
                                 }
                             },
@@ -2002,12 +2379,12 @@
                                 initialHeight = parseFloat(img.style.height);
                                 initialX = parseFloat(event.target.getAttribute('data-x')) || 0;
                                 initialY = parseFloat(event.target.getAttribute('data-y')) || 0;
-                                currentWidth = initialWidth;
-                                currentHeight = initialHeight;
-                                currentX = initialX;
-                                currentY = initialY;
                                 aspectRatio = img.naturalWidth / img.naturalHeight;
                                 resizeStarted = true;
+                                initialMousePos = {
+                                    x: event.clientX,
+                                    y: event.clientY
+                                };
                             },
                             move: event => {
                                 if (!resizeStarted) return;
@@ -2017,40 +2394,57 @@
                                 const fieldId = target.getAttribute('data-id');
                                 const field = this.currentNote.imageFields.find(f => f.id === fieldId);
 
-                                requestAnimationFrame(() => {
-                                    let newWidth = event.rect.width;
-                                    let newHeight = event.rect.height;
-                                    let newX = initialX;
-                                    let newY = initialY;
+                                const deltaX = event.clientX - initialMousePos.x;
+                                const deltaY = event.clientY - initialMousePos.y;
+                                const scaledDeltaX = deltaX / this.scale;
+                                const scaledDeltaY = deltaY / this.scale;
 
-                                    if (event.shiftKey) {
-                                        if (Math.abs(event.deltaRect.width) > Math.abs(event.deltaRect.height)) {
-                                            newHeight = newWidth / aspectRatio;
-                                        } else {
-                                            newWidth = newHeight * aspectRatio;
+                                let newWidth = initialWidth;
+                                let newHeight = initialHeight;
+                                let newX = initialX;
+                                let newY = initialY;
+
+                                if (event.edges.right) newWidth = initialWidth + scaledDeltaX;
+                                if (event.edges.bottom) newHeight = initialHeight + scaledDeltaY;
+                                if (event.edges.left) {
+                                    newWidth = initialWidth - scaledDeltaX;
+                                    newX = initialX + scaledDeltaX;
+                                }
+                                if (event.edges.top) {
+                                    newHeight = initialHeight - scaledDeltaY;
+                                    newY = initialY + scaledDeltaY;
+                                }
+
+                                if (event.shiftKey) {
+                                    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                                        newHeight = newWidth / aspectRatio;
+                                        if (event.edges.top) {
+                                            newY = initialY + (initialHeight - newHeight);
+                                        }
+                                    } else {
+                                        newWidth = newHeight * aspectRatio;
+                                        if (event.edges.left) {
+                                            newX = initialX + (initialWidth - newWidth);
                                         }
                                     }
+                                }
 
-                                    currentWidth = currentWidth * 0.5 + newWidth * 0.5;
-                                    currentHeight = currentHeight * 0.5 + newHeight * 0.5;
+                                img.style.width = `${newWidth}px`;
+                                img.style.height = `${newHeight}px`;
 
-                                    if (event.edges.left) newX = initialX + (initialWidth - currentWidth);
-                                    if (event.edges.top) newY = initialY + (initialHeight - currentHeight);
+                                const screenX = newX * this.scale + this.canvasOffset.x;
+                                const screenY = newY * this.scale + this.canvasOffset.y;
+                                target.style.transform = `translate(${screenX}px, ${screenY}px)`;
+                                target.setAttribute('data-x', newX);
+                                target.setAttribute('data-y', newY);
 
-                                    img.style.width = `${currentWidth}px`;
-                                    img.style.height = `${currentHeight}px`;
-                                    target.style.transform = `translate(${newX}px, ${newY}px)`;
-                                    target.setAttribute('data-x', newX);
-                                    target.setAttribute('data-y', newY);
-
-                                    if (field) {
-                                        field.width = currentWidth;
-                                        field.height = currentHeight;
-                                        field.x = newX;
-                                        field.y = newY;
-                                        this.currentNote.lastEdited = Date.now();
-                                    }
-                                });
+                                if (field) {
+                                    field.width = newWidth;
+                                    field.height = newHeight;
+                                    field.x = newX;
+                                    field.y = newY;
+                                    this.currentNote.lastEdited = Date.now();
+                                }
                             },
                             end: () => {
                                 resizeStarted = false;

@@ -130,6 +130,7 @@
             margin-bottom: 0.25rem;
             outline: none;
             cursor: text;
+            display: inline-block;
         }
 
         .note-date {
@@ -257,7 +258,7 @@
             width: 100%;
             height: 100%;
             z-index: 1;
-            pointer-events: auto;
+            pointer-events: none;
         }
 
         .text-fields-layer {
@@ -309,6 +310,10 @@
             min-height: 30px;
             cursor: text;
             font-family: "Patrick Hand", sans-serif;
+        }
+
+        .mq-math-mode {
+            font-family: 'Times New Roman', Times, serif;
         }
 
         .mq-cursor {
@@ -596,6 +601,82 @@
             height: fit-content;
             cursor: move;
         }
+
+        .note-item {
+            box-shadow: -4px 0 0 0 transparent;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .note-item.active-note {
+            box-shadow: -4px 0 0 0 #4a9eff;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                box-shadow: -4px 0 0 0 transparent;
+            }
+
+            to {
+                box-shadow: -4px 0 0 0 #4a9eff;
+            }
+        }
+
+        @media screen and (max-width: 420px) {
+            .sidebar.open~.main-content .top-buttons {
+                flex-direction: column;
+            }
+        }
+
+        @media screen and (max-width: 370px) {
+            .sidebar.open~.main-content .top-buttons {
+                top: calc(1rem + 40px + 0.5rem);
+            }
+        }
+
+        @media screen and (max-width: 322px) {
+            .sidebar.open~.main-content .top-buttons {
+                position: absolute;
+                top: calc(1rem + 40px + 0.5rem);
+                left: 1rem;
+                width: 40px;
+            }
+        }
+
+        @media screen and (max-width: 310px) {
+            .sidebar.open {
+                width: 175px;
+            }
+
+            .sidebar-toggle.open {
+                transform: translateX(175px);
+            }
+
+            .sidebar.open~.main-content {
+                margin-left: 175px;
+            }
+
+            .sidebar.open~.main-content .top-buttons {
+                position: absolute;
+                top: calc(1rem + 40px + 0.5rem);
+                left: 1rem;
+            }
+        }
+
+        @media screen and (max-width: 167px) {
+            .top-buttons {
+                flex-direction: column;
+            }
+        }
+
+        @media screen and (max-width: 120px) {
+            .top-buttons {
+                position: absolute;
+                top: calc(1rem + 40px + 0.5rem);
+                left: 1rem;
+                width: 40px;
+            }
+        }
     </style>
 </head>
 
@@ -848,16 +929,6 @@
                 this.setupZoom();
             }
 
-            setupContextMenu() {
-                this.textFieldsLayer.addEventListener('contextmenu', (e) => {
-                    const field = e.target.closest('.text-field.math-field');
-                    if (field) {
-                        e.preventDefault();
-                        this.showContextMenu(e.clientX, e.clientY, field);
-                    }
-                });
-            }
-
             showContextMenu(x, y, fieldElement) {
                 const menu = document.createElement('div');
                 menu.className = 'context-menu';
@@ -1008,16 +1079,25 @@
                     let derivativeLatex = derivative.toString();
 
                     const newFuncName = `${funcName}'`;
-
-                    this.createTextField(
+                    
+                    const derivativeField = new TextField(
                         textField.x + 50,
                         textField.y + 50,
                         `${newFuncName}(${variable}) = ${derivativeLatex}`,
                         true
                     );
+                    
+                    this.currentNote.textFields.push(derivativeField);
+                    this.createTextField(
+                        derivativeField.x,
+                        derivativeField.y,
+                        derivativeField.content,
+                        true,
+                        derivativeField.id
+                    );
 
+                    this.currentNote.lastEdited = Date.now();
                     this.saveNotes();
-                    this.loadNotes();
 
                 } catch (error) {
                     alert(`Error calculating derivative: ${error.message}`);
@@ -1032,12 +1112,6 @@
                 const icon = this.sidebarToggle.querySelector('.material-icons');
                 const isOpen = this.sidebar.classList.contains('open');
                 icon.textContent = isOpen ? 'close' : 'menu';
-
-                if (isOpen) {
-                    this.sidebarToggle.style.transform = `translateX(${this.sidebar.offsetWidth}px)`;
-                } else {
-                    this.sidebarToggle.style.transform = 'translateX(0)';
-                }
 
                 localStorage.setItem('zeronote-sidebarState', isOpen ? 'open' : 'closed');
             }
@@ -1163,10 +1237,7 @@
                     this.stopDraggingDrawing(e);
                 });
 
-                this.setupContextMenu();
-
                 this.canvasContainer.addEventListener('touchstart', (e) => {
-                    if (e.changedTouches[0].radiusX === 0.5) return;
                     if (e.touches.length === 1) {
                         const touch = e.touches[0];
                         this.startPanning({
@@ -1199,7 +1270,6 @@
             }
 
             setupDrawing() {
-                // Initialize canvas transform
                 const dpr = window.devicePixelRatio || 1;
                 this.ctx.setTransform(1, 0, 0, 1, 0, 0);
                 this.ctx.scale(dpr, dpr);
@@ -1212,17 +1282,19 @@
                 this.ctx.lineJoin = 'round';
 
                 const handlePointerStart = (e) => {
-                    if (e.pointerType === 'pen') {
-                        if (e.changedTouches?.[0]?.radiusX === 0.5) return;
+                    if (e.pointerType === 'pen' || (this.activeMode === 'drawing' && e.isPrimary)) {
                         e.preventDefault();
                         e.stopPropagation();
                         this.startDrawing(e);
-                        this.isStylusDrawing = true;
+                        if (e.pointerType === 'pen') {
+                            this.isStylusDrawing = true;
+                        }
                     }
                 };
 
                 const handlePointerMove = (e) => {
-                    if (this.isStylusDrawing && e.pointerType === 'pen') {
+                    if ((this.isDrawing && this.activeMode === 'drawing' && e.isPrimary) ||
+                        (this.isStylusDrawing && e.pointerType === 'pen')) {
                         e.preventDefault();
                         e.stopPropagation();
                         this.draw(e);
@@ -1230,17 +1302,19 @@
                 };
 
                 const handlePointerEnd = (e) => {
-                    if (e.pointerType === 'pen') {
+                    if (this.isDrawing && (e.isPrimary || e.pointerType === 'pen')) {
                         this.stopDrawing();
-                        this.isStylusDrawing = false;
+                        if (e.pointerType === 'pen') {
+                            this.isStylusDrawing = false;
+                        }
                     }
                 };
 
-                this.backgroundCanvas.addEventListener('pointerdown', handlePointerStart);
-                this.backgroundCanvas.addEventListener('pointermove', handlePointerMove);
-                this.backgroundCanvas.addEventListener('pointerup', handlePointerEnd);
-                this.backgroundCanvas.addEventListener('pointercancel', handlePointerEnd);
-                this.backgroundCanvas.addEventListener('pointerleave', handlePointerEnd);
+                this.backgroundCanvas.addEventListener('pointerdown', handlePointerStart, { capture: true });
+                this.backgroundCanvas.addEventListener('pointermove', handlePointerMove, { capture: true });
+                this.backgroundCanvas.addEventListener('pointerup', handlePointerEnd, { capture: true });
+                this.backgroundCanvas.addEventListener('pointercancel', handlePointerEnd, { capture: true });
+                this.backgroundCanvas.addEventListener('pointerleave', handlePointerEnd, { capture: true });
             }
 
             startDrawingDrag(e) {
@@ -1290,12 +1364,7 @@
 
                 this.pushToUndo();
                 this.isDrawing = true;
-
-                const rect = this.backgroundCanvas.getBoundingClientRect();
-                const x = (e.clientX - rect.left - this.canvasOffset.x) / this.scale;
-                const y = (e.clientY - rect.top - this.canvasOffset.y) / this.scale;
-
-                this.currentPath = [{ x, y }];
+                const pos = this.getMousePosition(e);
 
                 // Reset the transform state
                 const dpr = window.devicePixelRatio || 1;
@@ -1311,7 +1380,9 @@
                 this.ctx.lineJoin = 'round';
 
                 this.ctx.beginPath();
-                this.ctx.moveTo(x, y);
+                this.ctx.moveTo(pos.x, pos.y);
+
+                this.currentPath = [pos];
             }
 
             stopDrawing() {
@@ -1346,9 +1417,7 @@
             draw(e) {
                 if (!this.isDrawing) return;
 
-                const rect = this.backgroundCanvas.getBoundingClientRect();
-                const x = (e.clientX - rect.left - this.canvasOffset.x) / this.scale;
-                const y = (e.clientY - rect.top - this.canvasOffset.y) / this.scale;
+                const pos = this.getMousePosition(e);
 
                 this.ctx.save();
 
@@ -1358,12 +1427,12 @@
                 this.ctx.translate(this.canvasOffset.x, this.canvasOffset.y);
                 this.ctx.scale(this.scale, this.scale);
 
-                this.ctx.lineTo(x, y);
+                this.ctx.lineTo(pos.x, pos.y);
                 this.ctx.stroke();
 
                 this.ctx.restore();
 
-                this.currentPath.push({ x, y });
+                this.currentPath.push(pos);
             }
 
             redrawCanvas() {
@@ -1377,9 +1446,8 @@
                 this.backgroundCanvas.style.width = `${width}px`;
                 this.backgroundCanvas.style.height = `${height}px`;
 
-                this.ctx.setTransform(1, 0, 0, 1, 0, 0);
                 this.ctx.scale(dpr, dpr);
-
+                this.ctx.setTransform(1, 0, 0, 1, 0, 0);
                 this.ctx.clearRect(0, 0, width, height);
 
                 this.ctx.translate(this.canvasOffset.x, this.canvasOffset.y);
@@ -1438,7 +1506,8 @@
                                 fieldData.y,
                                 fieldData.content,
                                 fieldData.isMath,
-                                fieldData.id
+                                fieldData.id,
+                                fieldData.width
                             )
                         );
                         note.imageFields = noteData.imageFields.map(imgData =>
@@ -1492,8 +1561,12 @@
                     .forEach(note => {
                         const noteElement = document.createElement('div');
                         noteElement.className = 'note-item';
+                        if (this.currentNote && this.currentNote.id === note.id) {
+                            noteElement.classList.add('active-note');
+                        }
+                        noteElement.setAttribute('data-note-id', note.id);
                         noteElement.innerHTML = `
-                            <div class="note-title">${note.title}</div>
+                            <div class="note-title" contenteditable="true" spellcheck="false">${note.title}</div>
                             <div class="note-date">${this.formatDate(note.lastEdited)}</div>
                             <button class="note-delete">
                                 <span class="material-icons">delete</span>
@@ -1511,27 +1584,30 @@
                             }
                         });
 
-                        noteElement.addEventListener('click', (e) => {
-                            if (e.target.closest('.note-title')?.isContentEditable || e.target.closest('.note-delete')) {
-                                return;
-                            }
-                            this.loadNote(note.id);
+                        const titleElement = noteElement.querySelector('.note-title');
+                        let isEditing = false;
+
+                        titleElement.addEventListener('click', (e) => {
+                            e.stopPropagation();
                         });
 
-                        const titleElement = noteElement.querySelector('.note-title');
-                        titleElement.addEventListener('dblclick', (e) => {
+                        titleElement.addEventListener('focus', (e) => {
                             e.stopPropagation();
-                            titleElement.contentEditable = true;
-                            titleElement.focus();
+                            isEditing = true;
                         });
 
                         titleElement.addEventListener('blur', () => {
-                            titleElement.contentEditable = false;
-                            const newTitle = titleElement.textContent.trim();
-                            if (newTitle !== note.title) {
-                                note.title = newTitle || `Note ${note.id}`;
-                                note.lastEdited = Date.now();
-                                this.saveNotes();
+                            if (isEditing) {
+                                const newTitle = titleElement.textContent.trim();
+                                titleElement.textContent = newTitle;
+                                if (newTitle && newTitle !== note.title) {
+                                    note.title = newTitle;
+                                    note.lastEdited = Date.now();
+                                    this.saveNotes();
+                                } else if (!newTitle) {
+                                    titleElement.textContent = note.title;
+                                }
+                                isEditing = false;
                             }
                         });
 
@@ -1539,6 +1615,12 @@
                             if (e.key === 'Enter') {
                                 e.preventDefault();
                                 titleElement.blur();
+                            }
+                        });
+
+                        noteElement.addEventListener('click', (e) => {
+                            if (!isEditing && (!this.currentNote || this.currentNote.id !== note.id)) {
+                                this.loadNote(note.id);
                             }
                         });
 
@@ -1551,20 +1633,29 @@
                 return `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear().toString().slice(2)} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
             }
 
-            loadNote(noteId) {
+            loadNote(noteId, noteElement) {
+                const previousNote = this.currentNote;
                 this.currentNote = this.notes.find(note => note.id === noteId);
                 if (!this.currentNote) return;
 
+                if (previousNote && previousNote.id === this.currentNote.id) return;
+
+                const currentNoteElement = document.querySelector(`.note-item[data-note-id="${noteId}"]`);
+
                 this.textFieldsLayer.innerHTML = '';
+
                 this.currentNote.textFields.forEach(field => {
                     this.createTextField(field.x, field.y, field.content, field.isMath, field.id);
                 });
+
                 this.currentNote.imageFields = this.currentNote.imageFields || [];
                 this.currentNote.imageFields.forEach(field => {
                     this.createImageField(field);
                 });
+
                 this.removeEmptyTextFields();
                 this.redrawCanvas();
+                this.renderNotesList();
             }
 
             deleteNote(noteId) {
@@ -1698,23 +1789,41 @@
                     field.appendChild(mqField);
                     const mathField = MQ.MathField(mqField, {
                         spaceBehavesLikeTab: true,
+                        substituteTextarea: () => {
+                            const textarea = document.createElement('textarea');
+                            textarea.setAttribute('name', 'MathInput');
+                            return textarea;
+                        },
                         handlers: {
                             edit: () => {
-                                textField.content = mathField.latex();
+                                const latex = mathField.latex();
+                                textField.content = latex;
+                                if (!latex.trim()) {
+                                    const index = this.currentNote.textFields.findIndex(f => f.id === textField.id);
+                                    if (index !== -1) {
+                                        this.currentNote.textFields.splice(index, 1);
+                                        field.remove();
+                                    }
+                                }
                                 this.currentNote.lastEdited = Date.now();
                                 this.saveNotes();
                             }
                         }
                     });
 
-                    mqField.addEventListener('copy', (e) => {
-                        e.preventDefault();
-                        e.clipboardData.setData('text/plain', textField.content);
-                    });
-
-                    mathField.latex(content || '');
+                    // Initialize with content if exists
+                    if (content) {
+                        mathField.latex(content);
+                    }
+                    
                     textField.mathField = mathField;
                     field.classList.add('math-field');
+
+                    // Add right-click context menu for math fields
+                    field.addEventListener('contextmenu', (e) => {
+                        e.preventDefault();
+                        this.showContextMenu(e.clientX, e.clientY, field);
+                    });
                 }
 
                 field.style.fontSize = `${2 * this.scale}rem`;
@@ -1781,6 +1890,11 @@
                 });
 
                 field.addEventListener('mousedown', (e) => {
+                    if (e.target.classList.contains('resize-handle')) {
+                        return;
+                    }
+
+                    this.clearSelections();
                     field.classList.add('selected');
                     this.selectedFields.add(textField.id);
 
@@ -1794,7 +1908,6 @@
 
                     leftHandle.addEventListener('dblclick', () => this.autoResizeTextField(field, textField));
                     rightHandle.addEventListener('dblclick', () => this.autoResizeTextField(field, textField));
-
 
                     if (window.getSelection().toString()) {
                         return;
@@ -1836,6 +1949,17 @@
                         modifiers: [],
                         listeners: {
                             start: (event) => {
+                                if (!field.textContent.trim()) {
+                                    const fieldId = field.getAttribute('data-id');
+                                    const index = this.currentNote.textFields.findIndex(f => f.id === fieldId);
+                                    if (index !== -1) {
+                                        this.currentNote.textFields.splice(index, 1);
+                                    }
+                                    field.remove();
+                                    event.interaction.stop();
+                                    return;
+                                }
+
                                 if (event.target.closest('.mq-editable-field')) {
                                     event.interaction.stop();
                                     return;
@@ -1939,17 +2063,20 @@
 
             removeEmptyTextFields() {
                 let removedAny = false;
-                this.textFieldsLayer.querySelectorAll('.text-field').forEach(field => {
-                    if (!field.textContent.trim()) {
-                        const fieldId = field.getAttribute('data-id');
-                        const index = this.currentNote.textFields.findIndex(f => f.id === fieldId);
-                        if (index !== -1) {
-                            this.currentNote.textFields.splice(index, 1);
-                        }
+                const emptyFields = Array.from(this.textFieldsLayer.querySelectorAll('.text-field')).filter(field => {
+                    return !field.textContent.trim();
+                });
+
+                emptyFields.forEach(field => {
+                    const fieldId = field.getAttribute('data-id');
+                    const index = this.currentNote.textFields.findIndex(f => f.id === fieldId);
+                    if (index !== -1) {
+                        this.currentNote.textFields.splice(index, 1);
                         field.remove();
                         removedAny = true;
                     }
                 });
+
                 return removedAny;
             }
 
@@ -2003,27 +2130,29 @@
                 let shouldPushUndo = false;
                 const originalState = JSON.parse(JSON.stringify(this.currentNote));
 
-                this.selectedFields.forEach(id => {
-                    const textField = this.currentNote.textFields.find(f => f.id === id);
-                    if (textField) {
-                        shouldPushUndo = true;
-                        const index = this.currentNote.textFields.indexOf(textField);
-                        this.currentNote.textFields.splice(index, 1);
-
-                        const element = this.textFieldsLayer.querySelector(`[data-id="${id}"]`);
-                        if (element) element.remove();
+                document.querySelectorAll('.selected').forEach(element => {
+                    const fieldId = element.dataset.id;
+                    if (fieldId) {
+                        this.selectedFields.add(fieldId);
                     }
                 });
 
                 this.selectedFields.forEach(id => {
-                    const imageField = this.currentNote.imageFields.find(f => f.id === id);
-                    if (imageField) {
+                    const element = this.textFieldsLayer.querySelector(`[data-id="${id}"]`);
+                    if (element) {
                         shouldPushUndo = true;
-                        const index = this.currentNote.imageFields.indexOf(imageField);
-                        this.currentNote.imageFields.splice(index, 1);
+                        element.remove();
+                        this.saveNotes();
 
-                        const element = this.textFieldsLayer.querySelector(`[data-id="${id}"]`);
-                        if (element) element.remove();
+                        const textFieldIndex = this.currentNote.textFields.findIndex(f => f.id === id);
+                        if (textFieldIndex !== -1) {
+                            this.currentNote.textFields.splice(textFieldIndex, 1);
+                        }
+
+                        const imageFieldIndex = this.currentNote.imageFields.findIndex(f => f.id === id);
+                        if (imageFieldIndex !== -1) {
+                            this.currentNote.imageFields.splice(imageFieldIndex, 1);
+                        }
                     }
                 });
 
@@ -2032,12 +2161,14 @@
                     if (drawingIndex !== -1) {
                         shouldPushUndo = true;
                         this.currentNote.drawings.splice(drawingIndex, 1);
+                        this.saveNotes();
                     }
                 });
 
                 if (shouldPushUndo) {
                     this.undoStack.push(JSON.stringify(originalState));
                     this.redoStack = [];
+                    this.currentNote.lastEdited = Date.now();
                     this.saveNotes();
                 }
 
@@ -2130,28 +2261,29 @@
 
             startPanning(e) {
                 if (e.pointerType === 'pen') return;
-
-                const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
-                const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
-
-                if ((!e.touches && e.button !== 0) || e.target.closest('.text-field') || e.target.closest('.image-field')) return;
-                if (this.activeMode === 'drawing' && !e.touches) return;
-
-                this.removeEmptyTextFields();
-                this.clearSelections();
+                if (e.button !== 0 || e.target.closest('.text-field') || e.target.closest('.image-field')) return;
+                if (this.activeMode === 'drawing' && e.pointerType !== 'touch') return;
 
                 this.isPanning = true;
                 this.mouseDownTime = Date.now();
-                this.mouseDownPosition = { x: clientX, y: clientY };
-                this.lastPanPosition = { x: clientX, y: clientY };
+                this.mouseDownPosition = { x: e.clientX, y: e.clientY };
+                this.lastPanPosition = { x: e.clientX, y: e.clientY };
                 this.canvasContainer.classList.add('grabbing');
+
+                setTimeout(() => {
+                    if (this.isPanning) {
+                        this.removeEmptyTextFields();
+                        this.clearSelections();
+                        this.redrawCanvas();
+                    }
+                }, 0);
 
                 this.initialCanvasOffset = { ...this.canvasOffset };
 
                 const rect = this.canvasContainer.getBoundingClientRect();
                 this.clickPosition = {
-                    x: (clientX - rect.left - this.canvasOffset.x) / this.scale,
-                    y: (clientY - rect.top - this.canvasOffset.y) / this.scale
+                    x: (e.clientX - rect.left - this.canvasOffset.x) / this.scale,
+                    y: (e.clientY - rect.top - this.canvasOffset.y) / this.scale
                 };
             }
 

@@ -4,43 +4,49 @@
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
     <url>
-        <loc>https://nikityyy.github.io/</loc>
+        <loc>https://nikity.is-a.dev/</loc>
         <lastmod>2024-11-04T00:00:00+00:00</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>https://nikityyy.github.io/Emojopy/</loc>
+        <loc>https://nikity.is-a.dev/Emojopy/</loc>
         <lastmod>2024-06-04T00:00:00+00:00</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://nikityyy.github.io/FirmenABC/</loc>
+        <loc>https://nikity.is-a.dev/FirmenABC/</loc>
         <lastmod>2024-08-04T00:00:00+00:00</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://nikityyy.github.io/Musify/</loc>
+        <loc>https://nikity.is-a.dev/Musify/</loc>
         <lastmod>2024-05-04T00:00:00+00:00</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://nikityyy.github.io/NASA/</loc>
+        <loc>https://nikity.is-a.dev/NASA/</loc>
         <lastmod>2024-05-04T00:00:00+00:00</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://nikityyy.github.io/WhatsBreak/</loc>
+        <loc>https://nikity.is-a.dev/WhatsBreak/</loc>
         <lastmod>2024-10-04T00:00:00+00:00</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://nikityyy.github.io/Conomy/</loc>
+        <loc>https://nikity.is-a.dev/WhatsBreak/app</loc>
+        <lastmod>2024-10-04T00:00:00+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://nikity.is-a.dev/Conomy/</loc>
         <lastmod>2024-06-04T00:00:00+00:00</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
@@ -52,14 +58,68 @@
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://nikityyy.github.io/WhatsBreak/app</loc>
-        <lastmod>2024-10-04T00:00:00+00:00</lastmod>
+        <loc>https://nikity.is-a.dev/blog/blog-1</loc>
+        <lastmod>2024-11-11T00:00:00+00:00</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://nikityyy.github.io/blog/blog-1</loc>
-        <lastmod>2024-11-11T00:00:00+00:00</lastmod>
+        <loc>https://nikity.is-a.dev/ZeroNote/</loc>
+        <lastmod>2024-11-12T00:00:00+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://nikity.is-a.dev/TheNoise/</loc>
+        <lastmod>2024-09-12T00:00:00+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://nikity.is-a.dev/Tanzbaer/</loc>
+        <lastmod>2024-10-12T00:00:00+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://nikity.is-a.dev/MindMap/</loc>
+        <lastmod>2024-09-12T00:00:00+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://nikity.is-a.dev/BeKind/</loc>
+        <lastmod>2024-10-22T00:00:00+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://nikity.is-a.dev/HAK-Chicken/</loc>
+        <lastmod>2024-10-29T00:00:00+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://nikity.is-a.dev/HAK-Stonks/</loc>
+        <lastmod>2024-08-12T00:00:00+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://nikity.is-a.dev/Games/</loc>
+        <lastmod>2024-10-12T00:00:00+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://nikity.is-a.dev/DREAM/</loc>
+        <lastmod>2024-09-12T00:00:00+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://nikity.is-a.dev/AllYouNeed/</loc>
+        <lastmod>2024-09-12T00:00:00+00:00</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>

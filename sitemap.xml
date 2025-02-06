@@ -52,12 +52,6 @@
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://knowpedia.vercel.app/</loc>
-        <lastmod>2024-10-30T00:00:00+00:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
         <loc>https://nikity.is-a.dev/blog/blog-1</loc>
         <lastmod>2024-11-11T00:00:00+00:00</lastmod>
         <changefreq>monthly</changefreq>

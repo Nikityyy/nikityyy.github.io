@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Mathio - Math Battle</title>
+  <meta name="description"
+    content="Challenge yourself in Mathio, an exciting math battle game where you solve arithmetic, linear, and quadratic problems against an AI opponent. Perfect for students and math enthusiasts!" />
+  <meta name="keywords"
+    content="math game, arithmetic practice, algebra game, educational game, math battle, math practice" />
+  <meta name="author" content="Nikita Berger" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nikity.is-a.dev/Mathio/" />
+  <meta property="og:title" content="Mathio - Math Battle Game" />
+  <meta property="og:description"
+    content="Challenge yourself in this exciting math battle game. Solve problems, beat the AI, and improve your math skills!" />
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://nikity.is-a.dev/Mathio/" />
+  <meta property="twitter:title" content="Mathio - Math Battle Game" />
+  <meta property="twitter:description"
+    content="Challenge yourself in this exciting math battle game. Solve problems, beat the AI, and improve your math skills!" />
+  <link rel="preload" href="media/mascot.svg" as="image" />
+  <link rel="preload"
+    href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&family=Kaushan+Script&display=swap"
+    as="style" />
+  <link rel="preconnect" href="https://cdn.tailwindcss.com" />
+  <link rel="preconnect" href="https://unpkg.com" />
+  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com" />
+  <link rel="dns-prefetch" href="https://unpkg.com" />
+  <link rel="icon" href="media/favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" href="media/apple-touch-icon.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&family=Kaushan+Script&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.lottielab.com/s/lottie-player@1.x/player-web.min.js"></script>
+  <style>
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background: #FFFFFF;
+      margin: 0;
+      padding: 0;
+      color: #333333;
+    }
+
+    .screen {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #FFFFFF;
+      z-index: 20;
+      padding: 16px;
+      overflow-y: auto;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .screen.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 1;
+    }
+
+    #loadingScreen.active {
+      z-index: 200;
+    }
+
+    #mainMenu h1 {
+      font-family: 'Kaushan Script';
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .streak-effect {
+      animation: pulse 0.5s ease-in-out;
+    }
+
+    .progress-bar {
+      transition: width 50ms linear;
+    }
+
+    .answer-correct {
+      background-color: #4CAF50 !important;
+    }
+
+    .answer-wrong {
+      background-color: #F44336 !important;
+    }
+
+    .button {
+      background: #007BFF;
+      color: #FFFFFF;
+      border-radius: 12px;
+      height: 48px;
+      width: 80%;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: filter 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      flex-direction: column;
+    }
+
+    .button:hover {
+      filter: brightness(1.05);
+    }
+
+    .button:active {
+      filter: brightness(0.9);
+    }
+
+    .secondary {
+      background: #F0F0F0;
+      color: #333333;
+      border: 2px solid #E0E0E0;
+    }
+
+    .progress {
+      height: 4px;
+      background: #E0E0E0;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #007BFF;
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+
+    .custom-input {
+      border: 2px solid #E0E0E0;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 1.5rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    .card {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      background: #FFFFFF;
+    }
+
+    @media (max-width: 640px) {
+      .katex {
+        font-size: 1.5rem !important;
+        font-family: math !important;
+      }
+
+      .problem-text {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body class="select-none">
+  <div id="mainMenu" class="screen active">
+    <div class="w-full max-w-sm bg-white rounded-3xl p-8 text-center">
+      <h1 class="text-6xl font-bold text-blue-600 mb-8">Mathio</h1>
+      <img src="media/mascot.svg" alt="Mascot" class="mx-auto w-48 drop-shadow-lg mb-6">
+      <div class="space-y-4">
+        <button onclick="showScreen('difficultyChooser')" class="button">
+          Start Game
+        </button>
+        <button onclick="showScreen('instructions')" class="button secondary">
+          Instructions
+        </button>
+        <button onclick="showScreen('highScores')" class="button secondary">
+          High Score
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="difficultyChooser" class="screen">
+    <div class="w-full max-w-sm text-center">
+      <h2 class="text-2xl font-bold mb-6">Choose Your Difficulty</h2>
+      <div class="space-y-4">
+        <button onclick="chooseDifficulty('easy')" class="button">
+          Easy<br>
+          <span class="text-sm font-normal text-[#F0F0F0] lowercase">a + b</span>
+        </button>
+        <button onclick="chooseDifficulty('medium')" class="button">
+          Medium<br>
+          <span class="text-sm font-normal text-[#F0F0F0] lowercase">ax + b = 13</span>
+        </button>
+        <button onclick="chooseDifficulty('hard')" class="button">
+          Hard<br>
+          <span class="text-sm font-normal text-[#F0F0F0] lowercase">ax² + bx + c = 0</span>
+        </button>
+      </div>
+      <button onclick="showScreen('mainMenu')" class="button secondary" style="margin-top:20px;">
+        Back to Menu
+      </button>
+    </div>
+  </div>
+
+  <div id="loadingScreen" class="screen">
+    <button onclick="handleBackButton()" class="absolute top-5 left-5 p-2 rounded-full bg-[#E3F2FD]">
+      <i data-feather="arrow-left" class="w-5 text-[#007BFF]"></i>
+    </button>
+    <div class="w-full max-w-sm text-center">
+      <h2 class="text-2xl font-bold mb-4">Prepare Yourself!</h2>
+      <p class="mb-6">Grab a pen and paper – it's time to tackle a real brain-teaser!</p>
+      <lottie-player style="width: 150px; height: 150px" src="media/pencil.json" loop autoplay>
+      </lottie-player>
+      <div class="mb-6">
+        <div class="progress">
+          <div id="loadingProgress" class="progress-fill" style="width: 100%"></div>
+        </div>
+      </div>
+      <button id="skipLoading" class="button">Start mathing</button>
+    </div>
+  </div>
+
+  <div id="instructions" class="screen">
+    <div class="w-full max-w-sm">
+      <h2 class="text-2xl font-bold mb-6 text-center">How to Play</h2>
+      <div class="space-y-4 m-auto w-[80%]">
+        <div class="flex items-center gap-3">
+          <i data-feather="zap" class="text-[#007BFF]"></i>
+          <span>Solve math problems quickly</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <i data-feather="clock" class="text-[#007BFF]"></i>
+          <span>Beat the AI opponent's time</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <i data-feather="award" class="text-[#007BFF]"></i>
+          <span>Maintain streaks for bonus points</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <i data-feather="hash" class="text-[#007BFF]"></i>
+          <span>Use decimal numbers for answers</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <i data-feather="divide-circle" class="text-[#007BFF]"></i>
+          <span>A calculator is allowed</span>
+        </div>
+      </div>
+      <button onclick="showScreen('mainMenu')" class="button" style="margin-top: 20px;">
+        Back to Menu
+      </button>
+    </div>
+  </div>
+
+  <div id="highScores" class="screen">
+    <div class="w-full max-w-sm">
+      <h2 class="text-2xl font-bold mb-6 text-center">High Scores</h2>
+      <ul class="space-y-3" id="highScoresList">
+      </ul>
+      <button onclick="showScreen('mainMenu')" class="button" style="margin-top: 20px;">
+        Back to Menu
+      </button>
+    </div>
+  </div>
+
+  <div id="gameScreen" class="screen" style="flex-direction: column; height: 100vh;">
+    <div class="p-4 w-full flex justify-between items-center">
+      <button onclick="handleBackButton()" class="p-2 rounded-full bg-[#E3F2FD]">
+        <i data-feather="arrow-left" class="w-5 text-[#007BFF]"></i>
+      </button>
+      <div class="flex items-center gap-2">
+        <div id="streakCounter" class="font-bold text-[#007BFF] text-xl">🔥0</div>
+      </div>
+      <div class="flex flex-row items-center gap-[5px]">
+        <div class="text-xl font-bold text-[#007BFF]" id="scoreDisplay">0</div>
+        <div class="text-xs text-[#666666]">POINTS</div>
+      </div>
+    </div>
+
+    <div class="flex-1 w-full p-4 overflow-auto">
+      <div class="card p-4 border-2 border-[#E0E0E0]">
+        <div class="card p-4 mb-4 relative">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-[#E3F2FD] rounded-xl flex items-center justify-center">
+              <i data-feather="cpu" class="text-[#007BFF] w-6"></i>
+            </div>
+            <div class="flex-1">
+              <div class="font-bold">MathGPT</div>
+              <div class="text-xs text-[#666666] uppercase">The unbeatable</div>
+            </div>
+          </div>
+          <div class="progress">
+            <div id="botProgress" class="progress-fill" style="width: 100%"></div>
+          </div>
+        </div>
+
+        <div id="problemContainer" class="card p-6 text-center">
+          <div id="mathProblem" class="problem-text mb-6 text-3xl"></div>
+          <div id="solveForXInfo" class="mb-4 text-red-500 text-sm flex items-center" style="display: none;">
+            <i data-feather="info" class="mr-1"></i> Solve for x
+          </div>
+          <div class="relative mb-4">
+            <input type="text" id="answerInput" class="custom-input focus:outline-none focus:border-[#007BFF]"
+              inputmode="decimal" placeholder="Your Answer" autocomplete="off">
+          </div>
+          <button onclick="checkAnswer()" class="button">
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="resultsScreen" class="screen">
+    <div class="w-full max-w-sm text-center">
+      <h2 class="text-3xl font-bold mb-4">Game Over!</h2>
+      <div class="text-6xl font-bold text-[#007BFF] mb-8" id="finalScore">0</div>
+      <button onclick="showScreen('mainMenu')" class="button">
+        Main Menu
+      </button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script>
+    let currentProblem = null;
+    let gameTimer = null;
+    let streak = 0;
+    let score = 0;
+    let botTimeout = null;
+    let botAnimationFrame = null;
+    let selectedDifficulty = 'easy';
+    let loadingInterval = null;
+    let loadingScreenShown = false;
+
+    const problemTypes = [
+      {
+        type: 'arithmetic',
+        generate: () => {
+          const operators = ['+', '-', '*', '/'];
+          const operator = operators[Math.floor(Math.random() * operators.length)];
+          let a, b, answer, question;
+          if (operator === '+') {
+            a = Math.floor(Math.random() * 21);
+            b = Math.floor(Math.random() * 21);
+            answer = a + b;
+            question = `${a} + ${b}`;
+          } else if (operator === '-') {
+            a = Math.floor(Math.random() * 21);
+            b = Math.floor(Math.random() * 21);
+            if (b > a) [a, b] = [b, a];
+            answer = a - b;
+            question = `${a} - ${b}`;
+          } else if (operator === '*') {
+            a = Math.floor(Math.random() * 13);
+            b = Math.floor(Math.random() * 13);
+            answer = a * b;
+            question = `${a} * ${b}`;
+          } else if (operator === '/') {
+            b = Math.floor(Math.random() * 12) + 1;
+            answer = Math.floor(Math.random() * 13);
+            a = answer * b;
+            question = `${a} / ${b}`;
+          }
+          question = question.replace(/\+ -/g, "- ");
+          return {
+            question: question,
+            answer: answer.toFixed(2),
+            difficulty: 'easy'
+          };
+        }
+      },
+      {
+        type: 'linear',
+        generate: () => {
+          const a = Math.floor(Math.random() * 16) + 1;
+          const x = Math.floor(Math.random() * 16);
+          const b = Math.floor(Math.random() * 16);
+          const c = a * x + b;
+          let question = `${a}x + ${b} = ${c}`;
+          question = question.replace(/\+ -/g, "- ");
+          return {
+            question: question,
+            answer: x.toFixed(2),
+            difficulty: 'medium'
+          };
+        }
+      },
+      {
+        type: 'quadratic',
+        generate: () => {
+          let a, b, c, discriminant;
+          do {
+            a = Math.floor(Math.random() * 14) + 1;
+            b = Math.floor(Math.random() * 41) - 10;
+            c = Math.floor(Math.random() * 41) - 10;
+            discriminant = b * b - 4 * a * c;
+          } while (discriminant < 0);
+          let question = `${a}x² + ${b}x + ${c} = 0`;
+          question = question.replace(/\+ -/g, "- ");
+          return {
+            question: question,
+            solutions: solveQuadratic(a, b, c),
+            difficulty: 'hard'
+          };
+        }
+      }
+    ];
+
+    function solveQuadratic(a, b, c) {
+      const discriminant = b * b - 4 * a * c;
+      if (discriminant < 0) return [];
+      const sqrtD = Math.sqrt(discriminant);
+      const solutions = [(-b + sqrtD) / (2 * a), (-b - sqrtD) / (2 * a)];
+      return solutions.filter(s => !isNaN(s)).map(s => s.toFixed(2));
+    }
+
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+      if (screenId === 'highScores') {
+        displayHighScores();
+      }
+      if (screenId !== 'gameScreen') {
+        if (botTimeout) clearTimeout(botTimeout);
+        if (botAnimationFrame) cancelAnimationFrame(botAnimationFrame);
+      }
+      if (screenId === 'mainMenu') {
+        loadingScreenShown = false;
+      }
+    }
+
+    function chooseDifficulty(diff) {
+      selectedDifficulty = diff;
+      showScreen('gameScreen');
+      startNewGame();
+    }
+
+    function startNewGame() {
+      streak = 0;
+      score = 0;
+      updateScoreDisplay();
+      updateStreakDisplay();
+      generateNewProblem();
+      document.getElementById('answerInput').focus();
+    }
+
+    function generateNewProblem() {
+      if (selectedDifficulty === 'hard') {
+        if (!loadingScreenShown) {
+          loadingScreenShown = true;
+          showLoadingScreen();
+          return;
+        } else {
+          generateHardProblem();
+          return;
+        }
+      }
+      if (selectedDifficulty === 'medium') {
+        let filtered = problemTypes.filter(p => p.type === 'linear');
+        currentProblem = filtered[Math.floor(Math.random() * filtered.length)].generate();
+      } else {
+        let filtered = problemTypes.filter(p => p.type === 'arithmetic');
+        currentProblem = filtered[Math.floor(Math.random() * filtered.length)].generate();
+      }
+      katex.render(currentProblem.question, document.getElementById('mathProblem'), {
+        throwOnError: false,
+        displayMode: true
+      });
+      updateSolveForXInfo();
+      document.getElementById('answerInput').value = '';
+      document.getElementById('answerInput').focus();
+      startBotTimer();
+    }
+
+    function showLoadingScreen() {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('loadingScreen').classList.add('active');
+      const loadingProgressElem = document.getElementById('loadingProgress');
+      loadingProgressElem.style.width = '100%';
+      let timeLeft = 30;
+      const totalTime = 30 * 1000;
+      const startTime = Date.now();
+
+      if (loadingInterval) clearInterval(loadingInterval);
+      loadingInterval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(0, totalTime - elapsed);
+        const secondsLeft = Math.ceil(remaining / 1000);
+        const progressPercent = (remaining / totalTime) * 100;
+        loadingProgressElem.style.width = progressPercent + '%';
+        if (remaining <= 0) {
+          clearInterval(loadingInterval);
+          hideLoadingScreenAndGenerateProblem();
+        }
+      }, 1000);
+
+      document.getElementById('skipLoading').onclick = () => {
+        clearInterval(loadingInterval);
+        hideLoadingScreenAndGenerateProblem();
+      };
+    }
+
+    function hideLoadingScreenAndGenerateProblem() {
+      document.getElementById('loadingScreen').classList.remove('active');
+      generateHardProblem();
+    }
+
+    function generateHardProblem() {
+      const filtered = problemTypes.filter(p => p.type === 'quadratic');
+      currentProblem = filtered[Math.floor(Math.random() * filtered.length)].generate();
+      katex.render(currentProblem.question, document.getElementById('mathProblem'), {
+        throwOnError: false,
+        displayMode: true
+      });
+      updateSolveForXInfo();
+      document.getElementById('answerInput').value = '';
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('gameScreen').classList.add('active');
+      document.getElementById('answerInput').focus();
+      startBotTimer();
+    }
+
+    function checkAnswer() {
+      const userAnswer = document.getElementById('answerInput').value.replace(',', '.').trim();
+      if (userAnswer === '') return;
+      const correctAnswers = currentProblem.solutions || [currentProblem.answer];
+      const isCorrect = correctAnswers.some(correct =>
+        Math.abs(parseFloat(userAnswer) - parseFloat(correct)) < 0.01
+      );
+
+      if (isCorrect) {
+        handleCorrectAnswer();
+      } else {
+        handleWrongAnswer();
+      }
+    }
+
+    function handleCorrectAnswer() {
+      streak++;
+      score += calculatePoints();
+      flashFeedback('answer-correct');
+      updateScoreDisplay();
+      updateStreakDisplay();
+      if (botTimeout) clearTimeout(botTimeout);
+      if (botAnimationFrame) cancelAnimationFrame(botAnimationFrame);
+      generateNewProblem();
+    }
+
+    function handleWrongAnswer() {
+      streak = 0;
+      updateStreakDisplay();
+      flashFeedback('answer-wrong');
+      document.getElementById('answerInput').value = '';
+      document.getElementById('answerInput').focus();
+    }
+
+    function flashFeedback(className) {
+      const container = document.getElementById('problemContainer');
+      container.classList.add(className);
+      setTimeout(() => container.classList.remove(className), 500);
+    }
+
+    function calculatePoints() {
+      const basePoints = { easy: 50, medium: 100, hard: 200 }[currentProblem.difficulty] || 50;
+      return basePoints + streak * 10;
+    }
+
+    function updateScoreDisplay() {
+      document.getElementById('scoreDisplay').textContent = score;
+      document.getElementById('finalScore').textContent = score;
+      saveHighScore(score);
+    }
+
+    function updateStreakDisplay() {
+      const streakDisplay = document.getElementById('streakCounter');
+      streakDisplay.textContent = `🔥${streak}`;
+      streakDisplay.classList.toggle('streak-effect', streak > 0);
+    }
+
+    function showGameOver() {
+      if (botTimeout) clearTimeout(botTimeout);
+      if (botAnimationFrame) cancelAnimationFrame(botAnimationFrame);
+      saveHighScore(score);
+      showScreen('resultsScreen');
+    }
+
+    function startBotTimer() {
+      let botDelay;
+      if (currentProblem.difficulty === 'hard') {
+        botDelay = Math.random() * 2000 + 60000;
+      } else if (currentProblem.difficulty === 'medium') {
+        botDelay = Math.random() * 1500 + 15000;
+      } else {
+        botDelay = Math.random() * 1000 + 10000;
+      }
+
+      updateBotProgress(botDelay);
+      botTimeout = setTimeout(() => {
+        showGameOver();
+      }, botDelay);
+    }
+
+    function updateBotProgress(totalTime) {
+      const progressBar = document.getElementById('botProgress');
+      progressBar.style.width = '100%';
+      const startTime = Date.now();
+
+      if (botAnimationFrame) cancelAnimationFrame(botAnimationFrame);
+
+      function animate() {
+        const elapsed = Date.now() - startTime;
+        if (elapsed >= totalTime) {
+          progressBar.style.width = '0%';
+          return;
+        }
+        const remaining = 1 - (elapsed / totalTime);
+        progressBar.style.width = `${remaining * 100}%`;
+        botAnimationFrame = requestAnimationFrame(animate);
+      }
+      botAnimationFrame = requestAnimationFrame(animate);
+    }
+
+    function handleBackButton() {
+      if (botTimeout) clearTimeout(botTimeout);
+      if (botAnimationFrame) cancelAnimationFrame(botAnimationFrame);
+      if (loadingInterval) clearInterval(loadingInterval);
+      showScreen('mainMenu');
+    }
+
+    function saveHighScore(newScore) {
+      let highScore = parseInt(localStorage.getItem('mathioHighScore')) || 0;
+      if (newScore > highScore) {
+        localStorage.setItem('mathioHighScore', newScore);
+      }
+    }
+
+    function displayHighScores() {
+      const highScore = parseFloat(localStorage.getItem('mathioHighScore')) || 0;
+
+      const highScoresList = document.getElementById('highScoresList');
+      highScoresList.innerHTML = `
+		<li class="flex justify-between items-center bg-[#F8F9FA] p-4 rounded-xl">
+		  <span>High Score</span>
+		  <span class="font-bold text-[#007BFF]">${highScore}</span>
+		</li>
+	  `;
+    }
+
+    function updateSolveForXInfo() {
+      const infoElem = document.getElementById('solveForXInfo');
+      if (currentProblem && (currentProblem.difficulty === 'medium' || currentProblem.difficulty === 'hard')) {
+        infoElem.style.display = 'flex';
+      } else {
+        infoElem.style.display = 'none';
+      }
+      feather.replace();
+    }
+
+    document.getElementById('answerInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') checkAnswer();
+    });
+
+    feather.replace();
+  </script>
+</body>
+
+</html>

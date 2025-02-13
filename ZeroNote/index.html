@@ -782,8 +782,8 @@
 
         class ZeroNote {
             constructor() {
-                this.minScale = 0.1;
-                this.maxScale = 5;
+                this.minScale = 0.3;
+                this.maxScale = 3;
                 this.scale = 1;
                 this.lastPinchDistance = 0;
 
@@ -813,6 +813,36 @@
                 this.setupDrawing();
                 this.setupImageHandlers();
                 this.setupZoom();
+            }
+
+            drawDotPattern() {
+                const gridSize = 50;
+                const dotRadius = 1;
+                const ctx = this.ctx;
+
+                const rect = this.canvasContainer.getBoundingClientRect();
+                const width = rect.width;
+                const height = rect.height;
+
+                const startX = (-this.canvasOffset.x) / this.scale;
+                const startY = (-this.canvasOffset.y) / this.scale;
+                const endX = (width - this.canvasOffset.x) / this.scale;
+                const endY = (height - this.canvasOffset.y) / this.scale;
+
+                const gridStartX = Math.floor(startX / gridSize) * gridSize;
+                const gridStartY = Math.floor(startY / gridSize) * gridSize;
+                const gridEndX = Math.ceil(endX / gridSize) * gridSize;
+                const gridEndY = Math.ceil(endY / gridSize) * gridSize;
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+
+                for (let x = gridStartX; x <= gridEndX; x += gridSize) {
+                    for (let y = gridStartY; y <= gridEndY; y += gridSize) {
+                        ctx.beginPath();
+                        ctx.arc(x, y, dotRadius, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
             }
 
             setupZoom() {
@@ -1050,13 +1080,13 @@
                     });
             }
 
-			getFunctionName(latex) {
-				const match = latex.match(/^\s*([a-zA-Z]+'*)\\left\(\s*([a-zA-Z])\s*\\right\)/);
-				return match ? {
-					name: match[1],
-					variable: match[2]
-				} : { name: 'f', variable: 'x' };
-			}
+            getFunctionName(latex) {
+                const match = latex.match(/^\s*([a-zA-Z]+'*)\\left\(\s*([a-zA-Z])\s*\\right\)/);
+                return match ? {
+                    name: match[1],
+                    variable: match[2]
+                } : { name: 'f', variable: 'x' };
+            }
 
             calculateDerivative(fieldElement) {
                 const fieldId = fieldElement.dataset.id;
@@ -1070,35 +1100,34 @@
                     const expr = math.parse(mathJSExpression);
 
                     let derivative = math.derivative(expr, variable);
-					try {
-						derivative = math.simplify(derivative);
-						try {
-							derivative = math.rationalize(derivative, { exactFractions: false });
-						} catch (e) {
-							try {
-								derivative = math.rationalize(derivative);
-							} catch (e) {
-								// Fallback: Keine Rationalisierung
-							}
-						}
-					} catch (e) {
-						console.warn('Simplification failed:', e);
-					}
-					
-					const derivativeLatexRaw = derivative.toTex();
-					const derivativeLatex = derivativeLatexRaw
-						.replace(/\\mathrm\{([^}]+)\}/g, "$1")
-						.replace(/~/g, "");
+                    try {
+                        derivative = math.simplify(derivative);
+                        try {
+                            derivative = math.rationalize(derivative, { exactFractions: false });
+                        } catch (e) {
+                            try {
+                                derivative = math.rationalize(derivative);
+                            } catch (e) {
+                            }
+                        }
+                    } catch (e) {
+                        console.warn('Simplification failed:', e);
+                    }
+
+                    const derivativeLatexRaw = derivative.toTex();
+                    const derivativeLatex = derivativeLatexRaw
+                        .replace(/\\mathrm\{([^}]+)\}/g, "$1")
+                        .replace(/~/g, "");
 
                     const newFuncName = `${funcName}'`;
-                    
+
                     const derivativeField = new TextField(
                         textField.x + 50,
                         textField.y + 50,
                         `${newFuncName}(${variable}) = ${derivativeLatex}`,
                         true
                     );
-                    
+
                     this.currentNote.textFields.push(derivativeField);
                     this.createTextField(
                         derivativeField.x,
@@ -1447,39 +1476,41 @@
                 this.currentPath.push(pos);
             }
 
-			redrawCanvas() {
-				const dpr = window.devicePixelRatio || 1;
-				const rect = this.canvasContainer.getBoundingClientRect();
-				const width = rect.width;
-				const height = rect.height;
+            redrawCanvas() {
+                const dpr = window.devicePixelRatio || 1;
+                const rect = this.canvasContainer.getBoundingClientRect();
+                const width = rect.width;
+                const height = rect.height;
 
-				this.backgroundCanvas.width = width * dpr;
-				this.backgroundCanvas.height = height * dpr;
-				this.backgroundCanvas.style.width = `${width}px`;
-				this.backgroundCanvas.style.height = `${height}px`;
+                this.backgroundCanvas.width = width * dpr;
+                this.backgroundCanvas.height = height * dpr;
+                this.backgroundCanvas.style.width = `${width}px`;
+                this.backgroundCanvas.style.height = `${height}px`;
 
-				this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-				this.ctx.scale(dpr, dpr);
-				
-				this.ctx.clearRect(0, 0, width, height);
+                this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+                this.ctx.scale(dpr, dpr);
 
-				this.ctx.translate(this.canvasOffset.x, this.canvasOffset.y);
-				this.ctx.scale(this.scale, this.scale);
+                this.ctx.clearRect(0, 0, width, height);
 
-				this.ctx.lineWidth = 5 / this.scale;
-				this.ctx.lineCap = 'round';
-				this.ctx.lineJoin = 'round';
+                this.ctx.translate(this.canvasOffset.x, this.canvasOffset.y);
+                this.ctx.scale(this.scale, this.scale);
 
-				this.currentNote?.drawings?.forEach(drawing => {
-					this.ctx.strokeStyle = this.selectedDrawings.has(drawing.id) ? '#4a9eff' : '#ffffff';
-					this.ctx.beginPath();
-					drawing.path.forEach((point, index) => {
-						if (index === 0) this.ctx.moveTo(point.x, point.y);
-						else this.ctx.lineTo(point.x, point.y);
-					});
-					this.ctx.stroke();
-				});
-			}
+                this.drawDotPattern();
+
+                this.ctx.lineWidth = 5 / this.scale;
+                this.ctx.lineCap = 'round';
+                this.ctx.lineJoin = 'round';
+
+                this.currentNote?.drawings?.forEach(drawing => {
+                    this.ctx.strokeStyle = this.selectedDrawings.has(drawing.id) ? '#4a9eff' : '#ffffff';
+                    this.ctx.beginPath();
+                    drawing.path.forEach((point, index) => {
+                        if (index === 0) this.ctx.moveTo(point.x, point.y);
+                        else this.ctx.lineTo(point.x, point.y);
+                    });
+                    this.ctx.stroke();
+                });
+            }
 
             resizeCanvas() {
                 const dpr = window.devicePixelRatio || 1;
@@ -1717,8 +1748,8 @@
                         );
 
                         if (textField.isMath) {
-							const mathTextarea = newField.querySelector("textarea[name='MathInput']");
-							mathTextarea?.focus();
+                            const mathTextarea = newField.querySelector("textarea[name='MathInput']");
+                            mathTextarea?.focus();
                         } else {
                             newField.focus();
                         }
@@ -1782,9 +1813,9 @@
                         field.remove();
                     }
                 });
-				
-				const textFieldsCount = this.currentNote.textFields.filter(f => !f.isMath).length;
-				const mathFieldsCount = this.currentNote.textFields.filter(f => f.isMath).length;
+
+                const textFieldsCount = this.currentNote.textFields.filter(f => !f.isMath).length;
+                const mathFieldsCount = this.currentNote.textFields.filter(f => f.isMath).length;
 
                 const field = document.createElement('div');
                 field.className = 'text-field';
@@ -1831,7 +1862,7 @@
                     if (content) {
                         mathField.latex(content);
                     }
-                    
+
                     textField.mathField = mathField;
                     field.classList.add('math-field');
 
@@ -1843,7 +1874,7 @@
 
                 field.style.fontSize = `${2 * this.scale}rem`;
                 const remBase = parseFloat(getComputedStyle(document.documentElement).fontSize);
-				field.style.padding = `${(0.5 * remBase * this.scale) / remBase}rem`;
+                field.style.padding = `${(0.5 * remBase * this.scale) / remBase}rem`;
 
                 if (!isMath) {
 
@@ -1856,13 +1887,13 @@
                     }
                 }
 
-				field.addEventListener('copy', (e) => {
-					const selection = window.getSelection();
-					if (!selection.isCollapsed) return;
+                field.addEventListener('copy', (e) => {
+                    const selection = window.getSelection();
+                    if (!selection.isCollapsed) return;
 
-					e.preventDefault();
-					e.clipboardData.setData('text/plain', field.textContent);
-				});
+                    e.preventDefault();
+                    e.clipboardData.setData('text/plain', field.textContent);
+                });
 
                 field.addEventListener('input', () => {
                     if (!isMath) {
@@ -2114,12 +2145,12 @@
                         }
                     } else if (element.classList.contains('text-field')) {
                         element.style.fontSize = `${2 * this.scale}rem`;
-						const remBase = parseFloat(getComputedStyle(document.documentElement).fontSize);
-						element.style.padding = `${(0.5 * remBase * this.scale) / remBase}rem`;
+                        const remBase = parseFloat(getComputedStyle(document.documentElement).fontSize);
+                        element.style.padding = `${(0.5 * remBase * this.scale) / remBase}rem`;
 
                         if (element.classList.contains('math-field')) {
-							const remBase = parseFloat(getComputedStyle(document.documentElement).fontSize);
-							element.style.padding = `${(0.5 * remBase * this.scale) / remBase}rem`;
+                            const remBase = parseFloat(getComputedStyle(document.documentElement).fontSize);
+                            element.style.padding = `${(0.5 * remBase * this.scale) / remBase}rem`;
                         }
                     }
 
@@ -2320,52 +2351,52 @@
                 this.lastPanPosition = { x: e.clientX, y: e.clientY };
             }
 
-			stopPanning(e) {
-				if (!this.isPanning) return;
+            stopPanning(e) {
+                if (!this.isPanning) return;
 
-				const moved = this.initialCanvasOffset.x !== this.canvasOffset.x ||
-					this.initialCanvasOffset.y !== this.canvasOffset.y;
+                const moved = this.initialCanvasOffset.x !== this.canvasOffset.x ||
+                    this.initialCanvasOffset.y !== this.canvasOffset.y;
 
-				const mouseUpTime = Date.now();
-				const timeDiff = mouseUpTime - this.mouseDownTime;
-				const distanceX = Math.abs(e.clientX - this.mouseDownPosition.x);
-				const distanceY = Math.abs(e.clientY - this.mouseDownPosition.y);
+                const mouseUpTime = Date.now();
+                const timeDiff = mouseUpTime - this.mouseDownTime;
+                const distanceX = Math.abs(e.clientX - this.mouseDownPosition.x);
+                const distanceY = Math.abs(e.clientY - this.mouseDownPosition.y);
 
-				if (!moved && timeDiff < 200 && distanceX < 5 && distanceY < 5) {
-					if (!this.currentNote) this.currentNote = this.createNote();
+                if (!moved && timeDiff < 200 && distanceX < 5 && distanceY < 5) {
+                    if (!this.currentNote) this.currentNote = this.createNote();
 
-					const pos = this.getMousePosition(e);
-					const textField = new TextField(pos.x, pos.y, '', this.mathModeActive);
-					this.currentNote.textFields.push(textField);
-					const domElement = this.createTextField(
-						pos.x,
-						pos.y,
-						'',
-						this.mathModeActive,
-						textField.id
-					);
-					this.focusAndSelectTextField(domElement, textField.id);
+                    const pos = this.getMousePosition(e);
+                    const textField = new TextField(pos.x, pos.y, '', this.mathModeActive);
+                    this.currentNote.textFields.push(textField);
+                    const domElement = this.createTextField(
+                        pos.x,
+                        pos.y,
+                        '',
+                        this.mathModeActive,
+                        textField.id
+                    );
+                    this.focusAndSelectTextField(domElement, textField.id);
 
-					if (this.mathModeActive) {
-						const mathQuillField = domElement.querySelector('.mq-editable-field');
-						if (mathQuillField) {
-							setTimeout(() => {
-								const mathTextarea = mathQuillField.querySelector("textarea[name='MathInput']");
-								mathTextarea?.focus();
-							}, 0);
-						}
-					}
+                    if (this.mathModeActive) {
+                        const mathQuillField = domElement.querySelector('.mq-editable-field');
+                        if (mathQuillField) {
+                            setTimeout(() => {
+                                const mathTextarea = mathQuillField.querySelector("textarea[name='MathInput']");
+                                mathTextarea?.focus();
+                            }, 0);
+                        }
+                    }
 
-					this.justCreatedTextField = true;
-					setTimeout(() => {
-						this.justCreatedTextField = false;
-					}, 0);
-					this.saveNotes();
-				}
+                    this.justCreatedTextField = true;
+                    setTimeout(() => {
+                        this.justCreatedTextField = false;
+                    }, 0);
+                    this.saveNotes();
+                }
 
-				this.isPanning = false;
-				this.canvasContainer.classList.remove('grabbing');
-			}
+                this.isPanning = false;
+                this.canvasContainer.classList.remove('grabbing');
+            }
 
             setupImageHandlers() {
                 document.addEventListener('paste', (e) => {

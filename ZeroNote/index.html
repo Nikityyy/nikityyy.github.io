@@ -943,7 +943,8 @@
                 this.textFieldsLayer.style.transform = 'none';
 
                 const sidebarState = localStorage.getItem('zeronote-sidebarState');
-                if (sidebarState === 'open') {
+                if (!sidebarState || sidebarState === 'open') {
+                    localStorage.setItem('zeronote-sidebarState', 'open');
                     this.sidebar.classList.add('open');
                     this.sidebarToggle.classList.add('open');
                     this.mainContent.classList.add('sidebar-open');

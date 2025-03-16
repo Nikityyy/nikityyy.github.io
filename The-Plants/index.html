@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Plants</title>
+    <meta name="description" content="A collection of beautiful plants for your home.">
+    <meta name="keywords" content="plants, gardening, nature, home decor">
+    <link rel="icon" href="media/favicon.avif" type="image/avif">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preload" as="image" href="media/hero.avif">
+    <link rel="preload" as="image" href="media/hero-mobile.avif">
+    <link rel="preload" as="image" href="media/Monstera-Deliciosa.avif">
+    <link rel="preload" as="image" href="media/Fiddle-Leaf-Fig.avif">
+    <link rel="preload" as="image" href="media/Bonsai-Tree.avif">
+    <link rel="preload" as="image" href="media/Rubber-Plant.avif">
+    <link rel="preload" as="image" href="media/Calathea-Plant.avif">
+    <link rel="preload" as="image" href="media/Cactus.avif">
+    <link rel="preload" as="image" href="media/Plant-Care.avif">
+    <style>
+        :root {
+            --background-color: #121212;
+            --text-color: #ffffff;
+            --hover-color: #4CAF50;
+            --scrollbar-color: #317033;
+            --transition-speed: 0.4s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @media (pointer: fine) {
+            * {
+                cursor: none;
+            }
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            overflow-y: scroll;
+            scrollbar-width: thin;
+            scrollbar-color: var(--scrollbar-color) var(--background-color);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--background-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--scrollbar-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #45B857;
+        }
+
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: rgba(76, 175, 80, 0.5);
+            mix-blend-mode: difference;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+            z-index: 9999;
+        }
+
+        .cursor.grow {
+            width: 40px;
+            height: 40px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            mix-blend-mode: difference;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 2rem;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 1rem;
+            font-weight: 500;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--hover-color);
+            transition: width var(--transition-speed);
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            position: relative;
+            height: 70svh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 10%;
+            background-image: url('media/hero.avif');
+            background-size: cover;
+            background-position: right center;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            width: 50%;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-title {
+            font-size: 6rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1;
+        }
+
+        .section-title,
+        .showcase-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s, transform 0.8s;
+        }
+
+        .showcase {
+            padding: 6rem 2rem;
+        }
+
+        .section-title.visible,
+        .showcase-title.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .plant-grid {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: 1fr;
+            /* 1x6 layout */
+        }
+
+        @media (min-width: 600px) {
+            .plant-grid {
+                grid-template-columns: repeat(2, 1fr);
+                /* 2x3 layout */
+            }
+        }
+
+        @media (min-width: 900px) {
+            .plant-grid {
+                grid-template-columns: repeat(3, 1fr);
+                /* 3x2 layout */
+            }
+        }
+
+        .plant-card {
+            position: relative;
+            height: 450px;
+            overflow: hidden;
+            border-radius: 10px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s, transform 0.8s;
+        }
+
+        .plant-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .plant-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-speed), filter var(--transition-speed);
+        }
+
+        .plant-card:hover img {
+            transform: scale(1.05);
+            filter: brightness(0.7) saturate(1.2);
+        }
+
+        .plant-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            transform: translateY(100%);
+            transition: transform var(--transition-speed);
+        }
+
+        .plant-card:hover .plant-info {
+            transform: translateY(0);
+        }
+
+        .plant-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .plant-description {
+            font-size: 0.9rem;
+            font-weight: 300;
+        }
+
+        .benefits {
+            background-color: rgba(18, 18, 18, 0.7);
+        }
+
+        .benefits-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .benefit-card {
+            background-color: rgba(30, 30, 30, 0.5);
+            border-radius: 10px;
+            padding: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s, transform 0.8s, box-shadow 0.3s;
+        }
+
+        .benefit-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .benefit-icon {
+            margin-bottom: 1.5rem;
+            color: var(--hover-color);
+        }
+
+        .benefit-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-card p {
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .care-tips {
+            padding: 6rem 2rem;
+        }
+
+        .care-tips-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 3rem;
+        }
+
+        .care-content {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .care-image {
+            flex: 1;
+            min-width: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.8s, transform 0.8s;
+        }
+
+        .care-image.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .care-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .care-tip {
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s, transform 0.8s;
+            transition-delay: calc(var(--index) * 0.1s);
+        }
+
+        .care-tip.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .care-tip h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--hover-color);
+        }
+
+        .care-tip p {
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                background-image: url('media/hero-mobile.avif');
+                background-position: center;
+                justify-content: center;
+                padding-left: 0;
+                text-align: center;
+            }
+
+            .hero-title {
+                font-size: 6rem;
+            }
+
+            .section-title,
+            .showcase-title {
+                font-size: 2.5rem;
+                margin-bottom: 3rem;
+            }
+
+            .care-tips-container {
+                flex-direction: column;
+            }
+
+            header {
+                padding: 1.5rem;
+            }
+
+            nav ul li {
+                margin-left: 1rem;
+            }
+
+            .plant-info.visible {
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 4rem;
+            }
+
+            .section-title,
+            .showcase-title {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            header {
+                padding: 1rem;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            nav ul li {
+                margin-left: 0.8rem;
+            }
+
+            nav ul li a {
+                font-size: 0.9rem;
+            }
+        }
+
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--background-color);
+            z-index: 9998;
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cursor"></div>
+
+    <div class="page-transition"></div>
+
+    <header>
+        <div class="logo">The Plants</div>
+        <nav>
+            <ul>
+                <li><a href="./" class="nav-link">Home</a></li>
+                <li><a href="#showcase" class="nav-link">Collection</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">The Plants</h1>
+        </div>
+    </section>
+
+    <main>
+        <section id="showcase" class="showcase">
+            <h2 class="showcase-title">Our Collection</h2>
+            <div class="plant-grid">
+                <div class="plant-card">
+                    <img src="media/Monstera-Deliciosa.avif" alt="Monstera Deliciosa">
+                    <div class="plant-info">
+                        <h3 class="plant-name">Monstera Deliciosa</h3>
+                        <p class="plant-description">Known for its iconic split leaves, the Monstera is a striking
+                            tropical
+                            plant that brings instant jungle vibes to any space.</p>
+                    </div>
+                </div>
+                <div class="plant-card">
+                    <img src="media/Fiddle-Leaf-Fig.avif" alt="Fiddle Leaf Fig">
+                    <div class="plant-info">
+                        <h3 class="plant-name">Fiddle Leaf Fig</h3>
+                        <p class="plant-description">With its large, violin-shaped leaves, this statement plant has
+                            become a
+                            modern interior design favorite.</p>
+                    </div>
+                </div>
+                <div class="plant-card">
+                    <img src="media/Bonsai-Tree.avif" alt="Bonsai Tree">
+                    <div class="plant-info">
+                        <h3 class="plant-name">Bonsai Tree</h3>
+                        <p class="plant-description">A miniature tree that embodies the art of patience and harmony,
+                            bringing a sense of tranquility to your home.</p>
+                    </div>
+                </div>
+                <div class="plant-card">
+                    <img src="media/Rubber-Plant.avif" alt="Rubber Plant">
+                    <div class="plant-info">
+                        <h3 class="plant-name">Rubber Plant</h3>
+                        <p class="plant-description">With its glossy, leathery leaves, the rubber plant is a resilient
+                            and
+                            dramatic addition to any collection.</p>
+                    </div>
+                </div>
+                <div class="plant-card">
+                    <img src="media/Calathea-Plant.avif" alt="Calathea">
+                    <div class="plant-info">
+                        <h3 class="plant-name">Calathea</h3>
+                        <p class="plant-description">Famous for its striking leaf patterns and night-time leaf
+                            movements,
+                            the Calathea is as fascinating as it is beautiful.</p>
+                    </div>
+                </div>
+                <div class="plant-card">
+                    <img src="media/Cactus.avif" alt="Cactus">
+                    <div class="plant-info">
+                        <h3 class="plant-name">Cactus</h3>
+                        <p class="plant-description">These resilient desert dwellers come in countless shapes and sizes,
+                            perfect for bringing a touch of the wild to your space.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="benefits" class="benefits">
+            <h2 class="section-title">Why Plants Matter</h2>
+            <div class="benefits-container">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="material-icons" style="font-size:64px;">air</i>
+                    </div>
+                    <h3>Air Purification</h3>
+                    <p>Plants naturally filter air pollutants, improving indoor air quality and helping you breathe
+                        easier.
+                    </p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="material-icons" style="font-size:64px;">mood</i>
+                    </div>
+                    <h3>Mental Wellbeing</h3>
+                    <p>Studies show that being around plants reduces stress, anxiety, and promotes a sense of calm and
+                        relaxation.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="material-icons" style="font-size:64px;">format_paint</i>
+                    </div>
+                    <h3>Aesthetic Appeal</h3>
+                    <p>Plants add life, texture, and color to any space, creating a more inviting and beautiful
+                        environment.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="care-tips" class="care-tips">
+            <div class="care-tips-container">
+                <div class="care-content">
+                    <h2 class="section-title">Plant Care Essentials</h2>
+                    <div class="care-tip">
+                        <h3>Perfect Watering</h3>
+                        <p>Water deeply but infrequently. Allow soil to dry between waterings for most plants.</p>
+                    </div>
+                    <div class="care-tip">
+                        <h3>Lighting Matters</h3>
+                        <p>Understand your plant's light needs. Some thrive in bright spots, others prefer shade.</p>
+                    </div>
+                    <div class="care-tip">
+                        <h3>Seasonal Adjustments</h3>
+                        <p>Adapt care routines with the seasons. Most plants need less water in winter.</p>
+                    </div>
+                    <div class="care-tip">
+                        <h3>Soil Selection</h3>
+                        <p>Choose the right soil mix for your plant type. Drainage is crucial for most indoor plants.
+                        </p>
+                    </div>
+                </div>
+                <div class="care-image">
+                    <img src="media/Plant-Care.avif" alt="Plant care illustration">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        (function setupCursor() {
+            const cursor = document.querySelector('.cursor');
+            const links = document.querySelectorAll(
+                'a, .plant-card, button, input, .social-icon, .benefit-card'
+            );
+
+            let listenersActive = false;
+
+            function mousemoveHandler(e) {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            };
+
+            function mouseEnterHandler() {
+                cursor.classList.add('grow');
+            }
+
+            function mouseLeaveHandler() {
+                cursor.classList.remove('grow');
+            }
+
+            function addListeners() {
+                if (listenersActive) return;
+                document.addEventListener('mousemove', mousemoveHandler);
+                links.forEach(link => {
+                    link.addEventListener('mouseenter', mouseEnterHandler);
+                    link.addEventListener('mouseleave', mouseLeaveHandler);
+                });
+                listenersActive = true;
+            }
+
+            function removeListeners() {
+                if (!listenersActive) return;
+                document.removeEventListener('mousemove', mousemoveHandler);
+                links.forEach(link => {
+                    link.removeEventListener('mouseenter', mouseEnterHandler);
+                    link.removeEventListener('mouseleave', mouseLeaveHandler);
+                });
+                listenersActive = false;
+            }
+
+            function checkAndUpdateCursor() {
+                if (
+                    'ontouchstart' in window ||
+                    navigator.maxTouchPoints > 0 ||
+                    window.innerWidth < 768
+                ) {
+                    cursor.style.display = 'none';
+                    removeListeners();
+                } else {
+                    cursor.style.display = 'block';
+                    addListeners();
+                }
+            }
+
+            checkAndUpdateCursor();
+
+            window.addEventListener('resize', checkAndUpdateCursor);
+            window.addEventListener('scroll', checkAndUpdateCursor);
+        })();
+
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                if (href.startsWith('#')) {
+                    document.querySelector(href).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                } else {
+                    window.location.href = href;
+                }
+            });
+        });
+
+        const showcaseTitle = document.querySelector('.showcase-title');
+        const plantCards = document.querySelectorAll('.plant-card');
+        const sectionTitles = document.querySelectorAll('.section-title');
+        const benefitCards = document.querySelectorAll('.benefit-card');
+        const careTips = document.querySelectorAll('.care-tip');
+        const careImage = document.querySelector('.care-image');
+
+        careTips.forEach((tip, index) => {
+            tip.style.setProperty('--index', index);
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    if (entry.target.classList.contains('plant-card') && window.innerWidth < 768) {
+                        const plantInfo = entry.target.querySelector('.plant-info');
+                        if (plantInfo) {
+                            plantInfo.classList.add('visible');
+                        }
+                    }
+                }
+            });
+        }, { threshold: 0.1 });
+
+        [showcaseTitle, ...plantCards, ...sectionTitles, ...benefitCards, ...careTips, careImage].forEach(el => {
+            if (el) observer.observe(el);
+        });
+    </script>
+</body>
+
+</html>

@@ -169,6 +169,10 @@
             transition: background 0.3s;
         }
 
+        #volume {
+            display: inline-block;
+        }
+
         #volume img {
             background: rgba(0, 0, 0, 0.8);
             color: #fff;
@@ -267,7 +271,7 @@
             <div class="chip" data-value="50"><span>€50</span><img src="media/jetons/orange.png" alt="€50"></div>
         </div>
         <div id="volume">
-            <img src="media/volume/volume-on.avif" alt="Volume On" style="width: 60px;">
+            <img src="" alt="Volume On" style="width: 60px;">
         </div>
         <div id="status">
             <span id="balance">Balance: €500</span>
@@ -627,7 +631,16 @@
 
         const bgMusic = new Audio('media/volume/background.opus');
         bgMusic.loop = true;
-        document.addEventListener('click', function () {
+        let savedMusicState = localStorage.getItem('bgMusicState') || 'off';
+        const volumeBtn = document.getElementById('volume');
+        const volumeImg = volumeBtn.querySelector('img');
+
+        // Initial state setup
+        volumeImg.src = savedMusicState === 'on'
+            ? 'media/volume/volume-on.avif'
+            : 'media/volume/volume-off.avif';
+
+        if (savedMusicState === 'on') {
             bgMusic.volume = 0;
             bgMusic.play();
             const fadeInterval = setInterval(() => {
@@ -637,15 +650,34 @@
                     clearInterval(fadeInterval);
                 }
             }, 200);
+        }
+
+        document.addEventListener('click', function (event) {
+            if (savedMusicState === 'on' && bgMusic.paused && !event.target.closest('#volume')) {
+                bgMusic.play();
+            }
         }, { once: true });
 
-        document.getElementById('volume').addEventListener('click', function () {
-            if (bgMusic.paused) {
-                bgMusic.play();
-                this.querySelector('img').src = 'media/volume/volume-on.avif';
-            } else {
+        volumeBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (savedMusicState === 'on') {
                 bgMusic.pause();
-                this.querySelector('img').src = 'media/volume/volume-off.avif';
+                volumeImg.src = 'media/volume/volume-off.avif';
+                localStorage.setItem('bgMusicState', 'off');
+                savedMusicState = 'off';
+            } else {
+                bgMusic.volume = 0;
+                bgMusic.play();
+                const fadeInterval = setInterval(() => {
+                    if (bgMusic.volume < 1) {
+                        bgMusic.volume = Math.min(bgMusic.volume + 0.05, 1);
+                    } else {
+                        clearInterval(fadeInterval);
+                    }
+                }, 200);
+                volumeImg.src = 'media/volume/volume-on.avif';
+                localStorage.setItem('bgMusicState', 'on');
+                savedMusicState = 'on';
             }
         });
     </script>

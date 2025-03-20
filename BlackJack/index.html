@@ -169,6 +169,16 @@
             transition: background 0.3s;
         }
 
+        #volume img {
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            border: 2px solid #fff;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+
         button:hover:not(:disabled) {
             background: #333;
         }
@@ -200,7 +210,6 @@
             }
         }
 
-
         @media (max-width: 600px) {
             button {
                 padding: 5px 10px;
@@ -208,10 +217,25 @@
             }
         }
 
+        @media (max-width: 518px) {
+            #volume {
+                top: 20px;
+                left: -15px;
+                position: relative;
+            }
+        }
+
         @media (max-width: 500px) {
             button {
                 padding: 3px 6px;
                 font-size: 0.7em;
+            }
+        }
+
+        @media (max-width: 423px) {
+            #volume {
+                top: 50px;
+                position: relative;
             }
         }
 
@@ -241,6 +265,9 @@
             <div class="chip" data-value="10"><span>€10</span><img src="media/jetons/blue.png" alt="€10"></div>
             <div class="chip" data-value="25"><span>€25</span><img src="media/jetons/green.png" alt="€25"></div>
             <div class="chip" data-value="50"><span>€50</span><img src="media/jetons/orange.png" alt="€50"></div>
+        </div>
+        <div id="volume">
+            <img src="media/volume/volume-on.avif" alt="Volume On" style="width: 60px;">
         </div>
         <div id="status">
             <span id="balance">Balance: €500</span>
@@ -597,6 +624,30 @@
                 setTimeout(() => { notification.style.display = 'none'; }, 500);
             }, 2000);
         }
+
+        const bgMusic = new Audio('media/volume/background.opus');
+        bgMusic.loop = true;
+        document.addEventListener('click', function () {
+            bgMusic.volume = 0;
+            bgMusic.play();
+            const fadeInterval = setInterval(() => {
+                if (bgMusic.volume < 1) {
+                    bgMusic.volume = Math.min(bgMusic.volume + 0.05, 1);
+                } else {
+                    clearInterval(fadeInterval);
+                }
+            }, 200);
+        }, { once: true });
+
+        document.getElementById('volume').addEventListener('click', function () {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                this.querySelector('img').src = 'media/volume/volume-on.avif';
+            } else {
+                bgMusic.pause();
+                this.querySelector('img').src = 'media/volume/volume-off.avif';
+            }
+        });
     </script>
 </body>
 

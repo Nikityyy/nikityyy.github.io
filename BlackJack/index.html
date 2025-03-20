@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Retro Blackjack</title>
+    <link rel="icon" href="media/favicon.avif" type="image/avif">
+    <meta name="description" content="A Retro Blackjack game. Waste your money here!">
+    <meta name="keywords" content="blackjack, cards, retro, game, casino">
+    <style>
+        @font-face {
+            font-family: 'ArcadeGamer';
+            src: url('media/fonts/ArcadeGamer.woff2') format('woff2');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'ArcadeGamer', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #000;
+        }
+
+        #game-container {
+            position: relative;
+            width: 90vw;
+            max-width: 1050px;
+            height: 90vh;
+            max-height: 600px;
+            background: url('media/table.avif') no-repeat center/cover;
+            padding: 20px;
+            border: 4px solid #fff;
+            overflow: hidden;
+        }
+
+        #dealer-area,
+        #player-area {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            left: 0;
+        }
+
+        #dealer-area {
+            top: 10%;
+        }
+
+        #player-area {
+            bottom: 20%;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px #000;
+        }
+
+        #dealer-hand,
+        #player-hands {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .cards {
+            position: relative;
+            height: 100px;
+            width: 100px;
+        }
+
+        .card {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            transition: left 0.5s, top 0.5s;
+        }
+
+        .split-indicator {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+        }
+
+        .split-indicator img {
+            width: 20px;
+        }
+
+        .hand-value {
+            color: #fff;
+            margin-top: 5px;
+            text-shadow: 1px 1px #000;
+        }
+
+        #chips {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chip {
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .chip span {
+            display: block;
+            color: #fff;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px #000;
+        }
+
+        .chip img {
+            width: 40px;
+        }
+
+        .chip.selected {
+            border: 2px solid yellow;
+        }
+
+        .chip .chip-minus {
+            position: absolute;
+            top: 15px;
+            right: -5px;
+            width: 20px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        #status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #fff;
+            font-size: 1.5em;
+            text-shadow: 1px 1px #000;
+        }
+
+        #controls {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background: #000;
+            color: #fff;
+            border: 2px solid #fff;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+
+        button:hover:not(:disabled) {
+            background: #333;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #notification {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            border: 2px solid #fff;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+            font-size: 1.5em;
+            text-shadow: 2px 2px #000;
+        }
+
+        @media (max-width: 830px) {
+            #chips {
+                bottom: 7%;
+            }
+        }
+
+
+        @media (max-width: 600px) {
+            button {
+                padding: 5px 10px;
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 500px) {
+            button {
+                padding: 3px 6px;
+                font-size: 0.7em;
+            }
+        }
+
+        @media (max-width: 380px) {
+            button {
+                padding: 1px 2px;
+                font-size: 0.5em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="game-container">
+        <div id="dealer-area">
+            <h2>Dealer</h2>
+            <div id="dealer-hand">
+                <div class="cards"></div>
+            </div>
+        </div>
+        <div id="player-area">
+            <h2>Player</h2>
+            <div id="player-hands"></div>
+        </div>
+        <div id="chips">
+            <div class="chip" data-value="5"><span>€5</span><img src="media/jetons/red.png" alt="€5"></div>
+            <div class="chip" data-value="10"><span>€10</span><img src="media/jetons/blue.png" alt="€10"></div>
+            <div class="chip" data-value="25"><span>€25</span><img src="media/jetons/green.png" alt="€25"></div>
+            <div class="chip" data-value="50"><span>€50</span><img src="media/jetons/orange.png" alt="€50"></div>
+        </div>
+        <div id="status">
+            <span id="balance">Balance: €500</span>
+            <span id="bet">Bet: €0</span>
+        </div>
+        <div id="controls">
+            <button id="deal-button">Deal</button>
+            <button id="hit-button" disabled>Hit</button>
+            <button id="stay-button" disabled>Stay</button>
+            <button id="double-button" disabled>Double</button>
+            <button id="split-button" disabled>Split</button>
+        </div>
+        <div id="notification"></div>
+    </div>
+
+    <script>
+        const chipValues = { 'red': 5, 'blue': 10, 'green': 25, 'orange': 50 };
+        const suits = ['clubs', 'diamonds', 'hearts', 'spades'];
+        const values = ['A', '02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K'];
+
+        let deck = [];
+        let dealerHand = [];
+        let playerHands = [[]];
+        let currentBet = 0;
+        let balance = parseInt(localStorage.getItem('balance-blackjack')) || 500;
+        let currentHandIndex = 0;
+        let gameInProgress = false;
+
+        const dealerCards = document.querySelector('#dealer-hand .cards');
+        const playerHandsDiv = document.getElementById('player-hands');
+        const chips = document.querySelectorAll('.chip');
+        const balanceDisplay = document.getElementById('balance');
+        const betDisplay = document.getElementById('bet');
+        const dealButton = document.getElementById('deal-button');
+        const hitButton = document.getElementById('hit-button');
+        const stayButton = document.getElementById('stay-button');
+        const doubleButton = document.getElementById('double-button');
+        const splitButton = document.getElementById('split-button');
+        const notification = document.getElementById('notification');
+
+        updateBalanceDisplay();
+        createDeck();
+        shuffleDeck();
+
+        chips.forEach(chip => {
+            chip.addEventListener('click', (e) => {
+                if (!gameInProgress && !e.target.classList.contains('chip-minus')) {
+                    const chipValue = parseInt(chip.getAttribute('data-value'));
+                    if (currentBet + chipValue <= balance) {
+                        addChip(chip);
+                    }
+                }
+            });
+        });
+
+        dealButton.addEventListener('click', deal);
+        hitButton.addEventListener('click', hit);
+        stayButton.addEventListener('click', stay);
+        doubleButton.addEventListener('click', double);
+        splitButton.addEventListener('click', split);
+
+        function createDeck() {
+            deck = [];
+            suits.forEach(suit => {
+                values.forEach(value => {
+                    deck.push({ suit, value });
+                });
+            });
+        }
+
+        function shuffleDeck() {
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+        }
+
+        function addChip(chip) {
+            const count = parseInt(chip.dataset.count) || 0;
+            chip.dataset.count = count + 1;
+            updateChipDisplay(chip);
+            recalcBet();
+        }
+
+        function removeChip(chip) {
+            const count = parseInt(chip.dataset.count) || 0;
+            if (count > 0) {
+                chip.dataset.count = count - 1;
+                updateChipDisplay(chip);
+                recalcBet();
+            }
+        }
+
+        function updateChipDisplay(chip) {
+            let minusIcon = chip.querySelector('.chip-minus');
+            if (parseInt(chip.dataset.count) > 0) {
+                if (!minusIcon) {
+                    minusIcon = document.createElement('img');
+                    minusIcon.src = 'media/red-minus.png';
+                    minusIcon.classList.add('chip-minus');
+                    chip.appendChild(minusIcon);
+                    minusIcon.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        removeChip(chip);
+                    });
+                }
+            } else {
+                if (minusIcon) {
+                    chip.removeChild(minusIcon);
+                }
+            }
+        }
+
+        function recalcBet() {
+            let sum = 0;
+            chips.forEach(chip => {
+                const count = parseInt(chip.dataset.count) || 0;
+                const value = parseInt(chip.getAttribute('data-value'));
+                sum += count * value;
+            });
+            currentBet = sum;
+            betDisplay.textContent = `Bet: €${currentBet}`;
+            updateButtons();
+        }
+
+        function calculateHandValue(hand) {
+            let total = 0;
+            let aces = 0;
+            for (let card of hand) {
+                if (card.value === 'A') {
+                    aces++;
+                    total += 1;
+                } else if (['J', 'Q', 'K'].includes(card.value)) {
+                    total += 10;
+                } else {
+                    total += parseInt(card.value);
+                }
+            }
+            for (let i = 0; i < aces; i++) {
+                if (total + 10 <= 21) total += 10;
+            }
+            return total;
+        }
+
+        function dealCard(hand, container, isHidden = false, handIndex = null) {
+            const card = deck.pop();
+            hand.push(card);
+            const img = document.createElement('img');
+            img.classList.add('card');
+            img.src = isHidden ? 'media/cards/card_back.png' : `media/cards/card_${card.suit}_${card.value}.png`;
+            img.dataset.suit = card.suit;
+            img.dataset.value = card.value;
+            const cardCount = hand.length - 1;
+            const baseLeft = handIndex !== null ? handIndex * 100 : 0;
+            img.style.left = `${baseLeft + cardCount * 20}px`;
+            img.style.top = '0px';
+            console.log(img);
+            container.appendChild(img);
+            setTimeout(() => {
+                img.style.left = `${baseLeft + cardCount * 20}px`;
+            }, 10);
+            return img;
+        }
+
+        function updateHandDisplay() {
+            playerHandsDiv.innerHTML = '';
+            playerHands.forEach((hand, index) => {
+                const handDiv = document.createElement('div');
+                handDiv.classList.add('player-hand');
+                const cardsDiv = document.createElement('div');
+                cardsDiv.classList.add('cards');
+                handDiv.appendChild(cardsDiv);
+                const valueDiv = document.createElement('div');
+                valueDiv.classList.add('hand-value');
+                const value = calculateHandValue(hand);
+                valueDiv.textContent = `Total: ${value}${value > 21 ? ' (Bust)' : ''}`;
+                handDiv.appendChild(valueDiv);
+                hand.forEach((card, cardIndex) => {
+                    const img = document.createElement('img');
+                    img.classList.add('card');
+                    img.src = `media/cards/card_${card.suit}_${card.value}.png`;
+                    img.style.left = `${cardIndex * 20}px`;
+                    cardsDiv.appendChild(img);
+                });
+                playerHandsDiv.appendChild(handDiv);
+            });
+        }
+
+        function updateButtons() {
+            dealButton.disabled = gameInProgress || currentBet === 0 || balance < currentBet;
+            hitButton.disabled = !gameInProgress || currentHandIndex >= playerHands.length;
+            stayButton.disabled = !gameInProgress || currentHandIndex >= playerHands.length;
+            doubleButton.disabled = !gameInProgress || playerHands[currentHandIndex]?.length !== 2 || balance < currentBet;
+            splitButton.disabled = !gameInProgress || playerHands[currentHandIndex]?.length !== 2 ||
+                playerHands[currentHandIndex][0].value !== playerHands[currentHandIndex][1].value ||
+                balance < currentBet;
+        }
+
+        function disableButtons() {
+            dealButton.disabled = true;
+            hitButton.disabled = true;
+            stayButton.disabled = true;
+            doubleButton.disabled = true;
+            splitButton.disabled = true;
+        }
+
+        function deal() {
+            updateHandDisplay();
+            dealButton.disabled = true;
+            if (currentBet === 0 || balance < currentBet) return;
+            gameInProgress = true;
+            balance -= currentBet;
+            updateBalanceDisplay();
+            dealerHand = [];
+            playerHands = [[]];
+            currentHandIndex = 0;
+            dealerCards.innerHTML = '';
+            dealCard(playerHands[0], playerHandsDiv.querySelector('.cards') || playerHandsDiv);
+            updateHandDisplay();
+            setTimeout(() => dealCard(dealerHand, dealerCards), 500);
+            setTimeout(() => {
+                dealCard(playerHands[0], playerHandsDiv.querySelector('.cards'));
+                updateHandDisplay();
+            }, 1000);
+            setTimeout(() => dealCard(dealerHand, dealerCards, true), 1500);
+            setTimeout(() => {
+                if (calculateHandValue(playerHands[0]) === 21) {
+                    dealerTurn();
+                } else {
+                    updateButtons();
+                }
+            }, 2000);
+        }
+
+        function hit() {
+            dealCard(playerHands[currentHandIndex], playerHandsDiv.children[currentHandIndex].querySelector('.cards'));
+            setTimeout(() => {
+                updateHandDisplay();
+                if (calculateHandValue(playerHands[currentHandIndex]) > 21) {
+                    nextHandOrDealer();
+                }
+                updateButtons();
+            }, 500);
+        }
+
+        function stay() {
+            nextHandOrDealer();
+        }
+
+        function double() {
+            if (balance < currentBet) return;
+            balance -= currentBet;
+            currentBet *= 2;
+            updateBalanceDisplay();
+            betDisplay.textContent = `Bet: €${currentBet}`;
+            dealCard(playerHands[currentHandIndex], playerHandsDiv.children[currentHandIndex].querySelector('.cards'));
+            setTimeout(() => {
+                updateHandDisplay();
+                nextHandOrDealer();
+            }, 500);
+        }
+
+        function split() {
+            if (balance < currentBet) return;
+            balance -= currentBet;
+            updateBalanceDisplay();
+            const currentHand = playerHands[currentHandIndex];
+            playerHands.push([currentHand.pop()]);
+            dealCard(playerHands[currentHandIndex], playerHandsDiv.children[currentHandIndex].querySelector('.cards'));
+            setTimeout(() => {
+                dealCard(playerHands[currentHandIndex + 1], playerHandsDiv.children[currentHandIndex + 1]?.querySelector('.cards') || playerHandsDiv);
+                setTimeout(() => {
+                    updateHandDisplay();
+                    updateButtons();
+                }, 500);
+            }, 500);
+        }
+
+        function nextHandOrDealer() {
+            currentHandIndex++;
+            if (currentHandIndex < playerHands.length) {
+                updateHandDisplay();
+                updateButtons();
+            } else {
+                dealerTurn();
+            }
+        }
+
+        function dealerTurn() {
+            disableButtons();
+            dealerCards.children[1].src = `media/cards/card_${dealerHand[1].suit}_${dealerHand[1].value}.png`;
+            function hitDealer() {
+                if (calculateHandValue(dealerHand) < 17) {
+                    dealCard(dealerHand, dealerCards);
+                    setTimeout(hitDealer, 500);
+                } else {
+                    resolveGame();
+                }
+            }
+            setTimeout(hitDealer, 500);
+        }
+
+        function resolveGame() {
+            const dealerValue = calculateHandValue(dealerHand);
+            let message = '';
+            playerHands.forEach((hand, index) => {
+                const playerValue = calculateHandValue(hand);
+                if (playerValue > 21) {
+                    message += `Hand ${index + 1}: Bust\n`;
+                } else if (dealerValue > 21) {
+                    balance += currentBet * 2;
+                    message += `Hand ${index + 1}: Win €${currentBet * 2}\n`;
+                } else if (playerValue > dealerValue) {
+                    balance += currentBet * 2;
+                    message += `Hand ${index + 1}: Win €${currentBet * 2}\n`;
+                } else if (playerValue === dealerValue) {
+                    balance += currentBet;
+                    message += `Hand ${index + 1}: Push\n`;
+                } else {
+                    message += `Hand ${index + 1}: Lose\n`;
+                }
+            });
+            if (balance < 10) balance = 10;
+            updateBalanceDisplay();
+            showNotification(message);
+            gameInProgress = false;
+            currentBet = 0;
+            betDisplay.textContent = 'Bet: €0';
+            chips.forEach(chip => {
+                chip.dataset.count = 0;
+                const minusIcon = chip.querySelector('.chip-minus');
+                if (minusIcon) chip.removeChild(minusIcon);
+            });
+            setTimeout(() => {
+                dealerCards.innerHTML = '';
+                playerHandsDiv.innerHTML = '';
+                createDeck();
+                shuffleDeck();
+                updateButtons();
+            }, 2500);
+        }
+
+        function updateBalanceDisplay() {
+            balanceDisplay.textContent = `Balance: €${balance}`;
+            localStorage.setItem('balance-blackjack', balance);
+        }
+
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.style.display = 'block';
+            setTimeout(() => { notification.style.opacity = 1; }, 10);
+            setTimeout(() => {
+                notification.style.opacity = 0;
+                setTimeout(() => { notification.style.display = 'none'; }, 500);
+            }, 2000);
+        }
+    </script>
+</body>
+
+</html>

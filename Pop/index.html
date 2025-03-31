@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POP ART</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: white;
+            overflow-x: hidden;
+            height: 100vh;
+            cursor: none;
+            perspective: 1000px;
+        }
+
+        .dot-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(#ddd 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .title-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+            height: 100svh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .title {
+            font-size: 20vw;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            color: #000;
+            text-transform: uppercase;
+            user-select: none;
+            display: flex;
+            justify-content: center;
+        }
+
+        .title span {
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s ease;
+        }
+
+        .title span:hover {
+            color: #ff2d55;
+            transform: translateY(-10px) rotate(3deg) scale(1.1);
+        }
+
+        .pop-art-image {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            pointer-events: none;
+            z-index: 5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.8s ease;
+        }
+
+        .pop-art-image.disappear {
+            transform: scale(0.1) rotate(720deg);
+            opacity: 0;
+        }
+
+        .custom-cursor {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #ff2d55;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            mix-blend-mode: difference;
+            z-index: 9999;
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .custom-cursor.grow {
+            width: 50px;
+            height: 50px;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .color-explosion {
+            position: fixed;
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .color-dot {
+            position: absolute;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 15vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="custom-cursor"></div>
+    <div class="dot-pattern"></div>
+    
+    <div class="title-container">
+        <h1 class="title">
+            <span data-letter="P">P</span>
+            <span data-letter="O">O</span>
+            <span data-letter="P">P</span>
+            <span data-letter=" ">&nbsp;</span>
+            <span data-letter="A">A</span>
+            <span data-letter="R">R</span>
+            <span data-letter="T">T</span>
+        </h1>
+    </div>
+
+    <div class="color-explosion" id="color-explosion"></div>
+
+    <script>
+        // Pop Art images with descriptions
+        const popArtImages = [
+            { src: "media/wham1.jpg", alt: "Andy Warhol's Campbell's Soup Cans (1962) - A series of 32 canvases depicting all varieties of Campbell's soup" },
+            { src: "media/wham2.jpg", alt: "Roy Lichtenstein's Whaam! (1963) - Comic-book style painting of a fighter jet firing a rocket" },
+            { src: "media/wham3.jpg", alt: "Andy Warhol's Marilyn Diptych (1962) - Silkscreen painting of Marilyn Monroe's face in grid format" },
+            { src: "media/wham4.jpg", alt: "Claes Oldenburg's Two Cheeseburgers (1962) - Soft sculpture of burgers challenging notions of art" },
+            { src: "media/wham5.jpg", alt: "James Rosenquist's F-111 (1964-5) - Large-scale painting juxtaposing consumer images with military might" },
+            { src: "media/wham6.jpg", alt: "David Hockney's A Bigger Splash (1967) - Minimalist painting of a splash in a swimming pool" },
+            { src: "media/wham7.jpg", alt: "Keith Haring's Radiant Baby (1990) - Iconic crawling infant with radiating lines" },
+            { src: "media/wham8.jpg", alt: "Robert Rauschenberg's Retroactive I (1964) - Silkscreen collage with Kennedy and space imagery" },
+            { src: "media/wham9.jpg", alt: "Tom Wesselmann's Great American Nude series (1961-73) - Stylized female nudes with American iconography" }
+        ];
+
+        // Pop art colors
+        const popColors = ['#ff2d55', '#5ac8fa', '#ffcc00', '#ff9500', '#4cd964', '#0066ff'];
+
+        // Custom cursor
+        const cursor = document.querySelector('.custom-cursor');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = `${e.clientX}px`;
+            cursor.style.top = `${e.clientY}px`;
+        });
+
+        document.addEventListener('mousedown', () => {
+            cursor.classList.add('grow');
+        });
+
+        document.addEventListener('mouseup', () => {
+            cursor.classList.remove('grow');
+        });
+
+        // Physics variables
+        const gravity = 0.5;
+        const friction = 0.99;
+        const elasticity = 0.7;
+
+        // Track all images for physics updates
+        let activeImages = [];
+
+        // Function to create falling image
+        function createFallingImage(x, y) {
+            const randomImageIndex = Math.floor(Math.random() * popArtImages.length);
+            const imageInfo = popArtImages[randomImageIndex];
+            
+            const img = document.createElement('div');
+            img.className = 'pop-art-image';
+            img.style.backgroundImage = `url(${imageInfo.src})`;
+            img.style.left = `${x - 75}px`;
+            img.style.top = `${y - 75}px`;
+            img.setAttribute('aria-label', imageInfo.alt);
+            img.setAttribute('role', 'img');
+            
+            document.body.appendChild(img);
+            
+            // Random initial velocity
+            const physics = {
+                vx: (Math.random() - 0.5) * 10,
+                vy: -10 - Math.random() * 5,
+                element: img
+            };
+            
+            activeImages.push(physics);
+            
+            // Make the image disappear with a fun shrinking effect
+            setTimeout(() => {
+                if (document.body.contains(img)) {
+                    img.classList.add('disappear');
+                    
+                    // Remove element after transition completes
+                    setTimeout(() => {
+                        if (document.body.contains(img)) {
+                            document.body.removeChild(img);
+                            activeImages = activeImages.filter(item => item.element !== img);
+                        }
+                    }, 800);
+                }
+            }, 3000 + Math.random() * 2000);
+        }
+
+        // Mouse move handler
+        let lastImageTime = 0;
+        document.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            
+            // Only create new image every 300ms
+            if (now - lastImageTime > 300) {
+                createFallingImage(e.clientX, e.clientY);
+                lastImageTime = now;
+            }
+        });
+
+        // Click on title letters
+        document.querySelectorAll('.title span').forEach(letter => {
+            // New hover effects: on mouse enter/leave
+            letter.addEventListener('mouseenter', (e) => {
+                const randomScale = (Math.random() * 0.3) + 1.2;  // Scale between 1.2 and 1.5
+                const randomRotation = (Math.random() * 30) - 15;     // Rotation between -15deg and 15deg
+                const randomColor = popColors[Math.floor(Math.random() * popColors.length)];
+                letter.style.transform = `translateY(-10px) rotate(${randomRotation}deg) scale(${randomScale})`;
+                letter.style.color = randomColor;
+                letter.style.zIndex = 1000;
+            });
+            letter.addEventListener('mouseleave', (e) => {
+                letter.style.transform = '';
+                letter.style.color = '';
+                letter.style.zIndex = 1;
+            });
+
+            // Existing click event
+            letter.addEventListener('click', (e) => {
+                const rect = letter.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                // Create multiple images in a burst
+                for (let i = 0; i < 2; i++) {
+                    setTimeout(() => {
+                        createFallingImage(
+                            centerX + (Math.random() - 0.5) * 100,
+                            centerY + (Math.random() - 0.5) * 100
+                        );
+                    }, i * 100);
+                }
+                
+                // Create color explosion
+                createColorExplosion(centerX, centerY);
+            });
+        });
+
+        // Color explosion effect
+        function createColorExplosion(x, y) {
+            const explosion = document.getElementById('color-explosion');
+            explosion.innerHTML = '';
+            explosion.style.opacity = '1';
+            
+            for (let i = 0; i < 50; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'color-dot';
+                
+                const size = Math.random() * 30 + 10;
+                const color = popColors[Math.floor(Math.random() * popColors.length)];
+                
+                dot.style.width = `${size}px`;
+                dot.style.height = `${size}px`;
+                dot.style.backgroundColor = color;
+                dot.style.left = `${x}px`;
+                dot.style.top = `${y}px`;
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = Math.random() * 10 + 5;
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity;
+                
+                explosion.appendChild(dot);
+                
+                // Animate dot
+                let dotX = x;
+                let dotY = y;
+                let dotVx = vx;
+                let dotVy = vy;
+                let opacity = 1;
+                
+                function animateDot() {
+                    if (opacity <= 0) {
+                        if (explosion.contains(dot)) {
+                            explosion.removeChild(dot);
+                        }
+                        return;
+                    }
+                    
+                    dotVy += 0.2; // Gravity
+                    dotX += dotVx;
+                    dotY += dotVy;
+                    opacity -= 0.02;
+                    
+                    dot.style.left = `${dotX}px`;
+                    dot.style.top = `${dotY}px`;
+                    dot.style.opacity = opacity;
+                    
+                    requestAnimationFrame(animateDot);
+                }
+                
+                animateDot();
+            }
+            
+            // Hide explosion after animation completes
+            setTimeout(() => {
+                explosion.style.opacity = '0';
+            }, 2000);
+        }
+
+        // Physics update loop
+        function updatePhysics() {
+            const windowHeight = window.innerHeight;
+            const windowWidth = window.innerWidth;
+            
+            activeImages.forEach(obj => {
+                // Apply gravity
+                obj.vy += gravity;
+                
+                // Apply velocity
+                let left = parseFloat(obj.element.style.left);
+                let top = parseFloat(obj.element.style.top);
+                
+                left += obj.vx;
+                top += obj.vy;
+                
+                // Apply friction
+                obj.vx *= friction;
+                obj.vy *= friction;
+                
+                // Bounce off floor only if falling
+                if (top + 150 > windowHeight && obj.vy > 0) {
+                    top = windowHeight - 150;
+                    obj.vy = -Math.abs(obj.vy) * elasticity;
+                }
+                
+                // Bounce off walls
+                if (left + 150 > windowWidth) {
+                    left = windowWidth - 150;
+                    obj.vx = -obj.vx * elasticity;
+                }
+                if (left < 0) {
+                    left = 0;
+                    obj.vx = -obj.vx * elasticity;
+                }
+                
+                // Update position
+                obj.element.style.left = `${left}px`;
+                obj.element.style.top = `${top}px`;
+            });
+            
+            requestAnimationFrame(updatePhysics);
+        }
+        
+        // Start the physics loop
+        updatePhysics();
+        
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+        });
+    </script>
+</body>
+</html>

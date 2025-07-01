@@ -1,681 +1,791 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nikita Berger | Full Stack Developer | Portfolio</title>
-    <meta name="description" content="Full Stack Developer with knowledge in web development, machine learning, and data analysis. View my projects and professional experience.">
-    <meta property="og:title" content="Nikita Berger | Full Stack Developer">
-    <meta property="og:description" content="Full Stack Developer with knowledge in web development, machine learning, and data analysis.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://nikityyy.github.io/">
-    <meta property="og:image" content="media/profile-picture.avif">
-    <meta name="twitter:title" content="Nikita Berger | Full Stack Developer">
-    <meta name="twitter:description" content="Full Stack Developer with knowledge in web development and machine learning.">
-    <meta name="twitter:image" content="media/profile-picture.avif">
-    <meta name="keywords" content="Nikita Berger, Full Stack Developer, Web Development, Machine Learning, Portfolio">
-    <link rel="icon" type="image/webp" href="media/profile-picture.avif">
-    <link rel="apple-touch-icon" sizes="180x180" href="media/profile-picture.avif">
-    <meta name="google-site-verification" content="tcFMsrHfb1DfkNKlIoHM9qpqEPRq4SpNs8QlQOh7l1I" />
-    <style>
-      :root {
-        --bg-color: #ffffff;
-        --heading-color: #000000;
-        --subheading-color: #333333;
-        --text-color: #666666;
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nikita Berger | Full Stack Developer & Math Enthusiast</title>
+  <meta name="description"
+    content="Portfolio of Nikita Berger, a Full Stack Developer and Math enthusiast. Explore projects in web development, mathematics, and data analysis.">
+  <meta property="og:title" content="Nikita Berger | Full Stack Developer & Math Enthusiast">
+  <meta property="og:description" content="Portfolio of Nikita Berger, a Full Stack Developer and Math enthusiast.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nikityyy.github.io/">
+  <meta property="og:image" content="media/profile-picture.avif">
+  <meta name="twitter:title" content="Nikita Berger | Full Stack Developer & Math Enthusiast">
+  <meta name="twitter:description" content="Portfolio of Nikita Berger, a Full Stack Developer and Math enthusiast.">
+  <meta name="twitter:image" content="media/profile-picture.avif">
+  <link rel="icon" type="image/webp" href="media/profile-picture.avif">
+  <link rel="apple-touch-icon" sizes="180x180" href="media/profile-picture.avif">
+  <meta name="google-site-verification" content="tcFMsrHfb1DfkNKlIoHM9qpqEPRq4SpNs8QlQOh7l1I" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Nikita Berger",
+      "jobTitle": "Student & Math Enthusiast",
+      "email": "mailto:bergernikita1807@gmail.com",
+      "worksFor": {
+      "@type": "EducationalOrganization",
+      "name": "HAK Steyr"
+      },
+      "sameAs": [
+      "https://github.com/nikityyy",
+      "https://huggingface.co/nikityyy"
+      ]
+    }
+    </script>
+  <style>
+    :root {
+      --base-text: #1a202c;
+      --subtle-text: #4a5568;
+      --link-color: #2b6cb0;
+      --link-hover: #2c5282;
+      --border-color: rgba(255, 255, 255, 0.5);
+      --shadow-color: rgba(0, 0, 0, 0.08);
+      --card-bg: rgba(255, 255, 255, 0.45);
+      --card-blur: 10px;
+      --highlight-color: #3182ce;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f7fafc;
+      background-image: radial-gradient(circle at 1% 1%, rgba(220, 235, 255, 0.5) 0%, transparent 50%),
+        radial-gradient(circle at 99% 99%, rgba(220, 235, 255, 0.7) 0%, transparent 50%);
+      color: var(--base-text);
+      padding: 0 24px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    section {
+      margin: 60px 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      color: var(--base-text);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+
+    h2 {
+      font-size: 2.25rem;
+      margin: 40px 0 24px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      padding-bottom: 12px;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      color: var(--subtle-text);
+      margin: 0 0 12px 0;
+    }
+
+    h4 {
+      font-size: 1.125rem;
+      margin-bottom: 8px;
+    }
+
+    p,
+    ul {
+      color: var(--subtle-text);
+      line-height: 1.7;
+      margin-bottom: 16px;
+      font-size: 1.05rem;
+    }
+
+    ul {
+      list-style-position: inside;
+      padding-left: 8px;
+    }
+
+    li::marker {
+      color: var(--highlight-color);
+    }
+
+    a {
+      color: var(--link-color);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    a:hover {
+      text-decoration: underline;
+      color: var(--link-hover);
+    }
+
+    hr {
+      border: none;
+      height: 1px;
+      background-color: rgba(0, 0, 0, 0.1);
+      margin: 60px 0;
+    }
+
+    .language-switch {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 1000;
+    }
+
+    .language-btn {
+      padding: 8px 16px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none !important;
+      color: var(--base-text);
+      transition: all 0.2s ease;
+    }
+
+    .language-btn:hover {
+      background: rgba(255, 255, 255, 0.8);
+      transform: translateY(-2px);
+    }
+
+    [lang="de"],
+    [lang="de-flex"] {
+      display: none !important;
+    }
+
+    #de:target~* [lang="en"],
+    #de:target~* [lang="en-flex"] {
+      display: none !important;
+    }
+
+    #de:target~* [lang="de"] {
+      display: block !important;
+    }
+
+    #de:target~* [lang="de-flex"] {
+      display: flex !important;
+    }
+
+    .hero-section {
+      text-align: center;
+      padding: 80px 0 40px;
+      margin: 0;
+    }
+
+    .profile-image {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      margin: 0 auto 24px;
+      box-shadow: 0 0 0 5px rgba(255, 255, 255, 1), 0 10px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .profile-image img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
+
+    .quote {
+      font-style: italic;
+      color: var(--subtle-text);
+      font-size: 1.1rem;
+      max-width: 400px;
+      margin: 0 auto 24px;
+    }
+
+    .contact-links {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    .contact-links a {
+      padding: 12px 24px;
+      border-radius: 30px;
+      color: var(--base-text);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .contact-links a:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px var(--shadow-color);
+      background: #fff;
+      text-decoration: none;
+    }
+
+    .contact-links.support a {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+
+    .contact-links.support a:hover {
+      background-color: #ffcdd2;
+      color: #b71c1c;
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      -webkit-backdrop-filter: blur(var(--card-blur));
+      backdrop-filter: blur(var(--card-blur));
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 24px var(--shadow-color);
+      padding: 30px;
+      margin: 24px 0;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+    }
+
+    .company-info {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .company-logo img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+    }
+
+    .stars {
+      color: #FFC107;
+      font-size: 1.25rem;
+    }
+
+    .competition-card {
+      padding: 30px;
+      margin: 24px 0;
+      border-radius: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 24px var(--shadow-color);
+      color: var(--base-text);
+      text-decoration: none;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .competition-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+      transform: skewX(-25deg);
+      transition: left 0.6s ease;
+    }
+
+    .competition-card:hover::before {
+      left: 125%;
+    }
+
+    .competition-card:hover {
+      background: #0a0a0a;
+      transform: scale(1.02);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .competition-card * {
+      transition: color 0.4s ease;
+    }
+
+    .competition-card:hover h4 {
+      color: #FDDD00;
+    }
+
+    .competition-card:hover h5,
+    .competition-card:hover .rank-value {
+      color: #ffffff;
+    }
+
+    .competition-card:hover p,
+    .competition-card:hover .rank-label {
+      color: #cccccc;
+    }
+
+    .competition-card:hover .ccc {
+      opacity: 1;
+      transition-delay: 0.1s;
+    }
+
+    .competition-date {
+      font-size: 0.9em;
+      margin: 5px 0;
+    }
+
+    .ranking {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .rank-label {
+      margin-right: 10px;
+    }
+
+    .ccc {
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .competition-results a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .language-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+      margin: 24px 0;
+    }
+
+    .language-card {
+      margin: 0;
+      position: relative;
+    }
+
+    .language-icon {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+
+    .proficiency-bar {
+      width: 100%;
+      height: 8px;
+      background-color: rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+      margin: 12px 0;
+      overflow: hidden;
+    }
+
+    .progress {
+      height: 100%;
+      background: linear-gradient(90deg, #3182ce, #63b3ed);
+      border-radius: 4px;
+    }
+
+    .level {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      font-weight: bold;
+      color: var(--subtle-text);
+    }
+
+    .experience-item {
+      border-left: 4px solid var(--highlight-color);
+    }
+
+    .projects-flex {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      justify-items: stretch;
+      align-items: stretch;
+    }
+
+    .projects-flex .project-item {
+      min-width: 0;
+      max-width: 100%;
+      margin: 0;
+    }
+
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .blog-item {
+      padding: 0;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .blog-content {
+      overflow: hidden;
+      hyphens: auto;
+    }
+
+    .blog-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .blog-item img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .blog-item h3 {
+      margin: 10px 15px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .blog-item p {
+      margin: 5px 15px 15px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .blog-grid a {
+      text-decoration: inherit;
+    }
+
+    .site-footer {
+      text-align: center;
+      margin: 48px 0 24px 0;
+      color: #4a5568;
+      font-size: 1.1rem;
+    }
+
+    .site-footer hr {
+      margin: 40px 0 24px 0;
+      border: none;
+      height: 1px;
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .site-footer p {
+      margin: 0;
+      font-style: italic;
+      color: var(--subtle-text);
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.5rem;
       }
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: system-ui, sans-serif;
-        list-style-type: disc;
-        list-style-position: inside;
-      }
-      a:hover {
-        text-decoration: underline;
-      }
-      body {
-        background-color: var(--bg-color);
-        margin: 0;
-        padding: 0 20px;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-      .hero-section {
-        text-align: center;
-        padding: 40px 0;
-        margin-bottom: 60px;
-        margin-top: 0px;
-      }
-      .hero-section h1 {
-        margin-bottom: 0;
-      }
-      .profile-image {
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        margin-bottom: 20px;
-        background-color: #f0f0f0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto;
-      }
-      .profile-image img {
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-      }
-      .quote {
-        font-style: italic;
-        color: var(--text-color);
-        margin: 0;
-        margin-bottom: 20px;
-      }
-      .contact-links {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin: 20px 0;
-      }
-      .contact-links a {
-        padding: 10px 20px;
-        border: 2px solid var(--heading-color);
-        border-radius: 25px;
-        color: var(--heading-color);
-        text-decoration: none;
-        font-weight: bold;
-      }
-      .support a {
-        border: 2px solid #ff0000;
-        color: #ff0000;
-      }
-      .contact-links a:hover {
-        background-color: var(--heading-color);
-        border: 2px solid var(--heading-color);
-        color: var(--bg-color);
-      }
-      .fix {
-        width: 100px;
-      }
-      .language-switch {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        display: flex;
-        gap: 10px;
-        z-index: 1000;
-      }
-      .language-btn {
-        padding: 5px 10px;
-        border: 2px solid var(--heading-color);
-        background: var(--bg-color);
-        cursor: pointer;
-        font-weight: bold;
-        text-decoration: none !important;
-        color: var(--heading-color);
-      }
-      .language-btn:hover {
-        background: var(--heading-color);
-        color: var(--bg-color);
-      }
-      h1,
+
       h2 {
-        color: var(--heading-color);
-        margin: 30px 0 20px 0;
+        font-size: 1.8rem;
       }
-      h3 {
-        color: var(--subheading-color);
-        margin: 20px 0 10px 0;
+
+      .hero-section {
+        padding: 60px 0 20px;
       }
-      p {
-        color: var(--text-color);
-        line-height: 1.6;
-        margin-bottom: 15px;
+
+      .profile-image {
+        width: 140px;
+        height: 140px;
       }
-      .project-item {
-        padding: 20px;
-        margin: 20px 0;
-        border-radius: 10px;
-        background-color: #f9f9f9;
-        transition: transform 0.3s ease;
-      }
-      .project-item:hover {
-        transform: translateY(-5px);
-      }
-      .experience-item {
-        margin: 20px 0;
-        padding: 20px;
-        border-left: 3px solid var(--subheading-color);
-        background-color: #f9f9f9;
-        transition: transform 0.3s ease;
-      }
-      .experience-item:hover {
-        transform: translateX(10px);
-      }
-      section {
-        margin: 40px 0;
-        opacity: 1;
-      }
-      .more-link {
-        display: inline-block;
-        margin-top: 10px;
-        color: var(--subheading-color);
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 0.3s ease;
-      }
-      .more-link:hover {
-        color: var(--heading-color);
-      }
-      [lang="de"] {
-        display: none;
-        opacity: 0;
-      }
-      #de:target~* [lang="en"] {
-        display: none;
-        opacity: 0;
-      }
-      #de:target~* [lang="de"] {
-        display: block;
-        opacity: 1;
-      }
-      #de:target~* [lang="de"].rank-label,
-      #de:target~* [lang="de"].rank-value {
-        display: inline-block;
-        /* Change to inline-block */
-        opacity: 1;
-      }
-      .section-subtitle {
-        color: var(--text-color);
-        text-align: center;
-        margin-bottom: 40px;
-      }
-      .rating-card {
-        background-color: #f9f9f9;
-        border-radius: 10px;
-        padding: 20px;
-        margin: 20px 0;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
-      .rating-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      }
-      .company-info {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-      }
-      .company-logo {
-        width: 60px;
-        height: 60px;
-        background-color: var(--heading-color);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 24px;
-        font-weight: bold;
-      }
-      .stars {
-        color: #FFD700;
-        font-size: 20px;
-        margin: 0;
-        margin-bottom: 10px;
-      }
-      .testimonial {
-        margin: 0;
-        font-weight: bold;
-      }
-      .st0 {
-        opacity: 0;
-        fill: #FDDD00;
-      }
+
       .competition-card {
-        background-color: #f9f9f9;
-        border-radius: 10px;
-        padding: 20px;
-        margin: 20px 0;
-        transition: transform 0.3s ease;
-        display: flex;
-        justify-content: space-between;
-      }
-      .competition-card:hover {
-        transform: translateX(10px);
-        background-color: #060606;
-      }
-      .competition-card:hover h4 {
-        color: #FDDD00;
-      }
-      .competition-card:hover h5 {
-        color: #ffffff;
-      }
-      .competition-card:hover p {
-        color: #cccccc;
-      }
-      .competition-card:hover .rank-label {
-        color: #999999;
-      }
-      .competition-card:hover .rank-value {
-        color: #ffffff;
-      }
-      .competition-card:hover .st0 {
-        opacity: 1;
-      }
-      .competition-date {
-        color: var(--text-color);
-        font-size: 0.9em;
-        margin: 5px 0;
-      }
-      .competition-name {
-        color: var(--subheading-color);
-      }
-      .competition-results a {
-        text-decoration: none;
-        color: inherit;
-      }
-      .competition-results a:hover,
-      .competition-results a:visited,
-      .competition-results a:focus {
-        text-decoration: none;
-        color: inherit;
-      }
-      .ranking {
-        margin: 10px 0;
-        display: flex;
-        justify-content: space-between;
-      }
-      .rank-label {
-        color: var(--subheading-color);
-        margin-right: 10px;
-      }
-      .rank-value {
-        font-weight: bold;
-      }
-      .language-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-        margin: 20px 0;
-      }
-      .language-card {
-        background-color: #f9f9f9;
-        border-radius: 10px;
-        padding: 20px;
-        position: relative;
-        transition: transform 0.3s ease;
-      }
-      .language-card:hover {
-        transform: translateY(-5px);
-      }
-      .language-icon {
-        font-size: 24px;
-        margin-bottom: 10px;
-      }
-      .proficiency-bar {
-        width: 100%;
-        height: 8px;
-        background-color: #e0e0e0;
-        border-radius: 4px;
-        margin: 10px 0;
-        overflow: hidden;
-      }
-      .progress {
-        height: 100%;
-        background-color: var(--heading-color);
-        border-radius: 4px;
-        transition: width 0.3s ease;
-      }
-      .level {
-        position: absolute;
-        right: 20px;
-        top: 20px;
-        font-weight: bold;
-      }
-      .language-card[data-tooltip] {
-        cursor: help;
-      }
-      .language-card[data-tooltip]::after {
-        content: attr(data-tooltip);
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 8px;
-        background-color: var(--heading-color);
-        color: white;
-        border-radius: 4px;
-        font-size: 0.8em;
-        width: max-content;
-        max-width: 200px;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
-        z-index: 1000;
-      }
-      .language-card:hover[data-tooltip]::after {
-        opacity: 1;
-        visibility: visible;
-      }
-      .logo-placeholder,
-      .logo-placeholder img {
-        height: 60px;
-        width: 60px;
-      }
-      .blog-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        flex-direction: column;
+        text-align: center;
         gap: 20px;
       }
-      .blog-item {
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
+
+      .company-info {
+        flex-direction: column;
+        text-align: center;
       }
-	  
-	  .blog-item:hover {
-        transform: translateY(-5px);
+
+      .projects-flex .project-item {
+        flex: 1 1 100%;
+        max-width: 100%;
       }
-      .blog-item img {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-      }
-      .blog-item h3 {
-        margin: 10px 15px;
-        font-size: 18px;
-        font-weight: 600;
-      }
-      .blog-item p {
-        margin: 5px 15px 15px;
-        color: #666;
-        font-size: 14px;
-      }
-      .blog-grid a {
-        text-decoration: inherit;
-      }
-      footer {
-        text-align: right;
-      }
-      @media (max-width: 1000px) {
-        .blog-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-      @media (max-width: 768px) {
-        .language-grid {
-          grid-template-columns: 1fr;
-        }
-        .company-info {
-          flex-direction: column;
-          text-align: center;
-        }
-        .language-card[data-tooltip]::after {
-          width: 80%;
-        }
-        .competition-card {
-          background-color: #060606;
-          flex-direction: column;
-          flex-wrap: wrap;
-          align-items: center;
-          gap: 20px;
-        }
-        .competition-card h4 {
-          color: #FDDD00;
-        }
-        .competition-card h5 {
-          color: #ffffff;
-        }
-        .competition-card p {
-          color: #cccccc;
-        }
-        .competition-card .rank-label {
-          color: #999999;
-        }
-        .competition-card .rank-value {
-          color: #ffffff;
-        }
-        .competition-card .st0 {
-          opacity: 1;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="en"></div>
-    <div id="de"></div>
-    <div class="language-switch">
-      <a href="#de" class="language-btn">DE</a>
-      <a href="#en" class="language-btn">EN</a>
+    }
+  </style>
+</head>
+
+<body>
+  <div id="en"></div>
+  <div id="de"></div>
+  <div class="language-switch">
+    <a href="#de" class="language-btn">DE</a>
+    <a href="#en" class="language-btn">EN</a>
+  </div>
+
+  <section class="hero-section">
+    <div class="profile-image">
+      <img draggable="false" alt="Profile Picture of Nikita Berger" src="media/profile-picture.avif">
     </div>
-    <section class="hero-section">
-      <div class="profile-image">
-        <img draggable="false" alt="Profile Picture" src="media/profile-picture.avif"></img>
-      </div>
-      <h1>Nikita Berger</h1>
-      <p class="quote">"don't die"</p>
-      <div class="contact-links support">
-        <a lang="de" href="https://buymeacoffee.com/nikity" target="_blank">❤️ Unterstütze mich ❤️</a>
-        <a lang="en" href="https://buymeacoffee.com/nikity" target="_blank">❤️ Support me ❤️</a>
-      </div>
-      <div class="contact-links">
-        <a class="fix" href="mailto:bergernikita1807@gmail.com">Email</a>
-        <a href="https://huggingface.co/Nikity" target="_blank">HuggingFace</a>
-        <a class="fix" href="https://github.com/Nikityyy" target="_blank">GitHub</a>
-      </div>
-    </section>
-    <section>
-      <h2 lang="de">Leistungen & Empfehlungen</h2>
-      <h2 lang="en">Achievements & Endorsements</h2>
-      <div class="company-rating">
-        <h3 lang="de">Unternehmensempfehlungen</h3>
-        <h3 lang="en">Company Endorsements</h3>
-        <div class="rating-card">
-          <div class="company-info">
-            <div class="company-logo">
-              <div class="logo-placeholder">
-                <img draggable="false" alt="Anqodo GmbH" src="media/anqodo-icon.webp"></img>
-              </div>
-            </div>
-            <div class="company-details">
-              <h4>Anqodo GmbH</h4>
-              <p class="testimonial">"Top"</p>
-              <div class="rating">
-                <div class="stars">
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                </div>
-              </div>
-            </div>
-          </div>
+    <h1>Nikita Berger</h1>
+    <p class="quote">"just don't die"</p>
+    <div class="contact-links support">
+      <a lang="de" href="https://buymeacoffee.com/nikity" target="_blank">❤️ Unterstütze meine Arbeit</a>
+      <a lang="en" href="https://buymeacoffee.com/nikity" target="_blank">❤️ Support My Work</a>
+    </div>
+    <div class="contact-links">
+      <a href="mailto:bergernikita1807@gmail.com">Email</a>
+      <a href="https://huggingface.co/Nikity" target="_blank">HuggingFace</a>
+      <a href="https://github.com/Nikityyy" target="_blank">GitHub</a>
+    </div>
+  </section>
+
+  <section>
+    <h2 lang="de">Meine Leistungen & Empfehlungen</h2>
+    <h2 lang="en">My Achievements & Endorsements</h2>
+    <p lang="de">Dieser Abschnitt hebt meine beruflichen Anerkennungen und Wettbewerbserfolge hervor und zeigt mein
+      Engagement für Exzellenz.</p>
+    <p lang="en">This section highlights my professional recognitions and competition achievements, showcasing my
+      commitment to excellence.</p>
+
+    <h3 lang="de">Unternehmensempfehlungen</h3>
+    <h3 lang="en">Company Endorsements</h3>
+    <div class="glass-card rating-card">
+      <div class="company-info">
+        <div class="company-logo">
+          <img draggable="false" alt="Anqodo GmbH Logo" src="media/anqodo-icon.webp">
+        </div>
+        <div class="company-details">
+          <h4>Anqodo GmbH</h4>
+          <div class="stars">★★★★★</div>
+          <p class="testimonial" lang="de">"Top"</p>
+          <p class="testimonial" lang="en">"Top"</p>
         </div>
       </div>
-      <div class="competition-results">
-        <h3 lang="en">Competition Achievements</h3>
-        <h3 lang="de">Wettbewerbsleistungen</h3>
-        <a href="https://register.codingcontest.org/contest/5679/results?page.page=1&amp;activeId=35500#35500" target="_blank">
-          <div class="competition-card" style="
-    display: flex;
-    justify-content: space-between;
-">
-            <div class="competition-info">
-              <h4>Cloudflight Coding Contest</h4>
-              <h5 class="competition-name">40th School CCC</h5>
-              <p class="competition-date" lang="de">25. Oktober 2024</p>
-              <p class="competition-date" lang="en">October 25, 2024</p>
-              <div class="ranking">
-                <span class="rank-label" lang="de">Schulranking:</span>
-                <span class="rank-value" lang="de">1. / 27</span>
-                <span class="rank-label" lang="en">School Ranking:</span>
-                <span class="rank-value" lang="en">1st / 27</span>
-              </div>
-              <div class="ranking">
-                <span class="rank-label" lang="de">Gesamtranking:</span>
-                <span class="rank-value" lang="de">38. / 729</span>
-                <span class="rank-label" lang="en">Overall Ranking:</span>
-                <span class="rank-value" lang="en">38th / 729</span>
-              </div>
+    </div>
+
+    <h3 lang="en">Competition Achievements</h3>
+    <h3 lang="de">Wettbewerbsleistungen</h3>
+    <div class="competition-results">
+      <a href="https://register.codingcontest.org/contest/5679/results?page.page=1&activeId=35500#35500"
+        target="_blank">
+        <div class="competition-card">
+          <div class="competition-info">
+            <h4>Cloudflight Coding Contest</h4>
+            <h5 class="competition-name">40th School CCC</h5>
+            <p class="competition-date" lang="de">25. Oktober 2024</p>
+            <p class="competition-date" lang="en">October 25, 2024</p>
+            <div class="ranking" lang="de-flex">
+              <span class="rank-label" lang="de">Schulranking:</span><span class="rank-value"> 1. / 27</span>
             </div>
-            <svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 175 125" width="150px" xml:space="preserve">
-              <g>
-                <path class="st0" d="M61.6,111.8v-3.2h3.2v3.2v3.2v3.2h-3.2V115V111.8z M68.1,121.5v-3.2h-3.2v3.2H68.1z M6.5,1.6H3.2v3.2h3.2h3.2
-						V1.6H6.5z M110.2,111.8v3.2v3.2h3.2V115v-3.2v-3.2h-3.2V111.8z M106.9,121.5h3.2v-3.2h-3.2V121.5z M175,24.3v3.2v3.2V34v3.2v3.2
-						v3.2h-3.2V47h-3.2v3.2h-3.2H162h-3.2h-3.2h-3.2h-3.2h-3.2v3.2h-3.2h-3.2h-3.2h-3.2v3.2h-3.2V60h-3.2v3.2v3.2v3.2v3.2h-3.2v3.2h-3.2
-						v3.2v3.2v3.2v3.2v3.2v3.2h-3.2v3.2v3.2v3.2v3.2h-3.2v-3.2h-3.2v-3.2h-3.2h-3.2h-3.2h-3.2v-3.2H94h-3.2v-3.2h-3.2h-3.2v3.2H81h-3.2
-						v3.2h-3.2h-3.2h-3.2h-3.2v3.2h-3.2v3.2h-3.2v-3.2v-3.2v-3.2v-3.2h-3.2v-3.2v-3.2v-3.2v-3.2v-3.2v-3.2h-3.2v-3.2h-3.2v-3.2v-3.2
-						v-3.2V60h-3.2v-3.2h-3.2v-3.2h-3.2h-3.2h-3.2h-3.2v-3.2h-3.2h-3.2h-3.2h-3.2H13H9.7H6.5V47H3.2v-3.2H0v-3.2v-3.2V34v-3.2v-3.2v-3.2
-						h3.2v-3.2v-3.2h3.2v-3.2v-3.2h3.2V8.1V4.9H13v3.2h3.2v3.2v3.2H13v3.2H9.7v3.2v3.2H6.5v3.2v3.2V34h3.2v3.2v3.2H13h3.2h3.2h3.2h3.2
-						h3.2h3.2h3.2h3.2h3.2h3.2h3.2v3.2h3.2h3.2h3.2V47h3.2h3.2v3.2h3.2V47h3.2h3.2v-3.2h3.2H81h3.2h3.2h3.2H94h3.2h3.2V47h3.2h3.2v3.2
-						h3.2V47h3.2h3.2v-3.2h3.2h3.2h3.2v-3.2h3.2h3.2h3.2h3.2h3.2h3.2h3.2h3.2h3.2h3.2h3.2h3.2v-3.2V34h3.2v-3.2v-3.2v-3.2h-3.2v-3.2
-						v-3.2H162v-3.2h-3.2v-3.2V8.1h3.2V4.9h3.2v3.2v3.2h3.2v3.2v3.2h3.2v3.2v3.2H175z M110.2,76.2h-3.2v3.2h-3.2h-3.2v3.2h-3.2H94v3.2
-						v3.2h3.2h3.2h3.2h3.2v-3.2h3.2v-3.2v-3.2V76.2z M81,89.1v-3.2v-3.2h-3.2h-3.2v-3.2h-3.2h-3.2v-3.2h-3.2v3.2v3.2v3.2h3.2v3.2h3.2
-						h3.2h3.2H81z M171.8,4.9V1.6h-3.2h-3.2v3.2h3.2H171.8z"></path>
-              </g>
-            </svg>
+            <div class="ranking" lang="en-flex">
+              <span class="rank-label">School Ranking:</span><span class="rank-value"> 1st / 27</span>
+            </div>
+            <div class="ranking" lang="de-flex">
+              <span class="rank-label" lang="de">Gesamtranking:</span><span class="rank-value"> 38. / 729</span>
+            </div>
+            <div class="ranking" lang="en-flex">
+              <span class="rank-label">Overall Ranking:</span><span class="rank-value"> 38th / 729</span>
+            </div>
+          </div>
+          <img draggable="false" src="media/ccc.avif" alt="Cloudflight Coding Contest Logo" class="ccc">
+        </div>
+      </a>
+    </div>
+
+    <h3 lang="en">Language Skills</h3>
+    <h3 lang="de">Sprachkenntnisse</h3>
+    <div class="language-grid">
+      <div class="glass-card language-card">
+        <div class="language-icon">🇩🇪</div>
+        <h4 lang="de">Deutsch</h4>
+        <h4 lang="en">German</h4>
+        <div class="proficiency-bar">
+          <div class="progress" style="width: 100%"></div>
+        </div>
+        <span class="level">C2</span>
+      </div>
+      <div class="glass-card language-card">
+        <div class="language-icon">🇬🇧</div>
+        <h4 lang="de">Englisch</h4>
+        <h4 lang="en">English</h4>
+        <div class="proficiency-bar">
+          <div class="progress" style="width: 80%"></div>
+        </div>
+        <span class="level">B2</span>
+      </div>
+      <div class="glass-card language-card">
+        <div class="language-icon">🇪🇸</div>
+        <h4 lang="de">Spanisch</h4>
+        <h4 lang="en">Spanish</h4>
+        <div class="proficiency-bar">
+          <div class="progress" style="width: 30%"></div>
+        </div>
+        <span class="level">A2</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 lang="en">My Work Experience</h2>
+    <h2 lang="de">Meine Berufserfahrung</h2>
+    <p lang="de">Hier finden Sie eine detaillierte Übersicht über meine bisherige Berufserfahrung als Entwickler und
+      Freelancer.</p>
+    <p lang="en">Find a detailed overview of my professional history as a developer and freelancer here.</p>
+    <div class="glass-card experience-item">
+      <h3 lang="de" style="color: var(--base-text);">Praktikant - anqodo GmbH</h3>
+      <h3 lang="en" style="color: var(--base-text);">Intern - anqodo GmbH</h3>
+      <p style="font-size: 0.9rem; margin-bottom: 12px;">5. August 2024 – 30. August 2024</p>
+      <ul lang="de">
+        <li>Optimierung bestehender Unit-Tests zur Verbesserung der Softwarequalität.</li>
+        <li>Erlernung neuer Programmiersprachen und Frameworks zur Kompetenzerweiterung.</li>
+        <li>Erstellung eines Konzepts zur Evaluierung und Auswahl eines neuen Frameworks.</li>
+        <li>Implementierung von UI-Komponenten zur Verbesserung der Nutzererfahrung.</li>
+      </ul>
+      <ul lang="en">
+        <li>Optimized and expanded unit tests to improve software quality and stability.</li>
+        <li>Actively learned new programming languages and frameworks to enhance team skills.</li>
+        <li>Created a strategic concept for evaluating and selecting a new framework.</li>
+        <li>Implemented layout components to support the user interface and improve UX.</li>
+      </ul>
+    </div>
+    <div class="glass-card experience-item">
+      <h3 lang="de" style="color: var(--base-text);">Freelancer - GCT Gruber Consulting & Technology</h3>
+      <h3 lang="en" style="color: var(--base-text);">Freelancer - GCT Gruber Consulting & Technology</h3>
+      <p style="font-size: 0.9rem; margin-bottom: 12px;">April 2024 - Juli 2024</p>
+      <ul lang="de">
+        <li>Verantwortlich für die Gestaltung und Umsetzung der Unternehmenswebsite, einschließlich Benutzeroberfläche
+          und Nutzererlebnis.</li>
+      </ul>
+      <ul lang="en">
+        <li>Led the design and implementation of the company website, focusing on user interface and user experience.
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2 lang="en">My Projects</h2>
+    <h2 lang="de">Meine Projekte</h2>
+    <p lang="de">Entdecken Sie eine Auswahl meiner Projekte, die meine Fähigkeiten in der Full-Stack-Entwicklung und bei
+      KI-Projekten demonstrieren.</p>
+    <p lang="en">Explore a selection of my projects, demonstrating my skills in full-stack development and AI projects.
+    </p>
+    <div class="projects-flex">
+      <div class="glass-card">
+        <h3>HAK Casino</h3>
+        <p lang="de">Eine Sammlung aller Casino-Spiele, die ich je im HAK Steyr Stil entwickelt habe.</p>
+        <p lang="en">A collection of every Casino Game I ever made in a HAK Steyr style.</p>
+        <a href="https://nikityyy.github.io/HAK-Casino/" target="_blank" lang="de">Mehr erfahren →</a>
+        <a href="https://nikityyy.github.io/HAK-Casino/" target="_blank" lang="en">Learn more →</a>
+      </div>
+      <div class="glass-card">
+        <h3>Reel</h3>
+        <p lang="de">Ein Filmempfehlungssystem, das mit Flask und Googles Gemini AI entwickelt wurde. The Daily Reel
+          hilft Nutzern, Filme zu entdecken, die perfekt zu ihren Wünschen passen – durch natürliche
+          Sprachbeschreibungen.</p>
+        <p lang="en">A movie recommendation system built with Flask and Google's Gemini AI. The Daily Reel helps users
+          discover films that perfectly match their desires through natural language descriptions.</p>
+        <a href="https://the-daily-reel.vercel.app/" target="_blank" lang="de">Mehr erfahren →</a>
+        <a href="https://the-daily-reel.vercel.app/" target="_blank" lang="en">Learn more →</a>
+      </div>
+      <div class="glass-card">
+        <h3>Conomy</h3>
+        <p lang="de">Eine Software, die es Unternehmen ermöglicht, ihre Website auf betriebswirtschaftliche Kriterien
+          hin
+          zu analysieren und zu optimieren.</p>
+        <p lang="en">Software that enables companies to analyze and optimize their website based on business management
+          characteristics.</p>
+        <a href="https://nikityyy.github.io/Conomy/" target="_blank" lang="de">Mehr erfahren →</a>
+        <a href="https://nikityyy.github.io/Conomy/" target="_blank" lang="en">Learn more →</a>
+      </div>
+      <div class="glass-card">
+        <h3>Musify</h3>
+        <p lang="de">Eine werbefreie Musik-Streaming-Webanwendung, die Spotify-Einbettungen für ein nahtloses Erlebnis
+          nutzt.</p>
+        <p lang="en">An ad-free music streaming web app that works with Spotify by embedding its player for a seamless
+          experience.</p>
+        <a href="https://nikityyy.github.io/Musify/" target="_blank" lang="de">Mehr erfahren →</a>
+        <a href="https://nikityyy.github.io/Musify/" target="_blank" lang="en">Learn more →</a>
+      </div>
+      <div class="glass-card">
+        <h3>WhatsBreak</h3>
+        <p lang="de">Eine Web-Anwendung, die Nutzern hilft, eine passende Nachricht für die Beendigung einer Beziehung
+          zu
+          formulieren.</p>
+        <p lang="en">A web application that helps users formulate an appropriate message for ending a relationship.</p>
+        <a href="https://nikityyy.github.io/WhatsBreak/" target="_blank" lang="de">Mehr erfahren →</a>
+        <a href="https://nikityyy.github.io/WhatsBreak/" target="_blank" lang="en">Learn more →</a>
+      </div>
+      <div class="glass-card">
+        <h3>Knowpedia</h3>
+        <p lang="de">Eine genauere und benutzerfreundlichere Alternative zu Wikipedia, entwickelt für präzisere
+          Informationen.</p>
+        <p lang="en">A more accurate and user-friendly alternative to Wikipedia, designed for greater precision.</p>
+        <a href="https://knowpedia.vercel.app/" target="_blank" lang="de">Mehr erfahren →</a>
+        <a href="https://knowpedia.vercel.app/" target="_blank" lang="en">Learn more →</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 lang="en">My Thesis</h2>
+    <h2 lang="de">Meine Diplomarbeit</h2>
+    <p lang="de">Informationen zu meiner Diplomarbeit, die sich mit dem Thema künstliche Intelligenz befasst.</p>
+    <p lang="en">Information on my thesis, focusing on the topic of artificial intelligence.</p>
+    <div class="glass-card">
+      <h3 lang="de" style="color: var(--base-text);">Wie Künstliche Intelligenz Leistungsfähigkeit und Effizienz
+        steigert</h3>
+      <h3 lang="en" style="color: var(--base-text);">How Artificial Intelligence increases performance and efficiency
+      </h3>
+      <p lang="de">SOON</p>
+      <p lang="en">SOON</p>
+      <a href="#" target="_blank" lang="de">Mehr erfahren →</a>
+      <a href="#" target="_blank" lang="en">Learn more →</a>
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2 lang="de">Mein Blog</h2>
+    <h2 lang="en">My Blog</h2>
+    <p lang="de">Lesen Sie meine Artikel und Einblicke zu Themen wie Programmierung, KI und Technologie.</p>
+    <p lang="en">Read my articles and insights on topics like programming, AI, and technology.</p>
+    <div class="blog-grid">
+      <div class="glass-card blog-item">
+        <a href="blog/blog-1" target="_blank">
+          <img src="media/blog-1.avif" alt="Newspaper clipping about Nikita Berger">
+          <div class="blog-content">
+            <h3 lang="de">HAK-Schüler Nikita ist Steyrs bester Nachwuchsprogrammierer</h3>
+            <h3 lang="en">HAK student Nikita is Steyr's best young programmer</h3>
+            <p lang="de">11. November 2024</p>
+            <p lang="en">November 11, 2024</p>
           </div>
         </a>
       </div>
-      <div class="language-proficiency">
-        <h3 lang="en">Language Skills</h3>
-        <h3 lang="de">Sprachkenntnisse</h3>
-        <div class="language-grid">
-          <div class="language-card" data-tooltip="C2 - Mastery: Can express themselves spontaneously, very fluently and precisely">
-            <div class="language-icon">🇩🇪</div>
-            <h4 lang="de">Deutsch</h4>
-            <h4 lang="en">German</h4>
-            <div class="proficiency-bar">
-              <div class="progress" style="width: 100%"></div>
-            </div>
-            <span class="level">C2</span>
-          </div>
-          <div class="language-card" data-tooltip="B2 - Upper Intermediate: Can interact with a degree of fluency and spontaneity">
-            <div class="language-icon">🇬🇧</div>
-            <h4 lang="de">Englisch</h4>
-            <h4 lang="en">English</h4>
-            <div class="proficiency-bar">
-              <div class="progress" style="width: 80%"></div>
-            </div>
-            <span class="level">B2</span>
-          </div>
-          <div class="language-card" data-tooltip="A2 - Elementary: Can communicate in simple and routine tasks">
-            <div class="language-icon">🇪🇸</div>
-            <h4 lang="de">Spanisch</h4>
-            <h4 lang="en">Spanish</h4>
-            <div class="proficiency-bar">
-              <div class="progress" style="width: 30%"></div>
-            </div>
-            <span class="level">A2</span>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section>
-      <h2 lang="en">Work Experience</h2>
-      <h2 lang="de">Berufserfahrung</h2>
-      <div class="experience-item">
-        <h3 lang="de">Freelancer - GCT Gruber Consulting & Technology</h3>
-        <h3 lang="en">Freelancer - GCT Gruber Consulting & Technology</h3>
-        <p lang="de">April 2024 - Juli 2024</p>
-        <p lang="en">April 2024 - July 2024</p>
-        <ul lang="de">
-          <li>Verantwortlich für die Gestaltung und Umsetzung der Website, einschließlich der Benutzeroberfläche und Benutzererfahrung.</li>
-        </ul>
-        <ul lang="en">
-          <li>Responsible for the design and implementation of the website, including the user interface and user experience.</li>
-        </ul>
-      </div>
-      <div class="experience-item">
-        <h3 lang="de">Praktikant - anqodo GmbH</h3>
-        <h3 lang="en">Intern - anqodo GmbH</h3>
-        <p lang="de">5. August 2024 – 30. August 2024</p>
-        <p lang="en">August 5, 2024 – August 30, 2024</p>
-        <ul lang="de">
-          <li>Optimierung und Erweiterung bestehender Unit-Tests zur Verbesserung der Softwarequalität und -stabilität.</li>
-          <li>Aktive Auseinandersetzung mit und Erlernung neuer Programmiersprachen und Frameworks zur Förderung persönlicher und teaminterner Kompetenzen.</li>
-          <li>Erstellung eines strategischen Konzepts zur Evaluierung und Auswahl eines neuen Frameworks, basierend auf technischen Anforderungen und Projektzielen.</li>
-          <li>Implementierung grundlegender Layout-Komponenten in den neuen Frameworks zur Unterstützung der Benutzeroberfläche und Verbesserung der Nutzererfahrung.</li>
-        </ul>
-        <ul lang="en">
-          <li>Optimization and expansion of existing unit tests to improve software quality and stability.</li>
-          <li>Active involvement with and learning of new programming languages and frameworks to promote personal and team-internal skills.</li>
-          <li>Creating a strategic concept for evaluating and selecting a new framework based on technical requirements and project goals.</li>
-          <li>Implementation of basic layout components in the new frameworks to support the user interface and improve the user experience.</li>
-        </ul>
-      </div>
-    </section>
-    <section>
-      <h2 lang="en">My Projects</h2>
-      <h2 lang="de">Meine Projekte</h2>
-      <div class="project-item">
-        <h3>Conomy</h3>
-        <p lang="de">Entwickeln einer Software, die es Unternehmen ermöglicht Ihre Website auf viele betriebswirtschaftliche Eigenschaften zu überprüfen und zu optimieren.</p>
-        <p lang="en">Development of software that enables companies to check and optimize their website for various business management characteristics.</p>
-        <a href="https://nikityyy.github.io/Conomy/" target="_blank" class="more-link" lang="de">Mehr erfahren →</a>
-        <a href="https://nikityyy.github.io/Conomy/" target="_blank" class="more-link" lang="en">Learn more →</a>
-      </div>
-      <div class="project-item">
-        <h3>Musify</h3>
-        <p lang="de">Eine werbefreie Musik-Streaming-Webanwendung, die mit Spotify funktioniert, indem es Spotify embedded.</p>
-        <p lang="en">An ad-free music streaming web application that works with Spotify by embedding it.</p>
-        <a href="https://nikityyy.github.io/Musify/" target="_blank" class="more-link" lang="de">Mehr erfahren →</a>
-        <a href="https://nikityyy.github.io/Musify/" target="_blank" class="more-link" lang="en">Learn more →</a>
-      </div>
-      <div class="project-item">
-        <h3>WhatsBreak</h3>
-        <p lang="de">Eine Webanwendung, die Benutzern hilft, eine passende Nachricht für die Beendigung einer Beziehung zu formulieren. Die Nutzer können aus verschiedenen Kategorien und Sprachen wählen, um eine personalisierte Trennungsnachricht zu erstellen.</p>
-        <p lang="en">A web application that helps users formulate an appropriate message for ending a relationship. Users can choose from various categories and languages to create a personalized breakup message.</p>
-        <a href="https://nikityyy.github.io/WhatsBreak/" target="_blank" class="more-link" lang="de">Mehr erfahren →</a>
-        <a href="https://nikityyy.github.io/WhatsBreak/" target="_blank" class="more-link" lang="en">Learn more →</a>
-      </div>
-      <div class="project-item">
-        <h3>Lille</h3>
-        <p lang="de">Entwicklung und Training eines eigenen Large Language Models (LLM) basierend auf selbst gescrapten Daten aus dem Internet. Alle Daten wurden legal durch Web-Scraping gesammelt und zu einem Datensatz zusammengestellt. Anschließend wurde das LLM auf diesen Daten trainiert und im Chat-Modus weiter feinabgestimmt.</p>
-        <p lang="en">Development and training of a custom Large Language Model (LLM) based on self-scraped data from the internet. All data was legally collected through web scraping and compiled into a dataset. Subsequently, the LLM was trained on this data and further fine-tuned in chat mode.</p>
-        <a href="#" class="more-link" target="_blank" lang="de">Mehr erfahren →</a>
-        <a href="#" class="more-link" target="_blank" lang="en">Learn more →</a>
-      </div>
-      <div class="project-item">
-        <h3>Knowpedia</h3>
-        <p lang="de">Eine genauere und benutzerfreundlichere Alternative zu Wikipedia.</p>
-        <p lang="en">A more accurate and user-friendly alternative to Wikipedia.</p>
-        <a href="https://knowpedia.vercel.app/" class="more-link" target="_blank" lang="de">Mehr erfahren →</a>
-        <a href="https://knowpedia.vercel.app/" class="more-link" target="_blank" lang="en">Learn more →</a>
-      </div>
-    </section>
-    <section>
-      <h2 lang="en">Thesis</h2>
-      <h2 lang="de">Diplomarbeit</h2>
-      <h3 lang="de">Die Rolle der Datenanalyse im Sport</h3>
-      <h3 lang="en">The Role of Data Analysis in Sports</h3>
-      <p lang="de">In dieser Arbeit habe ich mich mit der KI-Seite der Datenanalyse im Sport befasst.</p>
-      <p lang="en">In this thesis, I focused on the AI aspect of data analysis in sports.</p>
-      <a href="#" class="more-link" target="_blank" lang="de">Mehr erfahren →</a>
-      <a href="#" class="more-link" target="_blank" lang="en">Learn more →</a>
-    </section>
+    </div>
+  </section>
+
+  <footer class="site-footer">
     <hr>
-    <h2 lang="de">Blog</h2>
-    <h2 lang="en">Blog</h2>
-    <section class="blog-grid">
-      <a href="blog/blog-1" target="_blank">
-        <div class="blog-item">
-          <img src="media/blog-1.avif" alt="Blog Post 1">
-          <h3 lang="de">HAK-Schüler Nikita ist Steyrs bester Nachwuchsprogrammierer</h3>
-          <h3 lang="en">HAK student Nikita is Steyr's best young programmer</h3>
-          <p lang="de">11. November 2024</p>
-          <p lang="en">November 11, 2024</p>
-        </div>
-      </a>
-    </section>
-    <footer>
-      <p lang="de">© 2024 Nikita Berger. Alle Rechte vorbehalten.</p>
-      <p lang="en">© 2024 Nikita Berger. All Rights Reserved.</p>
-    </footer>
-  </body>
+    <p>“Ideas are cheap. Execution is everything.”</p>
+    <p>© 2025 Nikita Berger. All rights reserved.</p>
+  </footer>
+
+</body>
+
 </html>

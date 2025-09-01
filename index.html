@@ -2,791 +2,258 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nikita Berger | Frontend Developer & Math Enthusiast</title>
-  <meta name="description"
-    content="Portfolio of Nikita Berger, a Frontend Developer and Math enthusiast. Explore projects in web development, mathematics, and data analysis.">
-  <meta property="og:title" content="Nikita Berger | Frontend Developer & Math Enthusiast">
-  <meta property="og:description" content="Portfolio of Nikita Berger, a Frontend Developer and Math enthusiast.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://nikityyy.github.io/">
-  <meta property="og:image" content="media/profile-picture.avif">
-  <meta name="twitter:title" content="Nikita Berger | Frontend Developer & Math Enthusiast">
-  <meta name="twitter:description" content="Portfolio of Nikita Berger, a Frontend Developer and Math enthusiast.">
-  <meta name="twitter:image" content="media/profile-picture.avif">
-  <link rel="icon" type="image/webp" href="media/profile-picture.avif">
-  <link rel="apple-touch-icon" sizes="180x180" href="media/profile-picture.avif">
-  <meta name="google-site-verification" content="tcFMsrHfb1DfkNKlIoHM9qpqEPRq4SpNs8QlQOh7l1I" />
-  <script type="application/ld+json">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Nikita Berger | Designer and Developer Portfolio</title>
+	<link rel="icon" href="media/profile-picture.webp">
+	<meta name="description"
+		content="Explore Nikita Berger's portfolio as a designer and developer from Austria. Passionate about AI, mathematics, and programming, discover innovative side projects that challenge boundaries and advance technology.">
+	<meta name="google-site-verification" content="tcFMsrHfb1DfkNKlIoHM9qpqEPRq4SpNs8QlQOh7l1I" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="preload"
+		href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Overpass:ital,wght@0,100..900;1,100..900&display=swap"
+		as="style" onload="this.onload=null;this.rel='stylesheet'">
+	<noscript>
+		<link rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Overpass:ital,wght@0,100..900;1,100..900&display=swap">
+	</noscript>
+	<link rel="preload" as="image" href="media/background.webp" fetchpriority="high">
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"
+		integrity="sha256-Lye89HGy1p3XhJT24hcvsoRw64Q4IOL5a7hdOflhjTA=" crossorigin="anonymous" defer></script>
+	<script src="https://unpkg.com/lenis@1.3.8/dist/lenis.min.js"
+		integrity="sha256-04G6inMRl5QDGj8FI92vJ22XZ0qHTcauVOut8vg8NLs=" crossorigin="anonymous" defer></script>
+	<script src="static/script.js"></script>
+	<script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Person",
       "name": "Nikita Berger",
-      "jobTitle": "Student & Math Enthusiast",
+      "jobTitle": "Designer and Developer",
       "email": "mailto:bergernikita1807@gmail.com",
-      "worksFor": {
+      "alumniOf": {
       "@type": "EducationalOrganization",
       "name": "HAK Steyr"
       },
       "sameAs": [
       "https://github.com/nikityyy",
-      "https://huggingface.co/nikityyy",
+      "https://huggingface.co/Nikity",
       "https://x.com/itsnikity"
       ]
     }
     </script>
-  <style>
-    :root {
-      --base-text: #1a202c;
-      --subtle-text: #4a5568;
-      --link-color: #2b6cb0;
-      --link-hover: #2c5282;
-      --border-color: rgba(255, 255, 255, 0.5);
-      --shadow-color: rgba(0, 0, 0, 0.08);
-      --card-bg: rgba(255, 255, 255, 0.45);
-      --card-blur: 10px;
-      --highlight-color: #3182ce;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    }
-
-    body {
-      background-color: #f7fafc;
-      background-image: radial-gradient(circle at 1% 1%, rgba(220, 235, 255, 0.5) 0%, transparent 50%),
-        radial-gradient(circle at 99% 99%, rgba(220, 235, 255, 0.7) 0%, transparent 50%);
-      color: var(--base-text);
-      padding: 0 24px;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    section {
-      margin: 60px 0;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5 {
-      color: var(--base-text);
-      font-weight: 700;
-      line-height: 1.2;
-    }
-
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 16px;
-      letter-spacing: -1px;
-    }
-
-    h2 {
-      font-size: 2.25rem;
-      margin: 40px 0 24px 0;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-      padding-bottom: 12px;
-    }
-
-    h3 {
-      font-size: 1.5rem;
-      color: var(--subtle-text);
-      margin: 0 0 12px 0;
-    }
-
-    h4 {
-      font-size: 1.125rem;
-      margin-bottom: 8px;
-    }
-
-    p,
-    ul {
-      color: var(--subtle-text);
-      line-height: 1.7;
-      margin-bottom: 16px;
-      font-size: 1.05rem;
-    }
-
-    ul {
-      list-style-position: inside;
-      padding-left: 8px;
-    }
-
-    li::marker {
-      color: var(--highlight-color);
-    }
-
-    a {
-      color: var(--link-color);
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    a:hover {
-      text-decoration: underline;
-      color: var(--link-hover);
-    }
-
-    hr {
-      border: none;
-      height: 1px;
-      background-color: rgba(0, 0, 0, 0.1);
-      margin: 60px 0;
-    }
-
-    .language-switch {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      display: flex;
-      gap: 10px;
-      z-index: 1000;
-    }
-
-    .language-btn {
-      padding: 8px 16px;
-      border: 1px solid var(--border-color);
-      background: var(--card-bg);
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
-      text-decoration: none !important;
-      color: var(--base-text);
-      transition: all 0.2s ease;
-    }
-
-    .language-btn:hover {
-      background: rgba(255, 255, 255, 0.8);
-      transform: translateY(-2px);
-    }
-
-    [lang="de"],
-    [lang="de-flex"] {
-      display: none !important;
-    }
-
-    #de:target~* [lang="en"],
-    #de:target~* [lang="en-flex"] {
-      display: none !important;
-    }
-
-    #de:target~* [lang="de"] {
-      display: block !important;
-    }
-
-    #de:target~* [lang="de-flex"] {
-      display: flex !important;
-    }
-
-    .hero-section {
-      text-align: center;
-      padding: 80px 0 40px;
-      margin: 0;
-    }
-
-    .profile-image {
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      margin: 0 auto 24px;
-      box-shadow: 0 0 0 5px rgba(255, 255, 255, 1), 0 10px 40px rgba(0, 0, 0, 0.15);
-    }
-
-    .profile-image img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-    }
-
-    .quote {
-      font-style: italic;
-      color: var(--subtle-text);
-      font-size: 1.1rem;
-      max-width: 400px;
-      margin: 0 auto 24px;
-    }
-
-    .contact-links {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      margin: 20px 0;
-      flex-wrap: wrap;
-    }
-
-    .contact-links a {
-      padding: 12px 24px;
-      border-radius: 30px;
-      color: var(--base-text);
-      text-decoration: none;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      background: rgba(255, 255, 255, 0.7);
-      border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .contact-links a:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 12px var(--shadow-color);
-      background: #fff;
-      text-decoration: none;
-    }
-
-    .contact-links.support a {
-      background-color: #ffebee;
-      color: #c62828;
-    }
-
-    .contact-links.support a:hover {
-      background-color: #ffcdd2;
-      color: #b71c1c;
-    }
-
-    .glass-card {
-      background: var(--card-bg);
-      -webkit-backdrop-filter: blur(var(--card-blur));
-      backdrop-filter: blur(var(--card-blur));
-      border-radius: 20px;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 8px 24px var(--shadow-color);
-      padding: 30px;
-      margin: 24px 0;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .glass-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
-    }
-
-    .company-info {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-
-    .company-logo img {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-    }
-
-    .stars {
-      color: #FFC107;
-      font-size: 1.25rem;
-    }
-
-    .competition-card {
-      padding: 30px;
-      margin: 24px 0;
-      border-radius: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      box-shadow: 0 8px 24px var(--shadow-color);
-      color: var(--base-text);
-      text-decoration: none;
-      transition: all 0.4s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .competition-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -75%;
-      width: 50%;
-      height: 100%;
-      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
-      transform: skewX(-25deg);
-      transition: left 0.6s ease;
-    }
-
-    .competition-card:hover::before {
-      left: 125%;
-    }
-
-    .competition-card:hover {
-      background: #0a0a0a;
-      transform: scale(1.02);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
-    }
-
-    .competition-card * {
-      transition: color 0.4s ease;
-    }
-
-    .competition-card:hover h4 {
-      color: #FDDD00;
-    }
-
-    .competition-card:hover h5,
-    .competition-card:hover .rank-value {
-      color: #ffffff;
-    }
-
-    .competition-card:hover p,
-    .competition-card:hover .rank-label {
-      color: #cccccc;
-    }
-
-    .competition-card:hover .ccc {
-      opacity: 1;
-      transition-delay: 0.1s;
-    }
-
-    .competition-date {
-      font-size: 0.9em;
-      margin: 5px 0;
-    }
-
-    .ranking {
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .rank-label {
-      margin-right: 10px;
-    }
-
-    .ccc {
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-
-    .competition-results a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .language-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 24px;
-      margin: 24px 0;
-    }
-
-    .language-card {
-      margin: 0;
-      position: relative;
-    }
-
-    .language-icon {
-      font-size: 1.5rem;
-      margin-bottom: 12px;
-    }
-
-    .proficiency-bar {
-      width: 100%;
-      height: 8px;
-      background-color: rgba(0, 0, 0, 0.1);
-      border-radius: 4px;
-      margin: 12px 0;
-      overflow: hidden;
-    }
-
-    .progress {
-      height: 100%;
-      background: linear-gradient(90deg, #3182ce, #63b3ed);
-      border-radius: 4px;
-    }
-
-    .level {
-      position: absolute;
-      top: 30px;
-      right: 30px;
-      font-weight: bold;
-      color: var(--subtle-text);
-    }
-
-    .experience-item {
-      border-left: 4px solid var(--highlight-color);
-    }
-
-    .projects-flex {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
-      justify-items: stretch;
-      align-items: stretch;
-    }
-
-    .projects-flex .project-item {
-      min-width: 0;
-      max-width: 100%;
-      margin: 0;
-    }
-
-    .blog-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-
-    .blog-item {
-      padding: 0;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease;
-    }
-
-    .blog-content {
-      overflow: hidden;
-      hyphens: auto;
-    }
-
-    .blog-item:hover {
-      transform: translateY(-5px);
-    }
-
-    .blog-item img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
-
-    .blog-item h3 {
-      margin: 10px 15px;
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    .blog-item p {
-      margin: 5px 15px 15px;
-      color: #666;
-      font-size: 14px;
-    }
-
-    .blog-grid a {
-      text-decoration: inherit;
-    }
-
-    .site-footer {
-      text-align: center;
-      margin: 48px 0 24px 0;
-      color: #4a5568;
-      font-size: 1.1rem;
-    }
-
-    .site-footer hr {
-      margin: 40px 0 24px 0;
-      border: none;
-      height: 1px;
-      background-color: rgba(0, 0, 0, 0.1);
-    }
-
-    .site-footer p {
-      margin: 0;
-      font-style: italic;
-      color: var(--subtle-text);
-    }
-
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 2.5rem;
-      }
-
-      h2 {
-        font-size: 1.8rem;
-      }
-
-      .hero-section {
-        padding: 60px 0 20px;
-      }
-
-      .profile-image {
-        width: 140px;
-        height: 140px;
-      }
-
-      .competition-card {
-        flex-direction: column;
-        text-align: center;
-        gap: 20px;
-      }
-
-      .company-info {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .projects-flex .project-item {
-        flex: 1 1 100%;
-        max-width: 100%;
-      }
-    }
-  </style>
+	<link rel="stylesheet" href="static/styles.css" />
 </head>
 
 <body>
-  <div id="en"></div>
-  <div id="de"></div>
-  <div class="language-switch">
-    <a href="#de" class="language-btn">DE</a>
-    <a href="#en" class="language-btn">EN</a>
-  </div>
+	<div class="web-title serif">
+		<span>Nikita Berger</span>
+	</div>
+	<main>
+		<section class="container hero" id="home">
+			<img src="media/background.webp" alt="" fetchpriority="high" draggable="false" />
+			<h1 class="serif title animated-text" aria-label="Design">
+				<span style="animation-delay:0s;">D</span>
+				<span style="animation-delay:0.05s;">E</span>
+				<span style="animation-delay:0.10s;">S</span>
+				<span style="animation-delay:0.15s;">I</span>
+				<span style="animation-delay:0.20s;">G</span>
+				<span style="animation-delay:0.25s;">N</span>
+			</h1>
+			<h2 class="sub-title animated-text" aria-label="must be elegant">
+				<span style="animation-delay:0.50s;">m</span>
+				<span style="animation-delay:0.55s;">u</span>
+				<span style="animation-delay:0.60s;">s</span>
+				<span style="animation-delay:0.65s;">t</span>
+				<span style="animation-delay:0.70s;"> </span>
+				<span style="animation-delay:0.75s;">b</span>
+				<span style="animation-delay:0.80s;">e</span>
+				<div class="gradient-text">
+					<span class="accent sub-title-main serif" style="animation-delay:0.85s;">e</span>
+					<span class="accent sub-title-main serif" style="animation-delay:0.90s;">l</span>
+					<span class="accent sub-title-main serif" style="animation-delay:0.95s;">e</span>
+					<span class="accent sub-title-main serif" style="animation-delay:1.00s;">g</span>
+					<span class="accent sub-title-main serif" style="animation-delay:1.05s;">a</span>
+					<span class="accent sub-title-main serif" style="animation-delay:1.10s;">n</span>
+					<span class="accent sub-title-main serif" style="animation-delay:1.15s;">t</span>
+				</div>
+			</h2>
+		</section>
 
-  <section class="hero-section">
-    <div class="profile-image">
-      <img draggable="false" alt="Profile Picture of Nikita Berger" src="media/profile-picture.avif">
-    </div>
-    <h1>Nikita Berger</h1>
-    <p class="quote">"just don't die"</p>
-    <div class="contact-links support">
-      <a lang="de" href="https://buymeacoffee.com/nikity" target="_blank">❤️ Unterstütze meine Arbeit</a>
-      <a lang="en" href="https://buymeacoffee.com/nikity" target="_blank">❤️ Support My Work</a>
-    </div>
-    <div class="contact-links">
-      <a href="mailto:bergernikita1807@gmail.com">Email</a>
-      <a href="https://huggingface.co/Nikity" target="_blank">HuggingFace</a>
-      <a href="https://github.com/Nikityyy" target="_blank">GitHub</a>
-    </div>
-  </section>
+		<div class="scroll-indicator">
+			<a href="#about-me" tabindex="0" aria-label="Scroll to About Me section">
+				<span class="arrow" tabindex="-1">&#8595;</span>
+			</a>
+		</div>
 
-  <section>
-    <h2 lang="de">Meine Leistungen & Empfehlungen</h2>
-    <h2 lang="en">My Achievements & Endorsements</h2>
-    <p lang="de">Dieser Abschnitt hebt meine beruflichen Anerkennungen und Wettbewerbserfolge hervor und zeigt mein
-      Engagement für Exzellenz.</p>
-    <p lang="en">This section highlights my professional recognitions and competition achievements, showcasing my
-      commitment to excellence.</p>
+		<nav class="nav">
+			<div class="nav-indicator"></div>
+			<a href="#home">Home</a>
+			<a href="#about-me">About</a>
+			<a href="#lille">Lille</a>
+			<a href="#projects">Projects</a>
+		</nav>
 
-    <h3 lang="de">Unternehmensempfehlungen</h3>
-    <h3 lang="en">Company Endorsements</h3>
-    <div class="glass-card rating-card">
-      <div class="company-info">
-        <div class="company-logo">
-          <img draggable="false" alt="Anqodo GmbH Logo" src="media/anqodo-icon.webp">
-        </div>
-        <div class="company-details">
-          <h4>Anqodo GmbH</h4>
-          <div class="stars">★★★★★</div>
-          <p class="testimonial" lang="de">"Top"</p>
-          <p class="testimonial" lang="en">"Top"</p>
-        </div>
-      </div>
-    </div>
+		<section class="container" id="about-me">
+			<h2 class="title title-sm serif">About Me</h2>
+			<div class="padding side">
+				<div class="text-container margin-0">
+					<p class="sub-title show serif left"><span class="accent-bg">I am Nikita Berger,</span></p>
+					<p>a <span class="accent serif">Designer</span> and <span class="accent serif">Developer</span> from
+						Austria.</p>
+					<p>I am passionate about <span class="accent-primary serif">Artificial Intelligence,</span> <span
+							class="accent-primary serif">Mathematics,</span> and <span
+							class="accent-primary serif">Programming.</span> I love working on side projects that
+						challenge
+						my problem-solving skills and deepen my understanding of these fields.</p>
+					<p>My goal is to specialize in Mathematics and AI, building innovative applications that improve
+						lives
+						and push the boundaries of technology.</p>
+					<p class="serif">Outside of work, I love doing sports, especially <span
+							class="accent">running.</span>
+					</p>
+				</div>
+				<img src="media/nikita-berger.webp" decoding="async" fetchpriority="low" loading="lazy"
+					alt="Nikita Berger overlooking Alhambra">
+			</div>
+		</section>
 
-    <h3 lang="en">Competition Achievements</h3>
-    <h3 lang="de">Wettbewerbsleistungen</h3>
-    <div class="competition-results">
-      <a href="https://register.codingcontest.org/contest/5679/results?page.page=1&activeId=35500#35500"
-        target="_blank">
-        <div class="competition-card">
-          <div class="competition-info">
-            <h4>Cloudflight Coding Contest</h4>
-            <h5 class="competition-name">40th School CCC</h5>
-            <p class="competition-date" lang="de">25. Oktober 2024</p>
-            <p class="competition-date" lang="en">October 25, 2024</p>
-            <div class="ranking" lang="de-flex">
-              <span class="rank-label" lang="de">Schulranking:</span><span class="rank-value"> 1. / 27</span>
-            </div>
-            <div class="ranking" lang="en-flex">
-              <span class="rank-label">School Ranking:</span><span class="rank-value"> 1st / 27</span>
-            </div>
-            <div class="ranking" lang="de-flex">
-              <span class="rank-label" lang="de">Gesamtranking:</span><span class="rank-value"> 38. / 729</span>
-            </div>
-            <div class="ranking" lang="en-flex">
-              <span class="rank-label">Overall Ranking:</span><span class="rank-value"> 38th / 729</span>
-            </div>
-          </div>
-          <img draggable="false" src="media/ccc.avif" alt="Cloudflight Coding Contest Logo" class="ccc">
-        </div>
-      </a>
-    </div>
+		<section class="container" id="lille">
+			<h2 class="title title-sm serif padding">Small Language Model</h2>
+			<div class="video-container">
+				<video class="video" autoplay muted playsinline preload="none" loading="lazy"
+					aria-label="Lille Logo Header">
+					<source src="media/lille-header.webm" type="video/webm">
+					Your browser does not support the video tag.
+				</video>
+			</div>
+			<div class="text-container padding padding-y-0">
+				<h3 class="text-heading serif">Lille, a Compact and Powerful AI</h3>
+				<p>
+					<a href="https://github.com/Nikityyy/lille" target="_blank" rel="noopener noreferrer"><strong>Lille
+							130M</strong></a> is a 130-million-parameter language model designed as part of a fully
+					open-source deep learning stack, offering strong performance in a compact size.
+				</p>
+				<p>
+					Available in two variants: <em>Lille-130M-Base</em>, pretrained on 4.27 billion tokens from the
+					<a href="https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu" target="_blank"
+						rel="noopener noreferrer"><strong>FineWeb-Edu</strong></a> dataset for general knowledge, and
+					<em>Lille-130M-Instruct</em>, fine-tuned on the
+					<a href="https://huggingface.co/datasets/Nikity/Kyoto-Corpus" target="_blank"
+						rel="noopener noreferrer"><strong>Kyoto-Corpus</strong></a> for instruction-based tasks like
+					chat and command
+					execution.
+				</p>
+				<p>
+					Powered by a modern Transformer architecture with Grouped-Query Attention, RoPE, and RMSNorm, Lille
+					is optimized for efficiency and performance, making it ideal for research and deployment on modest
+					hardware.
+				</p>
+				<p class="created-by serif"><em>Created by Nikita Berger with</em> ❤️</p>
+			</div>
+		</section>
 
-    <h3 lang="en">Language Skills</h3>
-    <h3 lang="de">Sprachkenntnisse</h3>
-    <div class="language-grid">
-      <div class="glass-card language-card">
-        <div class="language-icon">🇩🇪</div>
-        <h4 lang="de">Deutsch</h4>
-        <h4 lang="en">German</h4>
-        <div class="proficiency-bar">
-          <div class="progress" style="width: 100%"></div>
-        </div>
-        <span class="level">C2</span>
-      </div>
-      <div class="glass-card language-card">
-        <div class="language-icon">🇬🇧</div>
-        <h4 lang="de">Englisch</h4>
-        <h4 lang="en">English</h4>
-        <div class="proficiency-bar">
-          <div class="progress" style="width: 80%"></div>
-        </div>
-        <span class="level">B2</span>
-      </div>
-      <div class="glass-card language-card">
-        <div class="language-icon">🇪🇸</div>
-        <h4 lang="de">Spanisch</h4>
-        <h4 lang="en">Spanish</h4>
-        <div class="proficiency-bar">
-          <div class="progress" style="width: 30%"></div>
-        </div>
-        <span class="level">A2</span>
-      </div>
-    </div>
-  </section>
+		<hr />
 
-  <section>
-    <h2 lang="en">My Work Experience</h2>
-    <h2 lang="de">Meine Berufserfahrung</h2>
-    <p lang="de">Hier finden Sie eine detaillierte Übersicht über meine bisherige Berufserfahrung als Entwickler und
-      Freelancer.</p>
-    <p lang="en">Find a detailed overview of my professional history as a developer and freelancer here.</p>
-    <div class="glass-card experience-item">
-      <h3 lang="de" style="color: var(--base-text);">Praktikant - anqodo GmbH</h3>
-      <h3 lang="en" style="color: var(--base-text);">Intern - anqodo GmbH</h3>
-      <p style="font-size: 0.9rem; margin-bottom: 12px;">5. August 2024 – 30. August 2024</p>
-      <ul lang="de">
-        <li>Optimierung bestehender Unit-Tests zur Verbesserung der Softwarequalität.</li>
-        <li>Erlernung neuer Programmiersprachen und Frameworks zur Kompetenzerweiterung.</li>
-        <li>Erstellung eines Konzepts zur Evaluierung und Auswahl eines neuen Frameworks.</li>
-        <li>Implementierung von UI-Komponenten zur Verbesserung der Nutzererfahrung.</li>
-      </ul>
-      <ul lang="en">
-        <li>Optimized and expanded unit tests to improve software quality and stability.</li>
-        <li>Actively learned new programming languages and frameworks to enhance team skills.</li>
-        <li>Created a strategic concept for evaluating and selecting a new framework.</li>
-        <li>Implemented layout components to support the user interface and improve UX.</li>
-      </ul>
-    </div>
-    <div class="glass-card experience-item">
-      <h3 lang="de" style="color: var(--base-text);">Freelancer - GCT Gruber Consulting & Technology</h3>
-      <h3 lang="en" style="color: var(--base-text);">Freelancer - GCT Gruber Consulting & Technology</h3>
-      <p style="font-size: 0.9rem; margin-bottom: 12px;">April 2024 - Juli 2024</p>
-      <ul lang="de">
-        <li>Verantwortlich für die Gestaltung und Umsetzung der Unternehmenswebsite, einschließlich Benutzeroberfläche
-          und Nutzererlebnis.</li>
-      </ul>
-      <ul lang="en">
-        <li>Led the design and implementation of the company website, focusing on user interface and user experience.
-        </li>
-      </ul>
-    </div>
-  </section>
+		<section id="projects">
+			<section class="container" id="knowpedia">
+				<h2 class="title title-sm serif padding">Knowledge Is Power</h2>
+				<div class="video-container">
+					<video class="video" autoplay muted loop playsinline preload="none" loading="lazy"
+						aria-label="Knowpedia AI Platform Demo">
+						<source src="media/knowpedia.webm" type="video/webm">
+						Your browser does not support the video tag.
+					</video>
+				</div>
+				<div class="text-container padding">
+					<h3 class="text-heading serif">A User-Friendly Knowledge Platform</h3>
+					<p>
+						<a href="https://knowpedia.vercel.app/" target="_blank"
+							rel="noopener noreferrer"><strong>Knowpedia</strong></a> is a more user-friendly
+						alternative to Wikipedia, designed to provide a
+						seamless and engaging experience for users seeking knowledge.
+					</p>
+					<p>
+						It features a clean interface, intuitive navigation, and a focus on accessibility, making it
+						easier
+						for
+						everyone to explore and learn from a vast array of topics.
+					</p>
+					<p>
+						Powered by <em>Artificial Intelligence</em>, it provides detailed answers on a wide range of
+						topics.
+					</p>
+					<p class="created-by serif"><em>Created by Nikita Berger with</em> ❤️</p>
+				</div>
+			</section>
 
-  <section>
-    <h2 lang="en">My Projects</h2>
-    <h2 lang="de">Meine Projekte</h2>
-    <p lang="de">Entdecken Sie eine Auswahl meiner Projekte, die meine Fähigkeiten in der Full-Stack-Entwicklung und bei
-      KI-Projekten demonstrieren.</p>
-    <p lang="en">Explore a selection of my projects, demonstrating my skills in full-stack development and AI projects.
-    </p>
-    <div class="projects-flex">
-      <div class="glass-card">
-        <h3>HAK Casino</h3>
-        <p lang="de">Eine Sammlung aller Casino-Spiele, die ich je im HAK Steyr Stil entwickelt habe.</p>
-        <p lang="en">A collection of every Casino Game I ever made in a HAK Steyr style.</p>
-        <a href="https://nikityyy.github.io/HAK-Casino/" target="_blank" lang="de">Mehr erfahren →</a>
-        <a href="https://nikityyy.github.io/HAK-Casino/" target="_blank" lang="en">Learn more →</a>
-      </div>
-      <div class="glass-card">
-        <h3>Reel</h3>
-        <p lang="de">Ein Filmempfehlungssystem, das mit Flask und Googles Gemini AI entwickelt wurde. The Daily Reel
-          hilft Nutzern, Filme zu entdecken, die perfekt zu ihren Wünschen passen – durch natürliche
-          Sprachbeschreibungen.</p>
-        <p lang="en">A movie recommendation system built with Flask and Google's Gemini AI. The Daily Reel helps users
-          discover films that perfectly match their desires through natural language descriptions.</p>
-        <a href="https://the-daily-reel.vercel.app/" target="_blank" lang="de">Mehr erfahren →</a>
-        <a href="https://the-daily-reel.vercel.app/" target="_blank" lang="en">Learn more →</a>
-      </div>
-      <div class="glass-card">
-        <h3>Conomy</h3>
-        <p lang="de">Eine Software, die es Unternehmen ermöglicht, ihre Website auf betriebswirtschaftliche Kriterien
-          hin
-          zu analysieren und zu optimieren.</p>
-        <p lang="en">Software that enables companies to analyze and optimize their website based on business management
-          characteristics.</p>
-        <a href="https://nikityyy.github.io/Conomy/" target="_blank" lang="de">Mehr erfahren →</a>
-        <a href="https://nikityyy.github.io/Conomy/" target="_blank" lang="en">Learn more →</a>
-      </div>
-      <div class="glass-card">
-        <h3>Musify</h3>
-        <p lang="de">Eine werbefreie Musik-Streaming-Webanwendung, die Spotify-Einbettungen für ein nahtloses Erlebnis
-          nutzt.</p>
-        <p lang="en">An ad-free music streaming web app that works with Spotify by embedding its player for a seamless
-          experience.</p>
-        <a href="https://nikityyy.github.io/Musify/" target="_blank" lang="de">Mehr erfahren →</a>
-        <a href="https://nikityyy.github.io/Musify/" target="_blank" lang="en">Learn more →</a>
-      </div>
-      <div class="glass-card">
-        <h3>WhatsBreak</h3>
-        <p lang="de">Eine Web-Anwendung, die Nutzern hilft, eine passende Nachricht für die Beendigung einer Beziehung
-          zu
-          formulieren.</p>
-        <p lang="en">A web application that helps users formulate an appropriate message for ending a relationship.</p>
-        <a href="https://nikityyy.github.io/WhatsBreak/" target="_blank" lang="de">Mehr erfahren →</a>
-        <a href="https://nikityyy.github.io/WhatsBreak/" target="_blank" lang="en">Learn more →</a>
-      </div>
-      <div class="glass-card">
-        <h3>Knowpedia</h3>
-        <p lang="de">Eine genauere und benutzerfreundlichere Alternative zu Wikipedia, entwickelt für präzisere
-          Informationen.</p>
-        <p lang="en">A more accurate and user-friendly alternative to Wikipedia, designed for greater precision.</p>
-        <a href="https://knowpedia.vercel.app/" target="_blank" lang="de">Mehr erfahren →</a>
-        <a href="https://knowpedia.vercel.app/" target="_blank" lang="en">Learn more →</a>
-      </div>
-    </div>
-  </section>
+			<section class="container" id="crypto">
+				<h2 class="title title-sm serif margin-b-10">AI Crypto Fund</h2>
+				<h3 class="sub-title sub-title-sm show serif padding">Portfolio Value</h3>
 
-  <section>
-    <h2 lang="en">My Thesis</h2>
-    <h2 lang="de">Meine Diplomarbeit</h2>
-    <p lang="de">Informationen zu meiner Diplomarbeit, die sich mit dem Thema künstliche Intelligenz befasst.</p>
-    <p lang="en">Information on my thesis, focusing on the topic of artificial intelligence.</p>
-    <div class="glass-card">
-      <h3 lang="de" style="color: var(--base-text);">Wie Künstliche Intelligenz Leistungsfähigkeit und Effizienz
-        steigert</h3>
-      <h3 lang="en" style="color: var(--base-text);">How Artificial Intelligence increases performance and efficiency
-      </h3>
-      <p lang="de">SOON</p>
-      <p lang="en">SOON</p>
-      <a href="#" target="_blank" lang="de">Mehr erfahren →</a>
-      <a href="#" target="_blank" lang="en">Learn more →</a>
-    </div>
-  </section>
+				<div class="crypto-chart-container">
+					<canvas id="cryptoChart"></canvas>
+				</div>
+				<div class="text-container padding">
+					<p>
+						The <a href="https://github.com/Nikityyy/ai-crypto-fund" target="_blank"
+							rel="noopener noreferrer" class="dark">AI Crypto Fund</a>
+						is an innovative investment platform that leverages Artificial Intelligence to
+						manage and optimize Cryptocurrency Portfolios. You pick the <em>AI Agents</em> and the
+						<em>Cryptocurrency</em> you want to
+						invest in, and the AI Crypto Fund will do the rest.
+					</p>
+					<p class="serif"><em>Chart data is for illustrative purposes only.</em></p>
+					<p class="created-by serif"><em>Created by Nikita Berger with</em> ❤️</p>
+			</section>
 
-  <hr>
+			<section class="container" id="sophia">
+				<h2 class="title title-sm serif margin-b-10">SophiaG Triton</h2>
+				<h3 class="sub-title sub-title-sm show serif padding">High-Performance LLM Optimizer</h3>
+				<div class="sophia-chart-container">
+					<canvas id="sophiaChart"></canvas>
+				</div>
+				<p class="chart-note serif"><em>Performance Benchmark (ms/step) &mdash; Lower is better</em></p>
+				<div class="text-container padding">
+					<p>
+						<a href="https://github.com/Nikityyy/Sophia-Triton" target="_blank"
+							rel="noopener noreferrer">SophiaG Triton</a> is my unofficial adaptation of the
+						second-order optimizer by Liu et al., supercharged with <a href="https://triton-lang.org/"
+							target="_blank" rel="noopener noreferrer">Triton</a> for superior GPU performance.
+					</p>
+					<p>
+						This project focuses on leveraging custom Triton kernels to accelerate computations, achieving
+						up to
+						a <span class="accent serif">3x speedup</span> over the original implementation and
+						outperforming
+						standard optimizers like AdamW in mixed precision.
+					</p>
+					<p class="created-by serif"><em>Created by Nikita Berger with</em> ❤️</p>
+				</div>
+			</section>
+		</section>
+	</main>
 
-  <section>
-    <h2 lang="de">Mein Blog</h2>
-    <h2 lang="en">My Blog</h2>
-    <p lang="de">Lesen Sie meine Artikel und Einblicke zu Themen wie Programmierung, KI und Technologie.</p>
-    <p lang="en">Read my articles and insights on topics like programming, AI, and technology.</p>
-    <div class="blog-grid">
-      <div class="glass-card blog-item">
-        <a href="blog/blog-1" target="_blank">
-          <img src="media/blog-1.avif" alt="Newspaper clipping about Nikita Berger">
-          <div class="blog-content">
-            <h3 lang="de">HAK-Schüler Nikita ist Steyrs bester Nachwuchsprogrammierer</h3>
-            <h3 lang="en">HAK student Nikita is Steyr's best young programmer</h3>
-            <p lang="de">11. November 2024</p>
-            <p lang="en">November 11, 2024</p>
-          </div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <footer class="site-footer">
-    <hr>
-    <p>“Ideas are cheap. Execution is everything.”</p>
-    <p>© 2025 Nikita Berger. All rights reserved.</p>
-  </footer>
-
+	<footer class="dark">
+		<div>
+			<a href="https://github.com/Nikityyy" target="_blank" rel="noopener noreferrer">Github</a>
+			<a href="https://huggingface.co/Nikity" target="_blank" rel="noopener noreferrer">Hugging Face</a>
+		</div>
+		<a href="mailto:bergernikita1807@gmail.com" class="button-link">
+			<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+				fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+				class="icon icon-tabler icons-tabler-outline icon-tabler-mail">
+				<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+				<path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" />
+				<path d="M3 7l9 6l9 -6" />
+			</svg>
+			<span>Let's connect</span>
+		</a>
+		<div>
+			<a href="https://x.com/itsnikity" target="_blank" rel="noopener noreferrer">X</a>
+			<a href="https://www.instagram.com/itsnikity/" target="_blank" rel="noopener noreferrer">Instagram</a>
+		</div>
+	</footer>
 </body>
 
 </html>
